@@ -8,6 +8,9 @@ class Application(Thread) :
         assert self._node == None, 'Node already set'
         self._node = node
 
+    def get_node(self) :
+        return self._node
+
     def _main(self) :
         pass
 
