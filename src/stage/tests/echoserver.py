@@ -1,4 +1,5 @@
 from stage.core.application import Application
+from stage.networking.layers.internet.ipv4 import Ipv4InternetLayer
 
 class EchoServer(Application) :
     def __init__(self) :
