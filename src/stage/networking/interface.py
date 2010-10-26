@@ -16,3 +16,6 @@ class Interface :
 
     def set_subnetmask(self, mask) :
         self._mask = mask
+
+    def send(self, data) :
+        # TODO: send data to daemon
