@@ -14,7 +14,7 @@
     colorlinks=true,
     linkcolor=blue,
     urlcolor=blue,
-    pdftitle={ServiceSniffer Software Requirements Specification v2},
+    pdftitle={STAGE Software Requirements Specification v1},
     pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
 }
 
@@ -35,11 +35,11 @@
 
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Software Requirements Specification}
-\newcommand\mydate{January 12, 2010}
+\newcommand\mydate{November 1, 2010}
 
 % Page style for every other page
 \fancyhf{} % clear all header and footer fields
-\fancyhead[L]{ServiceSniffer}
+\fancyhead[L]{STAGE}
 \fancyhead[C]{\mytitle}
 \fancyhead[R]{\mydate}
 \fancyfoot[C]{\thepage}
@@ -58,10 +58,15 @@
 \begin{document}
 \pagenumbering{roman}
 
-\begin{figure}
+\begin{figure%
+	\label{logo}%
+}
     \vspace{-6em}
     \centering
-%    \includegraphics[width=0.6\textwidth]{../logo} \TODO
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Stick our (vectorized) logo in here...
+%    \includegraphics[width=0.6\textwidth]{../logo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
     \vspace{-4em}
 \end{figure}
 
@@ -98,9 +103,10 @@ This requirements document defines the functional and non-functional requirement
   \label{scope}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% \TODO
-The goal of the ServiceSniffer project is to automate the passive discovery,
-recognition, and consumption of semantic web services.  ServiceSniffer does not
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define the scope of STAGE, break it down into the components
+The goal of the ---------- project is to automate the passive discovery,
+recognition, and consumption of semantic web services.  ---------- does not
 require any central registry of services but will examine network traffic
 patterns to identify specific services, how to invoke them and report
 specific, user chosen information.  As well as running with known service
@@ -109,7 +115,7 @@ relevant network traffic to determine how to consume the service.  This
 application will be constructed of an extensible core framework upon which
 future modules can be developed and integrated.
 
-ServiceSniffer is split into 3 general pieces: the data input, data processing,
+---------- is split into 3 general pieces: the data input, data processing,
 and user interface modules.  The data input module is responsible for
 collecting traffic off the network or using a Pcap file as a source instead of
 a live network.  The data processing module, which is constructed from various
@@ -117,7 +123,7 @@ filters and processors (which will be described in more depth later), applies
 filters to collected information and transforms it into
 various and configurable reports and views depending on what the user wants to
 see.  Some examples of these reports will be described later.  Lastly,
-ServiceSniffer has both a CLI and a GUI for viewing the various data returned
+---------- has both a CLI and a GUI for viewing the various data returned
 by the data processors and filters.  These interfaces will allow users to
 interact with the data returned.  For example, a user could apply additional
 display filters, such as filtering by a specific destination IP.  Both
@@ -127,44 +133,46 @@ which users can use to consume the web service.  Users may specify a additional
 types of filters or processors to generate different types of reports via an
 extension system.
 
-Users of ServiceSniffer are chunked into 3 loose groups: system/network
-administrators who wish to control all of the ServiceSniffer pieces (data
+Users of ---------- are chunked into 3 loose groups: system/network
+administrators who wish to control all of the ---------- pieces (data
 input, data processing, and the user interface), developers who wish to or are
 tasked with developing custom data filters and/or processors so users can have
 new/custom reports, and UI users who only wish to analyze the data collected
-and processed by ServiceSniffer.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+and processed by ----------.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add ~5 relevant definitions here...
 \subsection{Definitions, Acronyms, and Abbreviations%
   \label{definitions}%
 }
 
 \begin{description}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% \TODO
 \item[Foobar]
     A foobar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{description}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Do we have any references? Add them here
 \subsection{References%
   \label{references}%
 }
 
-These documents explain in-depth about the various technologies involved in
-this project.
+These documents explain in-depth about the various technologies involved in this project.
 %
 \begin{itemize*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% \TODO
-\item WSDL Specification: \url{http://www.w3.org/TR/wsdl20/}
-\item SOAP Specification: \url{http://www.w3.org/TR/soap/}
-\item libpcap Homepage: \url{http://www.tcpdump.org/}
-\item MVP-E Project (Team 10): \url{http://www.cs.drexel.edu/SeniorDesign/2010Material/Projects2010.html}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item WSDL Specification: \url{http://www.w3.org/TR/wsdl20/}
+	\item SOAP Specification: \url{http://www.w3.org/TR/soap/}
+	\item libpcap Homepage: \url{http://www.tcpdump.org/}
+	\item MVP-E Project (Team 10): \url{http://www.cs.drexel.edu/SeniorDesign/2010Material/Projects2010.html}
 \end{itemize*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
@@ -174,20 +182,13 @@ this project.
 
 The rest of this document is organized as follows: 
 \begin{itemize*}
-\item[-]Section
-\ref{overall-description} gives a high level overview of the project
-requirements.  
-\item[-]Section \ref{specific-requirements} gives more detailed project
-requirements.  
-\item[-]Sections \ref{input-formats} and \ref{output-formats} provides
-detail in the inputs and outputs of the system, 
-\item[-]Section \ref{functional}
-specifies what the software will do, 
-\item[-]Section \ref{performance} gives
-performance requirements for the underlying system.
+	\item[-]Section \ref{overall-description} gives a high level overview of the project requirements.  
+	\item[-]Section \ref{specific-requirements} gives more detailed project requirements.  
+	\item[-]Sections \ref{input-formats} and \ref{output-formats} provides detail in the inputs and outputs of the system, 
+	\item[-]Section \ref{functional} specifies what the software will do, 
+	\item[-]Section \ref{performance} gives performance requirements for the underlying system.
 \end{itemize*}
-The rest of Section
-\ref{specific-requirements} explains other minor requirements.
+The rest of Section \ref{specific-requirements} explains other minor requirements.
 
 
 %___________________________________________________________________________
@@ -209,24 +210,16 @@ STAGE can be used as a testbed for sensors and respective algorithms in the labo
 \subsubsection{System Interfaces%
   \label{system-interfaces}%
 }
-\begin{figure}
-    \centering
-%    \includegraphics[width=0.75\textwidth]{gfx/figure}
-    \caption{A high level diagram of the ServiceSniffer architecture.}
-    \label{g:system}
-\end{figure}
 
-ServiceSniffer combines:
+STAGE combines:
 \begin{itemize}
-    \item Capture - Reading from network/pcap files
-    \item Filters - Removes specified data from the dataset
-    \item Processors - Transforms data into other formats
-    \item System Kernel - Coordinates information flow between other components
-    \item User Interfaces - Displays data, reports it to users, and allows them
-        to control the system
+    \item Scenario Language - Defining the entire scenario in a very simple language
+    \item Agent Framework - Supporting the customization of semi-intelligent agents
+    \item Topology Creator - Creating a virtual topology of nodes defined in the Scenario Language
+    \item Distribution Framework - Distributing a large-scale emulation across numerous physical machines
+    \item Data-Collection API - Collecting all relevant data through a simple API
+    \item Visualization Engine - Conceptually visualizing terrain, node movement, link status, etc.
 \end{itemize}
-See Figure~\ref{g:system} for a visualization of the ServiceSniffer
-architecture.
 
 %___________________________________________________________________________
 
@@ -234,11 +227,7 @@ architecture.
   \label{user-interfaces}%
 }
 
-The user interface allows the user to access and control the system. Two
-interfaces are provided, each for different tasks and uses. The graphical user
-interface (GUI) allows for the visual representation of the information
-collected from the network. The command line interface (CLI) allows for the textual
-representation of the same information.
+STAGE's user interface is two-fold, with each interface for different tasks and uses. The basic interface allows a user to simply and quickly define a scenario with the Scenario Language and begin an experiment, using the API to collect data in a way that is defined by the user. The Visualization Engine allows the user to interpret the experiment visually, without a need for data-collection or the API.
 
 %___________________________________________________________________________
 
@@ -246,8 +235,7 @@ representation of the same information.
   \label{hardware-interfaces}%
 }
 
-ServiceSniffer requires that the machine running the system has a network
-device that libpcap supports.
+STAGE requires that the machine running the system has one to many network interfaces to support distribution.
 
 %___________________________________________________________________________
 
@@ -255,8 +243,7 @@ device that libpcap supports.
   \label{software-interfaces}%
 }
 
-ServiceSniffer requires the use of libpcap in order to capture packets from
-network devices.
+STAGE requires the use of Linux Namespaces' kernel virtualization as well as OpenGL in order to use the visualizer.
 
 %___________________________________________________________________________
 
@@ -264,7 +251,7 @@ network devices.
   \label{memory-constraints}%
 }
 
-ServiceSniffer requires a machine with at least one gigabyte of RAM.
+STAGE requires a machine with at least two gigabytes of RAM.
 
 %___________________________________________________________________________
 
@@ -272,11 +259,12 @@ ServiceSniffer requires a machine with at least one gigabyte of RAM.
   \label{site-adaptation-requirements}%
 }
 
-ServiceSniffer requires that the system is configured per-site to set the
-appropriate network interface or file to read from.
+STAGE requires that the system is configured per-site to create a distributed emulation, or to interact on-the-fly.
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define the product's functions. This should be ~5 paragraphs
 \subsection{Product Functions%
   \label{product-functions}%
 }
@@ -300,13 +288,13 @@ Also, not all networks have a central registry of web services offered on the
 network, and most do not have a record of what web services from outside the
 network are consumed by users on the network.  More, many web services aren't
 clearly defined in WSDL or an equivalent format, so it is unclear how to consume
-the web service without a formal definition.  ServiceSniffer constructs an
+the web service without a formal definition.  ---------- constructs an
 ad-hoc registry of web services is observes being consumed in a defined way.
 This registry can then be used to let users consume these previously undefined
 web services.
 
 Some networks have a requirement that all services being used on them be
-encrypted as the network itself cannot be trusted.  ServiceSniffer is able to
+encrypted as the network itself cannot be trusted.  ---------- is able to
 show which services being used on a network are secure (either fully encrypted
 traffic or encrypted data with cleartext headers) and which are insecure.  By
 looking at the specific traffic an administrator can learn what pieces of the
@@ -323,11 +311,18 @@ service, and other similar situations.
 In debugging web services, developers need to see what data is being sent to
 the web service during invocation and usage.  Instead of using a program like
 Wireshark to have to look at the packets of a web service invocation,
-developers can use ServiceSniffer to see where, if anywhere, the data actually
+developers can use ---------- to see where, if anywhere, the data actually
 sent differs from what should be sent.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List the user characteristics. Continue w/ the story-line format...
+%   Alice - just visualization, demos, etc
+%   Bob - algorithms researcher, needs to collect data, uses visualizer just to make sure it's working, uses API, writes many different agents for the same topology
+%   Carol - protocol testing, wants to run a single protocol/agent/agent framework over many varying topologies
+%   Dave - large-scale emulation, needs to use the distribution framework and cluster rather than his personal computer
 \subsection{User Characteristics%
   \label{user-characteristics}%
 }
@@ -412,19 +407,14 @@ Zed also needs to be able to:
     \item Capture from the network in real time
     \item Store the capture in a Pcap file
 \end{itemize*}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 %___________________________________________________________________________
 
 \subsection{Constraints%
   \label{constraints}%
 }
 
-The system must be able to record and/or process all packets it receives.  If
-this isn't possible for any reason, the system should inform the user of this.
-The only piece of the code that should run with elevated privileges is the
-collection of packets over the network.  If a Pcap file is supplied as the
-input, or if a stream of the network packets is otherwise supplied, no piece of
-this system requires elevated privileges.
+The system must be able to interpret and/or process any agent or topology it is given.  If this isn't possible for any reason, the system should inform the user of this. No piece of this system requires elevated privileges.
 
 %___________________________________________________________________________
 
@@ -432,17 +422,12 @@ this system requires elevated privileges.
   \label{assumptions-and-dependencies}%
 }
 
-It is assumed that a user, administrator, or developer has the ability to
-install required libraries which will named in the future as a result of the
-development process.
-
-It is assumed that system will not have to deal with encrypted networks and
-will have access to raw unencrypted packets. Also, it is assumed that the user
-has local privileges to be able to capture packets in real time. Otherwise, the
-system will only be able to process Pcap files.
+It is assumed that a user, administrator, or developer has the ability to install required libraries which will named in the future as a result of the development process.
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Most of these are (obviouly) not relevant to our project. Add our own Functional Requirements!
 \section{Specific Requirements%
   \label{specific-requirements}%
 }
@@ -580,6 +565,7 @@ containing the following information:
 \end{itemize*}
 This list shall be sorted in order of number of invocations in ascending order.
 This will place the most abnormal services at the top of the list.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
@@ -587,8 +573,8 @@ This will place the most abnormal services at the top of the list.
   \label{data-storage}%
 }
   \begin{enumerate}
-    \item No outside database system will be used for data storage
-    \item Filtered PCAP network scans can be stored from a live capture
+    \item No outside database system will be used for data storage, unless it is introduced by the user via the API
+    \item Scenario definitions, including the topology and agents, will be stored and parsed by the system
   \end{enumerate}
 
 %___________________________________________________________________________
@@ -597,13 +583,15 @@ This will place the most abnormal services at the top of the list.
 \begin{itemize*}
     \item Operating Systems:  Unix / Linux / Mac
     \item Processor:  A modern 32- or 64-bit x86 processor
-    \item Memory:  512MB RAM minimum
-    \item Network connection:  Any recent network card which is currently connected to the network the user wishes to collect data from.
-    \item GUI:  For using the GUI, a web browser supporting HTML 4.01 is required.
+    \item Memory:  1024MB RAM minimum
+    \item Network connection:  Any recent network card which is currently connected to the emulation network (if the emulation is distributed)
+    \item Visualizer:  A graphics card which will support OpenGL or an equivalent
 \end{itemize*}
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Determine if these are relevant (probably) and update.
 \subsection{Input Formats%
   \label{input-formats}%
 }
@@ -640,8 +628,12 @@ This will place the most abnormal services at the top of the list.
         data gathered by the system.
     \item The system shall support generating WSDL for discovered web services.
 \end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
+
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Talk about our user interface!
 \subsection{User Interface%
   \label{user-interface}%
 }
@@ -663,49 +655,30 @@ Command Line Interface (CLI).
     \item The interface shall provide a method for viewing
         communication chain (Per user queries/responses from a server).
 \end{enumerate}
-
-%\begin{figure}
-%    \centering
-%    \subfloat[The main ServiceSniffer GUI]{\label{g:main}\includegraphics[width=0.4\textwidth]{gfx/main}}
-%    \subfloat[The properties of a particular service]{\label{g:detail}\includegraphics[width=0.4\textwidth]{gfx/detail}}
-%    \caption{A mockup of the ServiceSniffer GUI}
-%    \label{g:gui}
-%\end{figure}
-%
-%See Figure~\ref{g:gui} shows mockups of our Graphical User Interface.
-%Figure~\ref{g:main} shows the main window, and Figure~\ref{g:detail} shows a
-%properties dialog for a particular web service.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 %___________________________________________________________________________
 
 \subsection{Extensibility%
   \label{extensibility}%
 }
 \begin{enumerate}
-    \item The system shall provide a means for users to create custom filters.
-    \item The system shall provide a means for users to create custom processors.
+    \item The system shall provide a means for users to create custom topologies.
+    \item The system shall provide a means for users to create custom agents.
 \end{enumerate}
 
 \subsection{Testing%
     \label{testing}%
 }
-All code with in the system must be tested. Core functionality of the software
-will have 100\% code coverage with automated unit and integration tests.  The
-GUI testing will be done manually as it is a smaller component and would
-otherwise require a disproportionately large investment in initial setup.  Unit
-tests will cover the algorithms used in our system while integration tests will
-be used to test our data-flow.  
+All code with in the system must be tested. Core functionality of the software will have 100\% code coverage with automated unit and integration tests.  The visualizer testing will be done manually as it is a smaller component and would otherwise require a disproportionately large investment in initial setup.  Unit tests will cover the algorithms used in our system while integration tests will be used to test our data-flow.  
 
 \section{System Evolution}
 
-With more time, the ServiceSniffer team could further develop filters and
-processors in order to generate more reports without user customization.  Also,
-with our reliance on UNIX Domain Sockets for communication between processes,
-ServiceSniffer currently would only run on UNIX operating systems.  Further
-development could lead to a platform that included Windows.
+With more time, the STAGE team could create additional tools to aid in the the development of more complex agents or topologies, so that user customization does not become too granular.  Furthermore, tools which can automate or assist in data collection and parsing could be implements.  Even further development could lead to a platform that included Windows or other operating systems.
 
 %___________________________________________________________________________
 
+% \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is particularly relevant! Real (emulated) time vs. simulated time!
 \subsection{Performance%
     \label{performance}%
 }
@@ -728,6 +701,7 @@ The system shall have the ability to run in non-real time. Non-real time is
 defined as collecting the packets as they come off the wire and storing them in
 a data store for later processing and analysis.  The format for storage of all  
 web service packets is Pcap.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
 
@@ -735,12 +709,11 @@ web service packets is Pcap.
   \label{documentation}%
 }
 \begin{enumerate}
-    \item The software shall provide a User Manual containing  step-by-step
-        instructions for user perspective in Section~\ref{user-characteristics}.
+    \item The software shall provide a User Manual containing step-by-step instructions for user perspective in Section~\ref{user-characteristics}.
     \item The software shall provide Developer Documentation containing:
     \begin{enumerate}
-        \item Interface definitions for provided filters and processors
-        \item Requirements for 3rd party filters and processors
+        \item Agent Framework definitions and example agents
+        \item Scenario Language syntax and usage
     \end{enumerate}
 \end{enumerate}
 
