@@ -58,17 +58,18 @@
 \begin{document}
 \pagenumbering{roman}
 
-\begin{figure%
-	\label{logo}%
-}
-    \vspace{-6em}
-    \centering
 % \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Stick our (vectorized) logo in here...
+%
+%\begin{figure%
+%	\label{logo}%
+%}
+%    \vspace{-6em}
+%    \centering
 %    \includegraphics[width=0.6\textwidth]{../logo}
+%    \vspace{-4em}
+%\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
-    \vspace{-4em}
-\end{figure}
 
 \maketitle
 
@@ -105,8 +106,8 @@ This requirements document defines the functional and non-functional requirement
 
 % \TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Define the scope of STAGE, break it down into the components
-The goal of the ---------- project is to automate the passive discovery,
-recognition, and consumption of semantic web services.  ---------- does not
+The goal of the --------- project is to automate the passive discovery,
+recognition, and consumption of semantic web services.  --------- does not
 require any central registry of services but will examine network traffic
 patterns to identify specific services, how to invoke them and report
 specific, user chosen information.  As well as running with known service
@@ -115,7 +116,7 @@ relevant network traffic to determine how to consume the service.  This
 application will be constructed of an extensible core framework upon which
 future modules can be developed and integrated.
 
----------- is split into 3 general pieces: the data input, data processing,
+--------- is split into 3 general pieces: the data input, data processing,
 and user interface modules.  The data input module is responsible for
 collecting traffic off the network or using a Pcap file as a source instead of
 a live network.  The data processing module, which is constructed from various
@@ -123,7 +124,7 @@ filters and processors (which will be described in more depth later), applies
 filters to collected information and transforms it into
 various and configurable reports and views depending on what the user wants to
 see.  Some examples of these reports will be described later.  Lastly,
----------- has both a CLI and a GUI for viewing the various data returned
+--------- has both a CLI and a GUI for viewing the various data returned
 by the data processors and filters.  These interfaces will allow users to
 interact with the data returned.  For example, a user could apply additional
 display filters, such as filtering by a specific destination IP.  Both
@@ -133,12 +134,12 @@ which users can use to consume the web service.  Users may specify a additional
 types of filters or processors to generate different types of reports via an
 extension system.
 
-Users of ---------- are chunked into 3 loose groups: system/network
-administrators who wish to control all of the ---------- pieces (data
+Users of --------- are chunked into 3 loose groups: system/network
+administrators who wish to control all of the --------- pieces (data
 input, data processing, and the user interface), developers who wish to or are
 tasked with developing custom data filters and/or processors so users can have
 new/custom reports, and UI users who only wish to analyze the data collected
-and processed by ----------.
+and processed by ---------.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
@@ -288,13 +289,13 @@ Also, not all networks have a central registry of web services offered on the
 network, and most do not have a record of what web services from outside the
 network are consumed by users on the network.  More, many web services aren't
 clearly defined in WSDL or an equivalent format, so it is unclear how to consume
-the web service without a formal definition.  ---------- constructs an
+the web service without a formal definition.  --------- constructs an
 ad-hoc registry of web services is observes being consumed in a defined way.
 This registry can then be used to let users consume these previously undefined
 web services.
 
 Some networks have a requirement that all services being used on them be
-encrypted as the network itself cannot be trusted.  ---------- is able to
+encrypted as the network itself cannot be trusted.  --------- is able to
 show which services being used on a network are secure (either fully encrypted
 traffic or encrypted data with cleartext headers) and which are insecure.  By
 looking at the specific traffic an administrator can learn what pieces of the
@@ -311,7 +312,7 @@ service, and other similar situations.
 In debugging web services, developers need to see what data is being sent to
 the web service during invocation and usage.  Instead of using a program like
 Wireshark to have to look at the packets of a web service invocation,
-developers can use ---------- to see where, if anywhere, the data actually
+developers can use --------- to see where, if anywhere, the data actually
 sent differs from what should be sent.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
