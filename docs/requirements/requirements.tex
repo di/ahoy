@@ -343,7 +343,7 @@ STAGE requires the use of Linux Namespaces' kernel virtualization as well as Ope
   \label{memory-constraints}%
 }
 
-STAGE requires a machine with at least two gigabytes of RAM.
+STAGE requires a machine with at least 4GB of RAM.
 
 %___________________________________________________________________________
 
@@ -502,18 +502,16 @@ server.
 \subsubsection{Data Storage%
   \label{data-storage}%
 }
-  \begin{enumerate}
-    \item No outside database system will be used for data storage, unless it is introduced by the user via the API
-    \item Scenario definitions, including the topology and agents, will be stored and parsed by the system
-  \end{enumerate}
+    \paragraph{Outside Databases} No outside database system will be used for data storage, unless it is introduced by the user via the API
+    \paragraph{Scenario Definitions} Scenario definitions, including the topology and agents, will be stored and parsed by the system
 
 %___________________________________________________________________________
 
 \subsection{Runtime Environment} 
 \begin{itemize*}
     \item Operating Systems:  Unix / Linux / Mac
-    \item Processor:  A modern 32- or 64-bit x86 processor
-    \item Memory:  1024MB RAM minimum
+    \item Processor:  A 32- or 64-bit x86 3.0GHz processor
+    \item Memory:  4GB RAM minimum
     \item Network connection:  Any recent network card which is currently connected to the emulation network (if the emulation is distributed)
     \item Visualizer:  A graphics card which will support OpenGL or an equivalent
 \end{itemize*}
@@ -525,18 +523,14 @@ server.
 }
 
 \subsubsection{Scenario}
-\begin{enumerate}
-        \item The simulation shall be able to read location data for nodes.
-		\item The simulation shall be able to read mobility data for nodes.
-		\item The simulation shall be able to respond to event input from scenario input files
-\end{enumerate}
+    \paragraph{Location Data} The simulation shall be able to read location data for nodes.
+	\paragraph{Mobility Data} The simulation shall be able to read mobility data for nodes.
+	\paragraph{Scenario Input} The simulation shall be able to respond to event input from scenario input files
 
 \subsubsection{Topology}
-\begin{enumerate}
-    \item The simulation shall be able to read network interfaces for nodes
-    \item The simulation shall be able to read links in the network between interfaces
-    \item The simulation shall be able to read changes to the network topology
-\end{enumerate}
+    \paragraph{Network Interfaces} The simulation shall be able to read network interfaces for nodes
+    \paragraph{Network Links} The simulation shall be able to read links in the network between interfaces
+    \paragraph{Network Topology} The simulation shall be able to read changes to the network topology
 
 % NOTE: Believe we settled on no Network input.
 %\subsubsection{Network}
@@ -552,12 +546,10 @@ server.
   \label{output-formats}%
 }
 
-\begin{enumerate}
-    \item The system shall support outputting network data changes over time post-simulation
-		\item The system shall support outputting network fidelity over time post-simulation
-		\item The system shall support outputting topology changes over time post-simulation
-		\item The system shall support outputting agent and non-agent mobility patterns post simulation
-\end{enumerate}
+    \paragraph{Network Changes} The system shall support outputting network data changes over time post-simulation
+    \paragraph{Network Fidelity} The system shall support outputting network fidelity over time post-simulation
+	\paragraph{Topology Changes} The system shall support outputting topology changes over time post-simulation
+	\paragraph{Mobility Patterns} The system shall support outputting agent and non-agent mobility patterns post simulation
 
 %___________________________________________________________________________
 
@@ -566,36 +558,30 @@ server.
 }
 
 The following applies to STAGE's basic interface:
-\begin{enumerate}
-    \item The interface allows a user to define a scenario.
-    \item The scenario that will be defined by the interface will be written in the Scenario Language.
-    \item The interface allows a user to begin an experiment.
-    \item The interface allows a user to end an experiment.
-\end{enumerate}
+    \paragraph{Scenario} The interface allows a user to define a scenario.
+    \paragraph{Scenario Language} The scenario that will be defined by the interface will be written in the Scenario Language.
+    \paragraph{Beginning Experiment} The interface allows a user to begin an experiment.
+    \paragraph{Ending Experiment} The interface allows a user to end an experiment.
 
 The following applies to STAGE's Visualization Engine (VE):
-\begin{enumerate}
-    \item The VE will display varying types of terrain, as defined by the environment.
-    \item The VE will display mobile and static world objects, as defined by the scenario.
-    \item The VE will display mobile agents.
-    \item The VE will find the path for an object to move to a given coordinate, if there are no objects between it and the destination.
-    \item The VE is able to display 300 models in a given scenario.
-    \item The VE limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
-    \item The VE component is modular, i.e. it can be removed from the framework without affecting functionality (with the exception of the visuals).
-    \item The VE runs in real-time.
-    \item The VE is able to display the world from more than one point of view.
-    \item The VE is able to display the world from any given point of view.
-\end{enumerate}
+    \paragraph{Terrain} The VE will display varying types of terrain, as defined by the environment.
+    \paragraph{World Objects} The VE will display mobile and static world objects, as defined by the scenario.
+    \paragraph{Mobile Agents} The VE will display mobile agents.
+    \paragraph{Pathfinding} The VE will find the path for an object to move to a given coordinate, if there are no objects between it and the destination.
+    \paragraph{Maximum Models} The VE is able to display 300 models in a given scenario.
+    \paragraph{Limitations of Movement} The VE limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
+    \paragraph{Modularity} The VE component is modular, i.e. it can be removed from the framework without affecting functionality (with the exception of the visuals).
+    \paragraph{Timing} The VE runs in real-time.
+    \paragraph{Viewpoints} The VE is able to display the world from more than one point of view.
+    \paragraph{Viewpoints} The VE is able to display the world from any given point of view.
 
 %___________________________________________________________________________
 
 \subsection{Extensibility%
   \label{extensibility}%
 }
-\begin{enumerate}
-    \item The system shall provide a means for users to create custom topologies.
-    \item The system shall provide a means for users to create custom agents.
-\end{enumerate}
+    \paragraph{Custom Topologies} The system shall provide a means for users to create custom topologies.
+    \paragraph{Custom Agents} The system shall provide a means for users to create custom agents.
 
 \subsection{Testing%
     \label{testing}%
