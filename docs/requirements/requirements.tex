@@ -49,9 +49,9 @@
 \title{\textbf{\mytitle}}
 \author{
     Dustin Ingram \\\url{dsi23@drexel.edu}
-    \and Aaron Rosenfeld \\\url{mjk75@drexel.edu}
-    \and Maria Kolakowska \\\url{fjc28@drexel.edu}
-    \and Frank Clark \\\url{ar374@drexel.edu}
+    \and Aaron Rosenfeld \\\url{ar374@drexel.edu}
+    \and Maria Kolakowska \\\url{mjk75@drexel.edu}
+    \and Frank Clark \\\url{fjc28@drexel.edu}
 }
 \date{\mydate\\Version 1}
 
@@ -433,11 +433,44 @@ It is assumed that a user, administrator, or developer has the ability to instal
   \label{specific-requirements}%
 }
 
-%___________________________________________________________________________
-
 \subsection{Functional Requirements%
     \label{functional}%
 }
+
+\subsubsection{Visualization}
+\paragraph{Node Position} The visualization shall display the physical location of network nodes.
+\paragraph{Entity Position} The visualization shall display the physical location of entities other than network nodes.
+
+\subsubsection{Topology Definition}
+\paragraph{Interfaces} The network definition language shall specify interfaces on each virtual node.  Specifically,
+each interface shall be described with a physical model (radio, wired, etc.) and an appropriate link-layer protocol.
+
+\paragraph{Networks} The network definition language shall specify networks to which interfaces may interact.  Networks
+are described with a unique identifier and physical layer model (e.g. radio propagation model).
+
+\paragraph{Links} The network definition language shall specify one-to-one links between interfaces.  A link is
+described by a physical layer model.
+
+\subsubsection{Scenario Definition}
+\paragraph{Mobility} The scenario definition language shall describe the mobility or each virtual node as a function of
+time.
+\paragraph{Events} Mobility shall be alterable as a result of events, specified in the scenario definition.
+\paragraph{Non-node Behavior} The scenario definition language shall describe the movement of and events triggered by
+entities other than virtual nodes.
+
+\subsubsection{Agent Framework}
+\paragraph{Agent Location} The agent framework shall specify on which virtual node(s) a given agent should operate.
+\paragraph{Startup} The agent framework shall specify the startup parameters of each agent.
+\paragraph{Collection} The agent framework shall specify the output parameters of each agent instance.
+
+\subsubsection{Distribution Framework}
+\paragraph{Physical Distribution} The distribution framework shall distribute virtual nodes evenly across physical
+nodes.  Further, it shall handle the establishment of agents on the proper physical node.
+
+\paragraph{Data Collection} The distribution framework shall aggregate simulation data at the end of a trial.
+
+\paragraph{Simulation Server} The distribution framework all organize physical nodes to interact with the simulation
+server.
 
 %___________________________________________________________________________
 
