@@ -267,52 +267,6 @@ The environment that is specified will contain terrain data and static world obj
 
 The user specifies the initial network configuration, i.e. the types of connections and which agents are connected in the simulation.  This network is simulated, and its configuration may change over time. For example, if two agents that have a Wi-Fi connection move too far away from each other, their connection ceases to exist. 
 
----------------------------------------------------------------------------
-
-This software performs two major functions: collecting network traffic related
-to web services, and anyalizing collected data in a user specified
-way using built-in or user-defined filters and processors.  In performing these
-actions separately, either piece may be substituted by third-party software
-which performs the same actions and communicates over the same interface
-described in this document.  
-
-Network administrators, among other technical people, want to know what web
-services are being used on their network.  Some users may not report that
-they're using specific web services on a network when they are, which may 
-conflict with other services.  By being able to see all of the web service
-invocations on a network, an administrator can determine where rogue web
-services are being used and better determine whether they offer something
-useful on the network.  
-
-Also, not all networks have a central registry of web services offered on the
-network, and most do not have a record of what web services from outside the
-network are consumed by users on the network.  More, many web services aren't
-clearly defined in WSDL or an equivalent format, so it is unclear how to consume
-the web service without a formal definition.  --------- constructs an
-ad-hoc registry of web services is observes being consumed in a defined way.
-This registry can then be used to let users consume these previously undefined
-web services.
-
-Some networks have a requirement that all services being used on them be
-encrypted as the network itself cannot be trusted.  --------- is able to
-show which services being used on a network are secure (either fully encrypted
-traffic or encrypted data with cleartext headers) and which are insecure.  By
-looking at the specific traffic an administrator can learn what pieces of the
-network are vulnerable.
-
-Questions commonly asked consist of: whether a web service is actively being used, if
-there's a pattern to who uses a specific web service, or whether there's a
-pattern to when a specific web service is used.  Web service developers,
-as well as network administrators, frequently want to know what users and/or
-servers are using specific web services and when.  This allows them to
-determine to whom a specific service is useful, who uses an unauthorized web
-service, and other similar situations.
-
-In debugging web services, developers need to see what data is being sent to
-the web service during invocation and usage.  Instead of using a program like
-Wireshark to have to look at the packets of a web service invocation,
-developers can use --------- to see where, if anywhere, the data actually
-sent differs from what should be sent.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 
 %___________________________________________________________________________
@@ -665,25 +619,6 @@ The following applies to STAGE's Visualization Engine (VE):
     \item The VE will display mobile and static world objects, as defined by the scenario.
     \item The VE will display mobile agents.
     \item The VE will find the path for an agent to move to a given destination.
-\end{enumerate}
-
--------------------------------------------
-These requirements apply to both the Graphical User Interface (GUI) and the
-Command Line Interface (CLI).
-
-\begin{enumerate}
-    \item The interface shall provide access to raw unfiltered captured
-        web service information.
-    \item The interface shall provide the ability to filter web
-        services based on user supplied criteria.
-    \item The interface shall provide the ability to process web
-        service lists to gain more information.
-    \item The interface shall give the user the ability to produce
-        reports based off the information in the interface.
-    \item The interface shall provide a method for providing a
-        detailed inspection of web services.
-    \item The interface shall provide a method for viewing
-        communication chain (Per user queries/responses from a server).
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
 %___________________________________________________________________________
