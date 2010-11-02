@@ -312,87 +312,63 @@ sent differs from what should be sent.
   \label{user-characteristics}%
 }
 
-The system has three different types of users:  administrators, developers and
-traditional users.  Each type of user has different goals and needs to use
-different parts of the system.  These user roles, while they may be performed
-by the same user, are here split into the three distinct roles for clairty:
+% \TODO: intro
 
 %___________________________________________________________________________
 
-\subsubsection{Users: Jamie, Junior Data Analyst%
-  \label{jamie}%
+\subsubsection{User: Alice, Project Manager%
+  \label{alice}%
 }
 
-Jamie solely uses the GUI to run/view web service analyst reports.  Jamie wants
-to complete the tasks below on a network in real-time as allowed by the
-administrator, or based on a saved file of a previous capture in the GUI.
-%
-Tasks:
+Alice uses STAGE for demonstrations and to acquire funding for research.  Alice wants to complete the tasks below with
+the visualization:
+
 \begin{itemize*}
-    \item Get the full list of all services invoked
-    \item See how to invoke a specific service
-    \item View common services
-    \item View rare services
-    \item Finding patterns in service invocations
-    \item Finding exceptions (anti-patterns) to the previous patterns
-    \item Run reports and filtering by any combination of:
-    \begin{itemize*}
-        \item specific services
-        \item service specific criteria (e.g. Google Maps search vs. Google Maps display)
-        \item source IP address
-        \item destination IP address
-        \item protocol
-        \item protocol specific criteria (e.g. filtering SOAP content by Request Time)
-        \item date/time
-        \item secure services
-        \item insecure services
-    \end{itemize*}
-    \item Run reports with custom filters and processors setup by Susan
+    \item Start a simulation
+    \item View the simulation in real or simulated time
+    \item Move the viewpoint
+    \item Visualize simulation events including link changes and entity movements
+    \item View output from agents if implemented
 \end{itemize*}
 
-%___________________________________________________________________________
-
-\subsubsection{Developers: Susan; Senior Applications Developer%
-  \label{susan}%
+\subsubsection{User: Bob, Agent Algorithm Researcher%
+  \label{bob}%
 }
 
-Susan needs to add more functionality to the application.  Susan wants to
-complete the following tasks on a network in real-time as allowed by the administrator,
-or based on a saved file of a previous capture in either CLI or GUI mode.
-%
-Tasks:
+Bob researches agent algorithms and uses STAGE to compare their effectiveness.  Bob wants to complete the tasks below:
+
 \begin{itemize*}
-    \item Use an API
-    \item Run application in CLI mode and/or GUI mode for testing
-    \item Inspect their own services
-    \item Add new protocols and/or services to be reported on
+    \item Use the API to implement agents which run on network nodes
+    \item Use the visualizer to assure scenarios are properly setup
+    \item Disable the visualizer and run scenarios many times
+    \item Collect aggregate data from scenario trials
 \end{itemize*}
 
-%___________________________________________________________________________
-
-\subsubsection{Administrators: Zed; Systems Administrator%
-  \label{zed}%
+\subsubsection{User: Carol, Network Protocol Developer%
+  \label{bob}%
 }
 
-Zed needs to capture traffic coming over the network card to store it in Pcap
-format and/or allow Susan and Jamie to run analysis against the live network
-stream.  Zed needs to do this, as capturing from the network card requires root
-level access on the computer the system is being run on.  
-%
-Zed also needs to be able to:
+Carol uses STAGE to test networking protocols.  Specifically, she tries different network protocols with a single agent
+setup to find the best combination.  Carol wants to complete the tasks below:
+
 \begin{itemize*}
-    \item Deploy the software
-    \begin{itemize*}
-        \item on a single machine for full network scanning
-        \item on a single machine for scanning that same single machine
-        \item on a single machine for analysis of previously saved captures
-        \item with the GUI frontend (and associated files)
-        \item with the Data Processing layer (and associated files)
-    \end{itemize*}
-    \item Capture from the network in real time
-    \item Store the capture in a Pcap file
+    \item Use the networking component to implement networking protocols
+    \item Disable the visualizer and run scenarios many times
+    \item Collect aggregate data from scenario trials
 \end{itemize*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\ %
+
+\subsubsection{User: Dave, Large Scale Simulator%
+  \label{bob}%
+}
+
+Dave uses STAGE to run large scale simulations which run slower than real-time on his personal computer.  Dave wants to
+complete the tasks below:
+
+\begin{itemize*}
+    \item Distribute agent instances to multiple physical machines
+    \item Abstract the physical links from the simulation
+    \item Coordinate data collection after simulations
+\end{itemize*}
 %___________________________________________________________________________
 
 \subsection{Constraints%
