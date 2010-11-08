@@ -234,14 +234,17 @@ Users of STAGE are researchers looking to improve or test their current agent/ne
 \item[Agent]
 	Agents are emulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topolgoies.   
 
-\item[Distribution Framework]
-	The distribution framework facilitates the distribution of the emulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single emulation, at the system's discretion.
+\item[Distribution]
+	Distribution refers to the process of distributing the emulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single emualtion at the system's discretion.  A framework will be provided to allow the user to distribute their eumulation. 	
 
 \item[Node]
 	Nodes are virtual or physical machines that consist of agents and network interfaces.  If nodes are virtual, many nodes may run on one physical machine.  
 
 \item[Scenario]
 	Scenario is comprised of a scripted language indicating the location and mobility patterns of any emulated nodes within the virtual world. These nodes consist of agents (see definiton of 'Agent') and non-agent world objects such as planes, boats, ground vehicles, etc. 
+
+\item[Terrain]
+	Terrain refers to the simulated landscape running in the emulation.  This includes such geography as the slope of the land, the tree density, water v.s. land surfaces, etc.
 
 \item[Topology]
 	Topology refers to the network topology between nodes. It is described with a scripting language.  This language specifies the details of network interfaces on each emulated node, including radio models and throughput characteristics.  It describes any physical or wireless links that connect these interfaces.  Further, it indicates changes in linkage over time such as a wireless interface switches wireless LANs or a physical link being created or severed. 
@@ -490,7 +493,7 @@ entities other than virtual nodes.
 
 \subsubsection{Distribution Framework}
 \paragraph{Physical Distribution} The distribution framework distributes virtual nodes evenly across physical
-nodes.  Further, it shall handle the establishment of agents on the proper physical node.
+nodes.  Further, it handles the establishment of agents on the proper physical node.
 
 \paragraph{Data Collection} The distribution framework aggregates simulation data at the end of a trial.
 
