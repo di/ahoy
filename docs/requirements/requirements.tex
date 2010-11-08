@@ -465,8 +465,25 @@ It is assumed that a user, administrator, or developer has the ability to instal
 }
 
 \subsubsection{Visualization}
-\paragraph{Node Position} The visualization displays the physical location of network nodes.
-\paragraph{Entity Position} The visualization displays the physical location of entities other than network nodes.
+The following applies to STAGE's Visualization Engine (VE):
+    \paragraph{Terrain} The VE displays varying types of terrain, as defined by the environment.
+    \paragraph{World Objects} The VE displays mobile and static world objects, as defined by the scenario.
+    \paragraph{Mobile Agents} The VE displays mobile nodes.
+    \paragraph{Pathfinding} The VE finds the path for an object to move to a given coordinate.
+    \paragraph{Maximum Models} The VE is able to display 300 models in a given scenario.
+    \paragraph{Modularity} The VE component is modular, i.e. it can be removed from the framework without affecting functionality (with the exception of the visuals).
+    \paragraph{Timing} The VE runs in real-time.
+    \paragraph{Viewpoints} The VE is able to display the world from more than one point of view.
+    \paragraph{Viewpoints} The VE is able to display the world from any given point of view.
+
+\subsection{Simulation Engine}
+The following applies to STAGE's Simulation Engine (SE):
+    \paragraph{Timing} The SE runs in real-time.
+    \paragraph{Limitations of Movement} The SE limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
+    \paragraph{Pathfinding} The SE finds the path for an object to move to a given coordinate.
+    \paragraph{Collision Prevention} When finding a path, the SE ensures the path will not steer an agent to navigate into world objects.
+    \paragraph{Maximum Models} The SE keeps in memory up to 300 nodes.
+    \paragraph{User Intervention} The SE allows for the interruption or change of events by human input.
 
 \subsubsection{Topology Definition}
 \paragraph{Interfaces} The network definition language specifies interfaces on each virtual node.  Specifically,
@@ -565,18 +582,6 @@ The following applies to STAGE's basic interface:
     \paragraph{Scenario Language} The scenario defined by the interface is written in the Scenario Language.
     \paragraph{Beginning Experiment} The interface allows a user to begin an experiment.
     \paragraph{Ending Experiment} The interface allows a user to end an experiment.
-
-The following applies to STAGE's Visualization Engine (VE):
-    \paragraph{Terrain} The VE displays varying types of terrain, as defined by the environment.
-    \paragraph{World Objects} The VE displays mobile and static world objects, as defined by the scenario.
-    \paragraph{Mobile Agents} The VE displays mobile agents.
-    \paragraph{Pathfinding} The VE finds the path for an object to move to a given coordinate, if there are no objects between it and the destination.
-    \paragraph{Maximum Models} The VE is able to display 300 models in a given scenario.
-    \paragraph{Limitations of Movement} The VE limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
-    \paragraph{Modularity} The VE component is modular, i.e. it can be removed from the framework without affecting functionality (with the exception of the visuals).
-    \paragraph{Timing} The VE runs in real-time.
-    \paragraph{Viewpoints} The VE is able to display the world from more than one point of view.
-    \paragraph{Viewpoints} The VE is able to display the world from any given point of view.
 
 %___________________________________________________________________________
 
