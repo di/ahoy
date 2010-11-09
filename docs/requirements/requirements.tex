@@ -385,7 +385,7 @@ The system has four different types of users.  Each type of user has different g
 
 %___________________________________________________________________________
 
-\subsubsection{User: Alice, Project Manager%
+\subsubsection{Fictional User: Alice, Project Manager%
   \label{alice}%
 }
 
@@ -400,7 +400,7 @@ the visualization:
     \item View output from agents if implemented
 \end{itemize*}
 
-\subsubsection{User: Bob, Agent Algorithm Researcher%
+\subsubsection{Fictional User: Bob, Agent Algorithm Researcher%
   \label{bob}%
 }
 
@@ -413,7 +413,7 @@ Bob researches agent algorithms and uses STAGE to compare their effectiveness.  
     \item Collect aggregate data from scenario trials
 \end{itemize*}
 
-\subsubsection{User: Carol, Network Protocol Developer%
+\subsubsection{Fictional User: Carol, Network Protocol Developer%
   \label{bob}%
 }
 
@@ -426,7 +426,7 @@ setup to find the best combination.  Carol wants to complete the tasks below:
     \item Collect aggregate data from scenario trials
 \end{itemize*}
 
-\subsubsection{User: Dave, Large Scale Simulator%
+\subsubsection{Fictional User: Dave, Large Scale Simulator%
   \label{bob}%
 }
 
@@ -477,7 +477,7 @@ The following applies to STAGE's Visualization Engine (VE):
     \paragraph{Viewpoints} The VE is able to display the world from any given point of view.
 
 \subsection{Simulation Engine}
-The following applies to STAGE's Simulation Engine (SE):
+	The following applies to STAGE's Simulation Engine (SE):
     \paragraph{Timing} The SE runs in real-time.
     \paragraph{Limitations of Movement} The SE limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
     \paragraph{Pathfinding} The SE finds the path for an object to move to a given coordinate.
@@ -486,36 +486,25 @@ The following applies to STAGE's Simulation Engine (SE):
     \paragraph{User Intervention} The SE allows for the interruption or change of events by human input.
 
 \subsubsection{Topology Definition}
-\paragraph{Interfaces} The network definition language specifies interfaces on each virtual node.  Specifically,
-each interface is described with a physical model (radio, wired, etc.) and an appropriate link-layer protocol.
-
-\paragraph{Networks} The network definition language specifies networks to which interfaces may interact.  Networks
-are described with a unique identifier and physical layer model (e.g. radio propagation model).
-
-\paragraph{Links} The network definition language specifies one-to-one links between interfaces.  A link is
-described by a physical layer model.
+	\paragraph{Interfaces} The network definition language specifies interfaces on each virtual node.  Specifically, each interface is described with a physical model (radio, wired, etc.) and an appropriate link-layer protocol.
+	\paragraph{Networks} The network definition language specifies networks to which interfaces may interact.  Networks are described with a unique identifier and physical layer model (e.g. radio propagation model).
+	\paragraph{Links} The network definition language specifies one-to-one links between interfaces.  A link is	described by a physical layer model.
 
 \subsubsection{Scenario Definition}
-\paragraph{Location} The scenario definition language defines the location of agent and non-agent world objects
-\paragraph{Mobility} The scenario definition language describes the mobility or each virtual node as a function of
-time.
-\paragraph{Events} Mobility is alterable as a result of events, specified in the scenario definition.
-\paragraph{Non-node Behavior} The scenario definition language describes the movement of and events triggered by
-entities other than virtual nodes.
+	\paragraph{Location} The scenario definition language defines the location of agent and non-agent world objects.
+	\paragraph{Mobility} The scenario definition language describes the mobility or each virtual node as a function of time.
+	\paragraph{Events} Mobility is alterable as a result of events, specified in the scenario definition.
+	\paragraph{Non-node Behavior} The scenario definition language describes the movement of and events triggered by entities other than virtual nodes.
 
 \subsubsection{Agent Framework}
-\paragraph{Agent Location} The agent framework specifies on which virtual node(s) a given agent should operate.
-\paragraph{Startup} The agent framework specifies the startup parameters of each agent.
-\paragraph{Collection} The agent framework specifies the output parameters of each agent instance.
+	\paragraph{Agent Location} The agent framework specifies on which virtual node(s) a given agent should operate.
+	\paragraph{Startup} The agent framework specifies the startup parameters of each agent.
+	\paragraph{Collection} The agent framework specifies the output parameters of each agent instance.
 
 \subsubsection{Distribution Framework}
-\paragraph{Physical Distribution} The distribution framework distributes virtual nodes evenly across physical
-nodes.  Further, it handles the establishment of agents on the proper physical node.
-
-\paragraph{Data Collection} The distribution framework aggregates simulation data at the end of a trial.
-
-\paragraph{Simulation Server} The distribution framework organizes physical nodes to interact with the simulation
-server.
+	\paragraph{Physical Distribution} The distribution framework distributes virtual nodes evenly across physical nodes. Further, it handles the establishment of agents on the proper physical node.
+	\paragraph{Data Collection} The distribution framework aggregates simulation data at the end of a trial.
+	\paragraph{Simulation Server} The distribution framework organizes physical nodes to interact with the simulation server.
 
 %___________________________________________________________________________
 
