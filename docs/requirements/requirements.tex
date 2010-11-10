@@ -172,7 +172,7 @@
 	\and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
     \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
 }
-\date{\mydate\\Version 2}
+\date{\mydate\\Version 3}
 
 \begin{document}
 \pagenumbering{roman}
@@ -189,16 +189,7 @@
 \maketitle
 
 \begin{abstract}
-STAGE is an event-based simulation environment used to compare the effectiveness of different software agents, network
-configurations, and sensor data in real-world environments.  It is comprised of a distributed simulation engine,
-visualizer, and programming interface through which developers create agent software.  Communications between virtual
-nodes is also simulated, providing highly realistic scenarios.
-
-%STAGE provides the capability to test the veracity of system-level sensors and component-level algorithms in the
-%laboratory against virtual operations using data from simulated sensors and nodes. These nodes work with scripted or
-%real time data, depending on the user's need. This network and sensor testbed allows users to independently vary its
-%topology, application suites, and the environment. It also emulates the communication between these components. A
-%visualization tool is provided to the user for demoing and analyzing.
+STAGE is an event-based simulation environment used to compare the effectiveness of different combinations of software agents, network configurations, and sensor data in real-world environments.  It is comprised of a distributed simulation engine, visualizer, and programming interface through which developers create agent software and network topologies.  Communication between virtual nodes is also simulated, providing highly realistic scenarios.
 \end{abstract}
 
 \setcounter{tocdepth}{4}
@@ -274,7 +265,7 @@ These documents have been used as reference materials for various technologies i
 \begin{itemize*}
 	\item SPEYES: Sensing and Patrolling Enablers Yielding Effective SASO: \url{http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=1559616}
 	\item Service Sniffer Requirements Document: \url{http://servicesniffer.net/documents/requirements.html}
-  \item ASRA: %place ASRA reference here%
+    \item ASRA: \url{www.cs.drexel.edu/~dn53/papers/paper_cameraready.pdf}
 \end{itemize*}
 
 
@@ -567,9 +558,11 @@ The following applies to STAGE's Visualization Engine (VE):
 \subsection{Output Formats%
   \label{output-formats}%
 }
+\subsubsection{Scenario}
+    \paragraph{Network Changes} The system supports outputting network data changes over time post-simulation
+    \paragraph{Network Fidelity} The system supports outputting network fidelity over time post-simulation
 
-  \paragraph{Network Changes} The system supports outputting network data changes over time post-simulation
-  \paragraph{Network Fidelity} The system supports outputting network fidelity over time post-simulation
+\subsubsection{Topology}
 	\paragraph{Topology Changes} The system supports outputting topology changes over time post-simulation
 	\paragraph{Mobility Patterns} The system supports outputting agent and non-agent mobility patterns post simulation
 
@@ -580,8 +573,10 @@ The following applies to STAGE's Visualization Engine (VE):
 }
 
 The following applies to STAGE's basic interface:
+\subsubsection{Scenarios}
     \paragraph{Scenario} The interface allows a user to define a scenario.
     \paragraph{Scenario Language} The scenario defined by the interface is written in the Scenario Language.
+\subsubsection{Experimentation}
     \paragraph{Beginning Experiment} The interface allows a user to begin an experiment.
     \paragraph{Ending Experiment} The interface allows a user to end an experiment.
 
@@ -590,6 +585,7 @@ The following applies to STAGE's basic interface:
 \subsection{Extensibility%
   \label{extensibility}%
 }
+\subsubsection{Customization}
     \paragraph{Custom Topologies} The system provides a means for users to create custom topologies.
     \paragraph{Custom Agents} The system provides a means for users to create custom agents.
 
