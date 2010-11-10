@@ -1,5 +1,7 @@
 import sys
 from threading import Thread
+from stage.model import Model
+from stage.agent import Agent
 
 class Node :
     def __init__(self, model) :
@@ -7,7 +9,7 @@ class Node :
 
     def start(self) :
         for agent_model in self._model.get('agents') :
-            Thread(target=Agent(agent_model)).start()
+            Agent(agent_model).start()
 
 if __name__ == '__main__' :
-    Node(sys.args[1]).start()
+    Node(sys.argv[1]).start()

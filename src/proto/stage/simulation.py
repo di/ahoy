@@ -1,3 +1,4 @@
+import subprocess
 import sys
 
 class Simulation :
@@ -6,15 +7,17 @@ class Simulation :
         self._running = True
         self._time = 0
         self._tic = tic
+        self._scen_def = scen_def
+        self._net_def = net_def
 
     def stop(self) :
         self._running = False
 
     def initialize(self) :
-        import scen_def
-        import net_def
+        scenmod = __import__(scen_def.split('.')[0])
+        scenario = getattr(scenmod, scen_def.split('.')[1])()
         for node_model in scenario.get_nodes() :
-            os.Popen(('python node.py ' + node_model.__str__()).split(' '))
+            subprocess.Popen(('python node.py ' + node_model.__str__()).split(' '))
 
     def add_event(self, time, event) :
         if not self._events.has_key(time) :
@@ -23,7 +26,7 @@ class Simulation :
 
     def start(self) :
         while self._running :
-            if self._events.size() > 0 :
+            if len(self._events) > 0 :
                 if tic != None :
                     for time in filter(lambda t : t <= self._time, self._events) :
                         for e in self._events[next] :
@@ -40,7 +43,7 @@ class Simulation :
                     del self._events[next]
 
 if __name__ == '__main__' :
-    scen_def, net_def = sys.args[1:]
+    scen_def, net_def = sys.argv[1:]
     s = Simulation(scen_def, net_def)
     s.initialize()
     s.start()
