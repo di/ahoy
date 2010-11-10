@@ -1,6 +1,8 @@
-class Event :
-    def __init__(self) :
-        pass
+from events import *
 
-    def invoke(self) :
-        pass
+class Event :
+    def __init__(self, event_model) :
+        self._model = event_model
+
+    def __str__(self) :
+        return self._model.__str__()
