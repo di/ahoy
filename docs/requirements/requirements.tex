@@ -189,7 +189,16 @@
 \maketitle
 
 \begin{abstract}
-STAGE provides the capability to test the veracity of system-level sensors and component-level algorithms in the laboratory against virtual operations using data from simulated sensors and nodes. These nodes work with scripted or real time data, depending on the user's need. This network and sensor testbed allows users to independently vary its topology, application suites, and the environment. It also emulates the communication between these components. A visualization tool is provided to the user for demoing and analyzing.
+STAGE is an event-based simulation environment used to compare the effectiveness of different software agents, network
+configurations, and sensor data in real-world environments.  It is comprised of a distributed simulation engine,
+visualizer, and programming interface through which developers create agent software.  Communications between virtual
+nodes is also simulated, providing highly realistic scenarios.
+
+%STAGE provides the capability to test the veracity of system-level sensors and component-level algorithms in the
+%laboratory against virtual operations using data from simulated sensors and nodes. These nodes work with scripted or
+%real time data, depending on the user's need. This network and sensor testbed allows users to independently vary its
+%topology, application suites, and the environment. It also emulates the communication between these components. A
+%visualization tool is provided to the user for demoing and analyzing.
 \end{abstract}
 
 \setcounter{tocdepth}{4}
@@ -337,7 +346,7 @@ STAGE requires that the machine running the system has one to many network inter
   \label{software-interfaces}%
 }
 
-STAGE requires the use of Linux Namespaces' kernel virtualization as well as OpenGL in order to use the visualizer.
+STAGE requires the use of OpenGL in order to use the visualizer.
 
 %___________________________________________________________________________
 
@@ -361,18 +370,20 @@ STAGE requires that the system is configured per-site to create a distributed em
   \label{product-functions}%
 }
 
-This software is a testbed, where the user specifies an environment, network configuration, and applications to run in the scenario. Each of these items may be varied independently.
+This software is a testbed, where the users specify an environment, network configuration, and agent software running in
+the simulation. Each of these items may be varied independently at runtime.
 
-The general function of this software is to run a simulation.  The software collects data as it runs, which can then be used to evaluate the combination of simulation settings. 
-This data is particularly helpful in evaluating the effectiveness of the applications being tested in the scenario.
+The primary function of this software is to coordinate an event-based simulation comprised of virtual nodes, other world objects,
+agent software, and network devices.  Specifically the software starts simulations, handles all events, and determines
+when a scenario is complete.  The simulation may run in either simulated time or real-time depending on the user's
+configuration.
 
-There also exists a visualization component of the software. It is useful for quickly gauging the current simulation state, though is not required for running the simulation.  The visualization uses data from the environment configuration to display various types of terrain.
+STAGE also provides an optional visualization component, useful for monitoring the current simulation state.  The
+visualization uses data provided by the simulation to display world objects including nodes and terrain, as well as
+annotations such as network-link changes and node paths.
 
-The simulation runs in real time.  This allows for realistic simulations, where humans may interfere with self-directing agents in the application. There exists other simulation software which can display a scripted demo, however, this does not allow for realistic human intervention.  Real-time simulations are necessary for training simulations.
-
-The specified environment contains terrain data and static world objects, so that it may mirror existing real-world locations.  This is useful for testing the effectiveness of agent behavior in real-world situations, such as trying to get rovers to secure a given range of city blocks in Philadelphia. Though it may be of some benefit to test this with random mazes, it is more useful to test in an environment that models the existing world.
-
-The user specifies the initial network configuration, i.e. the types of connections and which agents are connected in the simulation.  This network is simulated, and its configuration may change over time. For example, if two agents that have a Wi-Fi connection move too far apart, their connection ceases to exist. 
+Simulation of inter-node communications is handled by STAGE's networking component.  This component provides realistic
+simulation of network links and virtual node networking stacks.
 
 %___________________________________________________________________________
 
