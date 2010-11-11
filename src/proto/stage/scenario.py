@@ -1,3 +1,6 @@
 class Scenario :
     def __init__(self) :
-        pass
+        self._nodes = []
+
+    def get_nodes(self) :
+        return self._nodes

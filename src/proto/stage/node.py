@@ -13,3 +13,5 @@ class Node :
 
 if __name__ == '__main__' :
     Node(sys.argv[1]).start()
+    while True :
+        pass
