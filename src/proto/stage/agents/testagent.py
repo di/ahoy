@@ -8,15 +8,15 @@ class TestAgent(Agent) :
         print '--- Starting ---'
 
     def _on_message(self, src, message, iface) :
-        print 'Agent on %s got %s from %s on %s' % (self._owner.get_name(), message, src, iface)
+        print 'Agent on %s got %s from %s on %s' % (self._owner.get_name(), message, src, iface.get('ssid'))
 
     def run(self) :
         if self._model.get('job') == 'recv' :
-            self._api.recv('eth0', self._on_message)
+            self._api.recv(self._owner.get_model().get('interfaces')['eth0'], self._on_message)
         else :
             while True :
-                self._api.send('eth0', 'n1', str(self._seq))
-                self._api.send('eth0', 'n3', str(self._seq))
+                self._api.send(self._owner.get_model().get('interfaces')['eth0'], 'n1', str(self._seq))
+                self._api.send(self._owner.get_model().get('interfaces')['eth0'], 'n3', str(self._seq))
                 print 'Agent on %s sent %s' % (self._owner.get_name(), self._seq)
                 self._seq += 1
                 time.sleep(1)

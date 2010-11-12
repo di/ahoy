@@ -1,9 +1,8 @@
 from threading import Thread
 from stage.api import API
 
-class Agent :#(Thread) :
+class Agent :
     def __init__(self, model) :
-        #Thread.__init__(self)
         self._model = model
 
     def set_owner(self, node) :

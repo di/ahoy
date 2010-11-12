@@ -2,7 +2,7 @@ import sys
 import socket
 import struct
 import time
-from threading import Thread
+from threading import Thread, Condition
 from stage.model import Model
 from stage.event import Event
 
@@ -27,6 +27,7 @@ class EventPubSub(Thread) :
 
     def _process(self, data, addr) :
         typestr, modelstr = data.strip().split(' ', 1)
+
         if typestr in self._subscriptions.keys() or '*' in self._subscriptions.keys() :
             model = Model.from_string(modelstr)
             instance = Event(typestr, model)
