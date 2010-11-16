@@ -17,7 +17,7 @@ class Node :
     def start(self) :
         for agent_model in self._model.get('agents') :
             agent_model.set_owner(self)
-            Thread(target=agent_model.run()).start()#Agent(agent_model, self).start()
+            Thread(target=agent_model.run()).start()
 
 if __name__ == '__main__' :
     Node(sys.argv[1]).start()

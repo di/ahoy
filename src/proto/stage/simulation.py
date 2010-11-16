@@ -1,7 +1,9 @@
 import subprocess
 import sys
+import time
 from stage.api import API
 from stage.event import Event
+from stage.model import Model
 
 class Simulation :
     def __init__(self, scen_def, net_def) :
@@ -29,6 +31,9 @@ class Simulation :
         
         for node_model in self._scen_inst.get_nodes() :
             subprocess.Popen(('python node.py ' + node_model.__str__()).split(' '))
+
+        time.sleep(1)
+        self._api.get_event_channel().publish(Event('start', Model()))
 
         while True :
             pass

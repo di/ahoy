@@ -13,6 +13,7 @@ class EventPubSub(Thread) :
         self._ip = ip
         self._port = port
         self._subscriptions = {}
+        self._conditions = {}
 
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -25,8 +26,19 @@ class EventPubSub(Thread) :
     def subscribe(self, event_type, callback, **kwds) :
         self._subscriptions[event_type] = (callback, kwds)
 
+    def block_until(self, event_type) :
+        if not self._conditions.has_key(event_type) :
+            self._conditions[event_type] = Condition()
+        self._conditions[event_type].acquire()
+        self._conditions[event_type].wait()
+        self._conditions[event_type].release()
+
     def _process(self, data, addr) :
         typestr, modelstr = data.strip().split(' ', 1)
+        if typestr in self._conditions.keys() :
+            self._conditions[typestr].acquire()
+            self._conditions[typestr].notify_all()
+            self._conditions[typestr].release()
 
         if typestr in self._subscriptions.keys() or '*' in self._subscriptions.keys() :
             model = Model.from_string(modelstr)

@@ -13,7 +13,10 @@ class TestAgent(Agent) :
     def run(self) :
         if self._model.get('job') == 'recv' :
             self._api.recv(self._owner.get_model().get('interfaces')['eth0'], self._on_message)
+            while True :
+                pass
         else :
+            self._api.get_event_channel().block_until('start')
             while True :
                 self._api.send(self._owner.get_model().get('interfaces')['eth0'], 'n1', str(self._seq))
                 self._api.send(self._owner.get_model().get('interfaces')['eth0'], 'n3', str(self._seq))
