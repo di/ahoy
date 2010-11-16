@@ -22,4 +22,6 @@ class TestAgent(Agent) :
                 self._api.send(self._owner.get_model().get('interfaces')['eth0'], 'n3', str(self._seq))
                 print 'Agent on %s sent %s' % (self._owner.get_name(), self._seq)
                 self._seq += 1
+                if self._owner.get_name() == 'n0' :
+                    self._api.set_position((self._seq, self._seq))
                 time.sleep(1)

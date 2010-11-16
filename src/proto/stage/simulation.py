@@ -18,9 +18,10 @@ class Simulation :
     def _event_callback(self, event) :
         if event.get_type() == 'SENT' :
             self._api.get_event_channel().publish(Event('RECV', event.get_model()))
-        else if event.get_type() == 'MOVEREQ' :
-            self._scen_def.get_nodes()[event.get_model().get('name')].get_model().set('position', event.get_model().get('pos'))
-            self._api.send('MOVEACPT', Model(name=event.get_model().get('name'), pos=event.get_model().get('pos')))
+        elif event.get_type() == 'MOVEREQ' :
+            print 'SIMULATION GOT MOVEREQ %s %s' % (event.get_model().get('name'), event.get_model().get('pos'))
+            self._scen_inst.get_nodes()[int(event.get_model().get('name')[1:])].set('position', event.get_model().get('pos'))
+            self._api.get_event_channel().publish(Event('MOVEACPT', Model(name=event.get_model().get('name'), pos=event.get_model().get('pos'))))
 
     def stop(self) :
         self._running = False

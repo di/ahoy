@@ -27,7 +27,7 @@ class API :
             user_cb(event.get_model().get('src'), event.get_model().get('message'), args['iface'])
 
     def set_position(self, pos) :
-        self.get_event_channel().send(Event('MOVEREQ', Model(pos=pos, name=self._node.get_name())))
+        self.get_event_channel().publish(Event('MOVEREQ', Model(pos=pos, name=self._node.get_name())))
 
     def get_position(self) :
        return self._node.get_position() 
