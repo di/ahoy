@@ -7,7 +7,7 @@ class ScenarioConcrete(Scenario) :
         Scenario.__init__(self)
 
         for n in range(0, 4) :
-            m = Model(name='n%s' % n, position='1,2', agents = [], interfaces = {})
+            m = Model(name='n%s' % n, position=(0,0), agents = [], interfaces = {})
 
             if n % 2 == 0 :
                 m.get('agents').append(TestAgent(Model(job='send')))

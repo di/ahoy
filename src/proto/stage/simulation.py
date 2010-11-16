@@ -25,6 +25,11 @@ class Simulation :
             print 'SIMULATION GOT MOVEREQ %s %s' % (event.get_model().get('name'), event.get_model().get('pos'))
             self._scen_inst.get_nodes()[int(event.get_model().get('name')[1:])].set('position', event.get_model().get('pos'))
             self._api.get_event_channel().publish(Event('MOVEACPT', Model(name=event.get_model().get('name'), pos=event.get_model().get('pos'))))
+            for other_node in self._scen_inst.get_nodes() :
+                n1 = self.get_scen().get_nodes()[int(event.get_model().get('name')[1:])]
+                n2 = self.get_scen().get_nodes()[int(other_node.get('name')[1:])]
+                if other_node.get('name') != event.get_model().get('name') :
+                    self._network_sim.can_transmit(n1, n2)
 
     def get_scen(self) :
         return self._scen_inst
