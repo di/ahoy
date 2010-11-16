@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import time
+from stage.networksim import NetworkSim
 from stage.api import API
 from stage.event import Event
 from stage.model import Model
@@ -15,13 +16,21 @@ class Simulation :
         self._scen_inst = None
         self._net_inst = None
 
+        self._network_sim = NetworkSim(self)
+
     def _event_callback(self, event) :
         if event.get_type() == 'SENT' :
-            self._api.get_event_channel().publish(Event('RECV', event.get_model()))
+            self._network_sim.on_sent_event(event)
         elif event.get_type() == 'MOVEREQ' :
             print 'SIMULATION GOT MOVEREQ %s %s' % (event.get_model().get('name'), event.get_model().get('pos'))
             self._scen_inst.get_nodes()[int(event.get_model().get('name')[1:])].set('position', event.get_model().get('pos'))
             self._api.get_event_channel().publish(Event('MOVEACPT', Model(name=event.get_model().get('name'), pos=event.get_model().get('pos'))))
+
+    def get_scen(self) :
+        return self._scen_inst
+
+    def get_api(self) :
+        return self._api
 
     def stop(self) :
         self._running = False
