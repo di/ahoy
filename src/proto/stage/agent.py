@@ -7,7 +7,7 @@ class Agent :
 
     def set_owner(self, node) :
         self._owner = node
-        self._api = API(node.get_name())
+        self._api = API(node)
 
     def run(self) :
         pass

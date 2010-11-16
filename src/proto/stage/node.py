@@ -7,6 +7,16 @@ class Node :
     def __init__(self, model) :
         self._model = Model.from_string(model)
         self._name = self._model.get('name')
+        self._api = API(self)
+        self._events.subscribe('MOVEACPT', self._on_move)
+        self._position = model.get('position')
+
+    def _on_move(self, event) :
+        if event.get('name') == self._name :
+            self._position = event.get_model().get('pos')
+
+    def get_position(self) :
+        return self._position
 
     def get_name(self) :
         return self._name
