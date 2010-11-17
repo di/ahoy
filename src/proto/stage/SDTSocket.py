@@ -18,8 +18,8 @@ class SDTSocket:
         self.port = port
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.verbose = False
-        self.fulllossthreshold
-        self.nolossthreshold
+        self.fulllossthreshold = None
+        self.nolossthreshold = None
 
     def send(self, command):
         if(self.sock.sendto(command,(self.addr, self.port))):
