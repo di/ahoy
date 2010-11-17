@@ -22,6 +22,8 @@ class SDTSocket:
         self.nolossthreshold = None
 
     def send(self, command):
+        print self.addr
+        print self.port
         if(self.sock.sendto(command,(self.addr, self.port))):
             return True
         return False

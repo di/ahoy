@@ -10,7 +10,7 @@ class sdt_foobar :
         self._channel.subscribe('LINK_DOWN', self.link_down)
         self._channel.subscribe('MOVEACPT', self.moveacpt)
         
-        self._sock = SDTSocket('127.0.0.1', 50737)
+        self._sock = SDTSocket('127.0.0.1', 50730)
         self._sock.setLossThresholds(100,101)
 
         self.lat_bot_left = 39.9534
@@ -37,7 +37,7 @@ class sdt_foobar :
         lat = self.lat_bot_left + (self.delta/self.random_scale)*y
         lon = self.lon_bot_left + (self.delta/self.random_scale)*x
         alt = (self.max_altitude/self.random_scale)*z
-        self._sock.handleLocationEvent(self, node, lat, lon, alt)
+        self._sock.handleLocationEvent(node, lat, lon, alt)
         self.debug("moveacpt: %s (%s, %s)" % (name, x, y))
 
     def debug(self, string) :
