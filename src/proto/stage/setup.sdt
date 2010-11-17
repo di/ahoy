@@ -1,0 +1,7 @@
+path "./sprites/;../../sdt/examples;../../sdt/examples/sprites;"
+bgbounds -75.1912,39.9579,-75.1957,39.9534
+
+defaultAltitudeType agl
+sprite helo image helo.png
+
+node 0 type helo label white
