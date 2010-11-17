@@ -23,5 +23,5 @@ class TestAgent(Agent) :
                 print 'Agent on %s sent %s' % (self._owner.get_name(), self._seq)
                 self._seq += 1
                 if self._owner.get_name() == 'n0' :
-                    self._api.set_position((self._seq, self._seq))
+                    self._api.set_position((self._seq, self._seq, 0))
                 time.sleep(1)
