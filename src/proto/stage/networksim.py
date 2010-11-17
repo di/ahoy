@@ -3,7 +3,7 @@ from stage.event import Event
 from stage.model import Model
 
 class NetworkSim :
-    TRANS_RANGE = 10
+    TRANS_RANGE = 15
     def __init__(self, simulation) :
         self._simulation = simulation
 

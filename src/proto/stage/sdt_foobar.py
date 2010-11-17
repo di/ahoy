@@ -28,8 +28,8 @@ class sdt_foobar :
     def link_down(self, event) :
         node1 = event.get_model().get('n1').get('name')
         node2 = event.get_model().get('n2').get('name')
-        self._sock.handlePathlossEvent(node1, node2, 0)
-        self.debug("link_down: %s, %s" % (node1, node2))
+        self._sock.handlePathlossEvent(node1, node2, -200)
+        #self.debug("link_down: %s, %s" % (node1, node2))
 
     def moveacpt(self, event) :
         node = event.get_model().get('name')
@@ -38,7 +38,7 @@ class sdt_foobar :
         lon = self.lon_bot_left + (self.delta/self.random_scale)*x
         alt = (self.max_altitude/self.random_scale)*z
         self._sock.handleLocationEvent(node, lat, lon, alt)
-        self.debug("moveacpt: %s (%s, %s)" % (name, x, y))
+        #self.debug("moveacpt: %s (%s, %s)" % (node, x, y))
 
     def debug(self, string) :
         print string

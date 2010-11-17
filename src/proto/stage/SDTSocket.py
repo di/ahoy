@@ -21,9 +21,7 @@ class SDTSocket:
         self.fulllossthreshold = None
         self.nolossthreshold = None
 
-    def send(self, command):
-        print self.addr
-        print self.port
+    def send_blah(self, command):
         if(self.sock.sendto(command,(self.addr, self.port))):
             return True
         return False
@@ -46,22 +44,24 @@ class SDTSocket:
     
     def handleLocationEvent(self, node, lat, lon, alt):
         cmd = "node " + str(node) + " position " + str(lon) + "," + str(lat) + "," + str(float(alt)) + "\n"
-        self.sock.send(cmd)
+        self.send_blah(cmd)
 
     def handlePathlossEvent(self, node1, node2, rx):
         #HARDCODED
         color = 'red'
+        linktype = '802.11'
         #/HARDCODED
 
         if rx <= -float(self.fulllossthreshold) :
-            cmd = 'delete link,%s,%s,%s\n' % (host1, host2, linktype)
+            cmd = 'delete link,%s,%s,%s\n' % (node1, node2, linktype)
         elif rx < -float(self.nolossthreshold) :
-            cmd = 'link %s,%s,%s line %s,%s\n' % (host1, host2, linktype, color, '1')
+            cmd = 'link %s,%s,%s line %s,%s\n' % (node1, node2, linktype, color, '1')
+            print cmd
         elif rx >= -float(self.nolossthreshold) : 
-            cmd = 'link %s,%s,%s line %s,%s\n' % (host1, host2, linktype, color, '3')
+            cmd = 'link %s,%s,%s line %s,%s\n' % (node1, node2, linktype, color, '3')
+            print cmd
 
-        cmd = "pathloss " + str(node1) + "," + str(node2) + " " + str(rx) + "," + str(rx) + "\n"
-        self.sock.send(cmd)
+        self.send_blah(cmd)
     
 def main():
 
@@ -95,7 +95,7 @@ def main():
         print "Creating UDP Socket on port " + str(port) + "..."
         sock = SDTSocket(adr, port)
         print "Sending SDTCMD to " + adr + ":" + str(port)
-        if(sock.send(cmd + '\n')):
+        if(sock.send_blah(cmd + '\n')):
             print "Sent SDTCMD \"" + cmd + "\""
         else:
             print "Send failed!"
