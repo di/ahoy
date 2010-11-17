@@ -31,6 +31,7 @@ class Simulation :
                 if other_node.get('name') != event.get_model().get('name') :
                     self._network_sim.can_transmit(n1, n2)
 
+
     def get_scen(self) :
         return self._scen_inst
 
