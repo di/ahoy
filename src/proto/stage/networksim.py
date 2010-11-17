@@ -3,12 +3,15 @@ from stage.event import Event
 from stage.model import Model
 
 class NetworkSim :
-    TRANS_RANGE = 240
+    TRANS_RANGE = 10
     def __init__(self, simulation) :
         self._simulation = simulation
 
     def _distance(self, n1, n2) :
-        return sqrt((n1.get('position')[0] - n2.get('position')[0])**2 + (n1.get('position')[0] - n2.get('position')[0])**2)
+        dx = n1.get('position')[0] - n2.get('position')[0]
+        dy = n1.get('position')[1] - n2.get('position')[1]
+        dz = n1.get('position')[2] - n2.get('position')[2]
+        return sqrt(dx**2 + dy**2 + dz**2)
 
     def _bc_link(self, n1, n2, up) :
         if up :
