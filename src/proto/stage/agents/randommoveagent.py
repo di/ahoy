@@ -13,8 +13,10 @@ class MovingAgent(Agent) :
         print 'Agent on %s got %s from %s on %s' % (self._owner.get_name(), message, src, iface.get('ssid'))
 
     def stop(self,event):
-        print 'Agent on %s stopped' % (self._owner.get_name())
-        self._moving = False
+        if(event.get_model().get("n1").get("name") == self._owner.get_name() or event.get_model().get("n2").get("name")
+            == self._owner.get_name()):
+            print 'Agent on %s stopped' % (self._owner.get_name())
+            self._moving = False
 
     def run(self) :
         self._api.get_event_channel().subscribe('LINK_UP', self.stop)
