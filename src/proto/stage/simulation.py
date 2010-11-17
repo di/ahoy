@@ -1,6 +1,8 @@
 import subprocess
 import sys
 import time
+import signal
+import os
 from stage.networksim import NetworkSim
 from stage.api import API
 from stage.event import Event
@@ -18,6 +20,11 @@ class Simulation :
 
         self._network_sim = NetworkSim(self)
 
+        def quit(signal, frame) :
+            os.system('pkill python')
+            sys.exit(0)
+        signal.signal(signal.SIGINT, quit)
+
     def _event_callback(self, event) :
         if event.get_type() == 'SENT' :
             self._network_sim.on_sent_event(event)
@@ -30,7 +37,6 @@ class Simulation :
                 n2 = self.get_scen().get_nodes()[int(other_node.get('name')[1:])]
                 if other_node.get('name') != event.get_model().get('name') :
                     self._network_sim.can_transmit(n1, n2)
-
 
     def get_scen(self) :
         return self._scen_inst
