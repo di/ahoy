@@ -30,8 +30,8 @@ class MovingAgent(Agent) :
                 xmax = x + 2
                 ymax = y + 2
 
-                newx = max(min(random.randint(xmin,xmax),20), 0)
-                newy = max(min(random.randint(ymin,ymax),20), 0)
+                newx = max(min(random.randint(xmin,xmax),100), 0)
+                newy = max(min(random.randint(ymin,ymax),100), 0)
 
                 new_pos = (newx,newy,0)
                 print 'Agent on %s at x= %s y= %s' % (self._owner.get_name(),newx,newy)
