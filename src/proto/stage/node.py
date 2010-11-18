@@ -15,7 +15,7 @@ class Node :
     def _on_move(self, event) :
         if event.get_model().get('name') == self._name :
             self._position = event.get_model().get('pos')
-            print 'NODE %s HEARD ACCEPT %s' % (self._name, self._position)
+            #print 'NODE %s HEARD ACCEPT %s' % (self._name, self._position)
 
     def get_position(self) :
         return self._position

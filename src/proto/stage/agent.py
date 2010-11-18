@@ -8,6 +8,7 @@ class Agent :
     def set_owner(self, node) :
         self._owner = node
         self._api = API(node)
+        self._origin = self._owner.get_position()
 
     def run(self) :
         pass

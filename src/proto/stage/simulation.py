@@ -29,7 +29,7 @@ class Simulation :
         if event.get_type() == 'SENT' :
             self._network_sim.on_sent_event(event)
         elif event.get_type() == 'MOVEREQ' :
-            print 'SIMULATION GOT MOVEREQ %s %s' % (event.get_model().get('name'), event.get_model().get('pos'))
+            #print 'SIMULATION GOT MOVEREQ %s %s' % (event.get_model().get('name'), event.get_model().get('pos'))
             self._scen_inst.get_nodes()[int(event.get_model().get('name')[1:])].set('position', event.get_model().get('pos'))
             self._api.get_event_channel().publish(Event('MOVEACPT', Model(name=event.get_model().get('name'), pos=event.get_model().get('pos'))))
             for other_node in self._scen_inst.get_nodes() :
