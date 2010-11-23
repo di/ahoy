@@ -1,0 +1,42 @@
+\documentclass{article}
+\begin{document}
+
+\section{Sample Configuration Files}
+
+\subsection{Scenario}
+
+\begin{verbatim}
+from stage.scenario import Scenario
+from stage.model import Model
+from stage.agents.testagent import TestAgent
+from stage.agents.randommoveagent import MovingAgent
+from stage.agents.circlewalker import CircleWalkerAgent
+
+class ScenarioDef(Scenario) :
+    def __init__(self) :
+        Scenario.__init__(self)
+
+        for node_id in range(0, 5) :
+            node = Model(name='n%s' % node_id, position=(0,0,0), \
+                agents = [], interfaces = {})
+            agent_instance = MovingAgent()
+            node.get('agents').append(agent_instance)
+            self._nodes.append(node)
+\end{verbatim}
+
+\subsection{Network}
+
+\begin{verbatim}
+from stage.network import Network
+from stage.model import Model
+
+class NetworkConcrete(Network) :
+    def __init__(self, scen_inst) :
+        Network.__init__(self, scen_inst)
+
+        for node in self._scen_inst.get_nodes() :
+            node.get('interfaces')['eth0'] = Model(type='wireless', \
+                range=20, ssid='wlan0')
+\end{verbatim}
+
+\end{document}
