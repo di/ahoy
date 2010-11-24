@@ -133,7 +133,7 @@
     colorlinks=true,
     linkcolor=blue,
     urlcolor=blue,
-    pdftitle={STAGE Software Requirements Specification v1},
+    pdftitle={STAGE Software Requirements Specification V4},
     pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
 }
 
@@ -172,7 +172,7 @@
 	\and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
     \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
 }
-\date{\mydate\\Version 3}
+\date{\mydate\\Version 4}
 
 \begin{document}
 \pagenumbering{roman}
@@ -412,7 +412,7 @@ Bob researches agent algorithms and uses STAGE to compare their effectiveness.  
     \item Use the API to implement agents which run on network nodes
     \item Use the visualizer to assure scenarios are properly setup
     \item Disable the visualizer and run scenarios many times
-    \item Collect aggregate data from scenario trials
+    \item Collect aggregate data from scenario trials via subscription to the API's event channel
 \end{itemize*}
 
 \subsubsection{Fictional User: Carol, Network Protocol Developer%
@@ -425,7 +425,7 @@ setup to find the best combination.  Carol wants to complete the tasks below:
 \begin{itemize*}
     \item Use the networking component to implement networking protocols
     \item Disable the visualizer and run scenarios many times
-    \item Collect aggregate data from scenario trials
+    \item Collect aggregate data from scenario trials via subscription to the API's event channel
 \end{itemize*}
 
 \subsubsection{Fictional User: Dave, Large Scale Simulator%
@@ -506,8 +506,10 @@ The following applies to STAGE's Visualization Engine (VE):
 \subsubsection{Distribution Framework}
 	The Distribution Framework uses the API to spread the simulation across a Physical Distribution, and to aggregate trial data. It consists of a network of one-to-many physical machines.
 	\paragraph{Physical Distribution} The distribution framework distributes virtual nodes evenly across physical nodes. Further, it handles the establishment and initialization of agents on their respective physical node.
-	\paragraph{Data Collection} The distribution framework aggregates simulation data at the end of a trial, and returns it to the Simulation Server in a standard form for examination or interpretation.
 	\paragraph{Simulation Server} The distribution framework organizes physical nodes hierarchically to interact with the simulation server.
+
+\subsubsection{Data Aggregation}
+    \paragraph{Real-Time Event Subscription} The simulator has an open API channel which should be used to monitor real-time events published by the simulation.
 
 %___________________________________________________________________________
 
@@ -606,8 +608,9 @@ With more time, the STAGE team could create additional tools to aid in the the d
     \item The software provides a User Manual containing step-by-step instructions for user perspective in Section~\ref{user-characteristics}.
     \item The software provides Developer Documentation containing:
     \begin{enumerate}
-        \item Agent Framework definitions and example agents
         \item Scenario Language syntax and usage
+        \item Network Topology definitions and example networks
+        \item Agent Framework definitions and example agents
     \end{enumerate}
 \end{enumerate}
 
