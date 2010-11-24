@@ -4,6 +4,7 @@
 \usepackage{fullpage}   % Use the whole page
 \usepackage{fancyhdr}   % Nice headers/footers
 \usepackage{graphicx}   % Importing graphics
+\usepackage{graphics}   % Importing graphics
 \usepackage{mdwlist}    % For itemize* and enumerate*
 \usepackage{hyperref}   % Hyperlink references and URLs
 \usepackage{subfig}
@@ -195,6 +196,8 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 \setcounter{tocdepth}{4}
 \tableofcontents
 \pagebreak
+\listoffigures
+\pagebreak
 \pagenumbering{arabic}
 
 %\listoftodos
@@ -323,39 +326,6 @@ STAGE combines:
 
 STAGE's user interface is two-fold, with each interface for different tasks and uses. The basic interface allows a user to simply and quickly define a scenario with the Scenario Language and begin an experiment, using the API to collect data in a way that is defined by the user. The Visualization Engine allows the user to interpret the experiment visually, without a need for data-collection or the API.
 
-%___________________________________________________________________________
-
-\subsubsection{Hardware Interfaces%
-  \label{hardware-interfaces}%
-}
-
-STAGE requires that the machine running the system has one to many network interfaces to support distribution.
-
-%___________________________________________________________________________
-
-\subsubsection{Software Interfaces%
-  \label{software-interfaces}%
-}
-
-STAGE requires the use of OpenGL in order to use the visualizer.
-
-%___________________________________________________________________________
-
-\subsubsection{Memory Constraints%
-  \label{memory-constraints}%
-}
-
-STAGE requires a machine with at least 4GB of RAM.
-
-%___________________________________________________________________________
-
-\subsubsection{Site Adaptation Requirements%
-  \label{site-adaptation-requirements}%
-}
-
-STAGE requires that the system is configured per-site to create a distributed simulation, or to interact on-the-fly.
-
-%___________________________________________________________________________
 
 \subsection{Product Functions%
   \label{product-functions}%
@@ -466,6 +436,16 @@ It is assumed that a user, administrator, or developer has the ability to instal
     \label{functional}%
 }
 
+
+\begin{figure}[hb]
+  \centering
+  \includegraphics[scale=.3]{../prototype/images/ss2.png}
+  \caption[A visual representation of mobile nodes on the world map.]%
+  {The Visualizer displays mobile nodes (represented by the helicopters) interacting on the world map.  The terrain (the city below) can
+  also be seen.  The red lines between nodes represent a network connection.  Connected nodes become stationary as
+  unconnected nodes continuosly change their position in the simulation until they come within range of another node.}
+\end{figure}
+
 \subsubsection{Visualization}
 The following applies to STAGE's Visualization Engine (VE):
     \paragraph{Terrain} The Visualization Engine displays varying types of terrain, as defined by the environment.
@@ -521,16 +501,73 @@ The following applies to STAGE's Visualization Engine (VE):
 
 %___________________________________________________________________________
 
-\subsection{Runtime Environment} 
-\begin{itemize*}
-    \item Operating Systems:  Unix / Linux / Mac
-    \item Processor:  A 32- or 64-bit x86 3.0GHz processor
-    \item Memory:  4GB RAM minimum
-    \item Network connection:  Any recent network card which is currently connected to the simulation network (if the simulation is distributed)
-    \item Visualizer:  A graphics card which will support OpenGL or an equivalent
-\end{itemize*}
+\subsection{Non-Functional Requirements} 
+%___________________________________________________________________________
+
+\subsubsection{Hardware Interfaces%
+  \label{hardware-interfaces}%
+}
+
+STAGE requires that the machine running the system has one to many network interfaces to support distribution.
 
 %___________________________________________________________________________
+
+\subsubsection{Software Interfaces%
+  \label{software-interfaces}%
+}
+
+STAGE requires the use of OpenGL in order to use the visualizer.
+
+%___________________________________________________________________________
+
+\subsubsection{Memory Constraints%
+  \label{memory-constraints}%
+}
+
+STAGE requires a machine with at least 4GB of RAM.
+
+%___________________________________________________________________________
+
+\subsubsection{Site Adaptation Requirements%
+  \label{site-adaptation-requirements}%
+}
+
+STAGE requires that the system is configured per-site to create a distributed simulation, or to interact on-the-fly.
+
+%__________________________________________________________________________
+
+\subsubsection{Operating System%
+  \label{operating-system}%
+}
+
+STAGE is able to run on Unix, Linux, and Mac
+
+%__________________________________________________________________________
+
+\subsubsection{Processor% 
+  \label{processor}%
+}
+
+STAGE requires at least a 32- or 64-bit x86 3.0GHz processor
+
+%__________________________________________________________________________
+
+\subsubsection{Network Connection%
+  \label{network-connection}%
+}
+
+STAGE requires any recent network card which is currently connected to the simulation network (if the simulation is
+distributed)
+
+%__________________________________________________________________________
+
+\subsubsection{Visualizer%
+  \label{visualizer}%
+}
+
+STAGE requires a graphics card which will support OpenGL or an equivalent
+
+%__________________________________________________________________________
 
 \subsection{Input Formats%
   \label{input-formats}%
