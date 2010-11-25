@@ -2,6 +2,19 @@
 \usepackage{graphicx}   % Importing graphics
 \usepackage{graphics}   % Importing graphics
 \usepackage{hyperref}   % Hyperlink references and URLs
+\usepackage{fullpage}   % Use the whole page
+\usepackage{fancyhdr}   % Nice headers/footers
+\usepackage{tikz}
+\usetikzlibrary{shapes,snakes,arrows,decorations}
+
+\fancyhf{} % clear all header and footer fields
+\fancyhead[L]{STAGE}
+\fancyhead[C]{\mytitle}
+\fancyhead[R]{\mydate}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
 \title{Prototype Review Document}
 \author{
 	Frank Clark \\\url{francis.j.clark@drexel.edu}
@@ -16,14 +29,14 @@
 \section{Introduction}
 The prototye represents the integration of a simulator with basic functionality as well as a Display Tool (SDT). The prototype fulfills a number of goals, as well as frames the work needed to be done in the next version.
 \subsection{Prototype Goals Completed}
-\begin{itemized}
+\begin{itemize}
     \item Created a simulator which aggregates a user-defined Scenario and Network.
     \item Specified a rough format for the user-definition of Scenarios, Networks and Agents.
     \item Implemented a Display Tool based on a real-world model which displays, verbatim, the real-time events created by the simulator.
     \item Allowed agents to react in real-time to events distributed through the simulator by other agents.
     \item Created a simplified process for using an Agent to publish real-world data into the simulator.
     \item Created an API channel for the simulator which allows the subscription and publication of events.
-\end{itemized}
+\end{itemize}
 \section{Sample Configuration Files}
 The following files represent the sample configuration files for the Scenario Definition and the Network Topology Definition, which are interpreted by the simulator to set up the virtual nodes, their agents, and settings.
 \subsection{Scenario}
@@ -63,6 +76,14 @@ class NetworkConcrete(Network) :
                 range=20, ssid='wlan0')
 \end{verbatim}
 
+\section{Diagram of Prototype Scenario}
+
+\begin{figure}
+    \centering
+    \input{../common/proto-fig.tikz}
+    \caption[Prototype Use Case Diagram]%
+    {A diagram of the Prototype: \emph{1.} Agents have been configured to perform random walks within a boundary, and each contains a wireless interface. \emph{2.} When nodes recieve an event indicating they are in range of another node, they hold their position and create a network link. \emph{3.} A static network is formed.}   
+\end{figure}
 \section{Screenschots of SDT-3D (STAGE Display Tool)}
 The nodes in their initial state:
 \center{\includegraphics[scale=.3]{images/ss1.png}}

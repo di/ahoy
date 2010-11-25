@@ -16,125 +16,13 @@
 \usepackage{scalefnt}
 \usepgfmodule{shapes}
 \usepgfmodule{plot}
-\usetikzlibrary{decorations}
-\usetikzlibrary{arrows}
-\usetikzlibrary{snakes}
-
-\newcommand{\logo}{
-	\pgfsetlinewidth{3pt}
-
-	% Background
-	\color{cyan!70!black}
-	\pgfpathmoveto{\pgfpointxy{-5}{2}}
-	\pgfpathlineto{\pgfpointxy{-5}{11}}
-	\pgfpathlineto{\pgfpointxy{-2}{11.9}}	
-	\pgfpathlineto{\pgfpointxy{2}{11.9}}	
-	\pgfpathlineto{\pgfpointxy{5}{11}}
-	\pgfpathlineto{\pgfpointxy{5}{2}}
-	\pgfpathclose 
-	\pgfusepath{fill,stroke} 
-
-	% Base
-	\color{green!70!black}
-	\pgfsetstrokecolor{black}
-	\pgfpathmoveto{\pgfpointxy{-2}{1.5}}
-	\pgfpathcurveto{\pgfpointxy{-2}{1.5}}{\pgfpointxy{-6}{1.5}}{\pgfpointxy{-6}{2.5}}
-	\pgfpathlineto{\pgfpointxy{-6}{4}}
-	\pgfpathlineto{\pgfpointxy{6}{4}}
-	\pgfpathlineto{\pgfpointxy{6}{2.5}}
-	\pgfpathcurveto{\pgfpointxy{6}{1.5}}{\pgfpointxy{2}{1.5}}{\pgfpointxy{2}{1.5}}
-	\pgfpathclose 
-	\pgfusepath{fill,stroke} 
-	
-	% Curtains
-	\color{red!70!black}
-	\pgfsetstrokecolor{black}
-	
-	% Left
-	\pgfpathmoveto{\pgfpointxy{-6}{11}}
-	\pgfpathlineto{\pgfpointxy{-6}{2.5}}
-	\pgfpathcurveto{\pgfpointxy{-6}{2.2}}{\pgfpointxy{-3.5}{2.2}}{\pgfpointxy{-3.5}{2.5}}
-	\pgfpathcurveto{\pgfpointxy{-3.5}{3}}{\pgfpointxy{-3.5}{4}}{\pgfpointxy{-4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-4}{11}}{\pgfpointxy{-3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{-4}{11}}{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-6}{11}}{\pgfpointxy{-3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{-6}{11}}{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-8}{11}}{\pgfpointxy{-3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{-8}{11}}{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{-2.5}{7}}{\pgfpointxy{-2.5}{11}}{\pgfpointxy{-3}{11.5}}
-	\pgfusepath{fill,stroke}
-
-	% Right
-	\pgfsetlinewidth{3pt}
-	\pgfpathmoveto{\pgfpointxy{6}{11}}
-	\pgfpathlineto{\pgfpointxy{6}{2.5}}
-	\pgfpathcurveto{\pgfpointxy{6}{2.2}}{\pgfpointxy{3.5}{2.2}}{\pgfpointxy{3.5}{2.5}}
-	\pgfpathcurveto{\pgfpointxy{3.5}{3}}{\pgfpointxy{3.5}{4}}{\pgfpointxy{4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{2.5}{7}}{\pgfpointxy{4}{11}}{\pgfpointxy{3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{4}{11}}{\pgfpointxy{2.5}{7}}{\pgfpointxy{4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{2.5}{7}}{\pgfpointxy{6}{11}}{\pgfpointxy{3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{6}{11}}{\pgfpointxy{2.5}{7}}{\pgfpointxy{4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{2.5}{7}}{\pgfpointxy{8}{11}}{\pgfpointxy{3}{11.5}}
-	\pgfpathcurveto{\pgfpointxy{8}{11}}{\pgfpointxy{2.5}{7}}{\pgfpointxy{4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{2.5}{7}}{\pgfpointxy{2.5}{11}}{\pgfpointxy{3}{11.5}}
-	\pgfusepath{fill,stroke}
-
-	% Top
-    %     Top-left
-	\pgfpathmoveto{\pgfpointxy{-2}{12}}
-	\pgfpathcurveto{\pgfpointxy{-2}{12}}{\pgfpointxy{-6}{12}}{\pgfpointxy{-6}{11}}
-	\pgfpathcurveto{\pgfpointxy{-5}{9}}{\pgfpointxy{-2}{11}}{\pgfpointxy{-2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{-2}{11.5}}{\pgfpointxy{-4.5}{9.5}}{\pgfpointxy{-6}{11}}
-	\pgfpathcurveto{\pgfpointxy{-4.5}{9.5}}{\pgfpointxy{-2}{11.5}}{\pgfpointxy{-2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{-2}{12}}{\pgfpointxy{-3.5}{10.4}}{\pgfpointxy{-6}{11}}
-	\pgfpathcurveto{\pgfpointxy{-3.5}{10.4}}{\pgfpointxy{-2}{12}}{\pgfpointxy{-2}{11.85}}
-
-	%    Top-middle
-	\pgfpathcurveto{\pgfpointxy{-1}{10.5}}{\pgfpointxy{1}{10.5}}{\pgfpointxy{2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{1}{10.5}}{\pgfpointxy{-1}{10.5}}{\pgfpointxy{-2}{11.85}}	
-	\pgfpathcurveto{\pgfpointxy{-1}{11}}{\pgfpointxy{1}{11}}{\pgfpointxy{2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{1}{11}}{\pgfpointxy{-1}{11}}{\pgfpointxy{-2}{11.85}}	
-	\pgfpathcurveto{\pgfpointxy{-1}{10}}{\pgfpointxy{1}{10}}{\pgfpointxy{2}{11.85}}
-	
-	%    Top-right
-	\pgfpathcurveto{\pgfpointxy{2}{11.5}}{\pgfpointxy{4.5}{9.5}}{\pgfpointxy{6}{11}}
-	\pgfpathcurveto{\pgfpointxy{4.5}{9.5}}{\pgfpointxy{2}{11.5}}{\pgfpointxy{2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{2}{12}}{\pgfpointxy{3.5}{10.4}}{\pgfpointxy{6}{11}}
-	\pgfpathcurveto{\pgfpointxy{3.5}{10.4}}{\pgfpointxy{2}{12}}{\pgfpointxy{2}{11.85}}
-	\pgfpathcurveto{\pgfpointxy{2}{11}}{\pgfpointxy{5}{9}}{\pgfpointxy{6}{11}}
-	\pgfpathcurveto{\pgfpointxy{6}{12}}{\pgfpointxy{2}{12}}{\pgfpointxy{2}{12}}
-	\pgfpathclose 
-	\pgfusepath{fill,stroke} 
-
-	% Rope
-	%     Rope-right
-	\pgfsetstrokecolor{black}
-	\pgfpathmoveto{\pgfpointxy{-4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{-4.5}{5}}{\pgfpointxy{-6}{5}}{\pgfpointxy{-6}{5.5}}
-	\pgfusepath{stroke}	
-	%     Rope-left
-	\pgfsetstrokecolor{black}
-	\pgfpathmoveto{\pgfpointxy{4.5}{5}}
-	\pgfpathcurveto{\pgfpointxy{4.5}{5}}{\pgfpointxy{6}{5}}{\pgfpointxy{6}{5.5}}
-	\pgfusepath{stroke}
-	
-	\node[color=black] at (0,0) {{\scalefont{10.0}STAGE}};
-
-	%% Just kinda a pretty path...
-	%% \pgfpathmoveto{\pgfpointxy{-2}{1.5}}
-	%% \pgfpathcurveto{\pgfpointxy{-2}{1.5}}{\pgfpointxy{-6}{1.5}}{\pgfpointxy{-6}{2.5}}
-	%% \pgfpathcurveto{\pgfpointxy{-5}{4.5}}{\pgfpointxy{-2}{2.5}}{\pgfpointxy{-2}{3.35}}
-	%% \pgfpathcurveto{\pgfpointxy{-1}{3.5}}{\pgfpointxy{1}{3.5}}{\pgfpointxy{2}{3.35}}
-	%% \pgfpathcurveto{\pgfpointxy{2}{2.5}}{\pgfpointxy{5}{4.5}}{\pgfpointxy{6}{2.5}}
-	%% \pgfpathcurveto{\pgfpointxy{6}{1.5}}{\pgfpointxy{2}{1.5}}{\pgfpointxy{2}{1.5}}
-	%% \pgfpathclose 
-}
+\usetikzlibrary{shapes,snakes,arrows,decorations}
 
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     urlcolor=blue,
-    pdftitle={STAGE Software Requirements Specification V5},
+    pdftitle={STAGE Software Requirements Specification V6},
     pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
 }
 
@@ -173,7 +61,7 @@
 	\and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
     \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
 }
-\date{\mydate\\Version 5}
+\date{\mydate\\Version 6}
 
 \begin{document}
 \pagenumbering{roman}
@@ -181,9 +69,7 @@
 \begin{figure}
     \vspace{-2em}
     \centering
-	\begin{tikzpicture}[scale=1]
-		\logo
-	\end{tikzpicture}
+    \input{../common/logo.tikz}
     \vspace{-4em}
 \end{figure}
 
@@ -371,6 +257,13 @@ the visualization:
     \item Visualize simulation events including link changes and entity movements
     \item View output from agents if implemented
 \end{itemize*}
+
+\begin{figure}
+    \centering
+    \input{../common/proto-fig.tikz}
+    \caption[Prototype Use Case Diagram]%
+    {A prototype of what ``Bob'' may create: \emph{1.} Agents have been configured to perform random walks within a boundary, and each contains a wireless interface. \emph{2.} When nodes recieve an event indicating they are in range of another node, they hold their position and create a network link. \emph{3.} A static network is formed.}   
+\end{figure}
 
 \subsubsection{Fictional User: Bob, Agent Algorithm Researcher%
   \label{bob}%
