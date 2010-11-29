@@ -1,0 +1,315 @@
+\RequirePackage{fix-cm}
+\documentclass[titlepage]{article}
+
+\usepackage{fullpage}   % Use the whole page
+\usepackage{fancyhdr}   % Nice headers/footers
+\usepackage{graphicx}   % Importing graphics
+\usepackage{graphics}   % Importing graphics
+\usepackage{mdwlist}    % For itemize* and enumerate*
+\usepackage{hyperref}   % Hyperlink references and URLs
+\usepackage{subfig}
+\usepackage{appendix}
+\usepackage{listings}
+%\usepackage{todonotes}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{scalefnt}
+\usepgfmodule{shapes}
+\usepgfmodule{plot}
+\usetikzlibrary{shapes,snakes,arrows,decorations}
+
+% Just so we don't have to specify this twice
+\newcommand\mytitle{Acceptance Test Plan}
+\newcommand\mydate{\today}
+\newcommand\version{1}
+
+\newcommand{\testentry}[4]{
+    \subsubsection{#1}
+    \begin{itemize}
+        \item \textbf{Pre-Condition:} #2
+        \item \textbf{Action:} #3
+        \item \textbf{Post-Condition:} #4
+    \end{itemize}
+    \vspace{0.5em}
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={STAGE \mytitle, Version \version},
+    pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
+}
+
+% So we can number paragraphs too
+\setcounter{secnumdepth}{5}
+
+% For headers and footers
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{25pt}
+\pagestyle{fancy}
+    
+% Page style for the title page
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% Page style for every other page
+\fancyhf{} % clear all header and footer fields
+\fancyhead[L]{STAGE}
+\fancyhead[C]{\mytitle}
+\fancyhead[R]{\mydate}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\title{\textbf{\mytitle}}
+\author{
+    Frank Clark \\\url{francis.j.clark@drexel.edu}
+    \and Dustin Ingram \\\url{dustin.s.ingram@drexel.edu}
+    \and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
+    \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
+}
+\date{\mydate\\Version \version}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{figure}
+    \vspace{-2em}
+    \centering
+    \input{../common/logo.tikz}
+    \vspace{-4em}
+\end{figure}
+
+\maketitle
+
+\begin{abstract}
+STAGE is an event-based simulation environment used to compare the effectiveness of different combinations of software agents, network configurations, and sensor data in real-world environments.  It is comprised of a distributed simulation engine, visualizer, and programming interface through which developers create agent software and network topologies.  Communication between virtual nodes is also simulated, providing highly realistic scenarios.
+\end{abstract}
+
+\setcounter{tocdepth}{4}
+\tableofcontents
+\pagebreak
+%\listoffigures
+%\pagebreak
+\pagenumbering{arabic}
+
+%\listoftodos
+
+%___________________________________________________________________________
+
+\section{Introduction%
+  \label{introduction}%
+}
+
+%___________________________________________________________________________
+
+\subsection{Objective%
+  \label{objective}%
+}
+    This document provide the plan for completing the testing activities required for the Acceptance Test Plan of STAGE. The acceptance test plan for this system is based on the project requirements set forth in the Software Requirements Specification document.
+
+%___________________________________________________________________________
+
+\subsection{Structure of the Document%
+    \label{structure}%
+}
+    \begin{itemize*}
+        \item[-]Section \ref{approach} describes the overall approach to the Acceptance Test Plan process.
+        \item[-]Section \ref{assumptions} describes in more detail individual issues covered or not covered by the Acceptance Test Plan process.
+        \item[-]Section \ref{criteria} describes the criteria which have to be satisfied for the Acceptance Test Plan project.
+        \item[-]Section \ref{participiants} describes the roles and responsibilities of the staff members involved in the Acceptance Test Plan project.
+        \item[-]Section \ref{cases} describes the test cases used during the Acceptance Test Plan.
+    \end{itemize*}
+
+%___________________________________________________________________________
+
+\subsection{References%
+    \label{references}%
+}
+    For the STAGE project requirements, please see the Software Requirements Specification document for this project. The most recent version of this document is available at \url{http://code.google.com/p/stage/}.
+
+%___________________________________________________________________________
+
+\subsection{Glossary%
+    \label{glossary}%
+}
+    \begin{description}
+        \item[Test Team Leader]
+            The person in charge of all the testers.
+        \item[Project Leader]
+            The person in charge of the whole project.
+        \item[Client’s Representatives]
+            Client’s Representatives are people who overlook the Acceptance Test Plan execution on behalf of the customers.
+        \item[Software Requirements Specification]
+            A Software Requirements Specification is a document which describes the behaviour of a system.
+        \item[Functional Requirements]
+            Functional Requirements define the internal workings of the software.
+        \item[Unit Tests]
+            A procedure in the software to validate that individual modules and other units of source code are working properly
+        \item[Integration Test]
+            Integration Test is a test phase which is employed after the Unit Tests are validated and tests how all the different modules of a software system fit and work together with each other.
+        \item[System Test]
+            System Test is conducted after Integration Test has been conducted to evaluate the system’s compliance with its specified requirements
+    \end{description}
+
+%___________________________________________________________________________
+
+\section{Test Approach and Constraints%
+    \label{approach}%
+}
+    This section describes the overall approach, particular techniques and testing tools which will be used during the Acceptance Test Plan of the STAGE and any constraints that may apply.
+
+%___________________________________________________________________________
+
+\subsection{Test Objectives%
+    \label{objectives}%
+}
+    The Acceptance Test Plan process will prompt the client to evaluate STAGE and verify whether it performs in accordance with the client’s requirements, listed in the Software Requirements Specification.
+
+%___________________________________________________________________________
+
+\subsection{Test Structure%
+    \label{structure}%
+}
+    The Acceptance Test Plan will consist of a subset of test cases and methods, previously utilized in the Unit Tests, Integration Test and System Test conducted on the STAGE. The test cases will be carefully selected and agreed upon by both the developer and the client, and will allow for the most adequate verification of the functional requirements of the STAGE, as listed in the Software Requirements Document, without the extensiveness of the full-scale System Test.
+
+    It is essential that all appropriate Unit Tests, Integration Test and the System Test were successfully performed for STAGE prior to the Acceptance Test Plan and their results were reported and presented to the client.
+
+%___________________________________________________________________________
+
+\section{Test Assumptions and Exclusions%
+    \label{assumptions}%
+}
+
+%___________________________________________________________________________
+
+\subsection{Introduction}
+    This section provides greater details about what issues and features of STAGE will be covered by Acceptance Test Plan process, and what issues and features of STAGE will not be covered.
+
+%___________________________________________________________________________
+
+\subsection{Assumptions}
+    It is assumed that all issues covered by the Acceptance Test Plan were also previously addressed by the Unit Tests, Integration Test and System Test of STAGE. The Acceptance Test Plan will cover:
+    \begin{itemize}
+        \item The functional requirements of the system listed in the Software Requirements Specification
+        \item Usability of the system
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\subsection{Exclusions}
+    It is assumed that all issues not covered by the Acceptance Test Plan were previously addressed by Unit Tests, Integration Tests and System Tests of STAGE. The Acceptance Test Plan will not cover:
+    \begin{itemize}   
+        \item The non-functional requirements of the system (except the aforementioned Usability) listed in the Software Requirements Specification
+        \item Structural integrity of the source code
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\section{Entry and Exit Criteria%
+    \label{criteria}%
+}
+
+%___________________________________________________________________________
+
+\subsection{Introduction}
+    This section lists the criteria which must be satisfied in order for the Acceptance Test Plan to begin, as well as the criteria which must be satisfied in order for the Acceptance Test Plan to stop.
+
+%___________________________________________________________________________
+
+\subsection{Entry Criteria}                                              
+    The Acceptance Test Plan can be initiated after the following preconditions are met:
+    \begin{itemize}
+        \item STAGE has successfully undergone Unit Tests, Integration Test and System Test.
+        \item The testing environment which satisfies the System Requirements of Software Requirements Specification has been setup and inspected by the client’s representative
+        \item A copy of the latest version of the Software Requirements Specification has been received
+        \item A copy of the latest version of the user-related documentation has been received
+        \item The latest released version of STAGE has been appropriately resourced.
+        \item A consent of the Project Leader has been obtained.
+        \item A consent of the Client has been obtained.
+        \item A consent of the Test Team Leader has been obtained.
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\subsection{Exit Criteria}
+    The Acceptance Test Plan should be halted after either of the following:
+    \begin{itemize}
+        \item All Priority 1 requirements were tested without any deviation from expected behavior. (Success)
+        \item At least one Priority 1 requirement deviated from the documented specification. (Failure)
+        \item By mutual agreement between Client’s Representative and the Tester, in which both parties’ supervisors should be notified and the Acceptance Test Plan should be rescheduled for a later date. (Failure)
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\section{Testing Participants%
+    \label{participiants}%
+}
+
+%___________________________________________________________________________
+
+\subsection{Introduction}
+    This section describes the roles and responsibilities of the staff members involved in the Acceptance Test Plan, as well as the procedure of reporting the test results and any problems that came up during testing.
+
+%___________________________________________________________________________
+
+\subsection{Roles and Responsibilities}
+    For the Acceptance Test Plan, the following roles were assumed by the following people:
+    \begin{itemize}
+        \item Test Team Leader: STAGE Team Leader
+        \item Client’s Representative: A person in charge from the client’s side who will overview the testing process.
+        \item Tester: A person who will execute the use case tests.
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\subsection{Training Requirements}
+    All parties involved in the Acceptance Test Plan should be familiar with the user interface of STAGE, as well as with the system documentation and the Software Requirements Specification.
+
+%___________________________________________________________________________
+
+\subsection{Problem Reporting}
+    Any problem pointed out by either the Client’s Representative or the Tester must be documented and reported to the Test Team Leader. Later the problem report will be submitted to the project Leader, and addressed during a periodic or urgent staff meeting depending on the severity of the problems.
+
+%___________________________________________________________________________
+
+\subsection{Progress Reporting}
+    The Acceptance Test Plan Report will be compiled once, after testing process is finished by the Test Team Leader and submitted to the Project Leader.
+
+%___________________________________________________________________________
+
+\section{Test Cases%
+    \label{cases}%
+}
+
+%___________________________________________________________________________
+
+\subsection{Introduction}
+    The test cases are distributed in sections covering functionality elements and use cases in the Software Requirements Specification. Each of the following test cases is in the format:
+    \begin{itemize}
+        \item \textbf{Pre-Conditions:} Conditions needed to initiate the test case
+        \item \textbf{Actions:} The actions expected form a tester
+        \item \textbf{Post-Conditions:} The expected outcome of the test case
+    \end{itemize}
+
+%___________________________________________________________________________
+
+\subsection{Example Section}
+    This section is of example test cases.
+
+\testentry{Example Test Case}{
+    The derp is not herping.
+}{
+    The user herps the derp, herp derps the herp, and then derp herp herp derp derp herpderp.
+}{
+    The derp herps.
+}
+
+\appendix
+\pagebreak
+
+\end{document}
