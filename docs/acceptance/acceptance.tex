@@ -2,6 +2,7 @@
 \documentclass[titlepage]{article}
 
 \usepackage{fullpage}   % Use the whole page
+\usepackage{lscape}
 \usepackage{fancyhdr}   % Nice headers/footers
 \usepackage{graphicx}   % Importing graphics
 \usepackage{graphics}   % Importing graphics
@@ -557,7 +558,54 @@ STAGE is an event-based simulation environment used to compare the effectiveness
     %\paragraph{Scenario Definitions} Scenario definitions, including the topology and agents, are stored and parsed by the system
 
 %___________________________________________________________________________
+\pagebreak
+\section{Traceability Matrix%
+  \label{Traceability Matrix}%
+}
 
+\begin{landscape}
+\begin{tabular}{ c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+\hline
+  & 3.1.1.1 & 3.1.1.2 & 3.1.1.3 & 3.1.1.4 & 3.1.1.5 & 3.1.1.6 & 3.1.1.7 
+  & 3.1.1.8 & 3.1.1.9 & 3.1.2.1 & 3.1.2.2 & 3.1.2.3 & 3.1.2.4 & 3.1.2.5  \\ \hline
+  6.1.1.1 & x &&&&&&&&&&&&& \\ \hline
+  6.1.1.2 && x &&&&&&&&&&&& \\ \hline
+  6.1.1.3 &&& x &&&&&&&&&&& \\ \hline
+  6.1.1.4 &&&& x &&&&&&&&&& \\ \hline
+  6.1.1.5 &&&&& x &&&&&&&&& \\ \hline
+  6.1.1.6 &&&&&& x &&&&&&&& \\ \hline
+  6.1.1.7 &&&&&&& x &&&&&&& \\ \hline
+  6.1.1.8 &&&&&&&& x &&&&&& \\ \hline
+  6.1.1.9 &&&&&&&&& x &&&&& \\ \hline
+  6.1.2.1 &&&&&&&&&& x &&&& \\ \hline
+  6.1.2.2 &&&&&&&&&&& x &&& \\ \hline
+  6.1.2.3 &&&&&&&&&&&& x && \\ \hline
+  6.1.2.4 &&&&&&&&&&&&& x & \\ \hline
+  6.1.2.5 &&&&&&&&&&&&&& x  \\ \hline
+\end{tabular}
+
+
+\begin{tabular}{ c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+\hline
+  & 3.1.2.6 & 3.1.3.1 & 3.1.3.2 & 3.1.3.3 & 3.1.4.1 & 3.1.4.2 & 3.1.4.3 & 3.1.5.1
+  & 3.1.5.2 & 3.1.5.3 & 3.1.6.1 & 3.1.6.2 & 3.1.7.1 & 3.1.8.2 \\ \hline
+  6.1.2.6 & x &&&&&&&&&&&&& \\ \hline
+  6.1.3.1 && x &&&&&&&&&&&& \\ \hline
+  6.1.3.2 &&& x &&&&&&&&&&& \\ \hline
+  6.1.3.3 &&&& x &&&&&&&&&& \\ \hline
+  6.1.4.1 &&&&& x &&&&&&&&& \\ \hline
+  6.1.4.2 &&&&&& x &&&&&&&& \\ \hline
+  6.1.4.3 &&&&&&& x &&&&&&& \\ \hline
+  6.1.5.1 &&&&&&&& x &&&&&& \\ \hline
+  6.1.5.2 &&&&&&&&& x &&&&& \\ \hline
+  6.1.6.1 &&&&&&&&&& x &&&& \\ \hline
+  6.1.6.2 &&&&&&&&&&&   &&& \\ \hline
+  6.1.6.3 &&&&&&&&&&&& x && \\ \hline
+  6.1.7.1 &&&&&&&&&&&&& x & \\ \hline
+  6.1.8.1 &&&&&&&&&&&&&& x  \\ \hline
+\end{tabular}
+\end{landscape}
+\pagebreak
 \appendix
 \pagebreak
 
