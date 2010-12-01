@@ -20,7 +20,6 @@
 
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Acceptance Test Plan}
-\newcommand\mydate{\today}
 \newcommand\version{1}
 
 \newcommand{\testentry}[4]{
@@ -60,7 +59,7 @@
 \fancyhf{} % clear all header and footer fields
 \fancyhead[L]{STAGE}
 \fancyhead[C]{\mytitle}
-\fancyhead[R]{\mydate}
+\fancyhead[R]{\today}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
@@ -72,7 +71,7 @@
     \and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
     \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
 }
-\date{\mydate\\Version \version}
+\date{\today\\Version \version}
 
 \begin{document}
 \pagenumbering{roman}
@@ -110,7 +109,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 \subsection{Objective%
   \label{objective}%
 }
-    This document provide the plan for completing the testing activities required for the Acceptance Test Plan of STAGE. The acceptance test plan for this system is based on the project requirements set forth in the Software Requirements Specification document.
+    This document provides the plan for completing the testing activities required for the Acceptance Test Plan of STAGE. The acceptance test plan for this system is based on the project requirements set forth in the Software Requirements Specification document.
 
 %___________________________________________________________________________
 
@@ -142,8 +141,8 @@ STAGE is an event-based simulation environment used to compare the effectiveness
             The person in charge of all the testers.
         \item[Project Leader]
             The person in charge of the whole project.
-        \item[Client’s Representatives]
-            Client’s Representatives are people who overlook the Acceptance Test Plan execution on behalf of the customers.
+        \item[Client's Representatives]
+            Client's Representatives are people who overlook the Acceptance Test Plan execution on behalf of the customers.
         \item[Software Requirements Specification]
             A Software Requirements Specification is a document which describes the behaviour of a system.
         \item[Functional Requirements]
@@ -153,7 +152,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
         \item[Integration Test]
             Integration Test is a test phase which is employed after the Unit Tests are validated and tests how all the different modules of a software system fit and work together with each other.
         \item[System Test]
-            System Test is conducted after Integration Test has been conducted to evaluate the system’s compliance with its specified requirements
+            System Test is conducted after completion of the Integration Test to evaluate the system's compliance with its specified requirements
     \end{description}
 
 %___________________________________________________________________________
@@ -168,7 +167,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 \subsection{Test Objectives%
     \label{objectives}%
 }
-    The Acceptance Test Plan process will prompt the client to evaluate STAGE and verify whether it performs in accordance with the client’s requirements, listed in the Software Requirements Specification.
+    The Acceptance Test Plan process will prompt the client to evaluate STAGE and verify whether it performs in accordance with the client's requirements, listed in the Software Requirements Specification.
 
 %___________________________________________________________________________
 
@@ -224,14 +223,14 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 \subsection{Entry Criteria}                                              
     The Acceptance Test Plan can be initiated after the following preconditions are met:
     \begin{itemize}
-        \item STAGE has successfully undergone Unit Tests, Integration Test and System Test.
-        \item The testing environment which satisfies the System Requirements of Software Requirements Specification has been setup and inspected by the client’s representative
-        \item A copy of the latest version of the Software Requirements Specification has been received
-        \item A copy of the latest version of the user-related documentation has been received
-        \item The latest released version of STAGE has been appropriately resourced.
-        \item A consent of the Project Leader has been obtained.
-        \item A consent of the Client has been obtained.
-        \item A consent of the Test Team Leader has been obtained.
+        \item Successful completion of Unit Tests, the Integration Test and a System Test.
+        \item Setup and inspection of the testing environment to satisfies the System Requirements of the Software Requirements Specification.
+        \item Reciept of a copy of the latest version of the Software Requirements Specification.
+        \item Reciept of a copy of the latest version of the user-related documentation.
+        \item Appropriate resourcing of the latest released version of STAGE.
+        \item Consent of the Project Leader.
+        \item Consent of the Client.
+        \item Consent of the Test Team Leader.
     \end{itemize}
 
 %___________________________________________________________________________
@@ -239,9 +238,9 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 \subsection{Exit Criteria}
     The Acceptance Test Plan should be halted after either of the following:
     \begin{itemize}
-        \item All Priority 1 requirements were tested without any deviation from expected behavior. (Success)
-        \item At least one Priority 1 requirement deviated from the documented specification. (Failure)
-        \item By mutual agreement between Client’s Representative and the Tester, in which both parties’ supervisors should be notified and the Acceptance Test Plan should be rescheduled for a later date. (Failure)
+        \item All requirements were tested without any deviation from expected behavior. (Success)
+        \item At least one requirement deviated from the documented specification. (Failure)
+        \item By mutual agreement between Client's Representative and the Tester, in which both parties' supervisors should be notified and the Acceptance Test Plan should be rescheduled for a later date. (Failure)
     \end{itemize}
 
 %___________________________________________________________________________
@@ -261,7 +260,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
     For the Acceptance Test Plan, the following roles were assumed by the following people:
     \begin{itemize}
         \item Test Team Leader: STAGE Team Leader
-        \item Client’s Representative: A person in charge from the client’s side who will overview the testing process.
+        \item Client's Representative: A person in charge from the client's side who will overview the testing process.
         \item Tester: A person who will execute the use case tests.
     \end{itemize}
 
@@ -273,7 +272,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 %___________________________________________________________________________
 
 \subsection{Problem Reporting}
-    Any problem pointed out by either the Client’s Representative or the Tester must be documented and reported to the Test Team Leader. Later the problem report will be submitted to the project Leader, and addressed during a periodic or urgent staff meeting depending on the severity of the problems.
+    Any problem pointed out by either the Client's Representative or the Tester must be documented and reported to the Test Team Leader. Later the problem report will be submitted to the project Leader, and addressed during a periodic or urgent staff meeting depending on the severity of the problems.
 
 %___________________________________________________________________________
 
@@ -308,14 +307,14 @@ STAGE is an event-based simulation environment used to compare the effectiveness
         The proper terrain for the location is shown.
     }
     \testentry{World Objects}{
-        The visualization engine is running, and the user has created a scenario containing mobile and static world objects.
+        The visualization engine is running, and the user creates a scenario containing mobile and static world objects.
     }{
         The user loads and starts the created scenario.
     }{
         The visualization engine shows mobile and static world objects.
     }
     \testentry{Mobile Agents}{
-        The visualization engine is running, and the user has created a scenario containing mobile nodes.
+        The visualization engine is running, and the user creates a scenario containing mobile nodes.
     }{
         The user loads and starts the created scenario.
     }{
@@ -329,7 +328,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
         The visualization engine draws the path for the object to move.
     }
     \testentry{Maximum Models}{
-        The visualization engine is running, and the user has created a scenario containing 300 models.
+        The visualization engine is running, and the user creates a scenario containing 300 models.
     }{
         The user loads and starts the created scenario.
     }{
@@ -343,7 +342,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
         The simulation continues to run.
     }
     \testentry{Timing}{
-        The visualization engine is running, and the user has created a scenario containing timed events.
+        The visualization engine is running, and the user creates a scenario containing timed events.
     }{
         The user loads and starts the created scenario.
     }{
@@ -377,14 +376,14 @@ STAGE is an event-based simulation environment used to compare the effectiveness
 
 \subsubsection{Simulation Engine}
     \testentry{Timing}{
-        The simulation engine is running, and the user has created a scenario containing timed events.
+        The simulation engine is running, and the user creates a scenario containing timed events.
     }{
         The user loads and starts the created scenario.
     }{
         Movement and communication occur at real-time speeds as reflected by the logs.
     }
     \testentry{Limitations of Movement}{
-        The simulation engine is running, and the user has created a scenario mobile objects.
+        The simulation engine is running, and the user creates a scenario mobile objects.
     }{
         The scenario attempts to move the object into an invalid location.
     }{
@@ -405,7 +404,7 @@ STAGE is an event-based simulation environment used to compare the effectiveness
         The simulation engine moves the object as close to the invalid location as possible.
     }
     \testentry{Maximum Models}{
-        The simulation engine is running, and the user has created a scenario containing 300 models.
+        The simulation engine is running, and the user creates a scenario containing 300 models.
     }{
         The user loads and starts the created scenario.
     }{
