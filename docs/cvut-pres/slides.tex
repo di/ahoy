@@ -148,7 +148,8 @@
 
 \begin{frame}[fragile]
     \frametitle{Example Scenario Definition}
-    Scenario creating five nodes, each with an "Example" agent:
+    Scenario creating five nodes, each with an ``Example'' agent:
+    {\small
     \begin{verbatim}
 class ScenarioExample(Scenario) :
     def __init__(self) :
@@ -158,12 +159,13 @@ class ScenarioExample(Scenario) :
               position=(0,0,0), agents = [ExampleAgent()])
             
             self._nodes.append(node)
-    \end{verbatim}
+    \end{verbatim}}
 \end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Example Network Definition}
     Network definition adding a wireless interface to each of nodes in a scenario:
+    {\small
     \begin{verbatim}
 class NetworkExample(Network) :
     def __init__(self, scen_inst) :
@@ -172,13 +174,14 @@ class NetworkExample(Network) :
             node.get('interfaces')['eth0'] = \
               Interface(type='wireless', power=50, \
               ssid='wlan0')
-    \end{verbatim}
+    \end{verbatim}}
 \end{frame}
 
 
 \begin{frame}[fragile]
     \frametitle{Example Custom Agent Definition}
     Example agent which randomly sets waypoints within a 100m square of its containing node, waits for the movement to complete, and repeats:
+    {\small
     \begin{verbatim}
 class AgentExample(Agent) :
     def __init__(self, parent_node) :
@@ -193,13 +196,13 @@ class AgentExample(Agent) :
               random.randint(-50,50))
             self._api.get_event_channel().block_until(\
               self.get_parent(), 'move_complete')
-    \end{verbatim}
+    \end{verbatim}}
 \end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Template Agent \& Subscription}
     Example template agent for following a specific node:
-
+    {\small
     \begin{verbatim}
 class FollowAgent(Agent) :
     def __init__(self, parent_node, follow_id, follow_close) :
@@ -217,10 +220,9 @@ class FollowAgent(Agent) :
             event_name = 'move_tic'
         else :
             event_name = 'move_complete'
-
         self._api.get_event_channel().subscribe(event_name, \
           self._on_move)
-    \end{verbatim}
+    \end{verbatim}}
 \end{frame}
 
 \frame
@@ -234,7 +236,7 @@ class FollowAgent(Agent) :
     \end{itemize}
     \textbf{Simulation Engine}
     \begin{itemize}
-	\item Simulation engine may become a bottleneck as all "filter \& forward" (e.g. messaging) type events must flow through it
+	\item Simulation engine may become a bottleneck as all ``filter \& forward'' (e.g. messaging) type events must flow through it
 	\item Distribution of simulation engine is a future goal 
     \end{itemize}
 }
@@ -274,7 +276,7 @@ class FollowAgent(Agent) :
 	\item Very early beta
 	\item Prototype created demonstrating:
         \begin{itemize}
-	    \item "Custom" agent definition
+	    \item ``Custom'' agent definition
 	    \item Network definition
 	    \item Scenario definition
 	    \item Visualization
@@ -299,17 +301,17 @@ class FollowAgent(Agent) :
 {
     \frametitle{Contact \& Links}
     \begin{center}
-	Dustin S. Ingram
-	<dsi23@drexel.edu>
+	Dustin S. Ingram\\
+	\texttt{dsi23@drexel.edu} \\
 
-	Aaron M. Rosenfeld
-	<ar374@drexel.edu>
+	Aaron M. Rosenfeld \\
+	\texttt{ar374@drexel.edu} \\
     \end{center}
-    \textbf{STAGE:} http://code.googe.com/p/stage
 
-    \textbf{CORE:} http://cs.itd.nrl.navy.mil/work/core
-    \textbf{EMANE:} http://cs.itd.nrl.navy.mil/work/emane
-    \textbf{NS3:} http://www.nsnam.org 
+    \textbf{STAGE:} http://code.googe.com/p/stage \\
+    \textbf{CORE:} http://cs.itd.nrl.navy.mil/work/core \\
+    \textbf{EMANE:} http://cs.itd.nrl.navy.mil/work/emane \\
+    \textbf{NS3:} http://www.nsnam.org  \\
 }
 
 \end{document}
