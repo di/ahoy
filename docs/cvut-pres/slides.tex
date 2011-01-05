@@ -149,7 +149,7 @@
 \begin{frame}[fragile]
     \frametitle{Example Scenario Definition}
     Scenario creating five nodes, each with an ``Example'' agent:
-    {\tiny
+    {\footnotesize
     \begin{verbatim}
 class ScenarioExample(Scenario) :
     def __init__(self) :
@@ -165,7 +165,7 @@ class ScenarioExample(Scenario) :
 \begin{frame}[fragile]
     \frametitle{Example Network Definition}
     Network definition adding a wireless interface to each of nodes in a scenario:
-    {\tiny
+    {\footnotesize
     \begin{verbatim}
 class NetworkExample(Network) :
     def __init__(self, scen_inst) :
@@ -181,7 +181,7 @@ class NetworkExample(Network) :
 \begin{frame}[fragile]
     \frametitle{Example Custom Agent Definition}
     Example agent which randomly sets waypoints within a 100m square of its containing node, waits for the movement to complete, and repeats:
-    {\tiny
+    {\footnotesize
     \begin{verbatim}
 class AgentExample(Agent) :
     def __init__(self, parent_node) :
@@ -202,7 +202,7 @@ class AgentExample(Agent) :
 \begin{frame}[fragile]
     \frametitle{Template Agent \& Subscription}
     Example template agent for following a specific node:
-    {\tiny
+    {\footnotesize
     \begin{verbatim}
 class FollowAgent(Agent) :
     def __init__(self, parent_node, follow_id, follow_close) :
