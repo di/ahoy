@@ -45,7 +45,7 @@
 	    \item World Objects
 	\end{itemize}
 	\item Real networks \& Communication
-	\item Bridges network emulatiors and agent simulators
+	\item Bridges network emulators and agent simulators
     \end{itemize}
 }
 
@@ -53,7 +53,7 @@
 {
     \frametitle{Overview of STAGE}
     \begin{center}
-        \includegraphics{ss2.png}
+        \includegraphics[scale=.3]{ss2.png}
     \end{center}
 }
 
@@ -66,7 +66,7 @@
 	\item Pre-scripted scenarios (CORE) or poor event support (EMANE)
 	\item Lack of templated agents
 	\item Inability to batch process many executions of scenarios with varying settings
-	\item Data collection non-existant or not supported
+	\item Data collection non-existent or not supported
     \end{itemize}
     \textbf{Current Agent Frameworks}
     \begin{itemize}
@@ -92,7 +92,7 @@
 {
     \frametitle{Motivational Background - CORE}
     \begin{center}
-        \includegraphics{core-screenshot.png}
+        \includegraphics[scale=.3]{core-screenshot.png}
     \end{center}
 }
 
@@ -142,7 +142,7 @@
 {
     \frametitle{Proposed Architecture}
     \begin{center}
-        \includegraphics{CTUSeminar.pdf}
+        \includegraphics[scale=.5]{CTUSeminar.pdf}
     \end{center}
 }
 
@@ -197,7 +197,7 @@ class AgentExample(Agent) :
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Template Extension Agent \& Pub/Sub}
+    \frametitle{Template Agent \& Subscription}
     Example template agent for following a specific node:
 
     \begin{verbatim}
@@ -243,10 +243,26 @@ class FollowAgent(Agent) :
 {
     \frametitle{Batch Experimentation}
     \begin{itemize}
-	\item Provided various input parameters (e.g. number of nodes, agent configuration) and argument vectors/argument distribution vectors, run experiments
-	\item Collect data from each experiment
-	\item Provide tabulated results of high level metrics (e.g. data sent, packets lost)
-	\item Incorporate into API to allow agents to output low-level, specific information (e.g. algorithm performance)d{itemize}
+        \item Collect data from each experiment
+        \item Provide tabulated results of high level metrics (e.g. data sent, packets lost)
+        \item Incorporate into API to allow agents to output low-level, specific information (e.g. algorithm
+        performance)
+    \end{itemize}
+    \textbf{Method 1}
+    \begin{itemize}
+        \item Provided various input parameters (e.g. number of nodes, agent configuration) and argument vector, run
+        experiments
+        \begin{itemize}
+            \item $P := [ NodeCount, AgentArg1, AgentArg2 ]$
+            \item $A := [ \{5, 10, 20\}, \{.1, .2, .5\}, \{1, 2, 3\} ]$
+        \end{itemize}
+    \end{itemize}
+    \textbf{Method 2}
+    \begin{itemize}
+        \item Provide desired distributions/counts for output metrics
+        \begin{itemize}
+            \item ``Run each experiment until output of agent 1 fits a nearly normal distribution''
+        \end{itemize}
     \end{itemize}
 }
 
