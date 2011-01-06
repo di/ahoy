@@ -10,7 +10,6 @@ class StartupDaemon :
     def _on_startup(self, event) :
         self._terminate_all()
 
-
     def _terminate_all(self) :
         #TODO: Kill all existing node processes
         pass
