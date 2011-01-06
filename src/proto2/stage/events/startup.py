@@ -17,5 +17,9 @@ class AckStartupEvent(Event) :
         return self._daemon_id
 
 class StartSimulationEvent(Event) :
-    def __init__(self) :
+    def __init__(self, entity_mapping) :
         Event.__init__(self)
+        self._entity_mapping = entity_mapping
+
+    def get_mapping(self) :
+        return self._entity_mapping
