@@ -25,6 +25,7 @@ class Simulation :
         if len(self._startup_acks) > 0 :
             print 'Got %s startup acks.  Starting simulation.' % (len(self._startup_acks),)
             self._event_api.unsubscribe_all(AckStartupEvent)
+            #TODO: Needs to divide work
             self._event_api.publish(StartSimulationEvent())
         else :
             print 'Got no startup acks.  Quitting...'
