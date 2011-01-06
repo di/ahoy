@@ -4,16 +4,22 @@ from stage.eventapi import EventAPI
 from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationEvent
 
 class Simulation :
-    def __init__(self) :
+    def __init__(self, world_path) :
         self._event_api = EventAPI()
         self._startup_acks = set([])
+        self._world = self._world_loader(world_path)
+
+    def _world_loader(self, world_path) :
+        world = __import__(world_path.split('.')[0])
+        world = getattr(world, world_path.split('.')[1])
+        return world
 
     def _on_ack_startup(self, event) :
         self._startup_acks.add(event.get_daemon_id())
 
-    def start(self, world, wait) :
+    def start(self, wait) :
         self._event_api.subscribe(AckStartupEvent, self._on_ack_startup)
-        self._event_api.publish(StartupEvent(world))
+        self._event_api.publish(StartupEvent(self._world))
         
         time.sleep(wait)
         if len(self._startup_acks) > 0 :
@@ -23,13 +29,3 @@ class Simulation :
         else :
             print 'Got no startup acks.  Quitting...'
 
-def world_loader(world_path) :
-    world = __import__(world_path.split('.')[0])
-    world = getattr(world, world_path.split('.')[1])
-    return world
-
-if __name__ == '__main__' :
-    if len(sys.argv) < 2 :
-        print ' usage: python simulation.py <worldfile.worldclass>'
-        sys.exit(0)
-    Simulation().start(world_loader(sys.argv[1]), 2)
