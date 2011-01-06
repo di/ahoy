@@ -1,18 +1,21 @@
 import socket
+import struct
 from threading import Thread
 from stage.event import Event
 
 class EventAPI(Thread) :
     def __init__(self) :
         self._subscriptions = {}
+        self._ip = '239.192.0.100'
+        self._port = 9998
         self._setup_mc()
 
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-        self._sock.bind(('', port))
-        mreq = struct.pack('=4sl', socket.inet_aton(ip), socket.INADDR_ANY)
+        self._sock.bind(('', self._port))
+        mreq = struct.pack('=4sl', socket.inet_aton(self._ip), socket.INADDR_ANY)
 
         self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
