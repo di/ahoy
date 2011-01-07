@@ -7,6 +7,7 @@ from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationE
 class Simulation :
     def __init__(self, world_inst) :
         self._event_api = EventAPI()
+        self._event_api.start()
         self._startup_acks = set([])
         self._world = world_inst
 
@@ -35,4 +36,3 @@ class Simulation :
             self._event_api.publish(StartSimulationEvent(mapping))
         else :
             print 'Got no startup acks.  Quitting...'
-

@@ -7,6 +7,7 @@ from stage.events.startup import StartupEvent, StartSimulationEvent, AckStartupE
 class StartupDaemon :
     def __init__(self, phys_id) :
         self._event_api = EventAPI()
+        self._event_api.start()
         self._phys_id = phys_id
         self._running_pids = set([])
 
@@ -23,6 +24,7 @@ class StartupDaemon :
         #TODO: Event here?
 
     def _start_entity_process(self, entity) :
+        print 'Starting subprocess for uid %s' % entity.get_uid()
         p = subprocess.Popen(('python entity.py %s' % entity.pickle()).split(' '))
         self._running_pids.add(p)
 

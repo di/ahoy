@@ -5,3 +5,6 @@ class Network :
 
     def add_interface(self, interface) :
         self._members.add(interface)
+
+    def get_name(self) :
+        return self._name

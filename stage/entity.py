@@ -5,7 +5,6 @@ from stage.eventapi import EventAPI
 class Entity :
     def __init__(self, uid) :
         self._uid = uid
-        self._event_api = None
 
     def pickle(self) :
         return pickle.dumps(self)
@@ -22,10 +21,12 @@ class Entity :
 
     def initialize(self) :
         self._event_api = EventAPI()
+        self._event_api.start()
 
     def run(self) :
         pass
 
 if __name__ == '__main__' :
     inst = Entity.from_pickle(sys.argv[1])
+    inst.initialize()
     inst.run()
