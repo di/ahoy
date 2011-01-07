@@ -5,6 +5,17 @@ from stage.eventapi import EventAPI
 class Entity :
     def __init__(self, uid) :
         self._uid = uid
+        self._lat = 0
+        self._long = 0
+        self._agl = 0
+
+    def set_position(self, lat, long, agl) :
+        self._lat = lat
+        self._long = long
+        self._agl = agl
+
+    def get_position(self) :
+        return self._lat, self._long, self._agl
 
     def pickle(self) :
         return pickle.dumps(self)
