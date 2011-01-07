@@ -1,8 +1,9 @@
 import sys
 from stage.simulation import Simulation
+from stage.world import World
+from stage.entities.node import Node
 
-if __name__ == '__main__' :
-    if len(sys.argv) < 2 :
-        print ' usage: python simulation.py <worldfile.worldclass>'
-        sys.exit(0)
-    Simulation(sys.argv[1]).start(2)
+world = World()
+world.add_entity(Node(0))
+
+Simulation(world).start(2)

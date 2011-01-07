@@ -10,3 +10,6 @@ class Node(Entity) :
 
     def remove_interface(self, name) :
         del self._interface[name]
+
+    def run(self) :
+        print 'starting node %s' % self._uid
