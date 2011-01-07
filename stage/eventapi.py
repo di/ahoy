@@ -37,7 +37,6 @@ class EventAPI(Thread) :
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if len(keys) > 0 :
-            print 'Processing %s ' % event_inst
             for cb in self._subscriptions[keys[0]] :
                 if len(cb[1]) > 0 :
                     cb[0](event_inst, cb[1])
