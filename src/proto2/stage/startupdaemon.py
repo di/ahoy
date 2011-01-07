@@ -11,7 +11,6 @@ class StartupDaemon :
     def _on_startup(self, event) :
         self._terminate_all()
         self._event_api.unsubscribe_all(StartupEvent)
-        print 'subscribing StartSimulationEvent'
         self._event_api.subscribe(StartSimulationEvent, self._on_sim_start)
         self._event_api.publish(AckStartupEvent(self._phys_id))
 
@@ -20,7 +19,6 @@ class StartupDaemon :
         pass
 
     def _start_entity_process(self, entity) :
-        print 'python entity.py %s' % entity.pickle()
         subprocess.Popen(('python entity.py %s' % entity.pickle()).split(' '))
 
     def _on_sim_start(self, event) :

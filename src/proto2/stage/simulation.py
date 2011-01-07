@@ -27,7 +27,8 @@ class Simulation :
             mapping = {}
             to_allocate = list(self._world.get_entities())
             for i, phy in enumerate(list(self._startup_acks)) :
-                alloc = to_allocate[i:i+entities_per_phy_node]
+                alloc = to_allocate[i*entities_per_phy_node:(i+1)*entities_per_phy_node]
+                print i, alloc
                 if len(alloc) == 0 :
                     break
                 mapping[phy] = alloc
