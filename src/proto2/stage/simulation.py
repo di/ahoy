@@ -1,18 +1,14 @@
 import sys
 import time
 from stage.eventapi import EventAPI
+from stage.world import World
 from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationEvent
 
 class Simulation :
-    def __init__(self, world_path) :
+    def __init__(self, world_inst) :
         self._event_api = EventAPI()
         self._startup_acks = set([])
-        self._world = self._world_loader(world_path)
-
-    def _world_loader(self, world_path) :
-        world = __import__(world_path.split('.')[0])
-        world = getattr(world, world_path.split('.')[1])
-        return world
+        self._world = world_inst
 
     def _on_ack_startup(self, event) :
         self._startup_acks.add(event.get_daemon_id())
@@ -26,10 +22,12 @@ class Simulation :
             print 'Got %s startup acks.  Starting simulation.' % (len(self._startup_acks),)
             self._event_api.unsubscribe_all(AckStartupEvent)
             #TODO: Fix the division
-            entities_per_phy_node = len(self._world.get_entities()) / float(len(self._startup_acks))
+            entities_per_phy_node = int(len(self._world.get_entities()) / float(len(self._startup_acks)))
+            print '    allocating %s entities per node' % entities_per_phy_node
             mapping = {}
-            for i, phy in enumerate(self._startup_acks) :
-                alloc = mapping[i:i+2]
+            to_allocate = list(self._world.get_entities())
+            for i, phy in enumerate(list(self._startup_acks)) :
+                alloc = to_allocate[i:i+entities_per_phy_node]
                 if len(alloc) == 0 :
                     break
                 mapping[phy] = alloc

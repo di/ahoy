@@ -5,10 +5,12 @@ from stage.event import Event
 
 class EventAPI(Thread) :
     def __init__(self) :
+        Thread.__init__(self)
         self._subscriptions = {}
         self._ip = '239.192.0.100'
         self._port = 9998
         self._setup_mc()
+        self.start()
 
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -32,12 +34,15 @@ class EventAPI(Thread) :
             del self._subscriptions[event_type]
 
     def _process(self, data) :
-        event_inst = Event.unpickle(data)
-        sub = filter(lambda e : isinstance(i, e), subs)
-        if len(sub) > 0 :
-            sub = sub[0]
-            cbinfo = sub
-            cbinfo[0](sub, cbinfo[1])
+        event_inst = Event.from_pickle(data)
+        keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
+        if len(keys) > 0 :
+            print 'Processing %s ' % event_inst
+            for cb in self._subscriptions[keys[0]] :
+                if len(cb[1]) > 0 :
+                    cb[0](event_inst, cb[1])
+                else :
+                    cb[0](event_inst)
 
     def run(self) :
         while True :
