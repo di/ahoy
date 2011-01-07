@@ -3,14 +3,12 @@ import struct
 from threading import Thread
 from stage.event import Event
 
-class EventAPI(Thread) :
+class EventAPI :
     def __init__(self) :
-        Thread.__init__(self)
         self._subscriptions = {}
         self._ip = '239.192.0.100'
         self._port = 9998
         self._setup_mc()
-        self.start()
 
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -46,5 +44,7 @@ class EventAPI(Thread) :
     def run(self) :
         while True :
             data, addr = self._sock.recvfrom(2048)
-            # TODO: thread this line?
             self._process(data)
+
+    def start(self) :
+        Thread(target=self.run).start()
