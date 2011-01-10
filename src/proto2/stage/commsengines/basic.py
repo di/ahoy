@@ -16,6 +16,7 @@ class BasicComms(CommsEngine) :
         src_lat, src_lon, src_agl = self.get_simulation().get_world().get_entity(source_uid).get_position()
         dest_lat, dest_lon, dest_agl = self.get_simulation().get_world().get_entity(dest_uid).get_position()
         distance = lin_distance(src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl)
+        print src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl, distance
         if distance <= self._max_range :
             return True
         return False
@@ -41,11 +42,12 @@ class BasicComms(CommsEngine) :
         move_uid = event.get_uid()
         for entity in self.get_simulation().get_world().get_entities() :
             if isinstance(entity, Node) :
-                for iface in entity.get_interfaces() :
-                    network = self.get_simulation().get_world().get_network(iface.get_network_name())
-                    if network.both_in_network(move_uid, entity.get_uid()) :
-                        # TODO: should probably cache the up/down status
-                        if self._in_range(move_uid, entity.get_uid()) :
-                            self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name()))
-                        else :
-                            self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))
+                if move_uid != entity.get_uid() :
+                    for iface in entity.get_interfaces() :
+                        network = self.get_simulation().get_world().get_network(iface.get_network_name())
+                        if network.both_in_network(move_uid, entity.get_uid()) :
+                            # TODO: should probably cache the up/down status
+                            if self._in_range(move_uid, entity.get_uid()) :
+                                self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name()))
+                            else :
+                                self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))

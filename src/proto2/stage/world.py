@@ -33,7 +33,6 @@ class World :
 
     def _on_entity_move(self, event) :
         self.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
-        print 'World got move event for %s' % event.get_uid()
 
     def pickle(self) :
         return pickle.dumps(self)
