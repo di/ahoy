@@ -1,3 +1,4 @@
+import socket
 import sys
 from stage.mcpull import McPull
 from stage.events.link import LinkEvent
