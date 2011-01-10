@@ -13,7 +13,6 @@ class McPull :
         self._socket.sendto('init', (self._ip, self._port))
 
     def _on_message(self, data) :
-        # A bit hacky
         self._event_api._process(data)
 
     def get_event_api(self) :
