@@ -3,7 +3,6 @@ import time
 from stage.eventapi import EventAPI
 from stage.world import World
 from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationEvent
-from stage.events.move import EntityMoveEvent
 
 class Simulation :
     def __init__(self, world_inst, comms_module) :
@@ -14,19 +13,15 @@ class Simulation :
         self._comms_module.set_simulation(self)
         self._world = world_inst
 
-        self._event_api.subscribe(EntityMoveEvent, self._on_entity_move)
-
     def get_world(self) :
         return self._world
-
-    def _on_entity_move(self, event) :
-        self._world.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
 
     def _on_ack_startup(self, event) :
         self._startup_acks.add(event.get_daemon_id())
 
     def start(self, wait) :
         self._event_api.subscribe(AckStartupEvent, self._on_ack_startup)
+        # Do *NOT* change self._world after this point.  It is pickled here and sent to other phy nodes
         self._event_api.publish(StartupEvent(self._world))
         
         time.sleep(wait)
@@ -44,6 +39,8 @@ class Simulation :
                 if len(alloc) == 0 :
                     break
                 mapping[phy] = alloc
+
+            self._world.initialize()
             self._event_api.publish(StartSimulationEvent(mapping))
         else :
             print 'Got no startup acks.  Quitting...'

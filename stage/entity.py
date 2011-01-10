@@ -1,5 +1,6 @@
 import sys
 import pickle
+from stage.world import World
 from stage.eventapi import EventAPI
 from stage.events.move import EntityMoveEvent
 
@@ -10,6 +11,13 @@ class Entity :
         self._long = 0
         self._agl = 0
         self._event_api = None
+        self._world = None
+
+    def set_world(self, world) :
+        self._world = world
+
+    def get_world(self) :
+        return self._world
 
     def set_position(self, lat, long, agl) :
         self._lat = lat
@@ -42,6 +50,11 @@ class Entity :
         pass
 
 if __name__ == '__main__' :
-    inst = Entity.from_pickle(sys.argv[1])
-    inst.initialize()
-    inst.run()
+    entity = Entity.from_pickle(sys.argv[1])
+
+    world = World.from_pickle(sys.argv[2])
+    world.initialize()
+
+    entity.set_world(world)
+    entity.initialize()
+    entity.run()
