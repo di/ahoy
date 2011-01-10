@@ -20,6 +20,7 @@ class McPush :
     def _listener(self) :
         while True :
             data, addr = self._listen_sock.recvfrom(2048)
+            print 'GOT:', data, addr
             if data == 'init' :
                 print 'New connection from %s' % (addr,)
                 self._clients.add(addr)
