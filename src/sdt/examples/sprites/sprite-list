@@ -1,0 +1,134 @@
+# This file contains some more or less useful image files for associating with
+# sdt sprites.  Modify the sizes as appropriate.
+
+#3d Models
+sprite hearse image hearse/hearse.3ds size 132,132 length 5.8
+sprite warrior image warrior-blue/warrior.3ds size 64,64 length 16
+sprite stealth image stealth/stealth.3ds size 300,300 length 20.8
+sprite boat image boat/boat.3ds length 10 light on
+sprite bradley image bradley/bradley.3ds length 7.5 #truck
+sprite f40 image f40/f40.3ds length 12.9 light on
+sprite gunship image gunship/gunship.3ds length 17.7 light on
+sprite hummer image hummer/hummer.3ds length 4.6 light on
+sprite jet image jet/jet.3ds light on
+sprite mooney image mooney/mooney.3ds length 20 light on
+
+
+# Vehicles
+sprite groundStation image groundStation.png size 114,103 #468,435
+sprite truck image truck.png size 50,25
+sprite truck1 image truck1.png size 181,68
+sprite truck2 image truck.png size 181,68
+sprite blueCar image car.gif size 47,23
+sprite greyCar image car-gray.gif size 47,23
+sprite firetruck image firetruck1.gif size 118,66
+sprite firetruck2 image firetruck2.gif size 153,100
+sprite firetruck3 image pumper3.gif size 153,65
+sprite humvee image humvee.png size 185,119
+sprite humveeSmall image humvee.png size 50,30
+sprite camoHumvee image vehicle.gif size 79,73
+sprite humvee image humvee.gif
+# 3d model vehicles
+sprite warrior image warrior/warrior.3ds size 32,32 length 8
+sprite hearse image hearse/hearse.3ds size 32,32 length 5.8
+
+# Aircraft 
+sprite jet image jet.gif
+sprite helicopter image helicopter.gif
+sprite uav image uav.png size 72,20
+sprite uav-up image uav.gif size 68,80
+sprite uav-red image uav-red.gif
+sprite f18 image f18.png size 188,67 #376,134
+sprite f18-l image f18-l.png size 188,67 #376,134
+sprite f18-side image f18-side.png size 246,206 #123x103
+sprite f18-tail image f18-tail.png size 246,206 #123x103
+sprite predatorSmall image predator.png size 69,20
+sprite predator image predator.png size 138,41 #495,149
+sprite saucer image saucer.gif size 144,52
+sprite helo1 image helo1.gif size 150,87
+sprite helo2 image helo2.png size 438,179
+sprite helo image helo.png size 105,43
+sprite raptor image raptor.png size 200,157 #1200,943
+sprite scanEagle image scanEagle.png size 114,42 #228,96
+sprite scanEagle-red image scanEagle-red.png size 114,42 #228,96
+sprite scanEagle-blue image scanEagle-blue.png size 114,42 #228,96
+sprite scanEagle-green image scanEagle-green.png size 114,42 #228,96
+sprite scanEagle-grey image scanEagle-grey.png size 114,42 #228,96
+sprite scanEagle-l image scanEagle-left.png size 114,42 #228,96
+sprite scanEagle-r image scanEagle-rt.png size 114,42 #228,96
+sprite scanEagle-t image scanEagle-transparant.png size 114,42 #228,96
+sprite scanEagle-lg image scanEagle-large.png size 125,95 #250,191
+sprite raptor image raptor-side.png size 188,67 #376,134
+sprite raptor image raptor-side-l.png size 188,67 #376,134
+sprite raptor image raptor.png size 200,157 #1200,943
+sprite raptor-f18.png size 240,120 # 481,241
+sprite raptor-f18-l.png size 240,120 # 481,241
+sprite marinar-uav image marinar-uav.png size 230,150 # 461,302 
+sprite marinar-uav-l image marinar-uav-l.png size 230,150 # 461,302 
+sprite raven image raven.png size size size 251,164 #503,328
+
+# Ships
+sprite cruiser image GuidedMissileCruiser.png size 248,115 # 496,230
+sprite cruiser-r image GuidedMissileCruiser-r.png size 248,115 # 496,230
+sprite destroyer image destroyer.png size 150,37
+sprite bigDestroyer image destroyer.png size 300,74
+sprite carrier image carrier.png size 150,26
+sprite carrier-red image carrier-red.png size 150,26
+sprite carrier-blue image carrier-blue.png size 150,26
+sprite carrier-green image carrier-green.png size 150,26
+sprite enterprise image carrier-enterprise size 240,172 #962,691
+sprite enterprise-hull image carrier-enterprise-hull size 240,172 #962,691
+sprite hovercraft image hovercraft.gif size 94,46 #47,23
+sprite hovercraft-cam image hovercraft-camo.gif size 94,46 #47,23
+sprite rih image inflatableRigidHull.png size 77,19
+sprite independence image uss-independence-LCS-2.png size 135,57 # 271,114
+sprite independence-side image uss-independence-LCS-2-side.png size 135,57 # 271,114
+sprite independence-side-l image uss-independence-LCS-2-side-l.png size 135,57 # 271,114
+sprite alp image amphibiousLandingPlatform.png size 353,68 #700,137
+sprite alp image amphibiousLandingPlatform-l.png size 353,68 #700,137
+sprite al image amphibiousLanding.png size 135,86
+sprite aegis image aegis.png size 283,215 # 567,430
+sprite ddg-destroyer-2 image ddg-destroyer-2.png size 366,399
+sprite aegis-r image aegis-r.png size 283,215 # 567,430
+sprite ddx-destroyer-2 image ddx-destroyer-2.png size 323,52 # 646,125
+sprite ddx-destroyer-3 image ddx-destroyer-3.png size 323,52 # 646,125
+sprite ddg-destroyer image ddg-destroyer.png size 454,309
+sprite ddc-destroyer image ddc-destroyer.png size 482,93 
+sprite oilTanker image oilTanker.png size 223,156 #446,312
+sprite sub-r image sub-r.png size 75,37 #150,74
+sprite sub-l image sub-l.png size 75,37 #150,74
+sprite sub-r image submarine_cartoon.png  #size 200,180 #600,470
+sprite pirate image pirates.png
+sprite pirate-skiff image pirate-skiff.png
+sprite pirate-skiff-r image pirate-skiff-r.png
+
+# Weaponry
+sprite scud image scud.png size 517,943
+sprite scud2 image scud2.png size 396,417
+sprite scudSmall image scudsmall.png size 79,38
+
+# People
+sprite soldier image soldier.gif size 28,60
+sprite soldier1 image soldier1.png size 49,128
+sprite soldier2 image soldier2.gif size 46,79
+
+# Miscellaneous
+sprite sat image satellite.png size 180,131 #361,262
+sprite sat-2 image satellite-2.png size 180,131 #361,262
+sprite flame image flame.gif size 58,80
+sprite laptop image laptop.png size 88,80
+sprite pda image pda.png size 82,55
+sprite redStar image red_star.gif size 33,32
+sprite yellowStar image star.gif size 33,32
+sprite billboard image billboard.png size 62,62 #256,256
+sprite waterTower image waterTower.png 62,62 #256,256
+sprite 4058 image 4058_super.gif size 80,56
+sprite ibm_eserver image ibm_eserver.gif size 130,30
+sprite mbr image mbr.gif size 80,40
+sprite redblack image redblack.gif size 46,91
+sprite router_green image router_green.gif size 47,27
+sprite router_purple image router_purple.gif size 47,27
+sprite t40 image T40.gif size 74,63 
+sprite t40_bw image T40_bw.gif size 74,63
+sprite X41 image X41.gif size 80,79
+sprite groundStation image groundStation.png size 114,108 #468,435

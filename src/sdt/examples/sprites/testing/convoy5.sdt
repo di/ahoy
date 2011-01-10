@@ -1,0 +1,139 @@
+path "E:/testing/frombrian/models/;./sprites/;./examples/sprites;/Documents and Settings/ljt/My Documents/EclipseWorkspace/examples/sprites;/Documents and Settings/ljt/My Documents/EclipseWorkspace/examples/;../../sdt/examples;../../sdt/examples/sprites;"
+
+bgbounds 69.0720,34.3510,69.1768,34.2676
+defaultAltitudeType agl
+#sprite yellowStar image star.gif size 32,32
+
+node nem:9 position 69.127091,34.281839,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.131139,34.292096,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.135186,34.302353,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137644,34.312733,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.119044,34.317113,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.161918,34.323158,2500.000000 symbol circle,red,3 label white
+
+link nem:9,nem:10,green
+link nem:9,nem:11,green
+link nem:9,nem:12,green
+link nem:10,nem:11,green
+link nem:10,nem:12,green
+link nem:11,nem:12,green
+link nem:15,nem:16 line red,3 linklabel on
+
+link nem:15,nem:9 line blue,3 linklabel on
+link nem:15,nem:10 line blue,3 linklabel on
+link nem:15,nem:11 line blue,3 linklabel on
+link nem:15,nem:12 line blue,3 linklabel on
+link nem:16,nem:9 line blue,3 linklabel on
+link nem:16,nem:10 line blue,3 linklabel on
+link nem:16,nem:11 line blue,3 linklabel on
+link nem:16,nem:12 line blue,3 linklabel on
+
+wait 1500.000000
+
+node nem:9 position 69.127091,34.281839,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.131139,34.292096,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.135186,34.302353,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137644,34.312733,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.119044,34.317113,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.161918,34.323158,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+unlink nem:6,nem:12
+node nem:9 position 69.127543,34.282985,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.131591,34.293242,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.135639,34.303499,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137459,34.313929,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.118570,34.316632,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.162604,34.322517,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+unlink nem:5,nem:9
+node nem:9 position 69.127996,34.284132,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132043,34.294388,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136091,34.304645,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137273,34.315125,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.118130,34.316139,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.163147,34.321867,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.128448,34.285278,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132496,34.295535,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136544,34.305791,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137087,34.316321,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117756,34.315622,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.163663,34.321216,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.128900,34.286424,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132948,34.296681,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136996,34.306938,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136902,34.317517,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117422,34.315093,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164063,34.320565,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.129353,34.287570,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.133401,34.297827,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.137448,34.308084,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136716,34.318713,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117149,34.314544,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164433,34.319915,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.129805,34.288717,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.133853,34.298974,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.137901,34.309230,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136530,34.319909,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.116920,34.313983,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164705,34.319269,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+
+
+wait 1500.000000
+
+node nem:9 position 69.127091,34.281839,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.131139,34.292096,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.135186,34.302353,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137644,34.312733,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.119044,34.317113,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.161918,34.323158,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+unlink nem:6,nem:12
+node nem:9 position 69.127543,34.282985,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.131591,34.293242,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.135639,34.303499,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137459,34.313929,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.118570,34.316632,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.162604,34.322517,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+unlink nem:5,nem:9
+node nem:9 position 69.127996,34.284132,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132043,34.294388,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136091,34.304645,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137273,34.315125,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.118130,34.316139,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.163147,34.321867,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.128448,34.285278,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132496,34.295535,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136544,34.305791,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.137087,34.316321,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117756,34.315622,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.163663,34.321216,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.128900,34.286424,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.132948,34.296681,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.136996,34.306938,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136902,34.317517,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117422,34.315093,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164063,34.320565,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.129353,34.287570,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.133401,34.297827,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.137448,34.308084,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136716,34.318713,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.117149,34.314544,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164433,34.319915,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+node nem:9 position 69.129805,34.288717,0.000000 symbol circle,red,3 label white
+node nem:10 position 69.133853,34.298974,0.000000 symbol circle,red,3 label white
+node nem:11 position 69.137901,34.309230,0.000000 symbol circle,red,3 label white
+node nem:12 position 69.136530,34.319909,0.000000 symbol circle,red,3 label white
+node nem:15 position 69.116920,34.313983,2500.000000 symbol circle,red,3 label white
+node nem:16 position 69.164705,34.319269,2500.000000 symbol circle,red,3 label white
+wait 1500.000000
+

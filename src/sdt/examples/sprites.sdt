@@ -1,0 +1,19 @@
+path "./sprites/;./examples/sprites;../../sdt/examples;../../sdt/examples/sprites;"
+# Load selected sprite types
+sprite rih image inflatableRigidHull.png #size 77,19
+sprite scanEagle image scanEagle.png #size 114,42 
+sprite oilTanker image oilTanker.png size 223,156 
+sprite independence image uss-independence-LCS-2.png #size 135,57 
+sprite alp image amphibiousLandingPlatform.png #size 311,45 
+sprite pirate image pirates.png
+# Define sprites types
+sprite uav image uav.png size 72,20
+sprite helo image helo.png size 105,43
+sprite truck image vehicle.gif size 79,73
+sprite warrior image warrior/warrior.3ds size 64,64 length 16
+sprite hummer image hummer/hummer.3ds length 9.2 light on #4.6 light on
+sprite bradley image bradley/bradley.3ds length 7.5 #truck
+# airplane
+sprite mooney image mooney/mooney.3ds length 20 light on
+sprite jet image jet/jet.3ds length 200 light on
+sprite stealth image stealth/stealth.3ds size 300,300 length 20.8
