@@ -20,7 +20,7 @@ class McPull :
 
 # Example
 if __name__ == '__main__' :
-    pull = McPull('127.0.0.1', 9876)
+    pull = McPull('explore.cs.drexel.edu', 9876)
     def on_link(event) :
         if event.get_up() :
             up_str = 'UP'
