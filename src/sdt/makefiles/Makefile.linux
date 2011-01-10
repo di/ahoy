@@ -1,0 +1,15 @@
+#
+# Linux Makefile
+#
+
+SYSTEM_FLAGS = 
+SYSTEM_INCLUDES = 
+SYSTEM_LIBS = 
+SYSTEM_REZ = touch
+SYSTEM_HAVES = -DLINUX -DUNIX -DHAVE_IPV6 -DHAVE_ASSERT -DHAVE_GETLOGIN -DHAVE_FLOCK -DHAVE_DIRFD
+SYSTEM = linux
+CC = g++
+RANLIB = ranlib
+AR = ar
+
+include Makefile.common
