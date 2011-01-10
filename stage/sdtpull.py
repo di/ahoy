@@ -1,3 +1,6 @@
+import sys
+from stage.mcpull import McPull
+
 class SdtPull(McPull) :
     def __init__(self, ip, port) :
         McPull.__init__(ip, port)
@@ -8,9 +11,9 @@ class SdtPull(McPull) :
 
     def _on_link(self, event) :
         if event.get_up() :
-            self._sdt_sock.send('link %s,%s,%s line %s,%s' % (event.get_uid1(), event.get_uid2(), '802.11', 'red', '3')
+            self._sdt_sock.send('link %s,%s,%s line %s,%s' % (event.get_uid1(), event.get_uid2(), '802.11', 'red', '3'))
         else :
-            self._sdt_sock.send('delete link %s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11')
+            self._sdt_sock.send('delete link %s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
 
     def _on_move(self, event) :
         self._sdt_sock.send('node %s position %s,%s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), event.get_agl()))
