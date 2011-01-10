@@ -16,6 +16,7 @@ class StartupDaemon :
         self._event_api.unsubscribe_all(StartupEvent)
         self._event_api.subscribe(StartSimulationEvent, self._on_sim_start)
         self._event_api.publish(AckStartupEvent(self._phys_id))
+        self._world = event.get_world()
 
     def terminate_all(self) :
         for p in self._running_pids :
@@ -25,7 +26,7 @@ class StartupDaemon :
 
     def _start_entity_process(self, entity) :
         print 'Starting subprocess for uid %s' % entity.get_uid()
-        p = subprocess.Popen(('python entity.py %s' % entity.pickle()).split(' '))
+        p = subprocess.Popen(('python entity.py %s %s' % (entity.pickle(), self._world.pickle())).split(' '))
         self._running_pids.add(p)
 
     def _on_sim_start(self, event) :
