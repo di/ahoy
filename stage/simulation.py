@@ -3,15 +3,17 @@ import time
 from stage.eventapi import EventAPI
 from stage.world import World
 from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationEvent
+from stage.mcpush import McPush
 
 class Simulation :
-    def __init__(self, world_inst, comms_module) :
+    def __init__(self, world_inst, comms_module, forward_port=None) :
         self._event_api = EventAPI()
         self._event_api.start()
         self._startup_acks = set([])
         self._comms_module = comms_module
         self._comms_module.set_simulation(self)
         self._world = world_inst
+        self._forward_port = forward_port
 
     def get_world(self) :
         return self._world
@@ -28,6 +30,10 @@ class Simulation :
         if len(self._startup_acks) > 0 :
             print 'Got %s startup acks.  Starting simulation.' % (len(self._startup_acks),)
             self._event_api.unsubscribe_all(AckStartupEvent)
+
+            if self._forward_port != None :
+                print 'Starting push on port %s' % self._forward_port
+                McPush(self._forward_port)
             #TODO: Fix the division
             entities_per_phy_node = int(len(self._world.get_entities()) / float(len(self._startup_acks)))
             print '    allocating %s entities per node' % entities_per_phy_node
