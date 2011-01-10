@@ -19,7 +19,7 @@ class SdtPull(McPull) :
             self._sdt_sock.send('delete link %s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
 
     def _on_move(self, event) :
-        self._sdt_sock.send('node %s position %s,%s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), event.get_agl()))
+        self._sdt_sock.send('node %s position %s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), event.get_agl()))
 
 if __name__ == '__main__' :
     if len(sys.argv) < 3 :
