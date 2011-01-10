@@ -1,5 +1,5 @@
-from stage.events.communication import CommunicationSendEvent
 from stage.eventapi import EventAPI
+from stage.events.communication import CommunicationSendEvent
 from stage.events.communication import CommunicationSendEvent
 
 class CommsEngine :
