@@ -6,10 +6,10 @@ from stage.events.move import EntityMoveEvent
 class SdtPull(McPull) :
     def __init__(self, ip, port) :
         McPull.__init__(self, ip, port)
+        self._sdt_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
         self.get_event_api().subscribe(LinkEvent, self._on_link)
         self.get_event_api().subscribe(EntityMoveEvent, self._on_move)
-
-        self._sdt_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def _on_link(self, event) :
         if event.get_up() :
