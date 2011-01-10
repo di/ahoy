@@ -1,6 +1,7 @@
 import sys
 import pickle
 from stage.eventapi import EventAPI
+from stage.events.move import EntityMoveEvent
 
 class Entity :
     def __init__(self, uid) :
@@ -14,7 +15,8 @@ class Entity :
         self._lat = lat
         self._long = long
         self._agl = agl
-        self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl))
+        if self._event_api != None :
+            self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl))
 
     def get_position(self) :
         return self._lat, self._long, self._agl

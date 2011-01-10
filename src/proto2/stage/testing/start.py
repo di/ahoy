@@ -9,9 +9,10 @@ from stage.network import Network
 
 world = World()
 wlan = Network('wlan0')
+world.add_network(wlan)
 for i in range(0, 4) :
     n = Node(i)
-    n.add_interface('wlan0', Interface(n, wlan.get_name()))
+    n.add_interface('wlan0', Interface(n, wlan))
     n.add_agent(CommsAgent(n, 'wlan0', (i+1) % 4))
 #    n.set_position(0, 0, i*270)
     world.add_entity(n)

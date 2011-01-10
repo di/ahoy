@@ -20,7 +20,7 @@ class Simulation :
         return self._world
 
     def _on_entity_move(self, event) :
-        self._world.get_entity(event.get_entity_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
+        self._world.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
 
     def _on_ack_startup(self, event) :
         self._startup_acks.add(event.get_daemon_id())

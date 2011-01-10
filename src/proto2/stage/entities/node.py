@@ -15,6 +15,9 @@ class Node(Entity) :
     def get_interface(self, name) :
         return self._interfaces[name]
 
+    def get_interfaces(self) :
+        return self._interfaces.values()
+
     def add_agent(self, agent_inst) :
         self._agents.append(agent_inst)
 

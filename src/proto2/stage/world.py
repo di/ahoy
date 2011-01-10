@@ -14,6 +14,9 @@ class World :
     def get_entity(self, uid) :
         return self._entities[uid]
 
+    def add_network(self, network) :
+        self._networks[network.get_name()] = network
+
     def get_networks(self) :
         return self._networks.values()
 
