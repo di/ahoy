@@ -1,3 +1,4 @@
+import random
 import time
 from stage.agent import Agent
 from stage.message import Message
@@ -17,5 +18,5 @@ class CommsAgent(Agent) :
         while True :
             iface.send(Message('this is a test from %s to %s' % (self.get_owner_node().get_uid(), self._dests), self._dests))
             lat, lon, agl = self.get_owner_node().get_position()
-            self.get_owner_node().set_position(lat, lon, agl + 1)
+            self.get_owner_node().set_position(lat, lon, agl + random.uniform(50.0, 100.0)/6371.0)
             time.sleep(1)
