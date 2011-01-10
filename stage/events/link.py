@@ -2,6 +2,7 @@ from stage.event import Event
 
 class LinkEvent(Event) :
     def __init__(self, up, uid_1, uid_2, network_name) :
+        Event.__init__(self)
         self._up = up
         self._uid_1 = uid_1
         self._uid_2 = uid_2
