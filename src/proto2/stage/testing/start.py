@@ -22,4 +22,4 @@ if __name__ == '__main__' :
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
 
-    Simulation(world, BasicComms()).start(2)
+    Simulation(world, BasicComms(), 9876).start(2)

@@ -24,21 +24,15 @@ class McPush :
                 print 'New connection from %s' % (addr,)
                 self._clients.add(addr)
             else :
-                print 'Forwarding event from %s' % (addr,)
+                #print 'Forwarding event from %s' % (addr,)
                 self._api.push_raw(data)
 
     def _on_event(self, event) :
-        print 'Pushing event:'
+        #print 'Pushing event:'
         for client in self._clients :
             try :
-                print '    %s' % (client,)
+                #print '    %s' % (client,)
                 self._send_sock.sendto(event.pickle(), client)
             except :
-                print '    %s : error' % (client,)
+                #print '    %s : error' % (client,)
                 self._client.discard(client)
-
-if __name__ == '__main__' :
-    push = McPush(9876)
-
-    while True :
-        pass
