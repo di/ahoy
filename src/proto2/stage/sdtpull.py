@@ -12,11 +12,14 @@ class SdtPull(McPull) :
         self.get_event_api().subscribe(LinkEvent, self._on_link)
         self.get_event_api().subscribe(EntityMoveEvent, self._on_move)
 
+    def _send(self, msg) :
+        self._sdt_sock.send(msg, (self._ip, self._port))
+
     def _on_link(self, event) :
         if event.get_up() :
-            self._sdt_sock.send('link %s,%s,%s line %s,%s' % (event.get_uid1(), event.get_uid2(), '802.11', 'red', '3'))
+            self._send('link %s,%s,%s line %s,%s' % (event.get_uid1(), event.get_uid2(), '802.11', 'red', '3'))
         else :
-            self._sdt_sock.send('delete link %s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
+            self._send('delete link %s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
 
     def _on_move(self, event) :
         self._sdt_sock.send('node %s position %s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), event.get_agl()))
