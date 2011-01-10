@@ -8,11 +8,13 @@ class Entity :
         self._lat = 0
         self._long = 0
         self._agl = 0
+        self._event_api = None
 
     def set_position(self, lat, long, agl) :
         self._lat = lat
         self._long = long
         self._agl = agl
+        self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl))
 
     def get_position(self) :
         return self._lat, self._long, self._agl
