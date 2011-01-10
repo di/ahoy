@@ -13,9 +13,7 @@ class SdtPull(McPull) :
         self.get_event_api().subscribe(EntityMoveEvent, self._on_move)
 
     def _send(self, msg) :
-	print self._ip, self._port
-	print type(self._port)
-        self._sdt_sock.send(msg, (self._ip, self._port))
+        self._sdt_sock.sendto(msg, (self._ip, self._port))
 
     def _on_link(self, event) :
         if event.get_up() :
