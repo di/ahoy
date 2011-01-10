@@ -23,6 +23,6 @@ if __name__ == '__main__' :
         print '    usage: python mcpull <remote_ip> <remote_port> <local_sdt_port>'
         sys.exit(0)
 
-    pull = SdtPull(sys.arv[0], int(sys.argv[1]))
+    pull = SdtPull(sys.argv[0], int(sys.argv[1]))
     while True :
         pass
