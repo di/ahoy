@@ -16,7 +16,7 @@ class BasicComms(CommsEngine) :
         src_lat, src_lon, src_agl = self.get_simulation().get_world().get_entity(source_uid).get_position()
         dest_lat, dest_lon, dest_agl = self.get_simulation().get_world().get_entity(dest_uid).get_position()
         distance = lin_distance(src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl)
-        print src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl, distance
+        #print src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl, distance
         if distance <= self._max_range :
             return True
         return False
