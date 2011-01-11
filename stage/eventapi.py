@@ -70,7 +70,6 @@ class EventAPI :
        length = struct.unpack('>L', length)[0]
        packet = self._tcp_conn.recv(length)
        while len(packet) < length :
-           print 'reassemble!'
            packet += self._tcp_conn.recv(length - len(packet))
        return packet
 
