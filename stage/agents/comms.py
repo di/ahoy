@@ -4,10 +4,11 @@ from stage.agent import Agent
 from stage.message import Message
 
 class CommsAgent(Agent) :
-    def __init__(self, owner_node, iface_name, dests) :
+    def __init__(self, owner_node, iface_name, dests, move) :
         Agent.__init__(self, owner_node)
         self._iface_name = iface_name
         self._dests = dests
+        self._move = move
 
     def _on_message(self, event, **kwds) :
         print 'NODE %s GOT: %s' % (self.get_owner_node().get_uid(), event.get_message().get_payload())
@@ -18,5 +19,8 @@ class CommsAgent(Agent) :
         while True :
             iface.send(Message('this is a test from %s to %s' % (self.get_owner_node().get_uid(), self._dests), self._dests))
             lat, lon, agl = self.get_owner_node().get_position()
-            self.get_owner_node().set_position(lat, lon, agl + random.uniform(10.0, 50.0)/6371.0)
+            if self._move :
+                self.get_owner_node().set_position(lat + .00005, lon, agl)
+            else :
+                self.get_owner_node().set_position(lat, lon, agl)
             time.sleep(1)
