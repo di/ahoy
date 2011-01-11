@@ -31,6 +31,7 @@ class EventAPI :
         if self._tcp_conn == None :
             self._sock.sendto(raw, (self._ip, self._port))
         else :
+            print 'Sent:', len(raw)
             self._tcp_conn.send(raw)
 
     def subscribe(self, event_type, callback, **args) :
@@ -43,8 +44,8 @@ class EventAPI :
             del self._subscriptions[event_type]
 
     def _process(self, data) :
-        #if self._tcp_conn != None :
-            #print data
+        if self._tcp_conn != None :
+            print 'Recv:', len(data)
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if self._subscriptions.has_key(All) :
