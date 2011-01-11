@@ -1,3 +1,5 @@
+import struct
+import sys
 import socket
 from threading import Thread
 from stage.eventapi import EventAPI
@@ -27,11 +29,13 @@ class TcpForward :
             data = conn.recv(4096)
             if not data :
                 break
-            self._api.push_raw(data.strip())
+            self._api.push_raw(data)
 
     def _on_event(self, event) :
         for client in self._clients :
             try :
-               client.sendall(event.pickle())
+               raw = event.pickle()
+               client.sendall(struct.pack('>L', len(raw)))
+               client.sendall(raw)
             except :
-                pass
+                print 'error sending:', sys.exc_info()[0]
