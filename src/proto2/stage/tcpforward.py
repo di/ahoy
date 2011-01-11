@@ -32,6 +32,6 @@ class TcpForward :
     def _on_event(self, event) :
         for client in self._clients :
             try :
-               client.send(event.pickle())
+               client.sendall(event.pickle())
             except :
                 pass
