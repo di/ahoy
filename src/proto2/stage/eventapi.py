@@ -43,8 +43,8 @@ class EventAPI :
             del self._subscriptions[event_type]
 
     def _process(self, data) :
-        if self._tcp_conn != None :
-            print data
+        #if self._tcp_conn != None :
+            #print data
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if self._subscriptions.has_key(All) :
