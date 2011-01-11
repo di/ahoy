@@ -24,7 +24,7 @@ class TcpForward :
 
     def _listener(self, conn) :
         while True : 
-            data = conn.recv(2048)
+            data = conn.recv(4096)
             if not data :
                 break
             self._api.push_raw(data.strip())

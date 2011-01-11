@@ -60,9 +60,9 @@ class EventAPI :
     def run(self) :
         while True :
             if self._tcp_conn == None :
-                data, addr = self._sock.recvfrom(2048)
+                data, addr = self._sock.recvfrom(4096)
             else :
-                data = self._tcp_conn.recv(2048)
+                data = self._tcp_conn.recv(4096)
             self._process(data)
 
     def start(self) :
