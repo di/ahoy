@@ -5,16 +5,15 @@ from stage.event import Event
 from stage.events.all import All
 
 class EventAPI :
-    def __init__(self, conn=None) :
+    def __init__(self, tcp_conn=None) :
         self._subscriptions = {}
-        if conn == None :
+        if tcp_conn == None :
             self._ip = '239.192.0.100'
             self._port = 9998
             self._setup_mc()
+            self._tcp_conn = None
         else :
-            self._sock = conn[0]
-            self._ip = conn[1]
-            self._port = conn[2]
+            self._tcp_conn = tcp_conn
 
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -29,7 +28,10 @@ class EventAPI :
         self.push_raw(event.pickle())
 
     def push_raw(self, raw) :
-        self._sock.sendto(raw, (self._ip, self._port))
+        if self._tcp_conn == None :
+            self._sock.sendto(raw, (self._ip, self._port))
+        else :
+            self._tcp_conn.send(raw)
 
     def subscribe(self, event_type, callback, **args) :
         if not self._subscriptions.has_key(event_type) :
@@ -54,7 +56,10 @@ class EventAPI :
 
     def run(self) :
         while True :
-            data, addr = self._sock.recvfrom(2048)
+            if self._tcp_conn == None :
+                data, addr = self._sock.recvfrom(2048)
+            else :
+                data = self._tcp_conn.recv(2048)
             self._process(data)
 
     def start(self) :
