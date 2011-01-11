@@ -1,5 +1,5 @@
 import sys
-import pickle
+from stage.util.serialize import *
 from stage.world import World
 from stage.eventapi import EventAPI
 from stage.events.move import EntityMoveEvent
@@ -30,11 +30,11 @@ class Entity :
         return self._lat, self._long, self._agl
 
     def pickle(self) :
-        return pickle.dumps(self)
+        return serialize(self)
 
     @staticmethod
     def from_pickle(pickled) :
-        return pickle.loads(pickled)
+        return unserialize(pickled)
 
     def get_event_api(self) :
         return self._event_api

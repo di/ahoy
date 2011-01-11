@@ -1,6 +1,6 @@
-import pickle
 from stage.eventapi import EventAPI
 from stage.events.move import EntityMoveEvent
+from stage.util.serialize import *
 
 class World :
     def __init__(self) :
@@ -35,8 +35,8 @@ class World :
         self.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
 
     def pickle(self) :
-        return pickle.dumps(self)
+        return serialize(self)
 
     @staticmethod
     def from_pickle(pickled) :
-        return pickle.loads(pickled)
+        return unserialize(pickled)
