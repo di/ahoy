@@ -27,7 +27,7 @@ class TcpForward :
             data = conn.recv(2048)
             if not data :
                 break
-            self._api.push_raw(data)
+            self._api.push_raw(data.strip())
 
     def _on_event(self, event) :
         for client in self._clients :
