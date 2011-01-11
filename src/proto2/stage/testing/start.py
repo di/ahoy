@@ -1,3 +1,4 @@
+import sys
 import signal
 from stage.simulation import Simulation
 from stage.world import World
@@ -15,7 +16,6 @@ for i in range(0, 4) :
     n = Node(i)
     n.add_interface('wlan0', Interface(n, wlan))
     n.add_agent(CommsAgent(n, 'wlan0', (i+1) % 4))
-#    n.set_position(0, 0, i*270)
     world.add_entity(n)
 
 if __name__ == '__main__' :
@@ -23,4 +23,4 @@ if __name__ == '__main__' :
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
 
-    Simulation(world, BasicComms(), TcpForward(9876)).start(2)
+    Simulation(world, BasicComms(), TcpForward(int(sys.argv[1]))).start(2)
