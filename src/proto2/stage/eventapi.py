@@ -31,7 +31,6 @@ class EventAPI :
         if self._tcp_conn == None :
             self._sock.sendto(raw, (self._ip, self._port))
         else :
-            print 'Sent:', len(raw)
             self._tcp_conn.send(raw)
 
     def subscribe(self, event_type, callback, **args) :
@@ -45,7 +44,6 @@ class EventAPI :
 
     def _process(self, data) :
         if self._tcp_conn != None :
-            print 'Recv:', len(data)
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if self._subscriptions.has_key(All) :
@@ -62,8 +60,20 @@ class EventAPI :
             if self._tcp_conn == None :
                 data, addr = self._sock.recvfrom(4096)
             else :
-                data = self._tcp_conn.recv(4096)
-            self._process(data)
+                data = self._tcp_assemble()
+            if data != None :
+                self._process(data)
+
+    def _tcp_assemble(self) :
+       length = self._tcp_conn.recv(4)
+       if len(length) < 4 :
+           return None
+       length = struct.unpack('>L', length)[0]
+       packet = self._tcp_conn.recv(length)
+       while len(packet) < length :
+           print 'reassemble!'
+           packet += self._tcp_conn.recv(length - len(packet))
+       return packet
 
     def start(self) :
         Thread(target=self.run).start()
