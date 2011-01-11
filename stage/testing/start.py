@@ -6,6 +6,7 @@ from stage.commsengines.basic import BasicComms
 from stage.interface import Interface
 from stage.agents.comms import CommsAgent
 from stage.network import Network
+from stage.tcpforward import TcpForward
 
 world = World()
 wlan = Network('wlan0')
@@ -22,4 +23,4 @@ if __name__ == '__main__' :
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
 
-    Simulation(world, BasicComms(), 9876).start(2)
+    Simulation(world, BasicComms(), TcpForward(9876)).start(2)

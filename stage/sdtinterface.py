@@ -1,17 +1,22 @@
 import socket
 import sys
-from stage.mcpull import McPull
+from stage.eventapi import EventAPI
 from stage.events.link import LinkEvent
 from stage.events.move import EntityMoveEvent
 
-class SdtPull(McPull) :
+class SdtInterface :
     def __init__(self, ip, port, sdt_port) :
-        McPull.__init__(self, ip, port)
+        # Socket to local SDT instance
         self._sdt_port = sdt_port
         self._sdt_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        self.get_event_api().subscribe(LinkEvent, self._on_link)
-        self.get_event_api().subscribe(EntityMoveEvent, self._on_move)
+        # Socket to remote simulation event channel
+        self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._remote_sock.connect((ip, port))
+        self._event_api = EventAPI(self._remote_sock)
+        self._event_api.start()
+        self._event_api.subscribe(LinkEvent, self._on_link)
+        self._event_api.subscribe(EntityMoveEvent, self._on_move)
 
     def _send(self, msg) :
         print 'To SDT:', msg
@@ -31,6 +36,6 @@ if __name__ == '__main__' :
         print '    usage: python mcpull <remote_ip> <remote_port> <local_sdt_port>'
         sys.exit(0)
 
-    pull = SdtPull(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+    pull = SdtInterface(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
     while True :
         pass
