@@ -1,5 +1,6 @@
 import socket
 import sys
+import signal
 from stage.eventapi import EventAPI
 from stage.events.link import LinkEvent
 from stage.events.move import EntityMoveEvent
@@ -38,5 +39,10 @@ if __name__ == '__main__' :
         sys.exit(0)
 
     pull = SdtInterface(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+    def quit(signal, frame) :
+        print 'Stopping...'
+        sys.exit(0)
+    signal.signal(signal.SIGINT, quit)
+
     while True :
         pass
