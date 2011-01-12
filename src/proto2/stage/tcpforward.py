@@ -32,6 +32,7 @@ class TcpForward :
             self._api.push_raw(data)
 
     def _on_event(self, event) :
+        discards = set([])
         for client in self._clients :
             try :
                raw = event.pickle()
@@ -39,3 +40,7 @@ class TcpForward :
                client.sendall(raw)
             except :
                 print 'error sending:', sys.exc_info()[0]
+                discards.add(client)
+
+        for discard in discards :
+            self._clients.discard(discard)
