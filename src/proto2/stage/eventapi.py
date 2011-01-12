@@ -88,3 +88,5 @@ class EventAPI :
 
     def stop(self) :
         self._running = False
+        if self._tcp_conn != None :
+            self._tcp_conn.close()
