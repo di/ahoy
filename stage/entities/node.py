@@ -6,8 +6,8 @@ class Node(Entity) :
         self._interfaces = {}
         self._agents = []
 
-    def add_interface(self, name, interface) :
-        self._interfaces[name] = interface
+    def add_interface(self, interface) :
+        self._interfaces[interface.get_name()] = interface
 
     def remove_interface(self, name) :
         del self._interface[name]
@@ -20,6 +20,12 @@ class Node(Entity) :
 
     def add_agent(self, agent_inst) :
         self._agents.append(agent_inst)
+
+    def get_interface_on_net(self, network_name) :
+        for iface in self._interfaces.values() :
+            if iface.get_network_name() == network_name :
+                return iface
+        return None
 
     def run(self) :
         for iface in self._interfaces.values() :
