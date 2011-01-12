@@ -31,7 +31,7 @@ class SdtInterface :
             self._send('delete link,%s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
 
     def _on_move(self, event) :
-        self._send('node %s position %s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), event.get_agl() * 1000))
+        self._send('node %s position %s,%s,%s' % (event.get_uid(), event.get_long(), event.get_lat(), int(event.get_agl() * 1000)))
 
 if __name__ == '__main__' :
     if len(sys.argv) < 3 :
