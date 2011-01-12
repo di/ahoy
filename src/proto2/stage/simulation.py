@@ -2,7 +2,7 @@ import sys
 import time
 from stage.eventapi import EventAPI
 from stage.world import World
-from stage.events.startup import StartupEvent, AckStartupEvent, StartSimulationEvent
+from stage.events.startup import *
 
 class Simulation :
     def __init__(self, world_inst, comms_module, tcp_forwarder=None) :
@@ -46,3 +46,7 @@ class Simulation :
             self._event_api.publish(StartSimulationEvent(mapping))
         else :
             print 'Got no startup acks.  Quitting...'
+
+    def stop(self) :
+        self._event_api.publish(StopSimulationEvent())
+        self._event_api.stop()

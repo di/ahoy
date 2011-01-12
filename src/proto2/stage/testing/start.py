@@ -19,22 +19,23 @@ n1.add_interface(Interface('wlan0', n1, wlan, 70))
 n1.add_agent(CommsAgent(n1, 'wlan0', 1, False))
 n1.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n1)
+
 n2 = Node(1)
 n2.add_interface(Interface('wlan0', n2, wlan, 70))
 n2.add_agent(CommsAgent(n2, 'wlan0', 0, True))
 n2.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n2)
-'''
-for i in range(0, 4) :
-    n = Node(i)
-    n.add_interface('wlan0', Interface(n, wlan))
-    n.add_agent(CommsAgent(n, 'wlan0', (i+1) % 4))
-    world.add_entity(n)
-'''
 
 if __name__ == '__main__' :
+    sim = Simulation(world, LogLossComms(), TcpForward(int(sys.argv[1])))
+
     def quit(signal, frame) :
+        print 'Stopping...'
+        sim.stop()
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
 
-    Simulation(world, LogLossComms(), TcpForward(int(sys.argv[1]))).start(2)
+    sim.start(2)
+
+    while True :
+        pass

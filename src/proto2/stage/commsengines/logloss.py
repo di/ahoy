@@ -28,7 +28,7 @@ class LogLossComms(CommsEngine) :
         return tx_power_dbm + loss
 
     def _should_deliver(self, src_uid, dest_uid, src_power, recv_sensitivity) :
-        if self._get_rx_power(src_uid, dest_uid, src_power) <= recv_sensitivity :
+        if self._get_rx_power(src_uid, dest_uid, src_power) <= -recv_sensitivity :
             return False
         return True
 
