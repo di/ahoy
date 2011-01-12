@@ -23,3 +23,7 @@ class StartSimulationEvent(Event) :
 
     def get_mapping(self) :
         return self._entity_mapping
+
+class StopSimulationEvent(Event) :
+    def __init__(self) :
+        Event.__init__(self)

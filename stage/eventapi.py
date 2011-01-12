@@ -7,6 +7,7 @@ from stage.events.all import All
 class EventAPI :
     def __init__(self, tcp_conn=None) :
         self._subscriptions = {}
+        self._running = True
         if tcp_conn == None :
             self._ip = '239.192.0.100'
             self._port = 9998
@@ -24,8 +25,14 @@ class EventAPI :
 
         self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
-    def publish(self, event) :
-        self.push_raw(event.pickle())
+    def publish(self, event, delay_sec=None) :
+        if delay_sec == None :
+            self.push_raw(event.pickle())
+        else :
+            Thread(tartget=self._delay, args=(event, delay_sec))
+
+    def _delay(self, event, delay_sec) :
+        pass    
 
     def push_raw(self, raw) :
         if self._tcp_conn == None :
@@ -42,6 +49,9 @@ class EventAPI :
         if self._subscriptions.has_key(event_type) :
             del self._subscriptions[event_type]
 
+    def clear_subscriptions(self) :
+        self._subscriptions = {}
+
     def _process(self, data) :
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
@@ -55,7 +65,7 @@ class EventAPI :
                     cb[0](event_inst)
 
     def run(self) :
-        while True :
+        while self._running :
             if self._tcp_conn == None :
                 data, addr = self._sock.recvfrom(4096)
             else :
@@ -75,3 +85,6 @@ class EventAPI :
 
     def start(self) :
         Thread(target=self.run).start()
+
+    def stop(self) :
+        self._running = False
