@@ -24,7 +24,7 @@ class LogLossComms(CommsEngine) :
         if distance <= d0 :
             return tx_power_dbm - ref_loss
         loss = -ref_loss - 10 * l * math.log(distance / d0, 10) + flat_fade_factor
-        print distance, tx_power_dbm, loss, tx_power_dbm + loss
+#        print distance, tx_power_dbm, loss, tx_power_dbm + loss
         return tx_power_dbm + loss
 
     def _should_deliver(self, src_uid, dest_uid, src_power, recv_sensitivity) :
