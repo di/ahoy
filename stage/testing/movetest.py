@@ -10,8 +10,8 @@ from stage.tcpforward import TcpForward
 world = World()
 
 n1 = Node(0)
-n1.add_agent(MovingAgent(n1, 40, -75, 0.02, 32, 0))
-n1.set_position(39.9534, -75.1912, 0.02)
+n1.set_position(40, -75, 0.02)
+n1.add_agent(MovingAgent(n1, 40.01, -75.01, 0.02, 0.0089, 0))
 world.add_entity(n1)
 
 if __name__ == '__main__' :

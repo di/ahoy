@@ -47,15 +47,14 @@ class Entity :
             bearing = math.degrees(math.atan2(y, x))
             bearing = (bearing + 360) % 360
 
-            # may break on 0?
-            lat_vel, lon_vel = linear_to_degree(self._lat, self._long, math.sin(math.radians(bearing)) * forward_vel, math.cos(math.radians(bearing)) * forward_vel)
             dt = time.time() - last_tic
-
-            dlat = lat_vel * dt
-            dlon = lon_vel * dt
+            # may break on 0?
+            dlat, dlon = linear_to_degree(self._lat, self._long, math.sin(math.radians(bearing)) * forward_vel * dt, math.cos(math.radians(bearing)) * forward_vel * dt)
             dagl = (agl - self._agl) * vert_vel * dt
+            print bearing, dlat, dlon, self._lat - dlat, self._long - dlon, self._agl + dagl
 
-            self.set_position(self._lat + dlat, self._long + dlon, self._agl + dagl)
+            self.set_position(self._lat - dlat, self._long - dlon, self._agl + dagl)
+
             last_tic = time.time()
             time.sleep(Entity.TIC_INTERVAL)
 
