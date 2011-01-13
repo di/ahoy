@@ -33,7 +33,6 @@ def lin_distance(lat1, lon1, alt1, lat2, lon2, alt2) :
 
     return math.sqrt(dx + dy + dz)
 
-
 def linear_to_degree(lat, lon, lat_km, lon_km) :
     # http://en.wikipedia.org/wiki/Geographic_coordinate_system#Expressing_latitude_and_longitude_as_linear_units
     km_per_lon = (math.pi / 180) * 6378137 * math.cos(0.99664719 * math.atan(lat)) / 1000
