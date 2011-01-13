@@ -48,6 +48,8 @@ class BasicComms(CommsEngine) :
                         if network.both_in_network(move_uid, entity.get_uid()) :
                             # TODO: should probably cache the up/down status
                             if self._in_range(move_uid, entity.get_uid()) :
-                                self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name()))
+                                if network.check_cache(move_uid, entity.get_uid(), True) :
+                                    self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name()))
                             else :
-                                self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))
+                                if network.check_cache(move_uid, entity.get_uid(), False) :
+                                    self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))

@@ -51,6 +51,7 @@ class LogLossComms(CommsEngine) :
             self.get_event_api().publish(CommunicationRecvEvent(event.get_src_node_uid(), event.get_src_iface_name(), message, event.get_network()))
 
     # TODO: BEST. METHOD. EVER.   Change this...
+    # Simplify some of these if's...
     def _on_movement(self, event) :
         move_uid = event.get_uid()
         for entity in self.get_simulation().get_world().get_entities() :
@@ -61,9 +62,10 @@ class LogLossComms(CommsEngine) :
                         if network.both_in_network(move_uid, entity.get_uid()) :
                             src_power = self.get_simulation().get_world().get_entity(move_uid).get_interface_on_net(network.get_name()).get_power()
                             dest_power = self.get_simulation().get_world().get_entity(entity.get_uid()).get_interface_on_net(network.get_name()).get_power()
-                            # TODO: should probably cache the up/down status
                             if self._should_deliver(move_uid, entity.get_uid(), src_power, dest_power) :
                                 pathloss = self._get_rx_power(move_uid, entity.get_uid(), src_power)
-                                self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name(), pathloss))
+                                if network.check_cache(move_uid, entity.get_uid(), pathloss) :
+                                    self.get_event_api().publish(LinkEvent(True, move_uid, entity.get_uid(), network.get_name(), pathloss))
                             else :
-                                self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))
+                                if network.check_cache(move_uid, entity.get_uid()) :
+                                    self.get_event_api().publish(LinkEvent(False, move_uid, entity.get_uid(), network.get_name()))
