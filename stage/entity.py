@@ -45,15 +45,18 @@ class Entity :
             y = math.sin(lon2 - lon1) * math.cos(lat2)
             x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2 - lon1)
             bearing = math.degrees(math.atan2(y, x))
-            bearing = (bearing + 360) % 360
+            #bearing = (bearing + 360) % 360
 
             dt = time.time() - last_tic
-            # may break on 0?
-            dlat, dlon = linear_to_degree(self._lat, self._long, math.sin(math.radians(bearing)) * forward_vel * dt, math.cos(math.radians(bearing)) * forward_vel * dt)
-            dagl = (agl - self._agl) * vert_vel * dt
-            print bearing, dlat, dlon, self._lat - dlat, self._long - dlon, self._agl + dagl
 
-            self.set_position(self._lat - dlat, self._long - dlon, self._agl + dagl)
+            d = forward_vel * dt
+            R = 6378.1
+            new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(bearing)))
+            new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
+
+            print new_lat, new_lon
+           
+            self.set_position(new_lat, new_lon, agl)
 
             last_tic = time.time()
             time.sleep(Entity.TIC_INTERVAL)
