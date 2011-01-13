@@ -33,41 +33,10 @@ def lin_distance(lat1, lon1, alt1, lat2, lon2, alt2) :
 
     return math.sqrt(dx + dy + dz)
 
-'''
-def elevation(lat, lon) :
-    import urllib, urllib2
-    from xml.dom import minidom
 
-    url = 'http://gisdata.usgs.gov/XMLWebServices/TNM_Elevation_Service.asmx/getElevation'
-    
-    values = {'X_Value' : lon,
-    'Y_Value' : lat,
-    'Elevation_Units' : 'meters',
-    'Source_Layer' : '-1',
-    'Elevation_Only' : '1', }
-    
-    user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    headers = {'User-Agent' : user_agent}
-    
-    data = urllib.urlencode(values)
-    get_url = url + '?' + data
-    
-    req = urllib2.Request(url=get_url, headers=headers)
-    response = urllib2.urlopen(req)
-    the_page = response.read()
-    
-    for entity, char in (('lt', '<'), ('gt', '>'), ('amp', '&')):
-        the_page = the_page.replace('&%s;' % entity, char)
+def linear_to_degree(lat, lon, lat_km, lon_km) :
+    # http://en.wikipedia.org/wiki/Geographic_coordinate_system#Expressing_latitude_and_longitude_as_linear_units
+    km_per_lon = (math.pi / 180) * 6378137 * math.cos(0.99664719 * math.atan(lat)) / 1000
+    km_per_lat = 111
 
-    the_page = the_page.replace('<string xmlns="http://gisdata.usgs.gov/XMLWebServices/">', '')
-    the_page = the_page.replace('<?xml version="1.0" encoding="utf-8"?>\r\n', '')
-    the_page = the_page.replace('</string>', '')
-    the_page = the_page.replace('<!-- Elevation Values of -1.79769313486231E+308 (Negative Exponential Value) may mean the data source does not have values at that point.  --> <USGS_Elevation_Web_Service_Query>', '')
-    
-    dom = minidom.parseString(the_page)
-    children = dom.getElementsByTagName('Elevation_Query')[0]
-    
-    elev = float(children.getElementsByTagName('Elevation')[0].firstChild.data)
-    data_source = children.getElementsByTagName('Data_Source')[0].firstChild.data
-    return elev
-'''
+    return lat_km/km_per_lat, lon_km/km_per_lon
