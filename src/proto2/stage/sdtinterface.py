@@ -15,9 +15,10 @@ class SdtInterface :
         self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._remote_sock.connect((ip, port))
         self._event_api = EventAPI(self._remote_sock)
-        self._event_api.start()
+        t = self._event_api.start()
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
+        t.join()
 
     def _send(self, msg) :
         print 'To SDT:', msg
@@ -43,6 +44,3 @@ if __name__ == '__main__' :
         print 'Stopping...'
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
-
-    while True :
-        pass
