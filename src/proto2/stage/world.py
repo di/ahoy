@@ -33,6 +33,8 @@ class World :
 
     def _on_entity_move(self, event) :
         self.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())
+        self.get_entity(event.get_uid()).set_forward_velocity(event.get_forward_vel())
+        self.get_entity(event.get_uid()).set_lin_velocity(event.get_lin_vel())
 
     def pickle(self) :
         return serialize(self)

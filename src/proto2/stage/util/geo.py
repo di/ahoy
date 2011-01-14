@@ -8,8 +8,20 @@ def haver_distance(lat1, lon1, lat2, lon2) :
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     return r * c
 
+def sph_to_lin(lat, lon, agl) :
+    rad_earth = 6371 # km
+    agl += rad_earth
+
+    lat = math.radians(lat)
+    lon = math.radians(lon)
+    
+    x = agl * math.sin(lat) * math.cos(lon)
+    y = agl * math.sin(lat) * math.sin(lon)
+    z = agl * math.cos(lat)
+
+    return x, y, z
+
 def lin_distance(lat1, lon1, alt1, lat2, lon2, alt2) :
-    #TODO: add elevation data
     rad_earth = 6371 # km
     alt1 += rad_earth
     alt2 += rad_earth
