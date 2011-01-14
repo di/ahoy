@@ -4,6 +4,7 @@ import signal
 from stage.eventapi import EventAPI
 from stage.events.link import LinkEvent
 from stage.events.move import EntityMoveEvent
+from stage.events.sensor import RadarEvent
 
 class SdtInterface :
     def __init__(self, ip, port, sdt_port) :
@@ -18,11 +19,20 @@ class SdtInterface :
         t = self._event_api.start()
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
+        self._event_api.subscribe(RadarEvent, self._on_radar)
         t.join()
 
     def _send(self, msg) :
         print 'To SDT:', msg
         self._sdt_sock.sendto(msg, ('127.0.0.1', self._sdt_port))
+
+    def _on_radar(self, event) :
+        self._send('clear symbols')
+        radar_data = event.get_data()
+        i = 0
+        for loc, data in radar_data.iteritems() :
+            i += 1
+            self._send('region region%s position %s,%s symbol sphere,red,X,X,X,X' % (i, loc[1], loc[0]))
 
     def _on_link(self, event) :
         if event.get_up() :

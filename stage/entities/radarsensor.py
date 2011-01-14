@@ -1,6 +1,7 @@
 import time
 import math
 from stage.entity import Entity
+from stage.events.sensor import RadarEvent
 from stage.util.geo import *
 
 class RadarSensor(Entity) :
@@ -61,7 +62,6 @@ class RadarSensor(Entity) :
                 est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
 
                 self._state[(e_lat, e_lon, e_agl)] = (recv_pwr, freq_shift, est_orth_vel)
-                for e in self._state.keys() :
-                    print e, self._state[e]
 
-                time.sleep(self._interval)
+            self.get_event_api().publish(RadarEvent(self.get_uid(), self.get_state()))
+            time.sleep(self._interval)
