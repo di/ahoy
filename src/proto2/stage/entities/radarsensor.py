@@ -26,20 +26,24 @@ class RadarSensor(Entity) :
                     continue
                 e_lat, e_lon, e_agl = entity.get_position()
 
+                # Received power calculation
                 recv_pwr = self._trans_power * self._gain * self._aperature * entity.get_rcs() * math.pow(self._prop_fact, 4) 
                 recv_pwr /= pow(4 * math.pi, 2) * lin_distance(lat, lon, agl, e_lat, e_lon, e_agl)
 
+                # Calculates Doppler shift and determines frequency shift
                 # TODO: Currently ignores altitude/vertical velocity
                 x, y, z = sph_to_lin(lat, lon, agl)
                 e_vel_x, e_vel_y, e_vel_z = entity.get_lin_velocity()
-                print 'LIN VEL', entity.get_uid(), ':', e_vel_x, e_vel_y, e_vel_z
                 e_x, e_y, e_z = sph_to_lin(e_vel_x, e_vel_y, e_vel_z)
                 angle = math.atan2(x - e_x, y - e_y)
 
                 proj_vel = entity.get_forward_velocity() * math.cos(angle)
                 freq_shift = 2 * proj_vel * self._trans_freq / 3e8
 
-                self._state[(e_lat, e_lon, e_agl)] = (recv_pwr, freq_shift)
+                # Estimates the (orthogonal) velocity of the entity
+                est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
+
+                self._state[(e_lat, e_lon, e_agl)] = (recv_pwr, freq_shift, est_orth_vel)
                 for e in self._state.keys() :
                     print e, self._state[e]
 
