@@ -21,7 +21,7 @@ n2.set_position(40.01, -75.01, feet(100))
 n1.add_agent(MovingAgent(n1, 40.02, -75.00, feet(100), kilometers(0.08), 0))
 world.add_entity(n2)
 
-radar = RadarSensor(2, watts(100), 25, 1, 20, 1, 1)
+radar = RadarSensor(2, watts(100), 25, 1, 2e-5, 1, 1)
 radar.set_position(39.8, -75.8, 0)
 world.add_entity(radar)
 

@@ -17,18 +17,35 @@ class RadarSensor(Entity) :
     def get_state(self) :
         return self._state.copy()
 
+    def _get_power(self, distance, src_power) :
+        d0 = 1.0 / 1000.0  # 1 meter
+        ref_loss = 46.6777 # loss @ 1 meter
+        l = 3.0 # path loss exponent
+        flat_fade_factor = 0
+        tx_power_dbm = 10 * math.log(src_power, 10)
+        if distance <= d0 :
+            return tx_power_dbm - ref_loss
+        loss = -ref_loss - 10 * l * math.log(distance / d0, 10) + flat_fade_factor
+        return tx_power_dbm + loss
+
     def run(self) :
-        lat, lon, agl = self.get_position()
         while True :
+            lat, lon, agl = self.get_position()
             self._state = {}
             for entity in self.get_world().get_entities() :
                 if entity.get_uid() == self.get_uid() :
                     continue
                 e_lat, e_lon, e_agl = entity.get_position()
 
+                dist = lin_distance(e_lat, e_lon, e_agl, lat, lon, agl)
+                # Outbound pathloss
+                #outbound_pwr = self._get_power(dist, self._trans_power)
+                outbound_pwr = self._trans_power
                 # Received power calculation
-                recv_pwr = self._trans_power * self._gain * self._aperature * entity.get_rcs() * math.pow(self._prop_fact, 4) 
+                recv_pwr = outbound_pwr * self._gain * self._aperature * entity.get_rcs() * math.pow(self._prop_fact, 4) 
                 recv_pwr /= pow(4 * math.pi, 2) * lin_distance(lat, lon, agl, e_lat, e_lon, e_agl)
+                # Inbound pathloss
+                #recv_pwr = self._get_power(dist, recv_pwr)
 
                 # Calculates Doppler shift and determines frequency shift
                 # TODO: Currently ignores altitude/vertical velocity
