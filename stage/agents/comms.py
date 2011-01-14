@@ -2,6 +2,7 @@ import random
 import time
 from stage.agent import Agent
 from stage.message import Message
+from stage.util.units import *
 
 class CommsAgent(Agent) :
     def __init__(self, owner_node, iface_name, dests, move) :
@@ -20,7 +21,7 @@ class CommsAgent(Agent) :
             iface.send(Message('this is a test from %s to %s' % (self.get_owner_node().get_uid(), self._dests), self._dests))
             lat, lon, agl = self.get_owner_node().get_position()
             if self._move :
-                self.get_owner_node().set_position(lat + .00005, lon, agl)
+                self.get_owner_node().set_position(lat + kilometers(.00005), lon, agl)
             else :
                 self.get_owner_node().set_position(lat, lon, agl)
             time.sleep(1)

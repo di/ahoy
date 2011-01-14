@@ -7,16 +7,38 @@ from stage.world import World
 from stage.eventapi import EventAPI
 from stage.events.move import EntityMoveEvent
 from stage.util.geo import *
+from stage.util.units import *
 
 class Entity :
-    MAX_DISTANCE = 0.01 # km
+    MAX_DISTANCE = kilometers(0.01)
     def __init__(self, uid) :
         self._uid = uid
         self._lat = 0
         self._long = 0
         self._agl = 0
+        self._rcs = 20 # m^2
         self._event_api = None
         self._world = None
+        self._velocity = (0, 0, 0)
+        self._forward_velocity = 0
+
+    def set_rcs(self, rcs) :
+        self._rcs = rcs
+
+    def get_rcs(self) :
+        return self._rcs
+
+    def get_lin_velocity(self) :
+        return self._velocity
+
+    def get_forward_velocity(self) :
+        return self._forward_velocity
+
+    def set_lin_velocity(self, v) :
+        self._velocity = v
+
+    def set_forward_velocity(self, v) :
+        self._forward_velocity = v
 
     def set_world(self, world) :
         self._world = world
@@ -29,13 +51,14 @@ class Entity :
         self._long = long
         self._agl = agl
         if self._event_api != None :
-            self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl))
+            self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl, self._forward_velocity, self._velocity))
 
     def move(self, lat, lon, agl, forward_vel, vert_vel) :
         Thread(target=self._move_tic, args=(lat, lon, agl, forward_vel, vert_vel)).start()
         
     def _move_tic(self, lat, lon, agl, forward_vel, vert_vel) :
         last_tic = time.time() - Entity.MAX_DISTANCE / forward_vel
+        self._forward_velocity = forward_vel
         while lat != self._lat or lon != self._long or self._agl != agl :
             lon1 = math.radians(self._long)
             lon2 = math.radians(lon)
@@ -46,17 +69,22 @@ class Entity :
             x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2 - lon1)
             bearing = math.atan2(y, x)
 
+            self._velocity = (math.cos(bearing) * forward_vel, math.sin(bearing) * forward_vel, vert_vel)
+
             dt = time.time() - last_tic
 
             d = forward_vel * dt
-            R = 6378.1
+            R = kilometers(6378.1)
             new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(bearing)))
             new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
 
             if haver_distance(self._lat, self._long, lat, lon) < d :
+                self._velocity = (0, 0, 0)
+                self._forward_velocity = 0
                 self.set_position(lat, lon, agl)
                 break
-            print math.degrees(bearing), new_lat, new_lon
+
+            #print math.degrees(bearing), new_lat, new_lon
             self.set_position(new_lat, new_lon, agl)
 
             last_tic = time.time()

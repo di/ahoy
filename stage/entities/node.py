@@ -31,6 +31,8 @@ class Node(Entity) :
         for iface in self._interfaces.values() :
             iface.connect()
         print 'starting node %s' % self._uid
+        lat, lon, agl = self.get_position()
+        self.set_position(lat, lon, agl)
         threads = []
         for a in self._agents :
             threads.append(a.start())
