@@ -14,11 +14,12 @@
 \usepackage{rotating}   % Rotating top row of tabular
 \usepackage{multirow}   % ARRRRGH
 %\usepackage{todonotes}
-\usepackage{tikz}
-\usepackage{pgf}
-\usepackage{scalefnt}
-\usepgfmodule{shapes}
-\usepgfmodule{plot}
+\usepackage[usenames,dvipsnames]{xcolor}	% Logo
+\usepackage{tikz,ifthen}			% Logo
+\usepackage{pgf}				% Logo
+\usepackage{scalefnt}				% Logo
+\usepgfmodule{shapes}				% Logo
+\usepgfmodule{plot}				% Logo
 \usetikzlibrary{shapes,snakes,arrows,decorations}
 
 % Just so we don't have to specify this twice
@@ -80,9 +81,9 @@
 \pagenumbering{roman}
 
 \begin{figure}
-    \vspace{-2em}
+%    \vspace{-2em}
     \centering
-    \input{../common/logo.tikz}
+    \scalebox{0.8}{\input{../common/logo.tikz}}
     \vspace{-4em}
 \end{figure}
 
@@ -132,7 +133,7 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsection{References%
     \label{references}%
 }
-    For the AHOY project requirements, please see the Software Requirements Specification document for this project. The most recent version of this document is available at \url{http://code.google.com/p/stage/}.
+    For the AHOY project requirements, please see the Software Requirements Specification document for this project. The most recent version of this document is available at \url{http://code.google.com/p/ahoy/}.
 
 %___________________________________________________________________________
 
