@@ -62,6 +62,10 @@ class RadarSensor(Entity) :
                 est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
 
                 self._state[(e_lat, e_lon, e_agl)] = (recv_pwr, freq_shift, est_orth_vel)
+                print (e_lat, e_lon, e_agl)
+                print '\tpower', recv_pwr
+                print '\test_v', est_orth_vel
+            print '---'
 
             self.get_event_api().publish(RadarEvent(self.get_uid(), self.get_state()))
             time.sleep(self._interval)
