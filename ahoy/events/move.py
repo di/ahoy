@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class EntityMoveEvent(Event) :
     def __init__(self, entity_uid, lat, long, agl, forward_vel=None, lin_vel=None) :

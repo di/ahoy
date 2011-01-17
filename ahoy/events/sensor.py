@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class SensorEvent(Event) :
     def __init__(self, sensor_id) :

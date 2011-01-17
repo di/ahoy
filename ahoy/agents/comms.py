@@ -1,8 +1,8 @@
 import random
 import time
-from stage.agent import Agent
-from stage.message import Message
-from stage.util.units import *
+from ahoy.agent import Agent
+from ahoy.message import Message
+from ahoy.util.units import *
 
 class CommsAgent(Agent) :
     def __init__(self, owner_node, iface_name, dests, move) :

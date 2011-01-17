@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class StartupEvent(Event) :
     def __init__(self, world) :

@@ -1,4 +1,4 @@
-from stage.entity import Entity
+from ahoy.entity import Entity
 
 class Node(Entity) :
     def __init__(self, uid) :

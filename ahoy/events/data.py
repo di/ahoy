@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class DataEvent(Event) :
     def __init__(self, metric, dataset, indep, dep) :
