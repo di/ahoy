@@ -1,8 +1,8 @@
 import time
 import math
-from stage.entity import Entity
-from stage.events.sensor import RadarEvent
-from stage.util.geo import *
+from ahoy.entity import Entity
+from ahoy.events.sensor import RadarEvent
+from ahoy.util.geo import *
 
 class RadarSensor(Entity) :
     def __init__(self, uid, trans_power, trans_freq, gain, aperature, prop_fact, interval) :

@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class CommunicationSendEvent(Event) :
     def __init__(self, src_node_uid, src_iface_name, message_inst, network) :

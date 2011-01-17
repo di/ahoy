@@ -1,14 +1,14 @@
 import sys
 import signal
-from stage.simulation import Simulation
-from stage.world import World
-from stage.entities.node import Node
-from stage.commsengines.basic import BasicComms
-from stage.commsengines.logloss import LogLossComms
-from stage.interface import Interface
-from stage.agents.comms import CommsAgent
-from stage.network import Network
-from stage.tcpforward import TcpForward
+from ahoy.simulation import Simulation
+from ahoy.world import World
+from ahoy.entities.node import Node
+from ahoy.commsengines.basic import BasicComms
+from ahoy.commsengines.logloss import LogLossComms
+from ahoy.interface import Interface
+from ahoy.agents.comms import CommsAgent
+from ahoy.network import Network
+from ahoy.tcpforward import TcpForward
 
 world = World()
 wlan = Network('wlan0')

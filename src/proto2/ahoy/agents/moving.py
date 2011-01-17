@@ -1,7 +1,7 @@
 import random
 import time
-from stage.agent import Agent
-from stage.message import Message
+from ahoy.agent import Agent
+from ahoy.message import Message
 
 class MovingAgent(Agent) :
     def __init__(self, owner_node, dest_lat, dest_lon, dest_agl, forward_vel, vert_vel) :

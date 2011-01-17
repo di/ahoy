@@ -1,4 +1,4 @@
-from stage.event import Event
+from ahoy.event import Event
 
 class LinkEvent(Event) :
     def __init__(self, up, uid_1, uid_2, network_name, pathloss=None) :

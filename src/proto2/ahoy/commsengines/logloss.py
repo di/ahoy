@@ -1,9 +1,9 @@
-from stage.util.geo import *
-from stage.entities.node import Node
-from stage.commsengine import CommsEngine
-from stage.events.communication import CommunicationRecvEvent
-from stage.events.move import EntityMoveEvent
-from stage.events.link import LinkEvent
+from ahoy.util.geo import *
+from ahoy.entities.node import Node
+from ahoy.commsengine import CommsEngine
+from ahoy.events.communication import CommunicationRecvEvent
+from ahoy.events.move import EntityMoveEvent
+from ahoy.events.link import LinkEvent
 
 class LogLossComms(CommsEngine) :
     def __init__(self) :

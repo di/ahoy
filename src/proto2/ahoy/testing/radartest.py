@@ -1,13 +1,13 @@
 import sys
 import signal
-from stage.simulation import Simulation
-from stage.world import World
-from stage.entities.node import Node
-from stage.commsengines.logloss import LogLossComms
-from stage.agents.moving import MovingAgent
-from stage.tcpforward import TcpForward
-from stage.entities.radarsensor import RadarSensor
-from stage.util.units import *
+from ahoy.simulation import Simulation
+from ahoy.world import World
+from ahoy.entities.node import Node
+from ahoy.commsengines.logloss import LogLossComms
+from ahoy.agents.moving import MovingAgent
+from ahoy.tcpforward import TcpForward
+from ahoy.entities.radarsensor import RadarSensor
+from ahoy.util.units import *
 
 world = World()
 
