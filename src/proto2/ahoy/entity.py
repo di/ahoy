@@ -77,6 +77,10 @@ class Entity :
             R = kilometers(6378.1)
             new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(bearing)))
             new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
+            if self._agl < agl :
+                new_agl = min(self._agl + vert_vel * dt, agl)
+            elif self._agl > agl :
+                new_agl = max(0, self._agl - vert_vel * dt)
 
             if haver_distance(self._lat, self._long, lat, lon) < d :
                 self._velocity = (0, 0, 0)
@@ -84,8 +88,7 @@ class Entity :
                 self.set_position(lat, lon, agl)
                 break
 
-            #print math.degrees(bearing), new_lat, new_lon
-            self.set_position(new_lat, new_lon, agl)
+            self.set_position(new_lat, new_lon, new_agl)
 
             last_tic = time.time()
             time.sleep(Entity.MAX_DISTANCE / forward_vel)
