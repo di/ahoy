@@ -1,6 +1,6 @@
 import sys
-from stage.eventapi import EventAPI
-from stage.events.data import DataEvent
+from ahoy.eventapi import EventAPI
+from ahoy.events.data import DataEvent
 
 class DataCollector :
     def __init__(self) :

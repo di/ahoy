@@ -1,6 +1,6 @@
-from stage.eventapi import EventAPI
-from stage.events.move import EntityMoveEvent
-from stage.util.serialize import *
+from ahoy.eventapi import EventAPI
+from ahoy.events.move import EntityMoveEvent
+from ahoy.util.serialize import *
 
 class World :
     def __init__(self) :

@@ -2,12 +2,12 @@ import sys
 import time
 import math
 from threading import Thread
-from stage.util.serialize import *
-from stage.world import World
-from stage.eventapi import EventAPI
-from stage.events.move import EntityMoveEvent
-from stage.util.geo import *
-from stage.util.units import *
+from ahoy.util.serialize import *
+from ahoy.world import World
+from ahoy.eventapi import EventAPI
+from ahoy.events.move import EntityMoveEvent
+from ahoy.util.geo import *
+from ahoy.util.units import *
 
 class Entity :
     MAX_DISTANCE = kilometers(0.01)

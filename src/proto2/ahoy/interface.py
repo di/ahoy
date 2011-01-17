@@ -1,4 +1,4 @@
-from stage.events.communication import CommunicationRecvEvent, CommunicationSendEvent
+from ahoy.events.communication import CommunicationRecvEvent, CommunicationSendEvent
 
 class Interface :
     def __init__(self, name, owner_node, network, power) :

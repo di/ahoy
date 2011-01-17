@@ -2,8 +2,8 @@ import struct
 import sys
 import socket
 from threading import Thread
-from stage.eventapi import EventAPI
-from stage.events.all import All
+from ahoy.eventapi import EventAPI
+from ahoy.events.all import All
 
 class TcpForward :
     def __init__(self, port) :

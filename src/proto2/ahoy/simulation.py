@@ -1,8 +1,8 @@
 import sys
 import time
-from stage.eventapi import EventAPI
-from stage.world import World
-from stage.events.startup import *
+from ahoy.eventapi import EventAPI
+from ahoy.world import World
+from ahoy.events.startup import *
 
 class Simulation :
     def __init__(self, world_inst, comms_module, tcp_forwarder=None) :
