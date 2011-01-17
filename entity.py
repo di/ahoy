@@ -81,6 +81,8 @@ class Entity :
                 new_agl = min(self._agl + vert_vel * dt, agl)
             elif self._agl > agl :
                 new_agl = max(0, self._agl - vert_vel * dt)
+            else :
+                new_agl = self._agl
 
             if haver_distance(self._lat, self._long, lat, lon) < d :
                 self._velocity = (0, 0, 0)
