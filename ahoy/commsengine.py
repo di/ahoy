@@ -1,6 +1,6 @@
-from stage.eventapi import EventAPI
-from stage.events.communication import CommunicationSendEvent
-from stage.events.communication import CommunicationSendEvent
+from ahoy.eventapi import EventAPI
+from ahoy.events.communication import CommunicationSendEvent
+from ahoy.events.communication import CommunicationSendEvent
 
 class CommsEngine :
     def __init__(self) :

@@ -1,8 +1,8 @@
 import signal
 import sys
 import subprocess
-from stage.eventapi import EventAPI
-from stage.events.startup import *
+from ahoy.eventapi import EventAPI
+from ahoy.events.startup import *
 
 class StartupDaemon :
     def __init__(self, phys_id) :

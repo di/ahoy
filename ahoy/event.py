@@ -1,5 +1,5 @@
 import pickle
-from stage.util.serialize import *
+from ahoy.util.serialize import *
 
 class Event :
     def __init__(self) :

@@ -1,10 +1,10 @@
 import socket
 import sys
 import signal
-from stage.eventapi import EventAPI
-from stage.events.link import LinkEvent
-from stage.events.move import EntityMoveEvent
-from stage.events.sensor import RadarEvent
+from ahoy.eventapi import EventAPI
+from ahoy.events.link import LinkEvent
+from ahoy.events.move import EntityMoveEvent
+from ahoy.events.sensor import RadarEvent
 
 class SdtInterface :
     def __init__(self, ip, port, sdt_port) :

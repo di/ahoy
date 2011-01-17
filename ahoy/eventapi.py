@@ -1,8 +1,8 @@
 import socket
 import struct
 from threading import Thread
-from stage.event import Event
-from stage.events.all import All
+from ahoy.event import Event
+from ahoy.events.all import All
 
 class EventAPI :
     def __init__(self, tcp_conn=None) :
