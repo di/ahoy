@@ -12,11 +12,11 @@ world = World()
 
 n1 = Node(0)
 n1.set_position(40, -75, feet(100))
-n1.add_agent(MovingAgent(n1, 40.01, -75.01, kilometers(0.02), kilometers(0.08), 0))
+n1.add_agent(MovingAgent(n1, 40.01, -75.01, feet(200), kilometers(0.08), feet(10)))
 world.add_entity(n1)
 
 n2 = Node(1)
-n2.set_position(40.01, -75.01, feet(100))
+n2.set_position(40.01, -75.01, feet(200))
 world.add_entity(n2)
 
 if __name__ == '__main__' :
