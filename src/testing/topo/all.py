@@ -29,7 +29,7 @@ for r, row in enumerate(data) :
     for c, cell in enumerate(row) :
         y = r
         x = c
-        v = int(min(255, 255*(cell / 500.0)))
+        v = int(min(255, 255*(cell / 100.0)))
         pixels[x,len(row) - 1 - y] = (v, v, v)
 
         print '%s,%s %s (%s, %s = %s)' % (south_lat + lat_change*y*(3/3600.0), west_lon + lon_change*x*(3/3600.0), cell, x, y, v)
