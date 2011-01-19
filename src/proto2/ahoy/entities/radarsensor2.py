@@ -32,14 +32,25 @@ class RadarSensor2(Entity) :
                 
                 y = math.sin(e_lon - lon) * math.cos(e_lat)
                 x = math.cos(lat) * math.sin(e_lat) - math.sin(lat) * math.cos(e_lat) * math.cos(e_lon - lon)
-                bearing = math.atan2(y, x)
+                bearing = math.atan2(y, x) % (2*math.pi)
                 
                 if bearing >= antenna_bearing and bearing <= antenna_bearing + self._angle :
                     dist = haver_distance(e_lat, e_lon, lat, lon)
                     dt = 2*dist / 3e8
                     est_dist = dt * 3e8 / 2.0
                     if angle_data == None or angle_data > est_dist :
-                        angle_data = est_dist
+                        x, y, z = sph_to_lin(lat, lon, agl)
+                        e_vel_x, e_vel_y, e_vel_z = entity.get_lin_velocity()
+                        e_x, e_y, e_z = sph_to_lin(e_vel_x, e_vel_y, e_vel_z)
+                        angle = math.atan2(x - e_x, y - e_y)
+
+                        proj_vel = entity.get_forward_velocity() * math.cos(angle)
+                        freq_shift = 2 * proj_vel * self._trans_freq / 3e8
+
+                        # Estimates the (orthogonal) velocity of the entity
+                        est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
+
+                        angle_data = (est_dist, est_orth_vel)
 
             self.get_event_api().publish(RadarEvent(self.get_uid(), (antenna_bearing, angle_data)))
 
