@@ -49,7 +49,6 @@ class RadarSensor2(Entity) :
 
                         # Estimates the (orthogonal) velocity of the entity
                         est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
-
                         angle_data = (est_dist, est_orth_vel)
 
             self.get_event_api().publish(RadarEvent(self.get_uid(), (antenna_bearing, angle_data)))
