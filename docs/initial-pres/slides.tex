@@ -19,14 +19,14 @@
 Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rosenfeld\inst{1}, William~Regli\inst{1}, Joseph~Macker\inst{2}, Michal~P\v{e}chou\v{e}k\inst{3}}
 
 \institute{
-	\inst{1}%
-	Drexel University Department of Computer Science, Philadelphia PA
-	\and
-	\inst{2}%
-	US Naval Research Laboratory Networks \& Communication Systems Branch, Washington DC
-	\and
-	\inst{3}%
-	Czech Technical University Agent Technology Center, Prague
+    \inst{1}%
+    Drexel University Department of Computer Science, Philadelphia PA
+    \and
+    \inst{2}%
+    US Naval Research Laboratory Networks \& Communication Systems Branch, Washington DC
+    \and
+    \inst{3}%
+    Czech Technical University Agent Technology Center, Prague
 }
 
 \date{\today}
@@ -47,9 +47,19 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 {
     \frametitle{Background on Network Simulators/Emulators}
     \begin{itemize}
-	\item What they are
-	\item Why we need them
-	\item etc
+        \item Testing applications, protocols and agents in a realistic way requires multiple real network environments
+        \item This is cost- and time-prohibitive
+        \item Requires physical hardware
+        \item Emulators mimic the properties of a physical network
+        \item Virtualization of network components (nodes) allows multiple virtual nodes to run on one physical node
+        \item Easy to scale, easy to reconfigure
+    \end{itemize}
+    
+    \frametitle{Background on Agent Frameworks}
+    \begin{itemize}
+        \item Agents are simulated pieces of software
+        \item They consist of different algorithms which define their belief system and actions
+
     \end{itemize}
 }
 
@@ -60,37 +70,36 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \frametitle{Nobody wants to pay us enough to actually make something awesome}
 }
 
-\subsection{Previous Work}
-%%%% TODO %%%%
-\frame
-{
-    \frametitle{Title}
-    \begin{itemize}
-	\item Difference between emulator and simulator
-	\item Big problems with each
-    \end{itemize}
-}
-
 \frame
 {
     \frametitle{Issues with Existing Tools}
     \textbf{Current Network Simulators}
     \begin{itemize}
-	\item Designed for testing networks \& protocols, not agents 
-	\item Scenarios are pre-scripted
-	\item Poor event support
-	\item Lack of templated agents
-	\item Inability to batch process multiple executions of scenarios with varying settings
-	\item Data collection non-existent or not directly supported
+        \item Designed for testing networks \& protocols, not agents 
+        \item Scenarios are pre-scripted
+        \item Poor event support
+        \item Lack of templated agents
+        \item Inability to batch process multiple executions of scenarios with varying settings
+        \item Data collection non-existent or not directly supported
     \end{itemize}
     \textbf{Current Agent Frameworks}
     \begin{itemize}
-	\item Communications modeled only at the application layer
-	\item Lack of rich lower-level protocols
-	\item Alternative approaches require physical hardware for networking
+        \item Communications modeled only at the application layer
+        \item Lack of rich lower-level protocols
+        \item Alternative approaches require physical hardware for networking
     \end{itemize}
 }
 
+\subsection{Our Previous Work}
+%%%% TODO %%%%
+\frame
+{
+    \frametitle{Some Background}
+    \begin{itemize}
+        \item Difference between emulator and simulator
+        \item Big problems with each
+    \end{itemize}
+}
 
 \section{Our Contribution}
 
@@ -105,17 +114,18 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 \frame
 {
     \frametitle{Implementation Goals}
-    \textbf{Bridge the gap between agent and network simulation}
+    \textbf{Bridge network emulators and agent simulators}
     \begin{itemize}
-        \item Entirely event-driven
-        \item Agents can be intelligent, pre-scripted, or live-feeds
+        \item Entirely event-driven environment
+        \item Support both real \& simulated time
         \item Allow for human-in-the-loop interaction
-	\item Support both real \& simulated time
-        \item Make writing custom agents extremely simple
+        \item Modular communication interface to support real networks \& communication
         \item Enable scenarios and network topologies to be easily defined
+        \item Make writing custom agents extremely simple
+        \item Software agents can be intelligent, pre-scripted, or live-feeds
         \item Visualization flexibility
-        \item Distributed simulation
-        \item Modular communication interface
+        \item Physically distributed simulation
+        \item Simple data collection
     \end{itemize}
 }
 
@@ -126,38 +136,74 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 {
     \frametitle{Overview of AHOY}
     \begin{itemize}
-	\item Event-based simulation environment
-	\item Used to compare combinations of software agents, network configurations, and sensor data in real-world environments
-	\item Physically Distributed Simulation
-	\item Visualization
-	\item ``Programming'' Interface:
-	\begin{itemize}
-	    \item Agent Software
-	    \item Network Topologies
-	    \item Sensor Functions
-	    \item World Objects
-	\end{itemize}
-	\item Real networks \& Communication
-	\item Bridges network emulators and agent simulators
+        \item AHOY is the realization of most of these goals
+        \item Currently finished 2nd prototype iteration
+        \item Supports:
+        \begin{itemize}
+            \item Event-Based Simulation
+            \item Decoupled Visualization
+            \item Scenario Setup \& Creation
+            \item Scaled Distribution
+            \item Batch Experimentation \& Data Collection
+        \end{itemize}
     \end{itemize}
 }
 
 \frame
 {
-    \frametitle{Distribution}
+    \frametitle{Event-Based Simulation}
+    \textbf{}
+    \begin{itemize}
+        \item
+    \end{itemize}
+}
+
+
+\frame
+{
+    \frametitle{Decoupled Visualization}
+    \textbf{Visualizing the Simulation}
+    \begin{itemize}
+        \item Monitoring the multicast event channel produces raw event data
+        \item This occurs simultaneously with the execution of an experiment
+        \item Any visualizer can interpret these events to produce their own visualization
+        \item Completely separated from the simulator
+    \end{itemize}
+}
+
+\frame
+{
+    \frametitle{Scenario Setup \& Creation}
+    \textbf{Using a ``Programming'' Interface}
+    \begin{itemize}
+        \item Each of the following are defined purely in Python:
+        \begin{itemize}
+            \item Agent Software
+            \item Network Topologies
+            \item Sensor Functions
+            \item World Objects
+        \end{itemize}
+        \item These definitions are then interpreted by the simulator to set up the experiment \& to define the 
+    \end{itemize}
+
+}
+
+\frame
+{
+    \frametitle{Scaled Distribution}
     \textbf{Distribution of Virtual Nodes}
     \begin{itemize}
-	\item Simple to distribute: everything is an event
-	\item All events are broadcast over a common event channel
-	\item Agents are started on multiple physical machines
-	\item Synchronization of simulation-time across physical machines may prove difficult, especially with integration of NS3; possible issues with human-in-the-loop
+        \item Simple to distribute: everything is an event
+        \item All events are broadcast over a common event channel
+        \item Agents are started on multiple physical machines
+        \item Synchronization of simulation-time across physical machines may prove difficult, especially with integration of NS3; possible issues with human-in-the-loop
     \end{itemize}
 }
 
 \frame
 {
     \frametitle{Batch Experimentation}
-    \textbf{Running Multiple Experienents \& Collecting Data}
+    \textbf{Running Multiple Experiments \& Collecting Data}
     \begin{itemize}
         \item Collect data from each experiment
         \item Provide tabulated results of high level metrics
