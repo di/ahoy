@@ -103,7 +103,6 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item Entirely event-driven
         \item Real-time
         \item Allow for human-in-the-loop interaction with agents
-        \item Modular communication interface to support real networks \& communication
         \item Enable scenarios and network topologies to be easily defined
         \item Make writing custom agents extremely simple
         \item Visualization flexibility
@@ -137,6 +136,18 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \begin{center}
         \includegraphics[scale=.4]{arch.pdf}
     \end{center}
+}
+
+\subsection{Distribution}
+\frame
+{
+    \frametitle{Scaled Distribution}
+    \textbf{Distribution of Virtual Nodes}
+    \begin{itemize}
+        \item Simple to distribute: everything is an event
+        \item All events are broadcast over a common event channel
+        \item Agents are started on multiple physical machines
+    \end{itemize}
 }
 
 \frame
@@ -175,23 +186,11 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
             \item Sensor Functions
             \item World Objects
         \end{itemize}
-        \item These definitions are then interpreted by the simulator to set up the experiment \& to define the 
+        \item These definitions are then interpreted by the simulator to set up the experiment \& to define the scenario
     \end{itemize}
 
 }
 
-\subsection{Distribution}
-\frame
-{
-    \frametitle{Scaled Distribution}
-    \textbf{Distribution of Virtual Nodes}
-    \begin{itemize}
-        \item Simple to distribute: everything is an event
-        \item All events are broadcast over a common event channel
-        \item Agents are started on multiple physical machines
-        \item Synchronization of simulation-time across physical machines may prove difficult, especially with integration of NS3; possible issues with human-in-the-loop
-    \end{itemize}
-}
 
 \subsection{Experimentation}
 \frame
@@ -201,7 +200,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \begin{itemize}
         \item Collect data from each experiment
         \item Provide tabulated results of high level metrics
-        \item API to allows agents to output low-level, specific information
+        \item API to allow agents to output low-level, specific information
     \end{itemize}
 }
 
