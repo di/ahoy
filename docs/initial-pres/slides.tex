@@ -42,10 +42,10 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 \section{Motivation}
 
-\subsection{Background}
+\subsection{Network Simulators}
 \frame
 {
-    \frametitle{Background on Network Simulators/Emulators}
+    \frametitle{Background on Network Simulators}
     \begin{itemize}
         \item Used to test applications and protocols without physical hardware
         \item Mimic the properties of a physical network
@@ -55,6 +55,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
+\subsection{Agents}
 \frame
 {
     \frametitle{Background on Agents}
@@ -70,9 +71,10 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
+\subsection{Issues with Existing Tools}
 \frame
 {
-    \frametitle{Issues with Existing Tools}
+    \frametitle{Existing tools}
     \textbf{Current Network Simulators}
     \begin{itemize}
         \item Designed for testing networks \& protocols, not agents 
@@ -90,27 +92,13 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
-\subsection{The Basic Problem That We Studied}
-%%%% TODO %%%%
-\frame
-{
-    \frametitle{Nobody wants to pay us enough to actually make something awesome}
-}
+\section{Implementation}
 
-\section{Our Contribution}
-
-%%%% TODO %%%%
-\frame
-{
-    \frametitle{Title}
-}
-
-\subsection{Basic Ideas for Implementation}
-
+\subsection{Goals}
 \frame
 {
     \frametitle{Implementation Goals}
-    \textbf{Bridge network emulators and agent simulators}
+    \textbf{Bridge network simulators and agent simulators}
     \begin{itemize}
         \item Entirely event-driven
         \item Real-time
@@ -125,8 +113,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 }
 
 
-\subsection{Main Results}
-
+\subsection{Overview}
 \frame
 {
     \frametitle{Overview of AHOY}
@@ -154,6 +141,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 }
 
 
+\subsection{Visualization}
 \frame
 {
     \frametitle{Decoupled Visualization}
@@ -166,6 +154,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
+\subsection{Scenarios}
 \frame
 {
     \frametitle{Scenario Setup \& Creation}
@@ -183,6 +172,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 }
 
+\subsection{Distribution}
 \frame
 {
     \frametitle{Scaled Distribution}
@@ -195,6 +185,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
+\subsection{Experimentation}
 \frame
 {
     \frametitle{Batch Experimentation}
@@ -204,14 +195,6 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item Provide tabulated results of high level metrics
         \item API to allows agents to output low-level, specific information
     \end{itemize}
-}
-
-\section{Summary}
-
-%%%% TODO %%%%
-\frame
-{
-    \frametitle{Title}
 }
 
 \end{document}
