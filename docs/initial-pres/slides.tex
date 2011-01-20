@@ -42,32 +42,33 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 }
 
 \section{Motivation}
-%%%% TODO %%%%
+
+\subsection{Background}
 \frame
 {
     \frametitle{Background on Network Simulators/Emulators}
     \begin{itemize}
-        \item Testing applications, protocols and agents in a realistic way requires multiple real network environments
-        \item This is cost- and time-prohibitive
-        \item Requires physical hardware
-        \item Emulators mimic the properties of a physical network
+        \item Used to test applications and protocols without physical hardware
+        \item Mimic the properties of a physical network
         \item Virtualization of network components (nodes) allows multiple virtual nodes to run on one physical node
-        \item Easy to scale, easy to reconfigure
-    \end{itemize}
-    
-    \frametitle{Background on Agent Frameworks}
-    \begin{itemize}
-        \item Agents are simulated pieces of software
-        \item They consist of different algorithms which define their belief system and actions
-
+        \item Scale well, easy to re-configure
+        \item Cost \& time effective
     \end{itemize}
 }
 
-\subsection{The Basic Problem That We Studied}
-%%%% TODO %%%%
 \frame
 {
-    \frametitle{Nobody wants to pay us enough to actually make something awesome}
+    \frametitle{Background on Agents}
+    \begin{block}{Definition}
+    An \emph{intelligent agent} is software which observes and acts upon an environment and directs its activity towards achieving goals (Russell, Norvig).
+    \end{block}
+
+    \begin{itemize}
+        \item Used to test agent algorithms within virtual worlds
+        \item Rules define actions to be taken when beliefs
+        \item Users define rule-sets for agents based on sensory information in the world
+        \item Allows for large-scale simulation unfeasible in the real-world
+    \end{itemize}
 }
 
 \frame
@@ -90,15 +91,11 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 }
 
-\subsection{Our Previous Work}
+\subsection{The Basic Problem That We Studied}
 %%%% TODO %%%%
 \frame
 {
-    \frametitle{Some Background}
-    \begin{itemize}
-        \item Difference between emulator and simulator
-        \item Big problems with each
-    \end{itemize}
+    \frametitle{Nobody wants to pay us enough to actually make something awesome}
 }
 
 \section{Our Contribution}
@@ -116,13 +113,12 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \frametitle{Implementation Goals}
     \textbf{Bridge network emulators and agent simulators}
     \begin{itemize}
-        \item Entirely event-driven environment
-        \item Support both real \& simulated time
-        \item Allow for human-in-the-loop interaction
+        \item Entirely event-driven
+        \item Real-time
+        \item Allow for human-in-the-loop interaction with agents
         \item Modular communication interface to support real networks \& communication
         \item Enable scenarios and network topologies to be easily defined
         \item Make writing custom agents extremely simple
-        \item Software agents can be intelligent, pre-scripted, or live-feeds
         \item Visualization flexibility
         \item Physically distributed simulation
         \item Simple data collection
