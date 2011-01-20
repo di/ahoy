@@ -19,7 +19,6 @@ class EventAPI :
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
         self._sock.bind(('', self._port))
         mreq = struct.pack('=4sl', socket.inet_aton(self._ip), socket.INADDR_ANY)
