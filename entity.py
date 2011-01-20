@@ -53,17 +53,21 @@ class Entity :
         if self._event_api != None :
             self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl, self._forward_velocity, self._velocity))
 
-    def move(self, lat, lon, agl, forward_vel, vert_vel) :
+    def move(self, lat, lon, agl, forward_vel, vert_vel, block=False) :
         if self._move_thread != None :
             self._stop_move = True
             self._stopped_cond.acquire()
             self._stopped_cond.wait()
             self._stopped_cond.release()
             self._stop_move = False
-        self._move_thread = Thread(target=self._move_tic, args=(lat, lon, agl, forward_vel, vert_vel))
-        self._move_thread.start()
+        if not block :
+            self._move_thread = Thread(target=self._iterate_move, args=(lat, lon, agl, forward_vel, vert_vel))
+            self._move_thread.start()
+        else :
+            self._move_thread = self
+            self._iterate_move(lat, lon, agl, forward_vel, vert_vel)
         
-    def _move_tic(self, lat, lon, agl, forward_vel, vert_vel) :
+    def _iterate_move(self, lat, lon, agl, forward_vel, vert_vel) :
         last_tic = time.time() - Entity.MAX_DISTANCE / forward_vel
         self._forward_velocity = forward_vel
         while (lat != self._lat or lon != self._long or self._agl != agl) and not self._stop_move :
@@ -102,6 +106,7 @@ class Entity :
                 break
 
             self.set_position(new_lat, new_lon, new_agl)
+            print new_lat, new_lon
 
             last_tic = time.time()
             time.sleep(Entity.MAX_DISTANCE / forward_vel)
