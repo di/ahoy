@@ -1,7 +1,7 @@
 import sys
 import time
 import math
-from threading import Thread
+from threading import Thread, Condition
 from ahoy.util.serialize import *
 from ahoy.world import World
 from ahoy.eventapi import EventAPI
@@ -54,12 +54,19 @@ class Entity :
             self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl, self._forward_velocity, self._velocity))
 
     def move(self, lat, lon, agl, forward_vel, vert_vel) :
-        Thread(target=self._move_tic, args=(lat, lon, agl, forward_vel, vert_vel)).start()
+        if self._move_thread != None :
+            self._stop_move = True
+            self._stopped_cond.acquire()
+            self._stopped_cond.wait()
+            self._stopped_cond.release()
+            self._stop_move = False
+        self._move_thread = Thread(target=self._move_tic, args=(lat, lon, agl, forward_vel, vert_vel))
+        self._move_thread.start()
         
     def _move_tic(self, lat, lon, agl, forward_vel, vert_vel) :
         last_tic = time.time() - Entity.MAX_DISTANCE / forward_vel
         self._forward_velocity = forward_vel
-        while lat != self._lat or lon != self._long or self._agl != agl :
+        while (lat != self._lat or lon != self._long or self._agl != agl) and not self._stop_move :
             lon1 = math.radians(self._long)
             lon2 = math.radians(lon)
             lat1 = math.radians(self._lat)
@@ -88,12 +95,21 @@ class Entity :
                 self._velocity = (0, 0, 0)
                 self._forward_velocity = 0
                 self.set_position(lat, lon, agl)
+                self._move_thread = None
+                self._stopped_cond.acquire()
+                self._stopped_cond.notify()
+                self._stopped_cond.release()
                 break
 
             self.set_position(new_lat, new_lon, new_agl)
 
             last_tic = time.time()
             time.sleep(Entity.MAX_DISTANCE / forward_vel)
+
+        self._move_thread = None
+        self._stopped_cond.acquire()
+        self._stopped_cond.notify()
+        self._stopped_cond.release()
 
     def get_position(self) :
         return self._lat, self._long, self._agl
@@ -114,6 +130,12 @@ class Entity :
     def initialize(self) :
         self._event_api = EventAPI()
         self._event_api.start()
+
+        self._event_api.publish(EntityMoveEvent(self._uid, self._lat, self._long, self._agl, self._forward_velocity, self._velocity))
+
+        self._move_thread = None
+        self._stop_move = False
+        self._stopped_cond = Condition()
 
     def run(self) :
         pass
