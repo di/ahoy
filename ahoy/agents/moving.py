@@ -13,4 +13,8 @@ class MovingAgent(Agent) :
         self._vert_vel = vert_vel
 
     def run(self) :
+        o_lat, o_lon, o_agl = self.get_owner_node().get_position()
         self.get_owner_node().move(self._dest_lat, self._dest_lon, self._dest_agl, self._forward_vel, self._vert_vel)
+        time.sleep(5)
+        print 'moving again'
+        self.get_owner_node().move(o_lat, o_lon, o_agl, self._forward_vel, self._vert_vel)
