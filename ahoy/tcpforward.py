@@ -22,12 +22,12 @@ class TcpForward :
         while True :
             conn, addr = self._tcp_server.accept()
             self._clients.add(conn)
-            Thread(target=self._listener, args=(conn,))
+            Thread(target=self._listener, args=(conn,)).start()
 
     def _listener(self, conn) :
         while True :
-            print 'got data'
             length = conn.recv(4)
+            print 'got data'
             if len(length) < 4 :
                 return None
             length = struct.unpack('>L', length)[0]

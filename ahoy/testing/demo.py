@@ -16,7 +16,7 @@ world = World()
 wlan = Network('wlan0')
 world.add_network(wlan)
 
-heli_areas = [(39.9558, -75.1386, 39.9475, -75.1314), (39.9468, -75.1396, 39.9419, -75.1314), (39.9410, -75.1420, 39.9360, -75.1321)]
+heli_areas = [(39.9558, -75.1386, 39.9475, -75.1314)]#, (39.9468, -75.1396, 39.9419, -75.1314), (39.9410, -75.1420, 39.9360, -75.1321)]
 for i, loc in enumerate(heli_areas) :
     heli = Node(i)
     heli.set_position(loc[0], loc[1], feet(i * 100))
