@@ -21,6 +21,19 @@ def sph_to_lin(lat, lon, agl) :
 
     return x, y, z
 
+def lin_to_sph(x, y, z) :
+    rad_earth = 6371 # km
+    r = math.sqrt(x**2 + y**2 + z**2)
+    
+    lat = math.acos(z/r)
+    lon = math.atan(y/x)
+    agl = r-rad_earth
+
+    lat = math.degrees(lat)
+    lon = math.degrees(lon)
+
+    return lat, lon, agl
+
 def lin_distance(lat1, lon1, alt1, lat2, lon2, alt2) :
     rad_earth = 6371 # km
     alt1 += rad_earth
