@@ -64,3 +64,13 @@ def linear_to_degree(lat, lon, lat_km, lon_km) :
     km_per_lat = 111
 
     return lat_km/km_per_lat, lon_km/km_per_lon
+
+
+def loc_from_bearing_dist(lat, lon, bearing, dist) :
+    R = 6378.1
+    lat = math.radians(lat)
+    lon = math.radians(lon)
+    bearing = math.radians(bearing)
+    new_lat = math.degrees(math.asin(math.sin(lat)*math.cos(dist/R) + math.cos(lat)*math.sin(dist/R)*math.cos(bearing)))
+    new_lon = math.degrees(lon + math.atan2(math.sin(bearing)*math.sin(dist/R)*math.cos(lat), math.cos(dist/R)-math.sin(lat)*math.sin(new_lat)))
+    return new_lat, new_lon
