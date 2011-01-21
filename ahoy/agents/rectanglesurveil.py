@@ -1,4 +1,5 @@
 import math
+from threading import Thread
 from ahoy.agent import Agent
 from ahoy.event import Event
 
@@ -11,6 +12,9 @@ class RectangleSurveilAgent(Agent) :
        self._new_order = False
 
     def _on_order(self, event) :
+        Thread(target=self._order_thread, args=(event,)).start()
+
+    def _order_thread(self, event) :
         if event.get_node_uid() == self.get_owner_node().get_uid() :
             print self.get_owner_node().get_uid(), 'got new orders', event.get_north_west(), event.get_south_east()
             
