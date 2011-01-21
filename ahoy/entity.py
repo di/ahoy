@@ -51,7 +51,7 @@ class Entity :
         self._long = long
         self._agl = agl
         if self._event_api != None :
-            self._event_api.publish(EntityMoveEvent(self._uid, lat, long, agl, self._forward_velocity, self._velocity))
+            self._event_api.publish(EntityMoveEvent(self, lat, long, agl, self._forward_velocity, self._velocity))
 
     def move(self, lat, lon, agl, forward_vel, vert_vel, block=False) :
         if self._move_thread != None :
@@ -136,7 +136,7 @@ class Entity :
         self._event_api = EventAPI()
         self._event_api.start()
 
-        self._event_api.publish(EntityMoveEvent(self._uid, self._lat, self._long, self._agl, self._forward_velocity, self._velocity))
+        self._event_api.publish(EntityMoveEvent(self, self._lat, self._long, self._agl, self._forward_velocity, self._velocity))
 
         self._move_thread = None
         self._stop_move = False
