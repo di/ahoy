@@ -27,7 +27,6 @@ class TcpForward :
     def _listener(self, conn) :
         while True :
             length = conn.recv(4)
-            print 'got data'
             if len(length) < 4 :
                 return None
             length = struct.unpack('>L', length)[0]
