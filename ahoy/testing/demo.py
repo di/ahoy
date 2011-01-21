@@ -10,12 +10,12 @@ from ahoy.agents.rectanglesurveil import RectangleSurveilAgent
 
 world = World()
 
-heli_locs = [(39.9490, -75.1374), (39.9407, -75.1351), (39.9581, -75.1310)]
+heli_locs = [(39.9558, -75.1386, 39.9475, -5.1314), (39.9468, -75.1396, 39.9419, -75.1314), (39.9410, -75.1420, 39.9360, -75.1321)]
 for i, loc in enumerate(heli_locs) :
     heli = Node(i)
     heli.set_position(loc[0], loc[1], feet(i * 100))
-    se = loc
-    nw = (loc[0] + .004, loc[1] - .003)
+    nw = (loc[0], loc[1])
+    se = (loc[2], loc[3])
     heli.add_agent(RectangleSurveilAgent(heli, nw, se, feet(75)))
     world.add_entity(heli)
 
