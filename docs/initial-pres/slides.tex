@@ -47,15 +47,16 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 {
     \frametitle{Background on Network Simulators}
     \begin{itemize}
-        \item Used to test applications and protocols without physical hardware
+        \item Application and protocol testing without physical hardware
         \item Mimic the properties of a physical network
-        \item Virtualization of network components (nodes) allows multiple virtual nodes to run on one physical node
+        \item Network compents are virtualized (``nodes'') 
+        \item Allow multiple virtual nodes to run on one physical machine
         \item Scale well, easy to re-configure
         \item Cost \& time effective
     \end{itemize}
 }
 
-\subsection{Agents}
+\subsection{Agent Frameworks}
 \frame
 {
     \frametitle{Background on Agents}
@@ -65,8 +66,8 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
     \begin{itemize}
         \item Used to test agent algorithms within virtual worlds
-        \item Rules define actions to be taken when beliefs
-        \item Users define rule-sets for agents based on sensory information in the world
+        \item Rules define actions to be taken based on beliefs
+        \item Agent rule-sets react to sensory information in the world
         \item Allows for large-scale simulation unfeasible in the real-world
     \end{itemize}
 }
@@ -81,14 +82,14 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item Scenarios are pre-scripted
         \item Poor event support
         \item Lack of templated agents
-        \item Inability to batch process multiple executions of scenarios with varying settings
+        \item Inability to vary settings across batch scenario executions
         \item Data collection non-existent or not directly supported
     \end{itemize}
     \textbf{Current Agent Frameworks}
     \begin{itemize}
         \item Communications modeled only at the application layer
-        \item Lack of rich lower-level protocols
-        \item Alternative approaches require physical hardware for networking
+        \item Lack of rich lower-level protocols, or
+        \item Require physical hardware for networking
     \end{itemize}
 }
 
@@ -138,7 +139,19 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 
-\subsection{Distribution}
+\frame
+{
+    \frametitle{Event-Based Simulation}
+    \textbf{Events allow Agents to react in real-time}
+    \begin{itemize}
+        \item Every action or change in the simulation is an event
+        \item All events are passed over the event channel
+        \item Event channel is available to all virtual nodes, agents
+        \item Physical nodes as well, including visualizers
+        \item New events can be inserted in real-time (human-in-the-loop)
+    \end{itemize}
+}
+
 \frame
 {
     \frametitle{Scaled Distribution}
@@ -152,28 +165,16 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 \frame
 {
-    \frametitle{Event-Based Simulation}
-    \textbf{}
-    \begin{itemize}
-        \item
-    \end{itemize}
-}
-
-
-\subsection{Visualization}
-\frame
-{
     \frametitle{Decoupled Visualization}
     \textbf{Visualizing the Simulation}
     \begin{itemize}
-        \item Monitoring the multicast event channel produces raw event data
-        \item This occurs simultaneously with the execution of an experiment
-        \item Any visualizer can interpret these events to produce their own visualization
+        \item Monitoring the event channel produces raw event data
+        \item Occurs simultaneously with the execution of an experiment
+        \item Visualizers interpret events, produce their own representation 
         \item Completely separated from the simulator
     \end{itemize}
 }
 
-\subsection{Scenarios}
 \frame
 {
     \frametitle{Scenario Setup \& Creation}
@@ -181,18 +182,17 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \begin{itemize}
         \item Each of the following are defined purely in Python:
         \begin{itemize}
-            \item Agent Software
+            \item Agent Behaviors 
             \item Network Topologies
-            \item Sensor Functions
-            \item World Objects
+            \item Sensor Functionality
+            \item World Objects \& Behaviors
         \end{itemize}
-        \item These definitions are then interpreted by the simulator to set up the experiment \& to define the scenario
+        \item These definitions are then interpreted by the simulator
+        \item Sets up the experiment \& defines the scenario
     \end{itemize}
 
 }
 
-
-\subsection{Experimentation}
 \frame
 {
     \frametitle{Batch Experimentation}
@@ -203,5 +203,29 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item API to allow agents to output low-level, specific information
     \end{itemize}
 }
+
+\section{Demonstration}
+\subsection{Prototype Demonstration}
+\frame
+{
+    \frametitle{Prototype Demonstration}
+    \textbf{A simple, multi-faceted scenario}
+    \begin{itemize}
+        \item Basic scenario description %%TODO
+        \item Shows two visualizers working independenty
+        \item Human in the loop can task reactionary UAV agents
+        \item Boat agents are moving with real, pre-recorded data 
+    \end{itemize}
+}
+
+\subsection{Q\&A}
+\frame
+{
+    \frametitle{Q\&A}
+    \begin{center} 
+        \Huge Questions? 
+    \end{center}
+}
+
 
 \end{document}
