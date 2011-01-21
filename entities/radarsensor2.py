@@ -54,10 +54,12 @@ class RadarSensor2(Entity) :
 
             if angle_data != None :
                 location = loc_from_bearing_dist(self._lat, self._long, math.degrees(antenna_bearing), angle_data[0])
+                distance = angle_data[0]
                 print antenna_bearing, location
             else :
                 location = None
-            self.get_event_api().publish(RadarEvent(self.get_uid(), (antenna_bearing, angle_data, location)))
+                distance = None
+            self.get_event_api().publish(RadarEvent(self.get_uid(), self.get_position(), antenna_bearing, distance, location))
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)
