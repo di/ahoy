@@ -35,9 +35,10 @@ class RadarSensor2(Entity) :
                 bearing = math.atan2(y, x) % (2*math.pi)
                 
                 if bearing >= antenna_bearing and bearing <= antenna_bearing + self._angle :
-                    dist = haver_distance(e_lat, e_lon, lat, lon)
-                    dt = 2*dist / 3e8
-                    est_dist = dt * 3e8 / 2.0
+                    dist = haver_distance(math.degrees(lat), math.degrees(lon), math.degrees(e_lat), math.degrees(e_lon)) #lin_distance(lat, lon, 0, e_lat, e_lon, 0)
+                    #dt = 2*dist / 3e8
+                    #est_dist = dt * 3e8 / 2.0
+                    est_dist = dist
                     if angle_data == None or angle_data > est_dist :
                         x, y, z = sph_to_lin(lat, lon, agl)
                         e_vel_x, e_vel_y, e_vel_z = entity.get_lin_velocity()
@@ -51,7 +52,12 @@ class RadarSensor2(Entity) :
                         est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
                         angle_data = (est_dist, est_orth_vel)
 
-            self.get_event_api().publish(RadarEvent(self.get_uid(), (antenna_bearing, angle_data)))
+            if angle_data != None :
+                location = loc_from_bearing_dist(self._lat, self._long, math.degrees(antenna_bearing), angle_data[0])
+                print antenna_bearing, location
+            else :
+                location = None
+            self.get_event_api().publish(RadarEvent(self.get_uid(), (antenna_bearing, angle_data, location)))
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)
