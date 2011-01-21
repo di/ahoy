@@ -27,7 +27,7 @@ for i, loc in enumerate(heli_areas) :
     heli.add_interface(Interface('wlan0', heli, wlan, 100))
     world.add_entity(heli)
 
-radar = RadarSensor2(len(heli_areas), watts(6000), 25, 1, 5, 1, 1/360.0, 1)
+radar = RadarSensor2(len(heli_areas), watts(6000), 25, 1, 5, 1, 3/360.0, 1)
 radar.set_position(39.9485, -75.1325, 0)
 world.add_entity(radar)
 

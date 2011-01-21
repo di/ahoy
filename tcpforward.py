@@ -25,11 +25,14 @@ class TcpForward :
             Thread(target=self._listener, args=(conn,))
 
     def _listener(self, conn) :
-        while True : 
-            data = conn.recv(4096)
-            if not data :
-                break
-            self._api.push_raw(data)
+       length = conn.recv(4)
+       if len(length) < 4 :
+           return None
+       length = struct.unpack('>L', length)[0]
+       packet = conn.recv(length)
+       while len(packet) < length :
+           packet += conn.recv(length - len(packet))
+       return packet
 
     def _on_event(self, event) :
         discards = set([])
