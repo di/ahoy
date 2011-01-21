@@ -82,6 +82,9 @@ class ProofOfConcept :
         p2 = self._get_ll(ux, uy)
 
         self._event_api.publish(RectangleSurveilMove(0, p1, p2))
+        self._event_api.publish(RectangleSurveilMove(1, p1, p2))
+        self._event_api.publish(RectangleSurveilMove(2, p1, p2))
+
         print p1, p2
 
     def draw_nodes(self) :
@@ -93,10 +96,9 @@ class ProofOfConcept :
 
     def draw_radar(self) :
         if self._current_radar_loc is not None :
-            #print self._current_radar_bearing
-            x = min(max(0, int(self._current_radar_loc[0] + 800*math.cos(math.radians(self._current_radar_bearing)))),800)
-            y = min(max(0, int(self._current_radar_loc[1] + 600*math.sin(math.radians(self._current_radar_bearing)))),600)
-            pygame.draw.line(surface, (0,255,0), self._current_radar_loc, (x,y), 1) 
+            x = int(self._current_radar_loc[0] + 800*math.cos(math.radians(self._current_radar_bearing-90)))
+            y = int(self._current_radar_loc[1] + 600*math.sin(math.radians(self._current_radar_bearing-90)))
+            pygame.draw.line(surface, (0,255,0), self._current_radar_loc, (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
             if t_loc is None :
@@ -106,7 +108,8 @@ class ProofOfConcept :
 
     def draw_blip(self, position) :
         x, y = position
-        pygame.draw.circle(surface, (100,255,100), (x,y), 2, 0)
+        pygame.draw.circle(surface, (0,155,0), (x,y), 6, 0)
+        pygame.draw.circle(surface, (100,255,100), (x,y), 4, 0)
 
     def draw_node(self, position, type) :
         x, y = position
