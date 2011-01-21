@@ -5,5 +5,5 @@ class Condition:
         self.name_ = name
         self.state_ = state
 
-    def isMet(self, state):
-        return
+    def is_met(self, state):
+        return True
