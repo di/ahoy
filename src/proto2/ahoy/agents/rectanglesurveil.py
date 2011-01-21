@@ -12,6 +12,7 @@ class RectangleSurveilAgent(Agent) :
 
     def _on_order(self, event) :
         if event.get_uid() == self.get_owner_node().get_uid() :
+            print self.get_owner_node().get_uid(), 'got new orders', event.get_north_west(), event.get_south_east()
             nw_lat, nw_lon = event.get_north_west()
             se_lat, se_lon = event.get_south_east()
             self._noth_west = event.get_north_west()

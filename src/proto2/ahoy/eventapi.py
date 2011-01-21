@@ -38,6 +38,7 @@ class EventAPI :
         if self._tcp_conn == None :
             self._sock.sendto(raw, (self._ip, self._port))
         else :
+            self._tcp_conn.send(struct.pack('>L', len(raw)))
             self._tcp_conn.send(raw)
 
     def subscribe(self, event_type, callback, **args) :
