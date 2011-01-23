@@ -4,6 +4,7 @@ from ahoy.simulation import Simulation
 from ahoy.world import World
 from ahoy.entities.node import Node
 from ahoy.entities.radarsensor2 import RadarSensor2
+from ahoy.entities.scripted import Scripted
 from ahoy.agents.rectanglesurveil import RectangleSurveilAgent
 from ahoy.commsengines.logloss import LogLossComms
 from ahoy.tcpforward import TcpForward
@@ -30,6 +31,18 @@ for i, loc in enumerate(heli_areas) :
 radar = RadarSensor2(len(heli_areas), watts(6000), 25, 1, 5, 1, 3/360.0, 1)
 radar.set_position(39.9485, -75.1325, 0)
 world.add_entity(radar)
+
+paths = [
+    [feet(15), (39.9545, -75.1358, 0), (39.9432, -75.1363, 0), (39.9273, -75.1348, 0)],
+    [feet(100), (39.9534, -75.1320, 0), (39.9374, -75.1367, 0), (39.9263, -75.1322, 0)],
+    [feet(25), (39.9281, -75.1385, 0), (39.9416, -75.1393, 0), (39.9591, -75.1341, 0)],
+    [feet(50), (39.9268, -75.1322, 0), (39.9333, -75.1340, 0), (39.9482, -75.1337, 0), (39.9583, -75.1322, 0)]
+]
+
+for path in paths :
+    e = Scripted(len(world.get_entities()) + 1, path[2:], path[0], 0)
+    e.set_position(*path[1])
+    world.add_entity(e)
 
 if __name__ == '__main__' :
     sim = Simulation(world, LogLossComms(), TcpForward(int(sys.argv[1])))
