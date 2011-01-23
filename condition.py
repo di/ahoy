@@ -1,9 +1,8 @@
 class Condition:
-    #name: what the condition is called
-    #state: state that satisfies the condition 
-    def __init__(self, name, state):
-        self.name_ = name
-        self.state_ = state
+    def __init__(self):
+        return
 
-    def is_met(self, state):
+    # This function is extended in super classes. If its true
+    # then the condition is met
+    def is_met(self, event):
         return True

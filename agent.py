@@ -1,6 +1,8 @@
 from threading import Thread
 from ahoy.action import Action
 from ahoy.condition import Condition
+from ahoy.entity import Entity
+from ahoy.entities.node import Node
 
 class Agent :
     def __init__(self, owner_node) :
@@ -11,6 +13,7 @@ class Agent :
         return self._owner_node
 
     def start(self) :
+        self._init_behaviors()
         t = Thread(target=self.run)
         t.start()
         return t
@@ -19,7 +22,7 @@ class Agent :
         pass
 
     # add behavior to the self._behaviors list. 
-    # event should be a string of the event's class name
+    # event should be the class of the event cared about
     def add_behavior(self, behavior):
         precondition, event, action = behavior
         if(not self._behaviors.has_key(event)):
@@ -39,12 +42,15 @@ class Agent :
     # check to see if there are behaviors for an event. If so check
     # to see if certain preconditions are met (always true for now)
     # if so, perform the action
-    def check_behavior(self, event):
-        eventname = event.__class__.__name__
+    def _on_event(self, event):
+        eventname = event.__class__
         if(self._behaviors.has_key(eventname)):
             possible_actions = self._behaviors[eventname]
             for p in possible_actions:
                 condition, action = p
-                if(condition.is_met('test')): #will always return true for now
+                if(condition.is_met(event)): 
                     action.perform()
-    
+
+    def _init_behaviors(self):
+        for event in self._behaviors.keys():
+            self.get_owner_node().get_event_api().subscribe(event, self._on_event)

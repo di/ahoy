@@ -15,7 +15,7 @@ class TstCommsAgent(Agent) :
         self._move = move
 
     def _on_message(self, event, **kwds) :
-        self.check_behavior(event)    
+        print 'got the message'    
 
     def run(self) :
         iface = self.get_owner_node().get_interface(self._iface_name)
