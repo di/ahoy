@@ -96,6 +96,7 @@ class ProofOfConcept :
         self._event_api.publish(RectangleSurveilMove(0, p1, p2))
         self._event_api.publish(RectangleSurveilMove(1, p1, p2))
         self._event_api.publish(RectangleSurveilMove(2, p1, p2))
+        self._event_api.publish(RectangleSurveilMove(3, p1, p2))
 
         print p1, p2
 
