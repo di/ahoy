@@ -9,8 +9,6 @@ from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
 from ahoy.events.sensor import RadarEvent
 
-from ptv import *
-
 pygame.init()
 surface = pygame.display.set_mode((800,600))
 image_surface = pygame.image.load("image.png")
@@ -19,7 +17,7 @@ image_surface = pygame.image.load("image.png")
 class ProofOfConcept :
     def __init__(self, ip, port) :
         self._nodelist = {}
-        self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100)}
+        self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._current_radar_bearing = None
         self._current_radar_loc = None

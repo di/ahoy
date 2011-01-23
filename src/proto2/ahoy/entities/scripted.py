@@ -9,4 +9,6 @@ class Scripted(Entity) :
 
     def run(self) :
         for dest in self._waypoints :
+            print 'moving to', dest
             self.move(dest[0], dest[1], dest[2], self._vel, self._vert_vel, True)
+            print 'done'
