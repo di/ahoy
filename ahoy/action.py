@@ -1,8 +1,7 @@
 class Action :
-    def __init__(self, name) :
-       self.name_ = name 
+    def __init__(self) :
+        return
 
     def perform(self) :
-        print 'performing action'
         return 
 
