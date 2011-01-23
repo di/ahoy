@@ -25,7 +25,7 @@ for i, loc in enumerate(heli_areas) :
     se = (loc[2], loc[3])
     heli.add_agent(RectangleSurveilAgent(heli, nw, se, feet(150)))
 
-    heli.add_interface(Interface('wlan0', heli, wlan, 100))
+    heli.add_interface(Interface('wlan0', heli, wlan, 120))
     world.add_entity(heli)
 
 radar = RadarSensor2(len(heli_areas), watts(6000), 25, 1, 5, 1, 3/360.0, 1)
