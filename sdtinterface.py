@@ -36,7 +36,7 @@ class SdtInterface :
 
     def _on_link(self, event) :
         if event.get_up() :
-            thickness = max(1, int(8 * (1-(event.get_pathloss() / -100))))
+            thickness = 3#max(1, int(8 * (1-(event.get_pathloss() / -100))))
             self._send('link %s,%s,%s line %s,%s' % (event.get_uid1(), event.get_uid2(), '802.11', 'red', thickness))
         else :
             self._send('delete link,%s,%s,%s' % (event.get_uid1(), event.get_uid2(), '802.11'))
