@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os, sys
 import socket, sys, signal
+from threading import Lock
 from ahoy.util.geo import *
 from ahoy.agents.rectanglesurveil import *
 from ahoy.eventapi import EventAPI
@@ -17,6 +18,8 @@ image_surface = pygame.image.load("image.png")
 class ProofOfConcept :
     def __init__(self, ip, port) :
         self._nodelist = {}
+        self._links = {}
+        self._link_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._current_radar_bearing = None
@@ -39,9 +42,13 @@ class ProofOfConcept :
         self._event_api.subscribe(RadarEvent, self._on_radar)
 
     def _get_pix(self, lat, lon) :
-        x = int(((lon-self.tl_lon)/self.d_lon)*800)
-        y = int(((lat-self.tl_lat)/self.d_lat)*600)
-        return (x,y)
+        try :
+            x = int(((lon-self.tl_lon)/self.d_lon)*800)
+            y = int(((lat-self.tl_lat)/self.d_lat)*600)
+            return (x,y)
+        except :
+            print lat, lon, self.tl_lon, self.tl_lat
+            return (0,0)
 
     def _get_ll(self, x, y) :
         lon = ((x/800.0)*self.d_lon)+self.tl_lon
@@ -49,7 +56,12 @@ class ProofOfConcept :
         return (lat,lon)
 
     def _on_link(self, event) :
-        pass
+        n1 = event.get_uid1()
+        n2 = event.get_uid2()
+
+        self._link_lock.acquire()
+        self._links[tuple(sorted((n1, n2)))] = event.get_up()
+        self._link_lock.release()
 
     def _on_move(self, event) :
         uid = event.get_uid()
@@ -122,6 +134,16 @@ class ProofOfConcept :
         pygame.draw.circle(surface, (r,g,b), (x,y), 6, 0)
         pygame.draw.circle(surface, (r-100,g-100,b-100), (x,y), 8, 3)
 
+    def draw_links(self) :
+        self._link_lock.acquire()
+        for link, up in self._links.iteritems() :
+           if up :
+               if self._nodelist.has_key(link[0]) and self._nodelist.has_key(link[1]) :
+                   p1 = self._nodelist[link[0]][0]
+                   p2 = self._nodelist[link[1]][0]
+                   pygame.draw.line(surface, (255, 0, 0), p1, p2, 2)
+        self._link_lock.release()
+
 def main() :
     
     def quit(signal, frame) :
@@ -133,6 +155,7 @@ def main() :
         surface.blit(image_surface,(0,0))
         poc.draw_nodes()
         poc.draw_radar()
+        poc.draw_links()
 
     poc = ProofOfConcept(sys.argv[1], int(sys.argv[2]))
     signal.signal(signal.SIGINT, quit)
@@ -155,6 +178,6 @@ def main() :
             if gotFirst :
                 poc.send_bound(dx, dy, ux, uy)
             gotFirst = False    
-        pygame.draw.rect(surface,(255,0,0),(dx,dy,ux-dx,uy-dy),1)
+        pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
         redraw() 
 main()
