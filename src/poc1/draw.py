@@ -9,6 +9,8 @@ from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
 from ahoy.events.sensor import RadarEvent
 
+from ptv import *
+
 pygame.init()
 surface = pygame.display.set_mode((800,600))
 image_surface = pygame.image.load("image.png")
