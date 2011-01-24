@@ -25,7 +25,7 @@ class Agent :
     # event should be the class of the event cared about
     def add_behavior(self, behavior):
         precondition, event, action = behavior
-        if(not self._behaviors.has_key(event)):
+        if not self._behaviors.has_key(event) :
             self._behaviors[event] = []
         
         self._behaviors[event].append([precondition,action])
@@ -33,10 +33,10 @@ class Agent :
     #remove a behavior from the self._behaviors list
     def remove_behavior(self, behavior):
         precondition, event, action = behavior
-        if(self._behaviors.has_key(event)):
+        if self._behaviors.has_key(event) :
             for p in self._behaviors[event]:
                 mycondition, myaction = p
-                if(mycondition == precondition and myaction == action):
+                if mycondition == precondition and myaction == action :
                     self._behaviors[event].remove(p)
 
     # check to see if there are behaviors for an event. If so check
@@ -44,11 +44,11 @@ class Agent :
     # if so, perform the action
     def _on_event(self, event):
         eventname = event.__class__
-        if(self._behaviors.has_key(eventname)):
+        if self._behaviors.has_key(eventname) :
             possible_actions = self._behaviors[eventname]
-            for p in possible_actions:
+            for p in possible_actions :
                 condition, action = p
-                if(condition.is_met(event)): 
+                if condition.is_met(event) : 
                     action.perform()
 
     def _init_behaviors(self):
