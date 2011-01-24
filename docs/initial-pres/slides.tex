@@ -135,7 +135,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 {
     \frametitle{Architecture}
     \begin{center}
-        \includegraphics[scale=.4]{arch.pdf}
+        \includegraphics[scale=.48]{arch.pdf}
     \end{center}
 }
 
@@ -198,9 +198,9 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \frametitle{Batch Experimentation}
     \textbf{Running Multiple Experiments \& Collecting Data}
     \begin{itemize}
-        \item Collect data from each experiment
-        \item Provide tabulated results of high level metrics
-        \item API to allow agents to output low-level, specific information
+        \item Users specify desired output metrics (e.g. lost packets)
+        \item AHOY collects data during experiments and tabulates results
+        \item Agent-specific metrics (e.g. algorithm performance) may be collected via the agent API
     \end{itemize}
 }
 
@@ -211,10 +211,12 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \frametitle{Prototype Demonstration}
     \textbf{A simple, multi-faceted scenario}
     \begin{itemize}
-        \item Basic scenario description %%TODO
-        \item Shows two visualizers working independenty
-        \item Human in the loop can task reactionary UAV agents
-        \item Boat agents are moving with real, pre-recorded data 
+        \item 4 UAVs each controlled by a surveillance agent, 4 pre-scripted boats, 1 RADAR groundstation
+        \item Wireless interfaces on each UAV; using log-loss model for pathloss
+        \item RADAR takes into account cross-sectional area, Doppler shift, and shadowing
+        \item Shows two visualizers working independently
+        \item Human in the loop can change agents' behaviors
+        \item Simulation distributed between two physical TUX nodes, each visualizer on an additional physical node
     \end{itemize}
 }
 
