@@ -10,12 +10,8 @@ class MoveAction(Action):
 
     def perform(self):
         lat, lon, alt = self._entity.get_position()
-        print str(self._entity.get_uid()) + " is at position " + str(lat) + " , " + str(lon) + " , " + str(alt) 
+        print str(self._entity.get_uid()) + ' is at position ' + str(lat) + ' , ' + str(lon) + ' , ' + str(alt) 
         self._entity.set_position(self._lat_move + lat, self._lon_move + lon, self._alt_move + alt)
-
-
 
     def test(self):
         print 'hello'
-
-
