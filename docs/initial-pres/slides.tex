@@ -237,4 +237,35 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 
+\frame
+{
+    \frametitle{Extra - Demonstration Scenario}
+    \begin{verbatim}
+world = World()
+
+wlan = Network('wlan0')
+world.add_network(wlan)
+
+heli_areas = [ ... ]
+paths = [ ... ]
+
+for i, loc in enumerate(heli_areas) :
+    heli = Node(i)
+    heli.set_position(loc[0], loc[1], feet(i * 100))
+    heli.add_agent(RectangleSurveilAgent(heli, loc[0:2], loc[2:3], feet(150)))
+
+    heli.add_interface(Interface('wlan0', heli, wlan, 120))
+    world.add_entity(heli)
+
+radar = RadarSensor2(len(world.get_entities()), watts(6000), 25, 1, 5, 1, 3/360.0, 1)
+radar.set_position(39.9485, -75.1325, 0)
+world.add_entity(radar)
+
+for path in paths :
+    e = Scripted(len(world.get_entities()), path[2:], path[0], 0)
+    e.set_position(*path[1])
+    world.add_entity(e)
+    \end{verbatim}
+}
+
 \end{document}
