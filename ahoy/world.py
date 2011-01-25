@@ -7,6 +7,7 @@ class World :
         self._entities = {}
         self._networks = {}
         self._event_api = None
+        self._agent_mapping = {}
 
     def add_entity(self, entity) :
         self._entities[entity.get_uid()] = entity
@@ -26,10 +27,19 @@ class World :
     def get_network(self, name) :
         return self._networks[name]
 
+    def get_agent_mapping(self) :
+        return self._agent_mapping
+        
     def initialize(self) :
         self._event_api = EventAPI()
         self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_entity_move)
+
+        for e in self._entities.values() :
+            #TODO: Should be using isinstance(e, Node) but causes cyclic imports :/
+            if e.__class__.__name__ == 'Node' :
+                for agent_uid in e.get_agent_uids() :
+                    self._agent_mapping[agent_uid] = e.get_uid()
 
     def _on_entity_move(self, event) :
         self.get_entity(event.get_uid()).set_position(event.get_lat(), event.get_long(), event.get_agl())

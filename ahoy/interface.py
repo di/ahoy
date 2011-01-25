@@ -11,14 +11,16 @@ class Interface :
 
     def _on_communication(self, event) :
         if event.get_network() == self._network_name :
-            if self._owner.get_uid() in event.get_message().get_dests() and self._recv_callback != None :
+            agents = set(event.get_message().get_dest_agents())
+            local_agents = set(self.get_owner().get_agent_uids())
+            if not agents.isdisjoint(local_agents) and self._recv_callback != None :
                 self._recv_callback(event, iface=self)
 
     def connect(self) :
         self._owner.get_event_api().subscribe(CommunicationRecvEvent, self._on_communication)
 
-    def send(self, message_inst) :
-        self._owner.get_event_api().publish(CommunicationSendEvent(self.get_owner().get_uid(), self.get_name(), message_inst, self._network_name))
+    def send(self, message_inst, src_agent) :
+        self._owner.get_event_api().publish(CommunicationSendEvent(src_agent, self.get_name(), message_inst, self._network_name))
 
     def set_recv_callback(self, cb) :
         self._recv_callback = cb
