@@ -10,6 +10,16 @@
 \usetikzlibrary{arrows,automata,petri,positioning}
 \usepackage[latin1]{inputenc}
 
+%% Hack so 'backup' slides aren't reflected in total slide count
+\newcommand{\backupbegin}{
+       \newcounter{framenumberappendix}
+          \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+       \addtocounter{framenumberappendix}{-\value{framenumber}}
+          \addtocounter{framenumber}{\value{framenumberappendix}} 
+}
+
 \title[AHOY: Slide \insertframenumber/\inserttotalframenumber]{AHOY: An event-based simulation environment}
 
 \subtitle{Initial Presentation}
@@ -229,6 +239,9 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 
+%% Begin backup slides
+\backupbegin
+
 \frame
 {
     \frametitle{Extra - Demo Architecture}
@@ -277,5 +290,8 @@ for path in paths :
         \item \texttt{CommunicationSendEvent}: Source agent UID, source interface name, message instance, network name
     \end{itemize}
 }
+
+%% End backup slides
+\backupend
 
 \end{document}
