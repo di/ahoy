@@ -5,9 +5,13 @@ from ahoy.entity import Entity
 from ahoy.entities.node import Node
 
 class Agent :
-    def __init__(self, owner_node) :
+    def __init__(self, owner_node, uid) :
         self._owner_node = owner_node
+        self._uid = uid
         self._behaviors = {}
+
+    def get_uid(self) :
+        return self._uid
 
     def get_owner_node(self) :
         return self._owner_node
@@ -17,6 +21,9 @@ class Agent :
         t = Thread(target=self.run)
         t.start()
         return t
+
+    def on_message(self, event) :
+        pass
      
     def run(self) :
         pass
