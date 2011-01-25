@@ -20,7 +20,7 @@ n2.set_position(40.01, -75.01, feet(200))
 world.add_entity(n2)
 
 if __name__ == '__main__' :
-    sim = Simulation(world, LogLossComms(), TcpForward(int(sys.argv[1])))
+    sim = Simulation(world, LogLossComms())
 
     def quit(signal, frame) :
         print 'Stopping...'

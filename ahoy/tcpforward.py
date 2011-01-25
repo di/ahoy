@@ -16,7 +16,10 @@ class TcpForward :
         self._tcp_server.bind(('', port))
         self._tcp_server.listen(1)
 
-        Thread(target=self._acceptor).start()
+    def start(self) :
+        t = Thread(target=self._acceptor)
+        t.start()
+        return t
 
     def _acceptor(self) :
         while True :
@@ -48,3 +51,12 @@ class TcpForward :
 
         for discard in discards :
             self._clients.discard(discard)
+
+if __name__ == '__main__' :
+    if len(sys.argv) < 2 :
+        print 'usage: python tcpforward.py <offer_port>'
+        sys.exit(0)
+    port = int(sys.argv[1])
+    forwarder = TcpForward(port)
+    print 'Starting forwarder on', port
+    forwarder.start().join()

@@ -48,7 +48,7 @@ for path in paths :
     world.add_entity(e)
 
 if __name__ == '__main__' :
-    sim = Simulation(world, LogLossComms(), TcpForward(int(sys.argv[1])))
+    sim = Simulation(world, LogLossComms())
 
     def quit(signal, frame) :
         print 'Stopping...'

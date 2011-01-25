@@ -1,8 +1,8 @@
 class Condition:
     def __init__(self):
-        return
+        pass
 
-    # This function is extended in super classes. If its true
+    # This function is extended in sub classes. If its true
     # then the condition is met
     def is_met(self, event):
         return True
