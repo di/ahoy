@@ -10,6 +10,9 @@ class CommsEngine :
 
         self._event_api.subscribe(CommunicationSendEvent, self._on_send)
 
+    def get_node_from_agent(self, agent_uid) :
+        return self._simulation.get_world().get_agent_mapping()[agent_uid]
+
     def set_simulation(self, simulation) :
         self._simulation = simulation
 
