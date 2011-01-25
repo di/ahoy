@@ -11,7 +11,6 @@ from ahoy.commsengines.basic import BasicComms
 from ahoy.commsengines.logloss import LogLossComms
 from ahoy.interface import Interface
 from ahoy.agents.comms import CommsAgent
-from ahoy.agents.tstcomms import TstCommsAgent
 from ahoy.network import Network
 from ahoy.tcpforward import TcpForward
 from ahoy.action import Action
@@ -26,7 +25,7 @@ world.add_network(wlan)
 n1 = Node(0)
 n1.add_interface(Interface('wlan0', n1, wlan, 100))
 
-ca1 = TstCommsAgent(n1, 'wlan0', 1, False)
+ca1 = CommsAgent(n1, 1, 2, False)
 n1.add_agent(ca1)
 n1.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n1)
@@ -34,7 +33,7 @@ world.add_entity(n1)
 n2 = Node(1)
 n2.add_interface(Interface('wlan0', n2, wlan, 100))
 
-ca2 = TstCommsAgent(n2, 'wlan0', 0, True)
+ca2 = CommsAgent(n2, 2, 1, True)
 
 n2.add_agent(ca2)
 n2.set_position(39.9534, -75.1912, 0.02)
