@@ -33,27 +33,14 @@ class LogLossComms(CommsEngine) :
         return True
 
     def _on_send(self, event) :
-        source_agent_uid = event.get_src_agent_uid()
-        dest_agent_uids = event.get_message().get_dest_agents()
+        source_node_uid = self.get_node_from_agent(event.get_src_agent_uid())
+        dest_node_uid = self.get_node_from_agent(event.get_message().get_dest_agent())
 
-        source_node_uid = self.get_node_from_agent(source_agent_uid)
-        dest_node_uids = set([])
-        for agent_uid in dest_agent_uids :
-            dest_node_uids.add(self.get_node_from_agent(agent_uid))
+        src_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface(event.get_src_iface_name()).get_power()
+        dest_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network()).get_power()
 
-        valid_dests = set([])
-
-        for dest_node_uid in dest_node_uids :
-            src_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface(event.get_src_iface_name()).get_power()
-            dest_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network()).get_power()
-            if self._should_deliver(source_node_uid, dest_node_uid, src_power, dest_power) :
-                valid_dests.add(dest_node_uid)
-
-        if len(valid_dests) > 0 :
-            valid_dests = list(valid_dests)
-            message = event.get_message()
-            message.set_dest_agents(valid_dests)
-            self.get_event_api().publish(CommunicationRecvEvent(event.get_src_agent_uid(), event.get_src_iface_name(), message, event.get_network()))
+        if self._should_deliver(source_node_uid, dest_node_uid, src_power, dest_power) :
+            self.get_event_api().publish(CommunicationRecvEvent(event.get_src_agent_uid(), event.get_src_iface_name(), event.get_message(), event.get_network()))
 
     # TODO: BEST. METHOD. EVER.   Change this...
     # Simplify some of these if's...

@@ -31,19 +31,15 @@ class Node(Entity) :
         return None
 
     def send(self, message, src_agent) :
-        sent_nets = set([])
         for iface in self._interfaces.values() :
             network = self.get_world().get_network(iface.get_network_name())
-            for agent in message.get_dest_agents() :
-                node_uid = self.get_world().get_agent_mapping()[agent]
-                if network not in sent_nets and network.both_in_network(self.get_uid(), node_uid) :
-                    iface.send(message, src_agent.get_uid())
-                    sent_nets.add(network)
+
+            node_uid = self.get_world().get_agent_mapping()[message.get_dest_agent()]
+            if network.both_in_network(self.get_uid(), node_uid) :
+                iface.send(message, src_agent.get_uid())
 
     def _on_message(self, event, **kwds) :
-        for agent in event.get_message().get_dest_agents() :
-            if self._agents.contains_key(agent) :
-                self._agents[agent].on_message(event)
+        self._agents[event.get_message().get_dest_agent()].on_message(event)
 
     def run(self) :
         print 'starting node %s' % self._uid

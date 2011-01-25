@@ -10,10 +10,8 @@ class Interface :
         network.add_interface(self)
 
     def _on_communication(self, event) :
-        if event.get_network() == self._network_name :
-            agents = set(event.get_message().get_dest_agents())
-            local_agents = set(self.get_owner().get_agent_uids())
-            if not agents.isdisjoint(local_agents) and self._recv_callback != None :
+        if event.get_network() == self._network_name and event.get_message().get_dest_agent() in self.get_owner().get_agent_uids():
+            if self._recv_callback != None :
                 self._recv_callback(event, iface=self)
 
     def connect(self) :
