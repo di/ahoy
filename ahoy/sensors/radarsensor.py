@@ -1,12 +1,31 @@
 import math
 import time
-from ahoy.entity import Entity
-from ahoy.events.sensor import RadarEvent
+from ahoy.sensor import Sensor
+from ahoy.event import Event
 from ahoy.util.geo import *
 
-class RadarSensor2(Entity) :
-    def __init__(self, uid, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
-        Entity.__init__(self, uid)
+class RadarEvent(Event) :
+    def __init__(self, radar_loc, bearing, distance, target_location) :
+        Event.__init__(self)
+        self._radar_loc = radar_loc
+        self._bearing = bearing
+        self._distance = distance
+        self._target_location = target_location
+
+    def get_radar_loc(self) :
+        return self._radar_loc
+
+    def get_bearing(self) :
+        return self._bearing
+
+    def get_distance(self) :
+        return self._distance
+
+    def get_target_location(self) :
+        return self._target_location
+
+class RadarSensor(Sensor) :
+    def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
         self._trans_power = trans_power
         self._trans_freq = trans_freq
         self._gain = gain
@@ -35,9 +54,7 @@ class RadarSensor2(Entity) :
                 bearing = math.atan2(y, x) % (2*math.pi)
                 
                 if bearing >= antenna_bearing and bearing <= antenna_bearing + self._angle :
-                    dist = haver_distance(math.degrees(lat), math.degrees(lon), math.degrees(e_lat), math.degrees(e_lon)) #lin_distance(lat, lon, 0, e_lat, e_lon, 0)
-                    #dt = 2*dist / 3e8
-                    #est_dist = dt * 3e8 / 2.0
+                    dist = haver_distance(math.degrees(lat), math.degrees(lon), math.degrees(e_lat), math.degrees(e_lon))
                     est_dist = dist
                     if angle_data == None or angle_data > est_dist :
                         x, y, z = sph_to_lin(lat, lon, agl)
@@ -48,7 +65,6 @@ class RadarSensor2(Entity) :
                         proj_vel = entity.get_forward_velocity() * math.cos(angle)
                         freq_shift = 2 * proj_vel * self._trans_freq / 3e8
 
-                        # Estimates the (orthogonal) velocity of the entity
                         est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
                         angle_data = (est_dist, est_orth_vel)
 
@@ -59,7 +75,7 @@ class RadarSensor2(Entity) :
             else :
                 location = None
                 distance = None
-            self.get_event_api().publish(RadarEvent(self.get_uid(), self.get_position(), antenna_bearing, distance, location))
+            self._publish_data(RadarEvent(antenna_bearing, distance, location))
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)
