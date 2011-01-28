@@ -27,12 +27,8 @@ class SdtInterface :
         self._sdt_sock.sendto(msg, ('127.0.0.1', self._sdt_port))
 
     def _on_radar(self, event) :
-        self._send('clear symbols')
-        radar_data = event.get_data()
-        i = 0
-        for loc, data in radar_data.iteritems() :
-            i += 1
-            self._send('region region%s position %s,%s symbol sphere,red,X,X,X,X' % (i, loc[1], loc[0]))
+        lat, lon, agl = event.get_radar_loc()
+        self._send('node %s position %s,%s,%s' % (event.get_sensor_id(), lon, lat, agl))
 
     def _on_link(self, event) :
         if event.get_up() :
