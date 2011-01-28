@@ -78,7 +78,7 @@
     top color=white, bottom color=blue!30, draw=blue!50!black!100,
     drop shadow, rounded corners,
     node distance = 5cm, text width = 5cm]
-
+\tikzstyle{component} = [umlclass, rectangle split parts=0, text width =]
 % Line styles
 \tikzstyle{hasa} = [draw, ->, >=open diamond]
 \tikzstyle{ownsa} = [draw, ->, >=diamond]
@@ -147,6 +147,16 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \section{Design Overview}
 \subsection{Description of Problem}
 \subsection{Subsystem Diagram}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node [component] (Simulation) {\textbf{Simulation}};
+    \end{tikzpicture}
+    \caption{Class diagram for Process Management}
+    \label{fig-kernel_process_mgmt}
+\end{figure}
+
+
 \subsection{Distribution Diagram}
 
 \section{Detailed System Design}
