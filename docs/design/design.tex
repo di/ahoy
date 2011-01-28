@@ -147,19 +147,24 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \section{Design Overview}
 \subsection{Description of Problem}
 \subsection{Subsystem Diagram}
+\subsection{Distribution Diagram}
 
 \section{Detailed System Design}
 \subsection{Simulator Components}
 \subsubsection{Simulation}
 \subsubsection{StartupDaemon}
 \subsubsection{Entity}
+\subsubsection{Built-in Entities}
+\paragraph{Node}
+\paragraph{PreScriptedObject}
 \subsubsection{World}
 
 \subsection{Networking Components}
 \subsubsection{Interface}
 \subsubsection{CommsEngine}
-\subsubsection{LogLossCommsEngine}
-\subsubsection{EthernetCommsEngine}
+\subsubsection{Built-in CommsEngines}
+\paragraph{LogLossCommsEngine}
+\paragraph{EthernetCommsEngine}
 
 \subsection{Event Components}
 \subsubsection{Event}
@@ -178,6 +183,9 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsubsection{Action}
 \subsubsection{Built-in Actions}
 \paragraph{Move}
+
+\subsection{Sensor Components}
+\subsubsection{Sensor}
 
 \subsection{Utility Components}
 \subsubsection{Geo}
