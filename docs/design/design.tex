@@ -1,6 +1,7 @@
 \RequirePackage{fix-cm}
 \documentclass[titlepage]{article}
 
+\usepackage[utf8]{inputenc}
 \usepackage{fullpage}    % Use the whole page
 \usepackage{fancyhdr}    % Nice headers/footers
 \usepackage{mdwlist}     % For itemize* and enumerate*
@@ -8,20 +9,13 @@
 \usepackage{hyperref}    % Hyperlink references and URLs
 \usepackage[figure,table]{hypcap} % Hyperlink points to the top of figures
 \usepackage[usenames,dvipsnames]{xcolor}	% Logo
-\usepackage{tikz,ifthen}			% Logo
-\usepackage{pgf}				% Logo
-\usepackage{scalefnt}				% Logo
-\usepgfmodule{shapes}				% Logo
-\usepgfmodule{plot}				% Logo
-
-% Tikz packages
-%\usepackage[svgnames]{xcolor}
-\usepackage[utf8]{inputenc}
-%\usepackage{tikz}
-%BEGIN IMAGE
+\usepackage{tikz,ifthen}			        % Logo
+\usepackage{pgf}				            % Logo
+\usepackage{scalefnt}				        % Logo
+\usepgfmodule{shapes}				        % Logo
+\usepgfmodule{plot}				            % Logo
 \usetikzlibrary{shapes,arrows,shadows,fit}
-%END IMAGE
-\usepackage{pgf-umlsd}
+\usepackage{pgf-umlsd}   % UML Library
 
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Software Design Specification}
