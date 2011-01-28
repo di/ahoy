@@ -1,7 +1,6 @@
 \RequirePackage{fix-cm}
 \documentclass[titlepage]{article}
 
-\usepackage[utf8]{inputenc}
 \usepackage{fullpage}    % Use the whole page
 \usepackage{fancyhdr}    % Nice headers/footers
 \usepackage{mdwlist}     % For itemize* and enumerate*
@@ -9,13 +8,56 @@
 \usepackage{hyperref}    % Hyperlink references and URLs
 \usepackage[figure,table]{hypcap} % Hyperlink points to the top of figures
 \usepackage[usenames,dvipsnames]{xcolor}	% Logo
-\usepackage{tikz,ifthen}			        % Logo
-\usepackage{pgf}				            % Logo
-\usepackage{scalefnt}				        % Logo
-\usepgfmodule{shapes}				        % Logo
-\usepgfmodule{plot}				            % Logo
+\usepackage{tikz,ifthen}			% Logo
+\usepackage{pgf}				% Logo
+\usepackage{scalefnt}				% Logo
+\usepgfmodule{shapes}				% Logo
+\usepgfmodule{plot}				% Logo
+\usepackage{multirow}
+\usepackage{mdwlist}
+\usepackage{colortbl}
+
+\makecompactlist{itemizecompact}{itemize}
+\newcommand{\operations}[1]{
+\begin{center}
+    \begin{tabular}{|p{3cm}|p{9cm}|}
+    \hline
+    \multicolumn{2}{|l|}{\cellcolor[gray]{0.5}{\textbf{Operations}}} \\ \hline
+#1
+    \end{tabular}
+\end{center}
+}
+\newcommand{\operation}[4]{
+    \hline
+    \multicolumn{2}{|l|}{\cellcolor[gray]{0.8}{#1}} \\ \hline
+    \textbf{Input} & #2 \\ \hline
+    \textbf{Output} & #3 \\ \hline
+    \textbf{Description} & #4 \\ \hline
+}
+
+\newcommand{\attributes}[1]{
+    \begin{center}
+        \begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
+            \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
+            \rowcolor[gray]{0.8} Name & Type & Description \\ \hline \hline
+            #1
+        \end{tabular}
+    \end{center}
+}
+
+\newcommand{\attribute}[3]{
+    \texttt{#1} & \texttt{#2} & #3 \\ \hline
+}
+
+
+% Tikz packages
+%\usepackage[svgnames]{xcolor}
+\usepackage[utf8]{inputenc}
+%\usepackage{tikz}
+%BEGIN IMAGE
 \usetikzlibrary{shapes,arrows,shadows,fit}
-\usepackage{pgf-umlsd}   % UML Library
+%END IMAGE
+\usepackage{pgf-umlsd}
 
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Software Design Specification}
@@ -194,7 +236,36 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsubsection{Built-in Events}
 \paragraph{LinkEvent}
 \paragraph{CommunicationSendEvent}
-\paragraph{EntityMoveEvent}
+\paragraph{EntityMoveEvent}{Published when an entity moves within the simulation.}
+
+\attributes{
+    \attribute{\_entity\_uid}{int}{UID of the entity that moved}
+    \attribute{\_lat}{float}{Latitude of new location}
+    \attribute{\_lon}{float}{Longitude of new location}
+    \attribute{\_agl}{float}{AGL of new location}
+    \attribute{\_velocity}{float}{Velocity of movement}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(entity, lat, lon, agl, velocity)}
+    {
+        \begin{itemizecompact}
+            \item \texttt{entity}: Instance of entity that moved
+            \item \texttt{lat}: Latitude of new location
+            \item \texttt{lon}: Longitude new location
+            \item \texttt{agl}: AGL of new location
+            \item \texttt{velocity}: Velocity of movement
+        \end{itemizecompact}
+
+    }{None}{Instantiates a new movement action}
+    \operation{get\_uid()}{None}{UID}{Gets the UID of the entity that moved}
+    \operation{get\_lat()}{None}{Latitude}{Gets the new latitude of the entity that moved}
+    \operation{get\_lon()}{None}{Longitude}{Gets the new longitude of the entity that moved}
+    \operation{get\_agl()}{None}{AGL}{Gets the new AGL of the entity that moved}
+    \operation{get\_velocity()}{Velocity}{None}{Gets the velocity of the entity that moved}
+}
+
 \paragraph{StartupEvent}
 \paragraph{AckStartupEvent}
 \paragraph{StartSimulationEvent}
