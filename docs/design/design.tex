@@ -213,11 +213,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
         \draw [draw, <-, >=open diamond] (Entity) -- (Agent);
         \draw [draw, <-, >=open diamond] (Entity) -- (Sensor);
         \draw [draw, <-, >=open diamond] (Entity) -- (Interface);
-%        \draw [draw, <-, >=open diamond] (Simulation) -- node[very near start, above] {1} node[very near end, above] {1} (World);
-%        \draw [draw, ->, >=open diamond] (Entity) -- node[very near end, above] {1} node[very near start, above] {1..*} (World);
-%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Agent);
-%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Sensor);
-%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Interface);
     \end{tikzpicture}
     \caption{Subsystem Diagram}
     \label{fig-subsystem}
@@ -289,8 +284,43 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 
 \subsection{Agent Components}
 \subsubsection{Agent}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[text width = 6cm,xshift=-2cm]{action}{Agent \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_owner\_node}{Node}
+            \umlattr{\#}{\_uid}{int}
+            \umlattr{\#}{\_behaviors}{dict$<$Event, list$<$[precondition, action]$>>$}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{owner\_uid, uid}{void}
+            \umlmethod{\#}{\_on\_event}{event : Event}{void}
+            \umlmethod{\#}{\_init\_behavior}{void}{void}
+            \umlmethod{+}{get\_uid}{}{int}
+            \umlmethod{+}{get\_owner\_node}{}{Node}
+            \umlmethod{+}{on\_message}{event : Event}{void}
+            \umlmethod{+}{start}{}{void}
+            \umlmethod{+}{run}{}{void}
+            \umlmethod{+}{add\_behavior}{behavior : (precond, event, action)}{void}
+            \umlmethod{+}{remove\_behavior}{behavior : (precond, event, action)}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for agents}
+    \label{fig-agents}
+\end{figure}
 \subsubsection{Condition}
 \subsubsection{Action}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[text width = 6cm,xshift=-2cm]{action}{Action \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_name}{String}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for agents}
+    \label{fig-agents}
+\end{figure}
 \subsubsection{Built-in Actions}
 \paragraph{Move}
 
