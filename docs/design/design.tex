@@ -36,7 +36,7 @@
     pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
 }
 
-% So we can number paragraphs too
+% So we can number subsubsections too
 \setcounter{secnumdepth}{5}
 
 % For headers and footers
@@ -149,9 +149,36 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsection{Subsystem Diagram}
 
 \section{Detailed System Design}
-\subsection{Component 1}
-\subsection{Component 2}
-\subsection{Component 3}
-\subsection{Component N}
+\subsection{Simulator Components}
+\subsubsection{Simulation}
+\subsubsection{StartupDaemon}
+\subsubsection{Entity}
+\subsubsection{World}
 
+\subsection{Networking Components}
+\subsubsection{Interface}
+\subsubsection{CommsEngine}
+\subsubsection{LogLossCommsEngine}
+\subsubsection{EthernetCommsEngine}
+
+\subsection{Event Components}
+\subsubsection{Event}
+\subsubsection{Built-in Events}
+\paragraph{LinkEvent}
+\paragraph{CommunicationSendEvent}
+\paragraph{EntityMoveEvent}
+\paragraph{StartupEvent}
+\paragraph{AckStartupEvent}
+\paragraph{StartSimulationEvent}
+\paragraph{StopSimulationEvent}
+
+\subsection{Agent Components}
+\subsubsection{Agent}
+\subsubsection{Condition}
+\subsubsection{Action}
+\subsubsection{Built-in Actions}
+\paragraph{Move}
+
+\subsection{Utility Components}
+\subsubsection{Geo}
 \end{document}
