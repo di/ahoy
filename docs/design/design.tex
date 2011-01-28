@@ -78,9 +78,9 @@
     top color=white, bottom color=blue!30, draw=blue!50!black!100,
     drop shadow, rounded corners,
     node distance = 5cm, text width = 5cm]
-\tikzstyle{component} = [umlclass, rectangle split parts=0, text width =]
+\tikzstyle{component} = [umlclass, rectangle split parts=0, text width =, node distance=3.14159cm]
 % Line styles
-\tikzstyle{hasa} = [draw, ->, >=open diamond]
+\tikzstyle{hasa} = [draw, <-, >=open diamond]
 \tikzstyle{ownsa} = [draw, ->, >=diamond]
 \tikzstyle{isa} = [draw, ->, >=open triangle 45]
 
@@ -147,18 +147,37 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \section{Design Overview}
 \subsection{Description of Problem}
 \subsection{Subsystem Diagram}
-\begin{figure}
+\begin{figure}[!h]
     \centering
-    \begin{tikzpicture}
-        \node [component] (Simulation) {\textbf{Simulation}};
+    \begin{tikzpicture}[node distance=.5cm]
+        \node [component] (Entity) {\textbf{Entities}};
+        \node [component, right of=Entity] (World) {\textbf{World}};
+        \node [component, right of=World] (Simulation) {\textbf{Simulation}};
+        \node [component, below left of=Entity] (Agent) {\textbf{Agents}};
+        \node [component, below right of=Entity] (Sensor) {\textbf{Sensors}};
+        \node [component, below of=Entity] (Interface) {\textbf{Interfaces}};
+        \draw [draw, <-, >=open diamond] (Simulation) -- (World);
+        \draw [draw, ->, >=open diamond] (Entity) -- (World);
+        \draw [draw, <-, >=open diamond] (Entity) -- (Agent);
+        \draw [draw, <-, >=open diamond] (Entity) -- (Sensor);
+        \draw [draw, <-, >=open diamond] (Entity) -- (Interface);
+%        \draw [draw, <-, >=open diamond] (Simulation) -- node[very near start, above] {1} node[very near end, above] {1} (World);
+%        \draw [draw, ->, >=open diamond] (Entity) -- node[very near end, above] {1} node[very near start, above] {1..*} (World);
+%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Agent);
+%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Sensor);
+%        \draw [draw, <-, >=open diamond] (Entity) -- node[very near end, right] {0..*} node[very near start, right] {1..*} (Interface);
     \end{tikzpicture}
-    \caption{Class diagram for Process Management}
-    \label{fig-kernel_process_mgmt}
+    \caption{Subsystem Diagram}
+    \label{fig-subsystem}
 \end{figure}
 
-
 \subsection{Distribution Diagram}
-
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=.6]{../initial-pres/arch.pdf}
+    \caption{Distribution Diagram}
+    \label{fig-distribution}
+\end{figure}
 \section{Detailed System Design}
 \subsection{Simulator Components}
 \subsubsection{Simulation}
