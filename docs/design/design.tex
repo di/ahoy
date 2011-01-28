@@ -1,6 +1,7 @@
 \RequirePackage{fix-cm}
 \documentclass[titlepage]{article}
 
+\usepackage[utf8]{inputenc}
 \usepackage{fullpage}    % Use the whole page
 \usepackage{fancyhdr}    % Nice headers/footers
 \usepackage{mdwlist}     % For itemize* and enumerate*
@@ -13,6 +14,8 @@
 \usepackage{scalefnt}				% Logo
 \usepgfmodule{shapes}				% Logo
 \usepgfmodule{plot}				% Logo
+\usetikzlibrary{shapes,arrows,shadows,fit}
+\usepackage{pgf-umlsd}
 \usepackage{multirow}
 \usepackage{mdwlist}
 \usepackage{colortbl}
@@ -48,16 +51,6 @@
 \newcommand{\attribute}[3]{
     \texttt{#1} & \texttt{#2} & #3 \\ \hline
 }
-
-
-% Tikz packages
-%\usepackage[svgnames]{xcolor}
-\usepackage[utf8]{inputenc}
-%\usepackage{tikz}
-%BEGIN IMAGE
-\usetikzlibrary{shapes,arrows,shadows,fit}
-%END IMAGE
-\usepackage{pgf-umlsd}
 
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Software Design Specification}
@@ -178,6 +171,29 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsection{Scope}
 \subsection{Design Goals}
 \subsection{Definitions, Acronyms, and Abbreviations}
+\begin{description}
+\item[Agent]
+	Agents are simulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topologies.   
+
+\item[Distribution]
+	Distribution refers to the process of distributing the simulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single simulation at the system's discretion.  A framework will be provided to allow the user to distribute their simulation. 	
+
+\item[Node]
+	Nodes are virtual or physical machines that consist of agents and network interfaces.  If nodes are virtual, many nodes may run on one physical machine.  
+
+\item[Scenario]
+	Scenario is comprised of a scripted language indicating the location simulated nodes within the virtual world. These nodes consist of agents (see definition of `Agent') and non-agent world objects such as planes, boats, ground vehicles, etc. 
+
+\item[Terrain]
+	Terrain refers to the simulated landscape.  This includes such geography as the slope of the land, the tree density, water v.s. land surfaces, etc.
+
+\item[Topology]
+	Topology describes time-dependent connections between nodes and their characteristics (e.g. radio model). It is described with a scripting language which specifies the details of network interfaces on each simulated node, including radio models and throughput characteristics.  It describes any physical or wireless links that connect these interfaces.  Further, it indicates changes in linkage over time such as a wireless interface switches, wireless LANs, or a physical link being created or severed. 
+
+\item[Visualizer]
+	The Visualizer allows the simulations to be superimposed over real-world topography.  This permits the user to examine the behavior of the agents.  It also allows for overlays such as link quality, traffic rates, and other metrics deemed important to specific components.
+\end{description}
+
 \subsection{References}
 
 \section{Design Overview}
