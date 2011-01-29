@@ -19,11 +19,13 @@
 \usepackage{multirow}
 \usepackage{mdwlist}
 \usepackage{colortbl}
+\usepackage{calc}
 
 \makecompactlist{itemizecompact}{itemize}
+
 \newcommand{\operations}[1]{
 \begin{center}
-    \begin{tabular}{|p{3cm}|p{9cm}|}
+    \begin{tabular}{|p{3cm}|p{9cm + 2.0\tabcolsep}|}
     \hline
     \multicolumn{2}{|l|}{\cellcolor[gray]{0.5}{\textbf{Operations}}} \\ \hline
 #1
@@ -32,7 +34,7 @@
 }
 \newcommand{\operation}[4]{
     \hline
-    \multicolumn{2}{|l|}{\cellcolor[gray]{0.8}{#1}} \\ \hline
+    \multicolumn{2}{|l|}{\cellcolor[gray]{0.8}{\texttt{#1}}} \\ \hline
     \textbf{Input} & #2 \\ \hline
     \textbf{Output} & #3 \\ \hline
     \textbf{Description} & #4 \\ \hline
@@ -42,7 +44,7 @@
     \begin{center}
         \begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
             \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
-            \rowcolor[gray]{0.8} Name & Type & Description \\ \hline \hline
+            \rowcolor[gray]{0.8} Name & Type & Description \\ \hline 
             #1
         \end{tabular}
     \end{center}
