@@ -275,13 +275,16 @@ AHOY is intentionally designed to provide no specific user interface in the trad
 \subsection{Technologies Used}
 The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
 
+\subsection{Design Motivations}
+\paragraph{Communication}{The method by which distrbuted nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{http://labs.cengen.com/emane/} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{http://cs.itd.nrl.navy.mil/work/norm/} protocol which provides the same QoS guarantees as TCP.}
+
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
 \subsubsection{StartupDaemon}
 \subsubsection{World}
-\subsubsection{EventAPI}
+\subsubsection{EventAPI} % TODO: Create UML for this
 
 \subsubsection{Entity}
 \subsubsection{Built-in Entities}
@@ -473,7 +476,7 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsubsection{Action}
 \subsubsection{Built-in Actions}
-\paragraph{Move}
+\paragraph{MoveAction}
 
 \subsection{Sensor Components}
 \subsubsection{Sensor}
