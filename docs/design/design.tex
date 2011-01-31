@@ -254,6 +254,12 @@ These documents have been used as reference materials for various technologies i
     \label{fig-distribution}
 \end{figure}
 
+\subsection{User Interface Overview}
+AHOY is intentionally designed to provide no specific user interface in the traditional sense. Instead, it provides an extensive and comprehensive API, for creating a simulation, interacting with an experiment as it is running, monitoring events from a global viewpoint, and recording the results of an experiment for analysis. This ultimately offers flexibility for the end user, as separate, pre-existing interfaces can be modified to support AHOY's software API, or simply created from scratch to explicitly satisfy the user's needs. 
+
+\subsection{Technologies Used}
+The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
+
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
