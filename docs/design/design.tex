@@ -276,13 +276,98 @@ AHOY is intentionally designed to provide no specific user interface in the trad
 The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
 
 \subsection{Design Motivations}
-\paragraph{Communication}{The method by which distrbuted nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{http://labs.cengen.com/emane/} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{http://cs.itd.nrl.navy.mil/work/norm/} protocol which provides the same QoS guarantees as TCP.}
+\paragraph{Communication}{The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{http://labs.cengen.com/emane/} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{http://cs.itd.nrl.navy.mil/work/norm/} protocol which provides the same QoS guarantees as TCP.}
 
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
+{ The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the
+entities running in it. }
+
+
+\attributes{
+    \attribute{\_event\_api}{EventAPI}{Instance of the Event API }
+    \attribute{\_startup\_acks}{list<int>}{A list of startup daemon id's }
+    \attribute{\_comms\_module}{CommsEngine}{Communication Engine used to send and receive events}
+    \attribute{\_world}{World}{Instance of the world maintained by the simulation}
+    \attribute{\_tcp\_forwarder}{TcpForward}{TcpForward object that maintains a port to listen on for packets of data }
+}
+
+
+\operations{
+    \operation{\_\_init\_\_(world\_inst, comms\_module, tcp\_forwarder=None)}
+    {
+        \begin{itemize*}
+            \item \texttt{world\_inst}: Instance of the world. 
+            \item \texttt{comms\_module}: Communication Engine for sending/receiving events. 
+            \item \texttt{tcp\_forwarder}: TcpForward object, if needed.
+        \end{itemize*}
+    }{None}{Instantiates the Simulation}
+    \operation{get\_world()}{None}{World}{Gets the World object being maintained}
+    \operation{get\_on\_ack\_startup(event)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: Event containing the startup daemon id.
+        \end{itemize*}
+    }    {None}{Adds a startup daemon id to the \_startup\_acks list}
+    \operation{start(wait)}
+    {
+        \begin{itemize*}
+            \item \texttt{wait}: Number of seconds to wait before starting.
+        \end{itemize*}
+    }{None}{Starts the Simulation. Startup daemons are alerted and the World and the entities within it are initialized}
+    \operation{stop()}{None}{None}{Stops the simulation. A StopSimulationEvent event is published.}
+}
+
+
 \subsubsection{StartupDaemon}
+{Startup Daemons maintain processes running on distributed nodes. It is responsible for starting and terminating these processes when appropriate. }
+
+\attributes{
+    \attribute{\_event\_api}{EventAPI}{Instance of the Event API. }
+    \attribute{\_phys\_id}{int}{Integer ID assigned to the daemon.}
+    \attribute{\_running\_pids}{int}{Process id's maintained by the daemon.}
+    \attribute{\_running}{boolean}{True if the daemon is running. }
+    \attribute{\_world}{World}{Instance of the World}
+}
+
+\operations{
+    \operation{\_\_init\_\_(phys\_id)}
+    {
+        \begin{itemize*}
+            \item \texttt{phys\_id}: The integer id of the daemon.
+        \end{itemize*}
+    }{None}{Instantiates the StartupDaemon.}
+    \operation{\_on\_startup(event)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: Event passed to the daemon on startup. 
+        \end{itemize*}
+    }{None}{Subscribes the daemon to the StartSimulationEvent and publishes an AckStartupEvent.  It also initializes the \_world attribute. }
+    \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \_running\_pids}
+    \operation{\_start\_entity\_processes(entity)}
+    {
+        \begin{itemize*}
+            \item \texttt{entity}: Entity to start and maintain.
+        \end{itemize*}
+    }{None}{Starts the entity passed in and adds its process id to the list \_running\_pids}
+    \operation{\_on\_sim\_start(event)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: StartSimulationEvent published at the start of the simulation. 
+        \end{itemize*}
+    }{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one}
+    \operation{start()}{None}{None}{Starts the daemon. Subscribes to StartupEvent and StopSimulationEvent events}
+    \operation{\_restart(event)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: Event that triggered the call to \_restart.
+        \end{itemize*}
+    }{None}{Resets the state of the daemon. All processes maintained are cleared.}
+    \operation{stop()}{None}{None}{Stops the daemon and sets \_running to false.}
+}
+
 \subsubsection{World}
 \subsubsection{EventAPI} % TODO: Create UML for this
 
