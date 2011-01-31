@@ -682,15 +682,15 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \begin{figure}
     \centering
-    \scalebox{0.7}{
+    \scalebox{0.8}{
     \begin{tikzpicture}
-        \eumlclass[]{event}{Event \textit{$<<$Abstract$>>$}}
+        \eumlclass[minimum width=6cm, text width=6cm]{event}{Event \textit{$<<$Abstract$>>$}}
         {
             \umlmethod{+}{\_\_init\_\_}{}{void}
             \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{Event}
             \umlmethod{+}{pickle}{}{String}
         }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, below of=event]{send}{CommunicationSendEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=-7cm, below of=event]{send}{CommunicationSendEvent}{
             \umlattr{\#}{\_src\_agent\_uid}{int}
             \umlattr{\#}{\_src\_iface\_name}{String}
             \umlattr{\#}{\_message}{Message}
@@ -703,7 +703,7 @@ Built-in events are specific Event classes provided by default to any emulation.
             \umlmethod{+}{get\_message}{}{Message}
             \umlmethod{+}{get\_network}{}{String}
         }
-        \umlclass[minimum width=5cm, text width=5cm, below of=event]{recv}{CommunicationRecvEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=7cm, below of=event]{recv}{CommunicationRecvEvent}{
             \umlattr{\#}{\_src\_agent\_uid}{int}
             \umlattr{\#}{\_src\_iface\_name}{String}
             \umlattr{\#}{\_message}{Message}
@@ -716,7 +716,7 @@ Built-in events are specific Event classes provided by default to any emulation.
             \umlmethod{+}{get\_message}{}{Message}
             \umlmethod{+}{get\_network}{}{String}
         }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, below of=event]{link}{LinkEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=7cm, above of=event]{link}{LinkEvent}{
             \umlattr{\#}{\_up}{bool}
             \umlattr{\#}{\_uid\_1}{int}
             \umlattr{\#}{\_uid\_2}{int}
@@ -731,7 +731,7 @@ Built-in events are specific Event classes provided by default to any emulation.
             \umlmethod{+}{get\_network\_name}{}{String}
             \umlmethod{+}{get\_pathloss}{}{float}
         }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, above of=event]{move}{MoveEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=-7cm, above of=event]{move}{MoveEvent}{
             \umlattr{\#}{\_entity\_uid}{int}
             \umlattr{\#}{\_lat}{float}
             \umlattr{\#}{\_lon}{float}
@@ -746,38 +746,38 @@ Built-in events are specific Event classes provided by default to any emulation.
             \umlmethod{+}{get\_agl}{}{float}
             \umlmethod{+}{get\_velocity}{}{float}
         }
-        \umlclass[minimum width=5cm, text width=5cm, above of=event]{start}{StartupEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=2cm, right of=event]{start}{StartupEvent}{
             \umlattr{\#}{\_world}{World}
         }
         {
             \umlmethod{+}{\_\_init\_\_}{world : World}{void}
             \umlmethod{+}{get\_world}{}{World}
         }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, above of=event]{ackstart}{AckStartupEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, below of=event]{ackstart}{AckStartupEvent}{
             \umlattr{\#}{\_daemon\_id}{int}
         }
         {
             \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
             \umlmethod{+}{get\_daemon\_id}{}{int}
         }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-4cm, left of=event]{startsim}{StartSimulationEvent}{
+        \umlclass[minimum width=6cm, text width=6cm, xshift=-2cm, left of=event]{startsim}{StartSimulationEvent}{
             \umlattr{\#}{\_entity\_mapping}{dict(int : int)}
         }
         {
             \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
             \umlmethod{+}{get\_mapping}{}{dict(int : int)}
         }
-        \eumlclass[minimum width=5cm, text width=5cm, xshift=4cm, right of=event]{stop}{StopSimulationEvent}
+        \eumlclass[minimum width=6cm, text width=6cm, above of=event]{stop}{StopSimulationEvent}
         {
             \umlmethod{+}{\_\_init\_\_}{}{void}
         }
 
-        \path [draw, <-, >=open triangle 45] (event) -| (send);
+        \path [draw, <-, >=open triangle 45] (event) -- (send);
         \path [draw, <-, >=open triangle 45] (event) -- (recv);
-        \path [draw, <-, >=open triangle 45] (event) -| (link);
-        \path [draw, <-, >=open triangle 45] (event) -| (move);
+        \path [draw, <-, >=open triangle 45] (event) -- (link);
+        \path [draw, <-, >=open triangle 45] (event) -- (move);
         \path [draw, <-, >=open triangle 45] (event) -- (start);
-        \path [draw, <-, >=open triangle 45] (event) -| (ackstart);
+        \path [draw, <-, >=open triangle 45] (event) -- (ackstart);
         \path [draw, <-, >=open triangle 45] (event) -- (startsim);
         \path [draw, <-, >=open triangle 45] (event) -- (stop);
     \end{tikzpicture}}
