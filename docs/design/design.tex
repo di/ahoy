@@ -417,7 +417,39 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \subsubsection{Built-in Entities}
 \paragraph{Node}
 \paragraph{ScriptedEntity}
+\subsubsection{Startup Sequence}
+\begin{figure}
+  \centering
 
+  \begin{sequencediagram}
+    \newthread{sim}{Simulation}{Simulation}
+    \newthread{mc}{Event Channel}{EventChannel}
+    \newthread{startup1}{StartupDaemon 1}{StartupDaemon}
+    \newthread{startupn}{StartupDaemon $n$}{StartupDaemon}
+
+    \mess{sim}{StartupEvent}{mc}
+    \begin{callself}{sim}{time.sleep()}{}
+        \mess{mc}{StartupEvent}{startup1}
+        \mess{mc}{\hspace*{3cm}StartupEvent}{startupn}
+        \mess{startup1}{AckStartupEvent}{mc}
+        \mess{mc}{AckStartupEvent}{sim}
+        \mess{startupn}{\hspace*{3cm}AckStartupEvent}{mc}
+        \mess{mc}{AckStartupEvent}{sim}
+    \end{callself}
+    \begin{callself}{sim}{allocate\_entities()}{}
+    \end{callself}
+    \mess{sim}{StartSimulationEvent}{mc}
+    \mess{mc}{StartSimulationEvent}{startup1}
+    \begin{callself}{startup1}{start\_entities()}{}
+    \end{callself}
+    \mess{mc}{\hspace*{3.7cm}StartSimulationEvent}{startupn}
+    \begin{callself}{startupn}{start\_entities()}{}
+    \end{callself}
+  \end{sequencediagram}
+
+  \caption{Startup sequence}
+  \label{fig-startupseq}
+\end{figure}
 \subsection{Networking Components}
 \subsubsection{Interface}
 \begin{figure}
