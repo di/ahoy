@@ -595,7 +595,35 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \end{figure}
 
 \subsubsection{Built-in Events}
-\paragraph{LinkEvent}
+Built-in events are specific Event classes provided by default to any emulation. These embody the basic events for a network simulation, but users are encouraged to develop and add their own as well.
+\paragraph{LinkEvent}{Published when a network link between two entities changes within the simulation.}
+
+\attributes{
+    \attribute{\_up}{bool}{Whether the link is currently up (connected)}
+    \attribute{\_uid\_1}{int}{UID of the first node which makes up the link}
+    \attribute{\_uid\_2}{int}{UID of the second node which makes up the link}
+    \attribute{\_network\_name}{string}{The network that the link exists on}
+    \attribute{\_pathloss}{float}{Pathloss value for wireless links}
+}
+
+\operations{
+    \operation{\_\_init\_\_(up, uid\_1, uid\_2, network\_name, pathloss)}
+    {
+        \begin{itemize*}
+            \item \texttt{up}: Whether the link is up
+            \item \texttt{uid\_1}: The UID of the first node
+            \item \texttt{uid\_2}: The UID of the second node
+            \item \texttt{network\_name}: The name of the network
+            \item \texttt{pathloss}: The pathloss value, if relevant
+        \end{itemize*}
+    }{None}{Instantiates a new link action}
+    \operation{get\_up()}{None}{Link State}{Gets whether or not the link is connected}
+    \operation{get\_uid1()}{None}{First Agent UID}{Gets the UID of the first node in the link}
+    \operation{get\_uid2()}{None}{Second Agent UID}{Gets the UID of the second node in the link}
+    \operation{get\_network\_name()}{Network Name}{None}{Gets the name of the network}
+    \operation{get\_pathloss()}{None}{Pathloss Value}{Gets the pathloss value for wireless links}
+}
+
 \paragraph{CommunicationSendEvent}{Published when an entity sends a message within the simulation.}
 
 \attributes{
@@ -606,7 +634,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 }
 
 \operations{
-    \operation{\_\_init\_\_(self, src\_agent\_uid, src\_iface\_name, message\_inst, network)}
+    \operation{\_\_init\_\_(src\_agent\_uid, src\_iface\_name, message\_inst, network)}
     {
         \begin{itemize*}
             \item \texttt{src\_agent\_uid}: UID of the sending agent
@@ -631,7 +659,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 }
 
 \operations{
-    \operation{\_\_init\_\_(self, src\_agent\_uid, src\_iface\_name, message\_inst, network)}
+    \operation{\_\_init\_\_(src\_agent\_uid, src\_iface\_name, message\_inst, network)}
     {
         \begin{itemize*}
             \item \texttt{src\_agent\_uid}: UID of the sending agent
