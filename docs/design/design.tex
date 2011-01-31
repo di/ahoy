@@ -278,6 +278,8 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
+\subsubsection{World}
+\subsubsection{EventAPI}
 
 \subsubsection{Entity}
 \subsubsection{Built-in Entities}
@@ -287,7 +289,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \begin{figure}
   \centering
 
-  \begin{sequencediagram}
+  \begin{sequencediagram}{3.5cm}
     \newthread{sim}{Simulation}{Simulation}
     \newthread{mc}{Event Channel}{EventChannel}
     \newthread{startup1}{StartupDaemon 1}{StartupDaemon}
@@ -317,8 +319,28 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
   \label{fig-startupseq}
 \end{figure}
 \subsection{Networking Components}
-\subsubsection{Interface}
+\begin{figure}
+    \centering
 
+    \begin{sequencediagram}{4cm}
+        \newthread{node}{Node}{Node}
+        \newthread{mc}{Event Channel}{Event Channel}
+        \newthread{ce}{CommsEngine}{CommsEngine}
+
+        \mess{node}{CommunicationSendEvent}{mc}
+        \mess{mc}{CommunicationSendEvent}{ce}
+        \begin{callself}{ce}{\_on\_send}{}
+        \end{callself}
+        \begin{sdloop}{alt}
+            \mess{ce}{CommunicationRecvEvent}{mc}
+            \mess{mc}{CommunicationRecvEvent}{node}
+        \end{sdloop}
+    \end{sequencediagram}
+
+    \caption{Messaging sequence diagram}
+    \label{fig-messageseq}
+\end{figure}
+\subsubsection{Interface}
 \subsubsection{CommsEngine}
 
 \subsubsection{Built-in CommsEngines}
@@ -502,8 +524,6 @@ Built-in events are specific Event classes provided by default to any emulation.
     \caption{Class diagram for simulation}
     \label{fig-simulation}
 \end{figure}
-\subsubsection{World}
-\subsubsection{EventAPI}
 
 \subsubsection{StartupDaemon}
 \begin{figure}

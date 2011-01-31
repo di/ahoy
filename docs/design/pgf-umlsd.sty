@@ -190,12 +190,12 @@ Sequence Diagrams.]
 }
 
 % the environment of sequence diagram
-\newenvironment{sequencediagram}{
+\newenvironment{sequencediagram}[1]{
   \begin{tikzpicture}
     \setlength{\unitlength}{1cm}
     \tikzstyle{sequence}=[coordinate]
     \tikzstyle{inststyle}=[rectangle, draw, anchor=west, minimum
-    height=0.8cm, minimum width=3.5cm, fill=white, 
+    height=0.8cm, minimum width=#1, fill=white, 
     drop shadow={opacity=1,fill=black}]
     \ifpgfumlsdroundedcorners
     \tikzstyle{inststyle}+=[rounded corners=3mm]
