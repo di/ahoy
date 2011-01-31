@@ -181,18 +181,20 @@ This design document defines the architecture of the AHOY application. AHOY cons
 \subsection{Scope}
 The goal of the AHOY project is to provide a system for testing multiple agents across varying scenarios and topologies, in a distributed, event-driven way. AHOY gives the user the ability to quantitatively examine the effectiveness of specific agent designs as well as a focus on additional factors relevant to the network, including network connectivity, connection fidelity, and the agent's ability to process and transmit data.
 
-A complete consists of 
-
 Users of AHOY are researchers looking to improve a specific agent's performance on a network through testing across varying combinations of topologies and scenarios.
 
 \subsection{Design Goals}
+AHOY is designed to be used as a testbed for sensors and respective algorithms in the laboratory against virtual operations using data from simulated sensors and nodes. It provides the ability to independently and quickly vary the network topology, application suites, environment, or any other variable is essential to collect data which would be cost-prohibitive to produce in a real-world scenario. 
+
+The goals of AHOY's core design process is to provide a framework upon which researches can build custom agents, scenarios and topologies, and quickly and easily run an experiment using them. A modular distributed architecture allows for a wide scale of simulation size. Most importantly, the Event API allows developer to easily tailor custom user interfaces for existing applications or visualizers by providing a common interface to monitor every action within an executing experiment.
+
 \subsection{Definitions, Acronyms, and Abbreviations}
 \begin{description}
 \item[Agent]
 	Agents are simulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topologies.   
 
 \item[Distribution]
-	Distribution refers to the process of distributing the simulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single simulation at the system's discretion.  A framework will be provided to allow the user to distribute their simulation. 	
+	Distribution refers to the process of distributing the simulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single simulation at the system's discretion.  A framework is provided to allow the user to distribute their simulation. 	
 
 \item[Node]
 	Nodes are virtual or physical machines that consist of agents and network interfaces.  If nodes are virtual, many nodes may run on one physical machine.  
