@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fullpage}    % Use the whole page
 \usepackage{fancyhdr}    % Nice headers/footers
-\usepackage{mdwlist}     % For itemize* and enumerate*
+%\usepackage{mdwlist}     % For itemize* and enumerate*
 \usepackage{graphicx}    % Importing graphics
 \usepackage{hyperref}    % Hyperlink references and URLs
 \usepackage[figure,table]{hypcap} % Hyperlink points to the top of figures
@@ -21,7 +21,13 @@
 \usepackage{colortbl}
 \usepackage{calc}
 
-\makecompactlist{itemizecompact}{itemize}
+\renewenvironment{itemize*}%
+    {\begin{itemize}%
+        \setlength{\itemsep}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\topsep}{0pt}}%
+    {\end{itemize}}
 
 \newcommand{\operations}[1]{
 \begin{center}
@@ -35,9 +41,9 @@
 \newcommand{\operation}[4]{
     \hline
     \multicolumn{2}{|l|}{\cellcolor[gray]{0.8}{\texttt{#1}}} \\ \hline
-    \textbf{Input} & #2 \\ \hline
-    \textbf{Output} & #3 \\ \hline
-    \textbf{Description} & #4 \\ \hline
+    \hspace{7pt}\textbf{Input:} & #2 \\ \hline
+    \hspace{7pt}\textbf{Output:} & #3 \\ \hline
+    \hspace{7pt}\textbf{Description:} & #4 \\ \hline
 }
 
 \newcommand{\attributes}[1]{
@@ -170,7 +176,15 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 
 \section{Introduction}
 \subsection{Purpose}
+This design document defines the architecture of the AHOY application. AHOY consists of several software components, including those which make up the simulator, the networking engine, event controller, and the agent and sensor frameworks. The information presented here is intended for the development team, as well as the advisor and external stakeholders, which are currently Dr.~William Regli, Joseph Macker of the Naval Research Laboratory, and Michal P\v{e}chou\v{e}ck of Czech Technical University. 
+
 \subsection{Scope}
+The goal of the AHOY project is to provide a system for testing multiple agents across varying scenarios and topologies, in a distributed, event-driven way. AHOY gives the user the ability to quantitatively examine the effectiveness of specific agent designs as well as a focus on additional factors relevant to the network, including network connectivity, connection fidelity, and the agent's ability to process and transmit data.
+
+A complete consists of 
+
+Users of AHOY are researchers looking to improve a specific agent's performance on a network through testing across varying combinations of topologies and scenarios.
+
 \subsection{Design Goals}
 \subsection{Definitions, Acronyms, and Abbreviations}
 \begin{description}
@@ -196,12 +210,22 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 	The Visualizer allows the simulations to be superimposed over real-world topography.  This permits the user to examine the behavior of the agents.  It also allows for overlays such as link quality, traffic rates, and other metrics deemed important to specific components.
 \end{description}
 
-\subsection{References}
+\subsection{References%
+  \label{references}%
+}
+
+These documents have been used as reference materials for various technologies involved with this project.
+%
+\begin{itemize*}
+	\item SPEYES: Sensing and Patrolling Enablers Yielding Effective SASO: \url{http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=1559616}
+	\item Service Sniffer Requirements Document: \url{http://servicesniffer.net/documents/requirements.html}
+    \item Developing an Agent Systems Reference Architecture: \url{www.cs.drexel.edu/~dn53/papers/paper_cameraready.pdf}
+\end{itemize*}
 
 \section{Design Overview}
 \subsection{Description of Problem}
 \subsection{Subsystem Diagram}
-\begin{figure}[!h]
+\begin{figure}%[!ht]
     \centering
     \begin{tikzpicture}[node distance=.5cm]
         \node [component] (Entity) {\textbf{Entities}};
@@ -221,13 +245,15 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \end{figure}
 
 \subsection{Distribution Diagram}
-\begin{figure}[!h]
+\begin{figure}%[!ht]
     \centering
     \includegraphics[scale=.6]{../initial-pres/arch.pdf}
     \caption{Distribution Diagram}
     \label{fig-distribution}
 \end{figure}
+
 \section{Detailed System Design}
+
 \subsection{Simulator Components}
 \subsubsection{Simulation}
 \subsubsection{StartupDaemon}
@@ -263,13 +289,13 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 {
     \operation{\_\_init\_\_(entity, lat, lon, agl, velocity)}
     {
-        \begin{itemizecompact}
+        \begin{itemize*}
             \item \texttt{entity}: Instance of entity that moved
             \item \texttt{lat}: Latitude of new location
             \item \texttt{lon}: Longitude new location
             \item \texttt{agl}: AGL of new location
             \item \texttt{velocity}: Velocity of movement
-        \end{itemizecompact}
+        \end{itemize*}
 
     }{None}{Instantiates a new movement action}
     \operation{get\_uid()}{None}{UID}{Gets the UID of the entity that moved}
@@ -320,8 +346,8 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
             \umlmethod{+}{\_\_init\_\_}{}{void}
         }
     \end{tikzpicture}
-    \caption{Class diagram for agents}
-    \label{fig-agents}
+    \caption{Class diagram for actions}
+    \label{fig-actions}
 \end{figure}
 \subsubsection{Built-in Actions}
 \paragraph{Move}
