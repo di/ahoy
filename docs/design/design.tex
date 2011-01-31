@@ -114,8 +114,8 @@
     % This makes a nice gradient
     top color=white, bottom color=blue!30, draw=blue!50!black!100,
     drop shadow, rounded corners,
-    node distance = 5cm, text width = 5cm]
-\tikzstyle{component} = [umlclass, rectangle split parts=0, text width =, node distance=3.14159cm]
+    node distance = 5cm, text width = 10cm, minimum width=10cm]
+\tikzstyle{component} = [umlclass, rectangle split parts=0, text width =, node distance=3.14159cm, minimum width=]
 % Line styles
 \tikzstyle{hasa} = [draw, <-, >=open diamond]
 \tikzstyle{ownsa} = [draw, ->, >=diamond]
@@ -258,8 +258,116 @@ These documents have been used as reference materials for various technologies i
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{action}{Simulation}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_startup\_acks}{set(int)}
+            \umlattr{\#}{\_comms\_engine}{CommsEngine}
+            \umlattr{\#}{\_world}{World}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{world\_inst : World, comms\_engine : CommsEngine}{void}
+            \umlmethod{\#}{\_on\_ack\_startup}{event : Event}{void}
+            \umlmethod{+}{get\_world}{}{World}
+            \umlmethod{+}{start}{wait : int}{void}
+            \umlmethod{+}{stop}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for simulation}
+    \label{fig-actions}
+\end{figure}
+
 \subsubsection{StartupDaemon}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{action}{StartupDaemon}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_phys\_id}{int}
+            \umlattr{\#}{\_running\_pids}{set(int)}
+            \umlattr{\#}{\_running}{bool}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
+            \umlmethod{\#}{\_on\_startup}{event : Event}{void}
+            \umlmethod{\#}{\_start\_entity\_process}{entity : Entity}{void}
+            \umlmethod{\#}{\_on\_sim\_start}{event : Event}{void}
+            \umlmethod{\#}{\_restart}{event : Event}{void}
+            \umlmethod{+}{terminate\_all}{}{void}
+            \umlmethod{+}{start}{}{void}
+            \umlmethod{+}{stop}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for startup daemon}
+    \label{fig-actions}
+\end{figure}
+
 \subsubsection{Entity}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{entity}{Entity \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_uid}{int}
+            \umlattr{\#}{\_lat}{float}
+            \umlattr{\#}{\_lon}{float}
+            \umlattr{\#}{\_agl}{float}
+            \umlattr{\#}{\_rcs}{float}
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_world}{World}
+            \umlattr{\#}{\_velocity}{(float, float, float)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{}{String}
+            \umlmethod{\#}{\_iterate\_move}{pos : (float, float, float), vel : float}{void}
+            \umlmethod{+}{get\_rcs}{}{float}
+            \umlmethod{+}{set\_rcs}{float}{void}
+            \umlmethod{+}{get\_velocity}{}{(float, float, float)}
+            \umlmethod{+}{set\_velocity}{vel : (float, float, float)}{void}
+            \umlmethod{+}{get\_world}{}{World}
+            \umlmethod{+}{set\_world}{world : World}{}
+            \umlmethod{+}{get\_position}{}{(float, float, float)}
+            \umlmethod{+}{set\_position}{pos : (float, float, float)}{}
+            \umlmethod{+}{move}{pos : (float, float, float)}{}
+            \umlmethod{+}{pickle}{}{String}
+            \umlmethod{+}{get\_event\_api}{}{EventAPI}
+            \umlmethod{+}{get\_uid}{}{int}
+            \umlmethod{+}{initialize}{}{void}
+            \umlmethod{+}{\textit{run}}{}{void}
+        }
+
+        \umlclass[minimum width=5cm, text width=8cm, yshift=-7cm, below left of=entity]{node}{Node}{
+            \umlattr{\#}{\_interfaces}{list(Interface)}
+            \umlattr{\#}{\_agents}{list(Agent)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{uid : int}{void}
+            \umlmethod{\#}{\_on\_message}{event : Event, **kwds : dict}{void}
+            \umlmethod{+}{get\_agent\_uids}{}{list(int)}
+            \umlmethod{+}{add\_interface}{interface : Interface}{void}
+            \umlmethod{+}{remove\_interface}{name : String}{void}
+            \umlmethod{+}{get\_interface}{name : String}{Interface}
+            \umlmethod{+}{get\_interfaces}{}{list(Interface)}
+            \umlmethod{+}{add\_agent}{agent : Agent}{void}
+            \umlmethod{+}{get\_interface\_on\_net}{network\_name : String}{Interface}
+            \umlmethod{+}{send}{message : Message, src\_agent : Agent}{void}
+            \umlmethod{+}{run}{}{void}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, yshift=-6cm, below right of=entity]{scripted}{Scripted}{
+            \umlattr{\#}{\_waypoints}{list((float, float, float))}
+            \umlattr{\#}{\_vel}{float}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{uid : int, waypoints : list((float, float, float)), vel : float}{void}
+            \umlmethod{+}{run}{}{void}
+        }
+        \path [draw, <-, >=open triangle 45] (entity) -- (node)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+        \path [draw, <-, >=open triangle 45] (entity) -- (scripted)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for entities}
+    \label{fig-actions}
+\end{figure}
 \subsubsection{Built-in Entities}
 \paragraph{Node}
 \paragraph{PreScriptedObject}
@@ -304,7 +412,7 @@ These documents have been used as reference materials for various technologies i
     \operation{get\_lat()}{None}{Latitude}{Gets the new latitude of the entity that moved}
     \operation{get\_lon()}{None}{Longitude}{Gets the new longitude of the entity that moved}
     \operation{get\_agl()}{None}{AGL}{Gets the new AGL of the entity that moved}
-    \operation{get\_velocity()}{Velocity}{None}{Gets the velocity of the entity that moved}
+    \operation{get\_velocity()}{None}{Velocity}{Gets the velocity of the entity that moved}
 }
 
 \paragraph{StartupEvent}
@@ -317,7 +425,7 @@ These documents have been used as reference materials for various technologies i
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \umlclass[text width = 6cm,xshift=-2cm]{action}{Agent \textit{$<<$Abstract$>>$}}{
+        \umlclass[xshift=-2cm]{action}{Agent \textit{$<<$Abstract$>>$}}{
             \umlattr{\#}{\_owner\_node}{Node}
             \umlattr{\#}{\_uid}{int}
             \umlattr{\#}{\_behaviors}{dict$<$Event, list$<$[precondition, action]$>>$}
@@ -329,9 +437,9 @@ These documents have been used as reference materials for various technologies i
             \umlmethod{+}{get\_owner\_node}{}{Node}
             \umlmethod{+}{on\_message}{event : Event}{void}
             \umlmethod{+}{start}{}{void}
-            \umlmethod{+}{run}{}{void}
             \umlmethod{+}{add\_behavior}{behavior : (precond, event, action)}{void}
             \umlmethod{+}{remove\_behavior}{behavior : (precond, event, action)}{void}
+            \umlmethod{+}{\textit{run}}{}{void}
         }
     \end{tikzpicture}
     \caption{Class diagram for agents}
@@ -342,10 +450,11 @@ These documents have been used as reference materials for various technologies i
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \umlclass[text width = 6cm,xshift=-2cm]{action}{Action \textit{$<<$Abstract$>>$}}{
+        \umlclass[xshift=-2cm]{action}{Action \textit{$<<$Abstract$>>$}}{
             \umlattr{\#}{\_name}{String}
         }{
             \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\textit{perform}}{}{void}
         }
     \end{tikzpicture}
     \caption{Class diagram for actions}
