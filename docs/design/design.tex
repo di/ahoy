@@ -275,7 +275,7 @@ These documents have been used as reference materials for various technologies i
         }
     \end{tikzpicture}
     \caption{Class diagram for simulation}
-    \label{fig-actions}
+    \label{fig-simulation}
 \end{figure}
 
 \subsubsection{StartupDaemon}
@@ -299,7 +299,7 @@ These documents have been used as reference materials for various technologies i
         }
     \end{tikzpicture}
     \caption{Class diagram for startup daemon}
-    \label{fig-actions}
+    \label{fig-startupdaemon}
 \end{figure}
 
 \subsubsection{Entity}
@@ -351,7 +351,7 @@ These documents have been used as reference materials for various technologies i
             \umlmethod{+}{send}{message : Message, src\_agent : Agent}{void}
             \umlmethod{+}{run}{}{void}
         }
-        \umlclass[minimum width=5cm, text width=5cm, yshift=-6cm, below right of=entity]{scripted}{Scripted}{
+        \umlclass[minimum width=5cm, text width=5cm, yshift=-6cm, below right of=entity]{scripted}{ScriptedEntity}{
             \umlattr{\#}{\_waypoints}{list((float, float, float))}
             \umlattr{\#}{\_vel}{float}
         }{
@@ -366,15 +366,39 @@ These documents have been used as reference materials for various technologies i
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for entities}
-    \label{fig-actions}
+    \label{fig-entities}
 \end{figure}
 \subsubsection{Built-in Entities}
 \paragraph{Node}
-\paragraph{PreScriptedObject}
+\paragraph{ScriptedEntity}
 \subsubsection{World}
 
 \subsection{Networking Components}
 \subsubsection{Interface}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{interface}{Interface}{
+            \umlattr{\#}{\_name}{String}
+            \umlattr{\#}{\_owner\_node}{Node}
+            \umlattr{\#}{\_recv\_callback}{function}
+            \umlattr{\#}{\_network\_name}{String}
+            \umlattr{\#}{\_power}{float}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{name : String, owner\_node : Node, network : Network, power : float}{void}
+            \umlmethod{\#}{\_on\_communication}{event : Event}{void}
+            \umlmethod{+}{connect}{}{void}
+            \umlmethod{+}{send}{message\_inst : Message, src\_agent : int}{void}
+            \umlmethod{+}{set\_recv\_callback}{cb : function}{void}
+            \umlmethod{+}{get\_owner}{}{Node}
+            \umlmethod{+}{get\_network\_name}{}{String}
+            \umlmethod{+}{get\_name}{}{String}
+            \umlmethod{+}{get\_power}{}{float}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for interfaces}
+    \label{fig-interface}
+\end{figure}
 \subsubsection{CommsEngine}
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}
