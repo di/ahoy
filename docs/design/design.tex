@@ -237,6 +237,8 @@ These documents have been used as reference materials for various technologies i
 
 \section{Design Overview}
 \subsection{Description of Problem}
+The AHOY application bridges network and agent simulators. It must provide an entirely event-driven, real-time system to ultimately allow for human-in-the-loop interaction with agents. It must enable scenarios and network topologies to be easily defined, and similarly make writing custom agents extremely simple. The Event API must be comprehensive to provide flexibility for the user in terms of visualization and data collection. Finally, AHOY must be able to effortlessly distribute an experiment across physical machines, so that scaling limitations are not a user issue.
+
 \subsection{Subsystem Diagram}
 \begin{figure}%[!ht]
     \centering
