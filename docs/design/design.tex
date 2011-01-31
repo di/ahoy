@@ -21,6 +21,7 @@
 \usepackage{colortbl}
 \usepackage{calc}
 \usepackage{float}
+\usepackage{longtable}
 
 \renewenvironment{itemize*}%
     {\begin{itemize}%
@@ -32,11 +33,11 @@
 
 \newcommand{\operations}[1]{
 \begin{center}
-    \begin{tabular}{|p{3cm}|p{9cm + 2.0\tabcolsep}|}
+    \begin{longtable}{|p{3cm}|p{9cm + 2.0\tabcolsep}|}
     \hline
     \multicolumn{2}{|l|}{\cellcolor[gray]{0.5}{\textbf{Operations}}} \\ \hline
 #1
-    \end{tabular}
+    \end{longtable}
 \end{center}
 }
 \newcommand{\operation}[4]{
@@ -287,7 +288,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \paragraph{Node}
 \paragraph{ScriptedEntity}
 \subsubsection{Startup Sequence}
-\begin{figure}
+\begin{figure}[!htb]
   \centering
 
   \begin{sequencediagram}{3.5cm}
@@ -320,7 +321,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
   \label{fig-startupseq}
 \end{figure}
 \subsection{Networking Components}
-\begin{figure}
+\begin{figure}[!htb]
     \centering
 
     \begin{sequencediagram}{4cm}
@@ -482,6 +483,60 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsection{Utility Components}
 \subsubsection{Geo}
+\operations{
+    \operation{haver\_distance(lat1, lon1, lat2, lon2)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat1}: Latitude of first point
+            \item \texttt{lon1}: Longitude of first point
+            \item \texttt{lat2}: Latitude of second point
+            \item \texttt{lon2}: Longitude of second point
+        \end{itemize*}
+    }{Haversine distance between two points}{Determines the ``as-the-bird-flies'' distance between to points.}
+    \operation{linear\_distance(lat1, lon1, lat2, lon2)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat1}: Latitude of first point
+            \item \texttt{lon1}: Longitude of first point
+            \item \texttt{lat2}: Latitude of second point
+            \item \texttt{lon2}: Longitude of second point
+        \end{itemize*}
+    }{Linear distance between two points}{Determines the linear distance between two points.}
+    \operation{sph\_to\_lin(lat, lon, agl)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude of point
+            \item \texttt{lon}: Longitude of point
+            \item \texttt{agl}: AGL of point
+        \end{itemize*}
+    }{\texttt{(x,y,z)} tuple of location}{Converts latitude, longitude, and altitude into Cartesian coordinates.}
+    \operation{lin\_to\_sph(x, y, z)}
+    {
+        \begin{itemize*}
+            \item \texttt{x}: $x$-coordinate of point
+            \item \texttt{y}: $y$-coordinate of point
+            \item \texttt{z}: $z$-coordinate of point
+        \end{itemize*}
+    }{\texttt{(lat, lon, agl)} tuple of location}{Converts Cartesian coordinates into latitude, longitude, and altitude.}
+    \operation{lin\_to\_degree(lat, lon, lat\_km, lon\_km)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude of point
+            \item \texttt{lon}: Longitude of point
+            \item \texttt{lat\_km}: Kilometers along latitude line
+            \item \texttt{lon\_km}: Kilometers along longitude line
+        \end{itemize*}
+    }{Radians of movement}{Converts distance in kilometers to radians at a given point on the Earth.}
+    \operation{loc\_from\_bearing\_dist(lat, lon, bearing, dist)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude of point
+            \item \texttt{lon}: Longitude of point
+            \item \texttt{bearing}: Bearing of movement
+            \item \texttt{dist}: Distance of movement in kilometers
+        \end{itemize*}
+    }{\texttt{(lat, lon)} tuple of new location}{Determines location after moving from a point, along a bearing, for a specific distance.}
+}
 
 \section{Appendix}
 \begin{figure}[!H]
