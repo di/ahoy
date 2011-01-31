@@ -135,6 +135,17 @@
     };
 }
 
+\newcommand{\eumlclass}[4][,]{
+    \node [umlclass,#1] (#2) {
+        \textbf{#3}
+        \nodepart{second}
+        \nodepart{third}
+        \begin{description*}
+        #4
+        \end{description*}
+    };
+}
+
 \newcommand{\umlattr}[3]{
     \item[$#1$]\textbf{#2}: \textit{#3}
 }
@@ -267,7 +278,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{action}{Simulation}{
+        \umlclass[xshift=-2cm]{simulation}{Simulation}{
             \umlattr{\#}{\_event\_api}{EventAPI}
             \umlattr{\#}{\_startup\_acks}{set(int)}
             \umlattr{\#}{\_comms\_engine}{CommsEngine}
@@ -288,7 +299,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{action}{StartupDaemon}{
+        \umlclass[xshift=-2cm]{startup}{StartupDaemon}{
             \umlattr{\#}{\_event\_api}{EventAPI}
             \umlattr{\#}{\_phys\_id}{int}
             \umlattr{\#}{\_running\_pids}{set(int)}
@@ -321,10 +332,13 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
             \umlattr{\#}{\_event\_api}{EventAPI}
             \umlattr{\#}{\_world}{World}
             \umlattr{\#}{\_velocity}{(float, float, float)}
+            \umlattr{\#}{\_sensors}{dict(String : Sensor)}
         }{
             \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
-            \umlmethod{+}{\underline{from\_pickle}}{}{String}
+            \umlmethod{+}{\underline{from\_pickle}}{String}{Entity}
             \umlmethod{\#}{\_iterate\_move}{pos : (float, float, float), vel : float}{void}
+            \umlmethod{+}{add\_sensor}{name : String, sensor : Sensor}{void}
+            \umlmethod{+}{get\_sensor}{name : String}{Sensor}
             \umlmethod{+}{get\_rcs}{}{float}
             \umlmethod{+}{set\_rcs}{float}{void}
             \umlmethod{+}{get\_velocity}{}{(float, float, float)}
@@ -378,6 +392,32 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \paragraph{Node}
 \paragraph{ScriptedEntity}
 \subsubsection{World}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{world}{World}{
+            \umlattr{\#}{\_entities}{dict(String : Entity)}
+            \umlattr{\#}{\_networks}{dict(String : Network)}
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_agent\_mapping}{dict(int : int)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{World}
+            \umlmethod{\#}{\_on\_entity\_move}{event : Event}{void}
+            \umlmethod{+}{add\_entity}{entity : Entity}{void}
+            \umlmethod{+}{get\_entity}{}{Entity}
+            \umlmethod{+}{get\_entities}{}{list(Entity)}
+            \umlmethod{+}{add\_network}{}{void}
+            \umlmethod{+}{get\_network}{String}{Network}
+            \umlmethod{+}{get\_networks}{}{list(Network)}
+            \umlmethod{+}{get\_agent\_mapping}{}{dict(int : int)}
+            \umlmethod{+}{initialize}{}{void}
+            \umlmethod{+}{pickle}{}{String}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for interfaces}
+    \label{fig-interface}
+\end{figure}
 
 \subsection{Networking Components}
 \subsubsection{Interface}
@@ -458,7 +498,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
         \umlclass[xshift=-2cm]{action}{Agent \textit{$<<$Abstract$>>$}}{
             \umlattr{\#}{\_owner\_node}{Node}
             \umlattr{\#}{\_uid}{int}
-            \umlattr{\#}{\_behaviors}{dict$<$Event, list$<$[precondition, action]$>>$}
+            \umlattr{\#}{\_behaviors}{dict(Event : list([precondition, action]))}
         }{
             \umlmethod{+}{\_\_init\_\_}{owner\_uid, uid}{void}
             \umlmethod{\#}{\_on\_event}{event : Event}{void}
@@ -476,16 +516,41 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
     \label{fig-agents}
 \end{figure}
 \subsubsection{Condition}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \eumlclass[xshift=-2cm]{condition}{Condition \textit{$<<$Abstract$>>$}}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\textit{is\_met}}{event : Event}{bool}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for conditions}
+    \label{fig-condition}
+\end{figure}
+
 \subsubsection{Action}
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{action}{Action \textit{$<<$Abstract$>>$}}{
-            \umlattr{\#}{\_name}{String}
-        }{
+        \eumlclass[]{action}{Action \textit{$<<$Abstract$>>$}}
+        {
             \umlmethod{+}{\_\_init\_\_}{}{void}
             \umlmethod{+}{\textit{perform}}{}{void}
         }
+        \umlclass[below of=action]{move}{Move}{
+            \umlattr{\#}{\_entity}{int}
+            \umlattr{\#}{\_lat}{float}
+            \umlattr{\#}{\_lon}{float}
+            \umlattr{\#}{\_agl}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{entity : int, lat : float, lon : float, agl : float}{void}
+            \umlmethod{+}{perform}{}{void}
+        }
+        \path [draw, <-, >=open triangle 45] (action) -- (move)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for actions}
     \label{fig-actions}
@@ -495,7 +560,60 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 
 \subsection{Sensor Components}
 \subsubsection{Sensor}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{sensor}{Sensor \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_subscribers}{list(Entity)}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_publish\_data}{event : Event}{void}
+            \umlmethod{+}{subscribe}{callback : function}{void}
+            \umlmethod{+}{\textit{run}}{}{void}
+        }
+        \umlclass[below of=sensor]{radar}{RadarSensor}{
+            \umlattr{\#}{\_trans\_power}{float}
+            \umlattr{\#}{\_trans\_freq}{float}
+            \umlattr{\#}{\_gain}{float}
+            \umlattr{\#}{\_aperture}{float}
+            \umlattr{\#}{\_prop\_fac}{float}
+            \umlattr{\#}{\_dwell\_time}{float}
+            \umlattr{\#}{\_angle}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_publish\_data}{event : Event}{void}
+            \umlmethod{+}{subscribe}{callback : function}{void}
+            \umlmethod{+}{run}{}{void}
+        }
+
+        \path [draw, <-, >=open triangle 45] (sensor) -- (radar)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for sensors}
+    \label{fig-sensors}
+\end{figure}
+\subsubsection{Built-in Sensors}
+\paragraph{RadarSensor}
 
 \subsection{Utility Components}
 \subsubsection{Geo}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \eumlclass[xshift=-2cm]{geo}{Geo}
+        {
+            \umlmethod{+}{\underline{haver\_distance}}{lat1 : float, lon1 : float, lat2 : float, lon2 : float}{float}
+            \umlmethod{+}{\underline{linear\_distance}}{lat1 : float, lon1 : float, lat2 : float, lon2 : float}{float}
+            \umlmethod{+}{\underline{sph\_to\_lin}}{lat : float, lon : float, agl : float}{(float, float, float)}
+            \umlmethod{+}{\underline{lin\_to\_sph}}{x : float, y : float, z : float}{(float, float, float)}
+            \umlmethod{+}{\underline{linear\_to\_degree}}{lat : float, lon : float, lat\_km : float, lon\_km : float}{float}
+            \umlmethod{+}{\underline{loc\_from\_bearing\_dist}}{lat : float, lon : float, bearing : float, dist : float}{float}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for geographic utilities}
+    \label{fig-condition}
+\end{figure}
 \end{document}
