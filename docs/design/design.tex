@@ -488,6 +488,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \subsection{Event Components}
 \begin{figure}
     \centering
+    \scalebox{0.7}{
     \begin{tikzpicture}
         \eumlclass[]{event}{Event \textit{$<<$Abstract$>>$}}
         {
@@ -551,12 +552,41 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
             \umlmethod{+}{get\_agl}{}{float}
             \umlmethod{+}{get\_velocity}{}{float}
         }
+        \umlclass[minimum width=5cm, text width=5cm, above of=event]{start}{StartupEvent}{
+            \umlattr{\#}{\_world}{World}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{world : World}{void}
+            \umlmethod{+}{get\_world}{}{World}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, above of=event]{ackstart}{AckStartupEvent}{
+            \umlattr{\#}{\_daemon\_id}{int}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
+            \umlmethod{+}{get\_daemon\_id}{}{int}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-4cm, left of=event]{startsim}{StartSimulationEvent}{
+            \umlattr{\#}{\_entity\_mapping}{dict(int : int)}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
+            \umlmethod{+}{get\_mapping}{}{dict(int : int)}
+        }
+        \eumlclass[minimum width=5cm, text width=5cm, xshift=4cm, right of=event]{stop}{StopSimulationEvent}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+        }
 
         \path [draw, <-, >=open triangle 45] (event) -| (send);
         \path [draw, <-, >=open triangle 45] (event) -- (recv);
         \path [draw, <-, >=open triangle 45] (event) -| (link);
-        \path [draw, <-] (event) -| (move);
-    \end{tikzpicture}
+        \path [draw, <-, >=open triangle 45] (event) -| (move);
+        \path [draw, <-, >=open triangle 45] (event) -- (start);
+        \path [draw, <-, >=open triangle 45] (event) -| (ackstart);
+        \path [draw, <-, >=open triangle 45] (event) -- (startsim);
+        \path [draw, <-, >=open triangle 45] (event) -- (stop);
+    \end{tikzpicture}}
     \caption{Class diagram for events}
     \label{fig-events}
 \end{figure}
