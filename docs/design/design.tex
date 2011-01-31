@@ -305,18 +305,8 @@ entities running in it. }
         \end{itemize*}
     }{None}{Instantiates the Simulation}
     \operation{get\_world()}{None}{World}{Gets the World object being maintained}
-    \operation{get\_on\_ack\_startup(event)}
-    {
-        \begin{itemize*}
-            \item \texttt{event}: Event containing the startup daemon id.
-        \end{itemize*}
-    }    {None}{Adds a startup daemon id to the \_startup\_acks list}
-    \operation{start(wait)}
-    {
-        \begin{itemize*}
-            \item \texttt{wait}: Number of seconds to wait before starting.
-        \end{itemize*}
-    }{None}{Starts the Simulation. Startup daemons are alerted and the World and the entities within it are initialized}
+    \operation{get\_on\_ack\_startup(event)}{Event containing the startup daemon id.}{None}{Adds a startup daemon id to the \_startup\_acks list}
+    \operation{start(wait)}{Number of seconds to wait before starting.}{None}{Starts the Simulation. Startup daemons are alerted and the World and the entities within it are initialized}
     \operation{stop()}{None}{None}{Stops the simulation. A StopSimulationEvent event is published.}
 }
 
@@ -333,38 +323,13 @@ entities running in it. }
 }
 
 \operations{
-    \operation{\_\_init\_\_(phys\_id)}
-    {
-        \begin{itemize*}
-            \item \texttt{phys\_id}: The integer id of the daemon.
-        \end{itemize*}
-    }{None}{Instantiates the StartupDaemon.}
-    \operation{\_on\_startup(event)}
-    {
-        \begin{itemize*}
-            \item \texttt{event}: Event passed to the daemon on startup. 
-        \end{itemize*}
-    }{None}{Subscribes the daemon to the StartSimulationEvent and publishes an AckStartupEvent.  It also initializes the \_world attribute. }
+    \operation{\_\_init\_\_(phys\_id)}{The integer id of the daemon.}{None}{Instantiates the StartupDaemon.}
+    \operation{\_on\_startup(event)}{Event passed to the daemon on startup}{None}{Subscribes the daemon to the StartSimulationEvent and publishes an AckStartupEvent.  It also initializes the \_world attribute. }
     \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \_running\_pids}
-    \operation{\_start\_entity\_processes(entity)}
-    {
-        \begin{itemize*}
-            \item \texttt{entity}: Entity to start and maintain.
-        \end{itemize*}
-    }{None}{Starts the entity passed in and adds its process id to the list \_running\_pids}
-    \operation{\_on\_sim\_start(event)}
-    {
-        \begin{itemize*}
-            \item \texttt{event}: StartSimulationEvent published at the start of the simulation. 
-        \end{itemize*}
-    }{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one}
+    \operation{\_start\_entity\_processes(entity)}{Entity to start and maintain.}{None}{Starts the entity passed in and adds its process id to the list \_running\_pids}
+    \operation{\_on\_sim\_start(event)}{StartSimulationEvent published at the start of the simulation.}{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one}
     \operation{start()}{None}{None}{Starts the daemon. Subscribes to StartupEvent and StopSimulationEvent events}
-    \operation{\_restart(event)}
-    {
-        \begin{itemize*}
-            \item \texttt{event}: Event that triggered the call to \_restart.
-        \end{itemize*}
-    }{None}{Resets the state of the daemon. All processes maintained are cleared.}
+    \operation{\_restart(event)}{Event that triggered the call to \_restart.}{None}{Resets the state of the daemon. All processes maintained are cleared.}
     \operation{stop()}{None}{None}{Stops the daemon and sets \_running to false.}
 }
 
