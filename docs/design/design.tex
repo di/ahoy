@@ -20,6 +20,7 @@
 \usepackage{mdwlist}
 \usepackage{colortbl}
 \usepackage{calc}
+\usepackage{float}
 
 \renewenvironment{itemize*}%
     {\begin{itemize}%
@@ -277,143 +278,8 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{simulation}{Simulation}{
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_startup\_acks}{set(int)}
-            \umlattr{\#}{\_comms\_engine}{CommsEngine}
-            \umlattr{\#}{\_world}{World}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{world\_inst : World, comms\_engine : CommsEngine}{void}
-            \umlmethod{\#}{\_on\_ack\_startup}{event : Event}{void}
-            \umlmethod{+}{get\_world}{}{World}
-            \umlmethod{+}{start}{wait : int}{void}
-            \umlmethod{+}{stop}{}{void}
-        }
-        \umlclass[below of=simulation, yshift=-2cm]{world}{World}{
-            \umlattr{\#}{\_entities}{dict(String : Entity)}
-            \umlattr{\#}{\_networks}{dict(String : Network)}
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_agent\_mapping}{dict(int : int)}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{World}
-            \umlmethod{\#}{\_on\_entity\_move}{event : Event}{void}
-            \umlmethod{+}{add\_entity}{entity : Entity}{void}
-            \umlmethod{+}{get\_entity}{}{Entity}
-            \umlmethod{+}{get\_entities}{}{list(Entity)}
-            \umlmethod{+}{add\_network}{}{void}
-            \umlmethod{+}{get\_network}{String}{Network}
-            \umlmethod{+}{get\_networks}{}{list(Network)}
-            \umlmethod{+}{get\_agent\_mapping}{}{dict(int : int)}
-            \umlmethod{+}{initialize}{}{void}
-            \umlmethod{+}{pickle}{}{String}
-        }
-        \path [draw, <-, >=open diamond] (simulation) -- (world)
-            node [very near start, auto=right] {}
-            node [very near end, auto=right] {};
-    \end{tikzpicture}
-    \caption{Class diagram for simulation}
-    \label{fig-simulation}
-\end{figure}
-\subsubsection{World}
-\subsubsection{EventAPI}
-
-\subsubsection{StartupDaemon}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{startup}{StartupDaemon}{
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_phys\_id}{int}
-            \umlattr{\#}{\_running\_pids}{set(int)}
-            \umlattr{\#}{\_running}{bool}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
-            \umlmethod{\#}{\_on\_startup}{event : Event}{void}
-            \umlmethod{\#}{\_start\_entity\_process}{entity : Entity}{void}
-            \umlmethod{\#}{\_on\_sim\_start}{event : Event}{void}
-            \umlmethod{\#}{\_restart}{event : Event}{void}
-            \umlmethod{+}{terminate\_all}{}{void}
-            \umlmethod{+}{start}{}{void}
-            \umlmethod{+}{stop}{}{void}
-        }
-    \end{tikzpicture}
-    \caption{Class diagram for startup daemon}
-    \label{fig-startupdaemon}
-\end{figure}
 
 \subsubsection{Entity}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[xshift=-2cm]{entity}{Entity \textit{$<<$Abstract$>>$}}{
-            \umlattr{\#}{\_uid}{int}
-            \umlattr{\#}{\_lat}{float}
-            \umlattr{\#}{\_lon}{float}
-            \umlattr{\#}{\_agl}{float}
-            \umlattr{\#}{\_rcs}{float}
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_world}{World}
-            \umlattr{\#}{\_velocity}{(float, float, float)}
-            \umlattr{\#}{\_sensors}{dict(String : Sensor)}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
-            \umlmethod{+}{\underline{from\_pickle}}{String}{Entity}
-            \umlmethod{\#}{\_iterate\_move}{pos : (float, float, float), vel : float}{void}
-            \umlmethod{+}{add\_sensor}{name : String, sensor : Sensor}{void}
-            \umlmethod{+}{get\_sensor}{name : String}{Sensor}
-            \umlmethod{+}{get\_rcs}{}{float}
-            \umlmethod{+}{set\_rcs}{float}{void}
-            \umlmethod{+}{get\_velocity}{}{(float, float, float)}
-            \umlmethod{+}{set\_velocity}{vel : (float, float, float)}{void}
-            \umlmethod{+}{get\_world}{}{World}
-            \umlmethod{+}{set\_world}{world : World}{}
-            \umlmethod{+}{get\_position}{}{(float, float, float)}
-            \umlmethod{+}{set\_position}{pos : (float, float, float)}{}
-            \umlmethod{+}{move}{pos : (float, float, float)}{}
-            \umlmethod{+}{pickle}{}{String}
-            \umlmethod{+}{get\_event\_api}{}{EventAPI}
-            \umlmethod{+}{get\_uid}{}{int}
-            \umlmethod{+}{initialize}{}{void}
-            \umlmethod{+}{\textit{run}}{}{void}
-        }
-
-        \umlclass[minimum width=5cm, text width=8cm, yshift=-7cm, below left of=entity]{node}{Node}{
-            \umlattr{\#}{\_interfaces}{list(Interface)}
-            \umlattr{\#}{\_agents}{list(Agent)}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{uid : int}{void}
-            \umlmethod{\#}{\_on\_message}{event : Event, **kwds : dict}{void}
-            \umlmethod{+}{get\_agent\_uids}{}{list(int)}
-            \umlmethod{+}{add\_interface}{interface : Interface}{void}
-            \umlmethod{+}{remove\_interface}{name : String}{void}
-            \umlmethod{+}{get\_interface}{name : String}{Interface}
-            \umlmethod{+}{get\_interfaces}{}{list(Interface)}
-            \umlmethod{+}{add\_agent}{agent : Agent}{void}
-            \umlmethod{+}{get\_interface\_on\_net}{network\_name : String}{Interface}
-            \umlmethod{+}{send}{message : Message, src\_agent : Agent}{void}
-            \umlmethod{+}{run}{}{void}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, yshift=-6cm, below right of=entity]{scripted}{ScriptedEntity}{
-            \umlattr{\#}{\_waypoints}{list((float, float, float))}
-            \umlattr{\#}{\_vel}{float}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{uid : int, waypoints : list((float, float, float)), vel : float}{void}
-            \umlmethod{+}{run}{}{void}
-        }
-        \path [draw, <-, >=open triangle 45] (entity) -- (node)
-            node [very near start, auto=right] {}
-            node [very near end, auto=right] {};
-        \path [draw, <-, >=open triangle 45] (entity) -- (scripted)
-            node [very near start, auto=right] {}
-            node [very near end, auto=right] {};
-    \end{tikzpicture}
-    \caption{Class diagram for entities}
-    \label{fig-entities}
-\end{figure}
 \subsubsection{Built-in Entities}
 \paragraph{Node}
 \paragraph{ScriptedEntity}
@@ -452,179 +318,15 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \end{figure}
 \subsection{Networking Components}
 \subsubsection{Interface}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[]{interface}{Interface}{
-            \umlattr{\#}{\_name}{String}
-            \umlattr{\#}{\_owner\_node}{Node}
-            \umlattr{\#}{\_recv\_callback}{function}
-            \umlattr{\#}{\_network\_name}{String}
-            \umlattr{\#}{\_power}{float}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{name : String, owner\_node : Node, network : Network, power : float}{void}
-            \umlmethod{\#}{\_on\_communication}{event : Event}{void}
-            \umlmethod{+}{connect}{}{void}
-            \umlmethod{+}{send}{message\_inst : Message, src\_agent : int}{void}
-            \umlmethod{+}{set\_recv\_callback}{cb : function}{void}
-            \umlmethod{+}{get\_owner}{}{Node}
-            \umlmethod{+}{get\_network\_name}{}{String}
-            \umlmethod{+}{get\_name}{}{String}
-            \umlmethod{+}{get\_power}{}{float}
-        }
-    \end{tikzpicture}
-    \caption{Class diagram for interfaces}
-    \label{fig-interface}
-\end{figure}
+
 \subsubsection{CommsEngine}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[]{comms}{CommsEngine \textit{$<<$Abstract$>>$}}{
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_simulation}{Simulation}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{\#}{\textit{\_on\_send}}{event : Event}{void}
-            \umlmethod{+}{get\_node\_from\_agent}{agent\_uid : int}{int}
-            \umlmethod{+}{set\_simulation}{simulation : Simulation}{void}
-            \umlmethod{+}{get\_event\_api}{}{EventAPI}
-            \umlmethod{+}{get\_simulation}{}{Simulation}
-        }
-        \eumlclass[minimum width=5cm, text width=6cm, below left of=comms, yshift=-2cm]{logloss}{LogLossCommsEngine}
-        {
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{\#}{\_on\_send}{event : Event}{void}
-            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
-            \umlmethod{\#}{\_get\_rx\_power}{src\_uid : int, dest\_uid : int, src\_power : float}{float}
-            \umlmethod{\#}{\_should\_deliver}{src\_uid : int, dest\_uid : int, src\_power : float, dest\_sensitivity : float}{bool}
-        }
-        \eumlclass[minimum width=5cm, text width=6cm, below right of=comms, yshift=-2cm]{ethernet}{EthernetCommsEngine}
-        {
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{\#}{\_on\_send}{event : Event}{void}
-            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
-        }
-        \path [draw, <-, >=open triangle 45] (comms) -- (logloss)
-            node [very near start, auto=right] {}
-            node [very near end, auto=right] {};
-        \path [draw, <-, >=open triangle 45] (comms) -- (ethernet)
-            node [very near start, auto=right] {}
-            node [very near end, auto=right] {};
-    \end{tikzpicture}
-    \caption{Class diagram for communication engines}
-    \label{fig-interface}
-\end{figure}
+
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}
 \paragraph{EthernetCommsEngine}
 
 \subsection{Event Components}
 \subsubsection{Event}
-\begin{figure}
-    \centering
-    \scalebox{0.7}{
-    \begin{tikzpicture}
-        \eumlclass[]{event}{Event \textit{$<<$Abstract$>>$}}
-        {
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{Event}
-            \umlmethod{+}{pickle}{}{String}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, below of=event]{send}{CommunicationSendEvent}{
-            \umlattr{\#}{\_src\_agent\_uid}{int}
-            \umlattr{\#}{\_src\_iface\_name}{String}
-            \umlattr{\#}{\_message}{Message}
-            \umlattr{\#}{\_network}{String}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
-            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
-            \umlmethod{+}{get\_src\_iface\_name}{}{String}
-            \umlmethod{+}{get\_message}{}{Message}
-            \umlmethod{+}{get\_network}{}{String}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, below of=event]{recv}{CommunicationRecvEvent}{
-            \umlattr{\#}{\_src\_agent\_uid}{int}
-            \umlattr{\#}{\_src\_iface\_name}{String}
-            \umlattr{\#}{\_message}{Message}
-            \umlattr{\#}{\_network}{String}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
-            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
-            \umlmethod{+}{get\_src\_iface\_name}{}{String}
-            \umlmethod{+}{get\_message}{}{Message}
-            \umlmethod{+}{get\_network}{}{String}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, below of=event]{link}{LinkEvent}{
-            \umlattr{\#}{\_up}{bool}
-            \umlattr{\#}{\_uid\_1}{int}
-            \umlattr{\#}{\_uid\_2}{int}
-            \umlattr{\#}{\_network\_name}{String}
-            \umlattr{\#}{\_pathloss}{float}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{up : bool, uid\_1 : int, uid\_2 : int, network\_name : String, pathloss : float}{void}
-            \umlmethod{+}{get\_up}{}{bool}
-            \umlmethod{+}{get\_uid\_1}{}{int}
-            \umlmethod{+}{get\_uid\_2}{}{int}
-            \umlmethod{+}{get\_network\_name}{}{String}
-            \umlmethod{+}{get\_pathloss}{}{float}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, above of=event]{move}{MoveEvent}{
-            \umlattr{\#}{\_entity\_uid}{int}
-            \umlattr{\#}{\_lat}{float}
-            \umlattr{\#}{\_lon}{float}
-            \umlattr{\#}{\_agl}{float}
-            \umlattr{\#}{\_velocity}{float}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{entity : Entity, lat : float, lon : float, agl : float, vel : float}{void}
-            \umlmethod{+}{get\_uid}{}{int}
-            \umlmethod{+}{get\_lat}{}{float}
-            \umlmethod{+}{get\_lon}{}{float}
-            \umlmethod{+}{get\_agl}{}{float}
-            \umlmethod{+}{get\_velocity}{}{float}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, above of=event]{start}{StartupEvent}{
-            \umlattr{\#}{\_world}{World}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{world : World}{void}
-            \umlmethod{+}{get\_world}{}{World}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, above of=event]{ackstart}{AckStartupEvent}{
-            \umlattr{\#}{\_daemon\_id}{int}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
-            \umlmethod{+}{get\_daemon\_id}{}{int}
-        }
-        \umlclass[minimum width=5cm, text width=5cm, xshift=-4cm, left of=event]{startsim}{StartSimulationEvent}{
-            \umlattr{\#}{\_entity\_mapping}{dict(int : int)}
-        }
-        {
-            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
-            \umlmethod{+}{get\_mapping}{}{dict(int : int)}
-        }
-        \eumlclass[minimum width=5cm, text width=5cm, xshift=4cm, right of=event]{stop}{StopSimulationEvent}
-        {
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-        }
-
-        \path [draw, <-, >=open triangle 45] (event) -| (send);
-        \path [draw, <-, >=open triangle 45] (event) -- (recv);
-        \path [draw, <-, >=open triangle 45] (event) -| (link);
-        \path [draw, <-, >=open triangle 45] (event) -| (move);
-        \path [draw, <-, >=open triangle 45] (event) -- (start);
-        \path [draw, <-, >=open triangle 45] (event) -| (ackstart);
-        \path [draw, <-, >=open triangle 45] (event) -- (startsim);
-        \path [draw, <-, >=open triangle 45] (event) -- (stop);
-    \end{tikzpicture}}
-    \caption{Class diagram for events}
-    \label{fig-events}
-\end{figure}
 
 \subsubsection{Built-in Events}
 Built-in events are specific Event classes provided by default to any emulation. These embody the basic events for a network simulation, but users are encouraged to develop and add their own as well.
@@ -742,6 +444,327 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsection{Agent Components}
 \subsubsection{Agent}
+
+\subsubsection{Condition}
+
+\subsubsection{Action}
+\subsubsection{Built-in Actions}
+\paragraph{Move}
+
+\subsection{Sensor Components}
+\subsubsection{Sensor}
+
+\subsubsection{Built-in Sensors}
+\paragraph{RadarSensor}
+
+\subsection{Utility Components}
+\subsubsection{Geo}
+
+\section{Appendix}
+\begin{figure}[!H]
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{simulation}{Simulation}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_startup\_acks}{set(int)}
+            \umlattr{\#}{\_comms\_engine}{CommsEngine}
+            \umlattr{\#}{\_world}{World}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{world\_inst : World, comms\_engine : CommsEngine}{void}
+            \umlmethod{\#}{\_on\_ack\_startup}{event : Event}{void}
+            \umlmethod{+}{get\_world}{}{World}
+            \umlmethod{+}{start}{wait : int}{void}
+            \umlmethod{+}{stop}{}{void}
+        }
+        \umlclass[below of=simulation, yshift=-2cm]{world}{World}{
+            \umlattr{\#}{\_entities}{dict(String : Entity)}
+            \umlattr{\#}{\_networks}{dict(String : Network)}
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_agent\_mapping}{dict(int : int)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{World}
+            \umlmethod{\#}{\_on\_entity\_move}{event : Event}{void}
+            \umlmethod{+}{add\_entity}{entity : Entity}{void}
+            \umlmethod{+}{get\_entity}{}{Entity}
+            \umlmethod{+}{get\_entities}{}{list(Entity)}
+            \umlmethod{+}{add\_network}{}{void}
+            \umlmethod{+}{get\_network}{String}{Network}
+            \umlmethod{+}{get\_networks}{}{list(Network)}
+            \umlmethod{+}{get\_agent\_mapping}{}{dict(int : int)}
+            \umlmethod{+}{initialize}{}{void}
+            \umlmethod{+}{pickle}{}{String}
+        }
+        \path [draw, <-, >=open diamond] (simulation) -- (world)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for simulation}
+    \label{fig-simulation}
+\end{figure}
+\subsubsection{World}
+\subsubsection{EventAPI}
+
+\subsubsection{StartupDaemon}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{startup}{StartupDaemon}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_phys\_id}{int}
+            \umlattr{\#}{\_running\_pids}{set(int)}
+            \umlattr{\#}{\_running}{bool}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
+            \umlmethod{\#}{\_on\_startup}{event : Event}{void}
+            \umlmethod{\#}{\_start\_entity\_process}{entity : Entity}{void}
+            \umlmethod{\#}{\_on\_sim\_start}{event : Event}{void}
+            \umlmethod{\#}{\_restart}{event : Event}{void}
+            \umlmethod{+}{terminate\_all}{}{void}
+            \umlmethod{+}{start}{}{void}
+            \umlmethod{+}{stop}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for startup daemon}
+    \label{fig-startupdaemon}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{entity}{Entity \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_uid}{int}
+            \umlattr{\#}{\_lat}{float}
+            \umlattr{\#}{\_lon}{float}
+            \umlattr{\#}{\_agl}{float}
+            \umlattr{\#}{\_rcs}{float}
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_world}{World}
+            \umlattr{\#}{\_velocity}{(float, float, float)}
+            \umlattr{\#}{\_sensors}{dict(String : Sensor)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{phys\_id : int}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{String}{Entity}
+            \umlmethod{\#}{\_iterate\_move}{pos : (float, float, float), vel : float}{void}
+            \umlmethod{+}{add\_sensor}{name : String, sensor : Sensor}{void}
+            \umlmethod{+}{get\_sensor}{name : String}{Sensor}
+            \umlmethod{+}{get\_rcs}{}{float}
+            \umlmethod{+}{set\_rcs}{float}{void}
+            \umlmethod{+}{get\_velocity}{}{(float, float, float)}
+            \umlmethod{+}{set\_velocity}{vel : (float, float, float)}{void}
+            \umlmethod{+}{get\_world}{}{World}
+            \umlmethod{+}{set\_world}{world : World}{}
+            \umlmethod{+}{get\_position}{}{(float, float, float)}
+            \umlmethod{+}{set\_position}{pos : (float, float, float)}{}
+            \umlmethod{+}{move}{pos : (float, float, float)}{}
+            \umlmethod{+}{pickle}{}{String}
+            \umlmethod{+}{get\_event\_api}{}{EventAPI}
+            \umlmethod{+}{get\_uid}{}{int}
+            \umlmethod{+}{initialize}{}{void}
+            \umlmethod{+}{\textit{run}}{}{void}
+        }
+
+        \umlclass[minimum width=5cm, text width=8cm, yshift=-7cm, below left of=entity]{node}{Node}{
+            \umlattr{\#}{\_interfaces}{list(Interface)}
+            \umlattr{\#}{\_agents}{list(Agent)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{uid : int}{void}
+            \umlmethod{\#}{\_on\_message}{event : Event, **kwds : dict}{void}
+            \umlmethod{+}{get\_agent\_uids}{}{list(int)}
+            \umlmethod{+}{add\_interface}{interface : Interface}{void}
+            \umlmethod{+}{remove\_interface}{name : String}{void}
+            \umlmethod{+}{get\_interface}{name : String}{Interface}
+            \umlmethod{+}{get\_interfaces}{}{list(Interface)}
+            \umlmethod{+}{add\_agent}{agent : Agent}{void}
+            \umlmethod{+}{get\_interface\_on\_net}{network\_name : String}{Interface}
+            \umlmethod{+}{send}{message : Message, src\_agent : Agent}{void}
+            \umlmethod{+}{run}{}{void}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, yshift=-6cm, below right of=entity]{scripted}{ScriptedEntity}{
+            \umlattr{\#}{\_waypoints}{list((float, float, float))}
+            \umlattr{\#}{\_vel}{float}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{uid : int, waypoints : list((float, float, float)), vel : float}{void}
+            \umlmethod{+}{run}{}{void}
+        }
+        \path [draw, <-, >=open triangle 45] (entity) -- (node)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+        \path [draw, <-, >=open triangle 45] (entity) -- (scripted)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for entities}
+    \label{fig-entities}
+\end{figure}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{interface}{Interface}{
+            \umlattr{\#}{\_name}{String}
+            \umlattr{\#}{\_owner\_node}{Node}
+            \umlattr{\#}{\_recv\_callback}{function}
+            \umlattr{\#}{\_network\_name}{String}
+            \umlattr{\#}{\_power}{float}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{name : String, owner\_node : Node, network : Network, power : float}{void}
+            \umlmethod{\#}{\_on\_communication}{event : Event}{void}
+            \umlmethod{+}{connect}{}{void}
+            \umlmethod{+}{send}{message\_inst : Message, src\_agent : int}{void}
+            \umlmethod{+}{set\_recv\_callback}{cb : function}{void}
+            \umlmethod{+}{get\_owner}{}{Node}
+            \umlmethod{+}{get\_network\_name}{}{String}
+            \umlmethod{+}{get\_name}{}{String}
+            \umlmethod{+}{get\_power}{}{float}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for interfaces}
+    \label{fig-interface}
+\end{figure}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{comms}{CommsEngine \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_simulation}{Simulation}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\textit{\_on\_send}}{event : Event}{void}
+            \umlmethod{+}{get\_node\_from\_agent}{agent\_uid : int}{int}
+            \umlmethod{+}{set\_simulation}{simulation : Simulation}{void}
+            \umlmethod{+}{get\_event\_api}{}{EventAPI}
+            \umlmethod{+}{get\_simulation}{}{Simulation}
+        }
+        \eumlclass[minimum width=5cm, text width=6cm, below left of=comms, yshift=-2cm]{logloss}{LogLossCommsEngine}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_on\_send}{event : Event}{void}
+            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
+            \umlmethod{\#}{\_get\_rx\_power}{src\_uid : int, dest\_uid : int, src\_power : float}{float}
+            \umlmethod{\#}{\_should\_deliver}{src\_uid : int, dest\_uid : int, src\_power : float, dest\_sensitivity : float}{bool}
+        }
+        \eumlclass[minimum width=5cm, text width=6cm, below right of=comms, yshift=-2cm]{ethernet}{EthernetCommsEngine}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_on\_send}{event : Event}{void}
+            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
+        }
+        \path [draw, <-, >=open triangle 45] (comms) -- (logloss)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+        \path [draw, <-, >=open triangle 45] (comms) -- (ethernet)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for communication engines}
+    \label{fig-interface}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \scalebox{0.7}{
+    \begin{tikzpicture}
+        \eumlclass[]{event}{Event \textit{$<<$Abstract$>>$}}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{Event}
+            \umlmethod{+}{pickle}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, below of=event]{send}{CommunicationSendEvent}{
+            \umlattr{\#}{\_src\_agent\_uid}{int}
+            \umlattr{\#}{\_src\_iface\_name}{String}
+            \umlattr{\#}{\_message}{Message}
+            \umlattr{\#}{\_network}{String}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
+            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
+            \umlmethod{+}{get\_src\_iface\_name}{}{String}
+            \umlmethod{+}{get\_message}{}{Message}
+            \umlmethod{+}{get\_network}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, below of=event]{recv}{CommunicationRecvEvent}{
+            \umlattr{\#}{\_src\_agent\_uid}{int}
+            \umlattr{\#}{\_src\_iface\_name}{String}
+            \umlattr{\#}{\_message}{Message}
+            \umlattr{\#}{\_network}{String}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
+            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
+            \umlmethod{+}{get\_src\_iface\_name}{}{String}
+            \umlmethod{+}{get\_message}{}{Message}
+            \umlmethod{+}{get\_network}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, below of=event]{link}{LinkEvent}{
+            \umlattr{\#}{\_up}{bool}
+            \umlattr{\#}{\_uid\_1}{int}
+            \umlattr{\#}{\_uid\_2}{int}
+            \umlattr{\#}{\_network\_name}{String}
+            \umlattr{\#}{\_pathloss}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{up : bool, uid\_1 : int, uid\_2 : int, network\_name : String, pathloss : float}{void}
+            \umlmethod{+}{get\_up}{}{bool}
+            \umlmethod{+}{get\_uid\_1}{}{int}
+            \umlmethod{+}{get\_uid\_2}{}{int}
+            \umlmethod{+}{get\_network\_name}{}{String}
+            \umlmethod{+}{get\_pathloss}{}{float}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, above of=event]{move}{MoveEvent}{
+            \umlattr{\#}{\_entity\_uid}{int}
+            \umlattr{\#}{\_lat}{float}
+            \umlattr{\#}{\_lon}{float}
+            \umlattr{\#}{\_agl}{float}
+            \umlattr{\#}{\_velocity}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{entity : Entity, lat : float, lon : float, agl : float, vel : float}{void}
+            \umlmethod{+}{get\_uid}{}{int}
+            \umlmethod{+}{get\_lat}{}{float}
+            \umlmethod{+}{get\_lon}{}{float}
+            \umlmethod{+}{get\_agl}{}{float}
+            \umlmethod{+}{get\_velocity}{}{float}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, above of=event]{start}{StartupEvent}{
+            \umlattr{\#}{\_world}{World}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{world : World}{void}
+            \umlmethod{+}{get\_world}{}{World}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, above of=event]{ackstart}{AckStartupEvent}{
+            \umlattr{\#}{\_daemon\_id}{int}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
+            \umlmethod{+}{get\_daemon\_id}{}{int}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-4cm, left of=event]{startsim}{StartSimulationEvent}{
+            \umlattr{\#}{\_entity\_mapping}{dict(int : int)}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{daemon\_id : int}{void}
+            \umlmethod{+}{get\_mapping}{}{dict(int : int)}
+        }
+        \eumlclass[minimum width=5cm, text width=5cm, xshift=4cm, right of=event]{stop}{StopSimulationEvent}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+        }
+
+        \path [draw, <-, >=open triangle 45] (event) -| (send);
+        \path [draw, <-, >=open triangle 45] (event) -- (recv);
+        \path [draw, <-, >=open triangle 45] (event) -| (link);
+        \path [draw, <-, >=open triangle 45] (event) -| (move);
+        \path [draw, <-, >=open triangle 45] (event) -- (start);
+        \path [draw, <-, >=open triangle 45] (event) -| (ackstart);
+        \path [draw, <-, >=open triangle 45] (event) -- (startsim);
+        \path [draw, <-, >=open triangle 45] (event) -- (stop);
+    \end{tikzpicture}}
+    \caption{Class diagram for events}
+    \label{fig-events}
+\end{figure}
+
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -765,7 +788,6 @@ Built-in events are specific Event classes provided by default to any emulation.
     \caption{Class diagram for agents}
     \label{fig-agents}
 \end{figure}
-\subsubsection{Condition}
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -779,7 +801,6 @@ Built-in events are specific Event classes provided by default to any emulation.
     \label{fig-condition}
 \end{figure}
 
-\subsubsection{Action}
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -805,11 +826,7 @@ Built-in events are specific Event classes provided by default to any emulation.
     \caption{Class diagram for actions}
     \label{fig-actions}
 \end{figure}
-\subsubsection{Built-in Actions}
-\paragraph{Move}
 
-\subsection{Sensor Components}
-\subsubsection{Sensor}
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -845,11 +862,6 @@ Built-in events are specific Event classes provided by default to any emulation.
     \caption{Class diagram for sensors}
     \label{fig-sensors}
 \end{figure}
-\subsubsection{Built-in Sensors}
-\paragraph{RadarSensor}
-
-\subsection{Utility Components}
-\subsubsection{Geo}
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -866,4 +878,5 @@ Built-in events are specific Event classes provided by default to any emulation.
     \caption{Class diagram for geographic utilities}
     \label{fig-condition}
 \end{figure}
+
 \end{document}
