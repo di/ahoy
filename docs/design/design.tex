@@ -290,10 +290,34 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
             \umlmethod{+}{start}{wait : int}{void}
             \umlmethod{+}{stop}{}{void}
         }
+        \umlclass[below of=simulation, yshift=-2cm]{world}{World}{
+            \umlattr{\#}{\_entities}{dict(String : Entity)}
+            \umlattr{\#}{\_networks}{dict(String : Network)}
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_agent\_mapping}{dict(int : int)}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{World}
+            \umlmethod{\#}{\_on\_entity\_move}{event : Event}{void}
+            \umlmethod{+}{add\_entity}{entity : Entity}{void}
+            \umlmethod{+}{get\_entity}{}{Entity}
+            \umlmethod{+}{get\_entities}{}{list(Entity)}
+            \umlmethod{+}{add\_network}{}{void}
+            \umlmethod{+}{get\_network}{String}{Network}
+            \umlmethod{+}{get\_networks}{}{list(Network)}
+            \umlmethod{+}{get\_agent\_mapping}{}{dict(int : int)}
+            \umlmethod{+}{initialize}{}{void}
+            \umlmethod{+}{pickle}{}{String}
+        }
+        \path [draw, <-, >=open diamond] (simulation) -- (world)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for simulation}
     \label{fig-simulation}
 \end{figure}
+\subsubsection{World}
+\subsubsection{EventAPI}
 
 \subsubsection{StartupDaemon}
 \begin{figure}
@@ -391,33 +415,6 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 \subsubsection{Built-in Entities}
 \paragraph{Node}
 \paragraph{ScriptedEntity}
-\subsubsection{World}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \umlclass[]{world}{World}{
-            \umlattr{\#}{\_entities}{dict(String : Entity)}
-            \umlattr{\#}{\_networks}{dict(String : Network)}
-            \umlattr{\#}{\_event\_api}{EventAPI}
-            \umlattr{\#}{\_agent\_mapping}{dict(int : int)}
-        }{
-            \umlmethod{+}{\_\_init\_\_}{}{void}
-            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{World}
-            \umlmethod{\#}{\_on\_entity\_move}{event : Event}{void}
-            \umlmethod{+}{add\_entity}{entity : Entity}{void}
-            \umlmethod{+}{get\_entity}{}{Entity}
-            \umlmethod{+}{get\_entities}{}{list(Entity)}
-            \umlmethod{+}{add\_network}{}{void}
-            \umlmethod{+}{get\_network}{String}{Network}
-            \umlmethod{+}{get\_networks}{}{list(Network)}
-            \umlmethod{+}{get\_agent\_mapping}{}{dict(int : int)}
-            \umlmethod{+}{initialize}{}{void}
-            \umlmethod{+}{pickle}{}{String}
-        }
-    \end{tikzpicture}
-    \caption{Class diagram for interfaces}
-    \label{fig-interface}
-\end{figure}
 
 \subsection{Networking Components}
 \subsubsection{Interface}
@@ -446,15 +443,129 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
     \label{fig-interface}
 \end{figure}
 \subsubsection{CommsEngine}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[]{comms}{CommsEngine \textit{$<<$Abstract$>>$}}{
+            \umlattr{\#}{\_event\_api}{EventAPI}
+            \umlattr{\#}{\_simulation}{Simulation}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\textit{\_on\_send}}{event : Event}{void}
+            \umlmethod{+}{get\_node\_from\_agent}{agent\_uid : int}{int}
+            \umlmethod{+}{set\_simulation}{simulation : Simulation}{void}
+            \umlmethod{+}{get\_event\_api}{}{EventAPI}
+            \umlmethod{+}{get\_simulation}{}{Simulation}
+        }
+        \eumlclass[minimum width=5cm, text width=6cm, below left of=comms, yshift=-2cm]{logloss}{LogLossCommsEngine}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_on\_send}{event : Event}{void}
+            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
+            \umlmethod{\#}{\_get\_rx\_power}{src\_uid : int, dest\_uid : int, src\_power : float}{float}
+            \umlmethod{\#}{\_should\_deliver}{src\_uid : int, dest\_uid : int, src\_power : float, dest\_sensitivity : float}{bool}
+        }
+        \eumlclass[minimum width=5cm, text width=6cm, below right of=comms, yshift=-2cm]{ethernet}{EthernetCommsEngine}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{\#}{\_on\_send}{event : Event}{void}
+            \umlmethod{\#}{\_on\_movement}{event : Event}{void}
+        }
+        \path [draw, <-, >=open triangle 45] (comms) -- (logloss)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+        \path [draw, <-, >=open triangle 45] (comms) -- (ethernet)
+            node [very near start, auto=right] {}
+            node [very near end, auto=right] {};
+    \end{tikzpicture}
+    \caption{Class diagram for communication engines}
+    \label{fig-interface}
+\end{figure}
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}
 \paragraph{EthernetCommsEngine}
 
 \subsection{Event Components}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \eumlclass[]{event}{Event \textit{$<<$Abstract$>>$}}
+        {
+            \umlmethod{+}{\_\_init\_\_}{}{void}
+            \umlmethod{+}{\underline{from\_pickle}}{pickled : String}{Event}
+            \umlmethod{+}{pickle}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, below of=event]{send}{CommunicationSendEvent}{
+            \umlattr{\#}{\_src\_agent\_uid}{int}
+            \umlattr{\#}{\_src\_iface\_name}{String}
+            \umlattr{\#}{\_message}{Message}
+            \umlattr{\#}{\_network}{String}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
+            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
+            \umlmethod{+}{get\_src\_iface\_name}{}{String}
+            \umlmethod{+}{get\_message}{}{Message}
+            \umlmethod{+}{get\_network}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, below of=event]{recv}{CommunicationRecvEvent}{
+            \umlattr{\#}{\_src\_agent\_uid}{int}
+            \umlattr{\#}{\_src\_iface\_name}{String}
+            \umlattr{\#}{\_message}{Message}
+            \umlattr{\#}{\_network}{String}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{src\_agent\_uid : int, src\_iface\_name : String, message\_inst : Message, network : String}{void}
+            \umlmethod{+}{get\_src\_agent\_uid}{}{int}
+            \umlmethod{+}{get\_src\_iface\_name}{}{String}
+            \umlmethod{+}{get\_message}{}{Message}
+            \umlmethod{+}{get\_network}{}{String}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=6cm, below of=event]{link}{LinkEvent}{
+            \umlattr{\#}{\_up}{bool}
+            \umlattr{\#}{\_uid\_1}{int}
+            \umlattr{\#}{\_uid\_2}{int}
+            \umlattr{\#}{\_network\_name}{String}
+            \umlattr{\#}{\_pathloss}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{up : bool, uid\_1 : int, uid\_2 : int, network\_name : String, pathloss : float}{void}
+            \umlmethod{+}{get\_up}{}{bool}
+            \umlmethod{+}{get\_uid\_1}{}{int}
+            \umlmethod{+}{get\_uid\_2}{}{int}
+            \umlmethod{+}{get\_network\_name}{}{String}
+            \umlmethod{+}{get\_pathloss}{}{float}
+        }
+        \umlclass[minimum width=5cm, text width=5cm, xshift=-6cm, above of=event]{move}{MoveEvent}{
+            \umlattr{\#}{\_entity\_uid}{int}
+            \umlattr{\#}{\_lat}{float}
+            \umlattr{\#}{\_lon}{float}
+            \umlattr{\#}{\_agl}{float}
+            \umlattr{\#}{\_velocity}{float}
+        }
+        {
+            \umlmethod{+}{\_\_init\_\_}{entity : Entity, lat : float, lon : float, agl : float, vel : float}{void}
+            \umlmethod{+}{get\_uid}{}{int}
+            \umlmethod{+}{get\_lat}{}{float}
+            \umlmethod{+}{get\_lon}{}{float}
+            \umlmethod{+}{get\_agl}{}{float}
+            \umlmethod{+}{get\_velocity}{}{float}
+        }
+
+        \path [draw, <-, >=open triangle 45] (event) -| (send);
+        \path [draw, <-, >=open triangle 45] (event) -- (recv);
+        \path [draw, <-, >=open triangle 45] (event) -| (link);
+        \path [draw, <-] (event) -| (move);
+    \end{tikzpicture}
+    \caption{Class diagram for events}
+    \label{fig-events}
+\end{figure}
+
 \subsubsection{Event}
 \subsubsection{Built-in Events}
 \paragraph{LinkEvent}
 \paragraph{CommunicationSendEvent}
+\paragraph{CommunicationRecvEvent}
 \paragraph{EntityMoveEvent}{Published when an entity moves within the simulation.}
 
 \attributes{
