@@ -278,6 +278,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
+\subsubsection{StartupDaemon}
 \subsubsection{World}
 \subsubsection{EventAPI}
 
@@ -331,7 +332,7 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
         \mess{mc}{CommunicationSendEvent}{ce}
         \begin{callself}{ce}{\_on\_send}{}
         \end{callself}
-        \begin{sdloop}{alt}
+        \begin{sdloop}{alt [send successful]}
             \mess{ce}{CommunicationRecvEvent}{mc}
             \mess{mc}{CommunicationRecvEvent}{node}
         \end{sdloop}
@@ -525,7 +526,6 @@ Built-in events are specific Event classes provided by default to any emulation.
     \label{fig-simulation}
 \end{figure}
 
-\subsubsection{StartupDaemon}
 \begin{figure}
     \centering
     \begin{tikzpicture}
