@@ -882,11 +882,69 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsection{Agent Components}
 \subsubsection{Agent}
+{An \texttt{Agent} is an intelligent algorithm that makes decisions based on data it receives from its environment and its beliefs about the current state of the system. Agents are run as threads on distributed nodes. }
+
+\attributes{
+    \attribute{\_owner\_node}{\texttt{Node}}{Node that owns the \texttt{Agent}}
+    \attribute{\_uid}{int}{Unique identifier.}
+    \attribute{\_behaviors}{dict(entity: [\texttt{Condition},\texttt{Action}])}{Behavior map linking events to actions.}
+}
+
+\operations{
+    \operation{get\_uid()}{None}{UID}{Returns the unique ID.}
+    \operation{get\_owner\_node()}{None}{Owner \texttt{Node}}{Returns the node that owns the agent.}
+    \operation{start()}{None}{A thread}{Returns the \texttt{Agent} thread.}
+    \operation{on\_message(event)}{Event generating a message.}{None}{Abstract class for handling message events.}
+    \operation{run()}{None}{None}{Abstract class for starting the \texttt{Agent} thread.}
+    \operation{add\_behavior(behavior)}{list([\texttt{Condition},\texttt{Event},\texttt{Action}])}{None}{Adds a behavior tuple to the \texttt{Agent}.}
+    \operation{remove\_behavior(behavior)}{list[\texttt{Condition},\texttt{Event},\texttt{Action}]}{None}{Removes the specified behavior tuple.}
+    \operation{\_on\_event(event)}{An \texttt{Event}.}{None}{Performs an \texttt{Action} based on the \texttt{Event} and \texttt{Condition} associated with it.}
+    \operation{\_init\_behaviors()}{None}{None}{Initializes the \texttt{Agent} behaviors.}
+}
+
 \subsubsection{Condition}
+{A \texttt{Condition} is an abstract class used to determine if some state in the system is true or false. It is used by an \texttt{Agent} to decide if it should perform an \texttt{Action}.}
+
+\noattributes{}
+
+\operations{
+    \operation{\_\_init\_\_()}{None}{None}{Initializes the abstract \texttt{Condition}.}
+    \operation{is\_met(event)}{An \texttt{Event}}{None}{Abstract method for testing if the \texttt{Condition} is true or not.}
+}
+
 \subsubsection{Action}
+{An \texttt{Action} is an abstract class that allows an \texttt{Agent} to perform a specific task.  All user defined and built in actions inherit this base class.}
+
+\noattributes{}
+
+\operations{
+    \operation{\_\_init\_\_()}{None}{None}{Initializes the abstract \texttt{Action} class.}
+    \operation{perform()}{None}{None}{Abstract method for performing the \texttt{Action}.}
+}
 
 \subsubsection{Built-in Actions}
 \paragraph{MoveAction}
+{\texttt{MoveAction} moves an entity to a specified location. It is used by an \texttt{Agent}.}
+
+\attributes{
+    \attribute{\_lat\_move}{float}{The latitude to move to.}
+    \attribute{\_lon\_move}{float}{The longitude to move to.}
+    \attribute{\_alt\_move}{float}{The above ground location to move to.}
+    \attribute{\_entity}{\texttt{Entity}}{The \texttt{Entity} to move.}
+}
+
+\operations{
+    \operation{\_\_init\_\_(node,lat,lon.alt)}
+    {
+        \begin{itemize*}
+            \item \texttt{node}: The \texttt{Entity} being moved. 
+            \item \texttt{lat}: The latitude to move to. 
+            \item \texttt{lon}: The longitude to move to. 
+            \item \texttt{alt}: The above ground location to move to. 
+        \end{itemize*}
+    }{None}{Initializes the \texttt{MoveAction} class.}
+    \operation{perform()}{None}{None}{Moves \_entity to the position given at initialization.}
+}
 
 \subsection{Sensor Components}
 \subsubsection{Sensor}
