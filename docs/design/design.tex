@@ -385,7 +385,7 @@ entities running in it. }
     }{World}{Deserializes a pickled verson of the World.}
 }
     
-\subsubsection{EventAPI} % TODO: Create UML for this
+\subsubsection{EventAPI}
 {The EventAPI is used to communicate events across the event channel.  It allows entities to subscribe to certain events or publish the occurrence of events. When an event occurs, it will handle any function calls an entity wishes to make during that event. }
 
 \attributes{
@@ -892,6 +892,35 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
     \end{tikzpicture}
     \caption{Class diagram for startup daemon}
     \label{fig-startupdaemon}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{api}{EventAPI}{
+            \umlattr{\#}{\_subscriptions}{dict(Event : function)}
+            \umlattr{\#}{\_running}{bool}
+            \umlattr{\#}{\_ip}{String $|$ None}
+            \umlattr{\#}{\_port}{int $|$ None}
+            \umlattr{\#}{\_tcp\_conn}{socket $|$ None}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{tcp\_conn=None}{void}
+            \umlmethod{\#}{\_tcp\_assemble}{}{void}
+            \umlmethod{\#}{\_setup\_mc}{}{void}
+            \umlmethod{\#}{\_publish}{event : Event, delay\_sec : int}{void}
+            \umlmethod{\#}{\_delay}{event : Event, delay\_sec : int}{void}
+            \umlmethod{\#}{\_process}{data : String}{void}
+            \umlmethod{+}{push\_raw}{raw : String}{void}
+            \umlmethod{+}{subscribe}{event\_type : Event, callback : function, **args : dict()}{void}
+            \umlmethod{+}{unsubscribe\_all}{event\_type : Event}{void}
+            \umlmethod{+}{clear\_subscriptions}{}{void}
+            \umlmethod{+}{run}{}{void}
+            \umlmethod{+}{start}{}{void}
+            \umlmethod{+}{stop}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for event API}
+    \label{fig-eventapi}
 \end{figure}
 
 \begin{figure}
