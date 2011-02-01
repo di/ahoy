@@ -496,6 +496,27 @@ entities running in it. }
     \operation{get\_uid()}{None}{int}{Returns the entities unique id.}
     \operation{initialize()}{None}{None}{Initializes the entity.}
 }
+\begin{figure}[!htb]
+  \centering
+
+  \begin{sequencediagram}{3cm}
+    \newthread{ent}{Entity}{Entity}
+    \newthread{ec}{Event Channel}{Event Channel}
+    \newthread{all}{World Instances}{World Instances}
+
+    \begin{sdloop}{loop [not at dest]}
+        \begin{callself}{ent}{\_iterate\_move()}{}
+            \mess{ent}{EntityMoveEvent}{ec}
+            \mess{ec}{EntityMoveEvent}{all}
+            \begin{callself}{all}{\_on\_entity\_move()}{}
+            \end{callself}
+        \end{callself}
+    \end{sdloop}
+  \end{sequencediagram}
+
+  \caption{Movement iteration}
+  \label{fig-movement}
+\end{figure}
 
 \subsubsection{Built-in Entities}
 \paragraph{Node}{Nodes are processes that aggregate agents. Each one has an interface that handles communication to the outside world (i.e. other nodes or agents). They inherit properties from the Entity class.}
