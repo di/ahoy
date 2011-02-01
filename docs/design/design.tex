@@ -567,6 +567,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
 }
 
 \subsubsection{Startup Sequence}
+As shown in Figure~\ref{fig-startupseq}, the startup sequence for a simulation is comprised of three major steps.  Initially, the \texttt{Simulation} process publishes a \texttt{StartupEvent}, which results in all \texttt{StartupDaemon} processes responding with an \texttt{AckStartupEvent}.  These acknowledgements are then used by the \texttt{Simulation} to equally distribute \texttt{Entities} across the daemons.  This distribution is communicated with a \texttt{SimulationStartEvent} which contains a list of entities to bestarted on each daemon.  Additionally, this causes all daemons to start the simulation.
 \begin{figure}[!htb]
   \centering
 
