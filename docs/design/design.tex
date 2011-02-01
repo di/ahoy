@@ -288,20 +288,18 @@ entities running in it. }
 
 \attributes{
     \attribute{\_event\_api}{EventAPI}{Instance of the Event API }
-    \attribute{\_startup\_acks}{list<int>}{A list of startup daemon id's }
-    \attribute{\_comms\_module}{CommsEngine}{Communication Engine used to send and receive events}
+    \attribute{\_startup\_acks}{list(int)}{A list of startup daemon ID's}
+    \attribute{\_comms\_module}{CommsEngine}{Communication Engine used to send and receive messages}
     \attribute{\_world}{World}{Instance of the world maintained by the simulation}
-    \attribute{\_tcp\_forwarder}{TcpForward}{TcpForward object that maintains a port to listen on for packets of data }
 }
 
 
 \operations{
-    \operation{\_\_init\_\_(world\_inst, comms\_module, tcp\_forwarder=None)}
+    \operation{\_\_init\_\_(world\_inst, comms\_module}
     {
         \begin{itemize*}
             \item \texttt{world\_inst}: Instance of the world. 
-            \item \texttt{comms\_module}: Communication Engine for sending/receiving events. 
-            \item \texttt{tcp\_forwarder}: TcpForward object, if needed.
+            \item \texttt{comms\_module}: Communication Engine for sending/receiving messages.
         \end{itemize*}
     }{None}{Instantiates the Simulation}
     \operation{get\_world()}{None}{World}{Gets the World object being maintained}
@@ -325,10 +323,10 @@ entities running in it. }
 \operations{
     \operation{\_\_init\_\_(phys\_id)}{The integer id of the daemon.}{None}{Instantiates the StartupDaemon.}
     \operation{\_on\_startup(event)}{Event passed to the daemon on startup}{None}{Subscribes the daemon to the StartSimulationEvent and publishes an AckStartupEvent.  It also initializes the \_world attribute. }
-    \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \_running\_pids}
-    \operation{\_start\_entity\_processes(entity)}{Entity to start and maintain.}{None}{Starts the entity passed in and adds its process id to the list \_running\_pids}
-    \operation{\_on\_sim\_start(event)}{StartSimulationEvent published at the start of the simulation.}{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one}
-    \operation{start()}{None}{None}{Starts the daemon. Subscribes to StartupEvent and StopSimulationEvent events}
+    \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \_running\_pids.}
+    \operation{\_start\_entity\_processes(entity)}{Entity to start and maintain.}{None}{Starts the entity passed in and adds its process id to the list \_running\_pids.}
+    \operation{\_on\_sim\_start(event)}{StartSimulationEvent published at the start of the simulation.}{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one.}
+    \operation{start()}{None}{None}{Starts the daemon. Subscribes to StartupEvent and StopSimulationEvent events.}
     \operation{\_restart(event)}{Event that triggered the call to \_restart.}{None}{Resets the state of the daemon. All processes maintained are cleared.}
     \operation{stop()}{None}{None}{Stops the daemon and sets \_running to false.}
 }
@@ -424,22 +422,22 @@ entities running in it. }
     
 \subsubsection{Entity}
 \attributes{
-    \attribute{MAX\_DISTANCE}{const float}{Maximum distance the entity can move in kilometers}
+    \attribute{MAX\_DISTANCE}{const float}{Maximum distance the entity can move in kilometers before publishing a move event.}
     \attribute{\_uid}{int}{Unique user id of the entity.}
     \attribute{\_lat}{float}{Current latitude.}
     \attribute{\_long}{float}{Current longitude.}
     \attribute{\_agl}{float}{Distance above ground level.}
-    \attribute{\_rcs}{TODO}{TODO}
+    \attribute{\_rcs}{float}{Approximate cross-sectional area.}
     \attribute{\_event\_api}{EventAPI}{The EventAPI for an entity.}
     \attribute{\_world}{World}{The World instance.}
-    \attribute{\_velocity}{list[float]}{The vector velocity of the entity.}
+    \attribute{\_velocity}{list(float)}{The vector velocity of the entity.}
     \attribute{\_forward\_velocity}{float}{The forward velocity of the entity.}
 }
 
 \operations{
-    \operation{set\_rcs(rcs)}{\texttt{rcs}: TODO}{None}{TODO}
-    \operation{get\_rcs()}{None}{TODO}{TODO}
-    \operation{get\_lin\_velocity()}{None}{list[float]}{Returns the velocity as a vector of three numbers}
+    \operation{set\_rcs(rcs)}{\texttt{rcs}: Cross sectional-area}{None}{Sets the cross-sectional area.}
+    \operation{get\_rcs()}{None}{Cross-sectional area}{The cross-sectional area.}
+    \operation{get\_lin\_velocity()}{None}{list(float)}{Returns the velocity as a vector of three numbers.}
     \operation{get\_forward\_velocity()}{None}{float}{Returns the forward velocity.}
     \operation{set\_lin\_velocity(v)}{\texttt{v}: A vector of three floating point numbers describing the velocity.}{None}{Sets the vector velocity of the entity.}
     \operation{set\_forward\_velocity(v)}{\texttt{v}: Floating point number to assign to the forward velocity.}{None}{Sets the forward velocity of the entity.}
@@ -474,7 +472,7 @@ entities running in it. }
             \item \texttt{vert\_vel}: Vertical velocity to move with. 
         \end{itemize*}
     }{None}{Moves the entity to the given coordinates in steps by smaller distances using its velocity and MAX\_DISTANCE.}
-    \operation{get\_position()}{None}{list[float]}{Returns a list of the latitude, longitude, and above ground location in that order.}
+    \operation{get\_position()}{None}{list(float)}{Returns a list of the latitude, longitude, and above ground location in that order.}
     \operation{pickle()}{None}{Serialized Entity}{Serializes the entity.}
     \operation{from\_pickle(pickled)}{\texttt{pickled}:Serialized entity.}{Entity}{Deserializes an entity.}
     \operation{get\_event\_api()}{None}{EventAPI}{Returns the entities EventAPI.}
@@ -492,11 +490,11 @@ entities running in it. }
 
 \operations{
     \operation{\_\_init\_\_(uid)}{\texttt{uid}: Unique id assigned to the node.}{None}{Instantiates the Node.}
-    \operation{get\_agent\_uids()}{None}{list[int]}{Returns a list of all agent ids belonging to that node.}
+    \operation{get\_agent\_uids()}{None}{list(int)}{Returns a list of all agent ids belonging to that node.}
     \operation{add\_interface(interface)}{\texttt{interface}: Network interface to add to the node.}{None}{Adds a network interface to the node.}
     \operation{remove\_interface(name)}{\texttt{name}: The name of the interface to remove.}{None}{Removes an network interface from the node.}
     \operation{get\_interface(name)}{\texttt{name}: The name of the interface to return.}{Interface}{Returns a network interface with the given name.}
-    \operation{get\_interfaces()}{None}{list[Interface]}{Returns a list of all network interfaces belonging to the node.}
+    \operation{get\_interfaces()}{None}{list(Interface)}{Returns a list of all network interfaces belonging to the node.}
     \operation{add\_agent(agent\_inst)}{\texttt{agent\_inst}: Agent to add to the node.}{None}{Adds an agent to the list of agents owned by the node.}
     \operation{get\_interface\_on\_net(network\_name)}{\texttt{network\_name}:Network name associated with an interface.}{None}{Returns the interface associated with the given network name.}
     \operation{send(message,src\_agent)}
