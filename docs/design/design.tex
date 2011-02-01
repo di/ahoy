@@ -682,6 +682,8 @@ Each entity in the world, be it a node or other world object, exists as a proces
 
 where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an arbitrary reference distance, $l_0$ is the loss at that distance, $d$ is the actual distance between the two interfaces, and $X_g$ is a constant accounting for flat-fading.  If this power falls below the sensitivity of the receiver, the message will not be received.}
 
+\noattributes
+
 \operations
 {
     \operation{\_\_init\_\_()}{none}{none}{instantiates a new \texttt{loglosscommsengine}.}
@@ -703,6 +705,9 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 }
 
 \paragraph{EthernetCommsEngine}{Provides basic support for Ethernet communications.}
+
+\noattributes
+
 \operations
 {
     \operation{\_\_init\_\_()}{None}{None}{Instantiates a new \texttt{EthernetCommsEngine}.}
@@ -867,6 +872,9 @@ Built-in events are specific Event classes provided by default to any emulation.
 }
 
 \paragraph{StopSimulationEvent}{An event that stops the simulation.  All simulation state information on daemons is reset.}
+
+\noattributes
+
 \operations
 {
     \operation{\_\_init\_\_()}{None}{None}{Instantiates a new \texttt{StopSimulationEvent}.}
@@ -949,6 +957,9 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 
 \subsection{Utility Components}
 \subsubsection{Geo}
+
+\noattributes
+
 \operations{
     \operation{haver\_distance(lat1, lon1, lat2, lon2)}
     {
