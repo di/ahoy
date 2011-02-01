@@ -48,6 +48,16 @@
     \hspace{7pt}\textbf{Description:} & #4 \\ \hline
 }
 
+\newcommand{\noattributes}{
+    \begin{center}
+        \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
+            \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
+            \rowcolor[gray]{0.8} Name & Type & Description \\ \hline 
+            \multicolumn{3}{|c|}{This class has no attributes} \\ \hline
+        \end{tabular}
+    \end{center}
+}
+
 \newcommand{\attributes}[1]{
     \begin{center}
         \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
@@ -701,6 +711,8 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 
 \subsection{Event Components}
 \subsubsection{Event}{Event is the base abstract class from which all other events descend.  This class provides picking and unpickling methods used to send events over the event channel.}
+
+\noattributes
 
 \operations
 {
