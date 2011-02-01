@@ -75,7 +75,7 @@
 % Just so we don't have to specify this twice
 \newcommand\mytitle{Software Design Specification}
 \newcommand\mydate{\today}
-\newcommand\myversion{1}
+\newcommand\myversion{2}
 
 \hypersetup{
     colorlinks=true,
@@ -207,7 +207,7 @@ The goal of the AHOY project is to provide a system for testing multiple agents 
 Users of AHOY are researchers looking to improve a specific agent's performance on a network through testing across varying combinations of topologies and scenarios.
 
 \subsection{Design Goals}
-AHOY is designed to be used as a testbed for sensors and respective algorithms in the laboratory against virtual operations using data from simulated sensors and nodes. It provides the ability to independently and quickly vary the network topology, application suites, environment, or any other variable is essential to collect data which would be cost-prohibitive to produce in a real-world scenario. 
+AHOY is designed to be used as a testbed for sensors and respective algorithms in the laboratory against virtual operations using data from simulated sensors and nodes. It provides the ability to independently and quickly vary the network topology, application suites, environment, or any other aspect of the emulation. This variability is essential to collect experimental data which would be cost-prohibitive to produce in a real-world scenario. 
 
 The goals of AHOY's core design process is to provide a framework upon which researches can build custom agents, scenarios and topologies, and quickly and easily run an experiment using them. A modular distributed architecture allows for a wide scale of simulation size. Most importantly, the Event API allows developer to easily tailor custom user interfaces for existing applications or visualizers by providing a common interface to monitor every action within an executing experiment.
 
@@ -255,13 +255,13 @@ The AHOY application bridges network and agent simulators. It must provide an en
 \subsection{Subsystem}
 As shown in Figure~\ref{fig-subsystem}, AHOY is comprised of seven primary components.
 
-\paragraph{Simulation}{Inializes simulations and provides a communication engine for other components.}
-\paragraph{Communications}{Handles simulation of network links and hardware.}
-\paragraph{World}{Maintains world state.  An identical instance of this is maintained by all Entities and the Simulation.}
-\paragraph{Entities}{Physical objects within the simulated world.  These include Nodes and World Objects.}
-\paragraph{Agents}{Provide logic that interacts with the environment, other agents, and sensors.}
-\paragraph{Interfaces}{Connect virtual nodes to each other.  Provide a means for communication}
-\paragraph{Sensors}{Sense some aspect of the vitual world and provide data to local agents.}
+\subsubsection{Simulation}{Initializes simulations and provides a communication engine for other components.}
+\subsubsection{Communications}{Handles simulation of network links and hardware.}
+\subsubsection{World}{Maintains world state.  An identical instance of this is maintained by all Entities and the Simulation.}
+\subsubsection{Entities}{Physical objects within the simulated world.  These include Nodes and World Objects.}
+\subsubsection{Agents}{Provide logic that interacts with the environment, other agents, and sensors.}
+\subsubsection{Interfaces}{Connect virtual nodes to each other.  Provide a means for communication}
+\subsubsection{Sensors}{Sense some aspect of the virtual world and provide data to local agents.}
 
 \begin{figure}
     \centering
@@ -300,7 +300,9 @@ The AHOY project is written entirely in Python, an interpreted, general-purpose 
 
 \subsection{Design Motivations}
 \subsubsection{Communication}
-The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.
+The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is used instead.
+
+This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.
 
 \subsubsection{Distribution Method}
 Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.
@@ -355,26 +357,26 @@ Each entity in the world, be it a node or other world object, exists as a proces
 }
 
 \subsubsection{World}
-{The World maintains the entities running in the simulation. It also maintains the networks being used within the simulation.}
+{The \texttt{World} object maintains the entities running in the simulation. It also maintains the networks being used within the simulation.}
 
 \attributes{
-    \attribute{\_entities}{dict(int : Entity)}{Maps entity IDs to entities}
-    \attribute{\_networks}{dict(String : Network)}{Maps network names to the network}
-    \attribute{\_event\_api}{EventAPI}{\texttt{EventAPI} for subscribing to and publishing events}
+    \attribute{\_entities}{dict(int : Entity)}{Maps \texttt{Entity} IDs to \texttt{Entity}s}
+    \attribute{\_networks}{dict(String : Network)}{Maps network names to the \texttt{Network}}
+    \attribute{\_event\_api}{EventAPI}{\texttt{EventAPI} for subscribing to and publishing \texttt{Event}s}
 }
 
 \operations{
     \operation{\_\_init\_\_()}{None}{None}{Instantiates the \texttt{World}.}
-    \operation{add\_entity(entity)}{Entity to be added to list of entities.}{None}{Adds an entity to \_entities.}
+    \operation{add\_entity(entity)}{Entity to be added to list of entities.}{None}{Adds an entity to \texttt{\_entities}.}
     \operation{get\_entities()}{None}{Dictionary mapping IDs to their entities.}{Returns the dictionary of entities}
-    \operation{get\_entity(uid)}{Unique entity id.}{The entity with UID \texttt{uid}.}{Returns the entity that has ID \texttt{uid}.}
+    \operation{get\_entity(uid)}{Unique entity ID.}{The entity with UID \texttt{uid}.}{Returns the entity that has ID \texttt{uid}.}
     \operation{add\_network(network)}{Network to add to the dictionary of networks.}{None}{Adds the given network to the dictionary of networks. }
     \operation{get\_networks()}{None}{Dictionary mapping network names to \texttt{Network} instances.}{Returns the dictionary of networks}
     \operation{get\_network(name)}{Name of the network.}{Gets the network with name \texttt{name}.}{Returns the network whose name is the same as the parameter}
     \operation{initialize()}{None}{None}{Initializes the \texttt{World}. Instantiates \texttt{\_event\_api}, starts it, and subscribes the \texttt{World} to events.}
     \operation{\_on\_entity\_move(event)}{\texttt{EntityMoveEvent} event with information on new entity values.}{None}{Finds the entity in \texttt{\_entities} given by the event and updates that entity's position and velocity.}
-    \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{World}.}
-    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{World} object.}{\texttt{World} object}{Deserializes a pickled verson of the \texttt{World} object.}
+    \operation{pickle()}{None}{Serialized version of the \texttt{World} object.}{Serializes the \texttt{World}.}
+    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{World} object.}{\texttt{World} object}{De-serializes a pickled version of the \texttt{World} object.}
 }
     
 \subsubsection{EventAPI}
@@ -392,7 +394,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
 \operations{
     \operation{\_\_init\_\_(tcp\_conn)}{A socket for the \texttt{EventAPI} to communicate over}{None}{Instantiates an \texttt{EventAPI}}
     \operation{\_setup\_mc()}{None}{None}{Initializes the multicast channel to communicate on.}
-    \operation{publish(event,dealy\_sec)}
+    \operation{publish(event,delay\_sec)}
     {
         \begin{itemize*}
             \item \texttt{event}: The event to be published. 
@@ -411,7 +413,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
     {
         \begin{itemize*}
             \item \texttt{event\_type}: Event type being subscribed to. 
-            \item \texttt{callback}: Method to call on event event\_type.
+            \item \texttt{callback}: Method to call on \texttt{event\_type}.
             \item \texttt{**args}: arguments to pass to callback.
         \end{itemize*}
     }{None}{Sets a callback function to be made at a given event type.}
@@ -716,7 +718,7 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 }
 
 \subsection{Event Components}
-\subsubsection{Event}{Event is the base abstract class from which all other events descend.  This class provides picking and unpickling methods used to send events over the event channel.}
+\subsubsection{Event}{Event is the base abstract class from which all other events descend.  This class provides picking and un-pickling methods used to send events over the event channel.}
 
 \noattributes
 
@@ -724,7 +726,7 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 {
     \operation{\_\_init\_\_()}{None}{None}{Instantiates a new event.}
     \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{Event}.}
-    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{Event} object.}{\texttt{Event} object}{Deserializes a pickled verson of the \texttt{Event} object.}
+    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{Event} object.}{\texttt{Event} object}{De-serializes a pickled version of the \texttt{Event} object.}
 }
 
 \subsubsection{Built-in Events}
@@ -857,7 +859,7 @@ Built-in events are specific Event classes provided by default to any emulation.
 \operations
 {
     \operation{\_\_init\_\_(daemon\_id)}{ID of the daemon.}{None}{Instantiates a new \texttt{AckStartupEvent}.}
-    \operation{get\_daemon\_id()}{None}{ID of the ACKing daemon.}{Gets the ID of the ACKing daemon.}
+    \operation{get\_daemon\_id()}{None}{ID of the ACK-ing daemon.}{Gets the ID of the ACK-ing daemon.}
 }
 
 \paragraph{StartSimulationEvent}{Event used to trigger a simulation to begin.  Issuing this allocates entities across daemons.}
@@ -973,7 +975,7 @@ Based on the latitude ($\phi_r$) and longitude ($\lambda_r$) of the radar sensor
     \lambda_t &=& \lambda_t + tan^{-1}\left(sin\left(\theta\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\phi_r\right), cos\left(d/R_{e}\right)-sin\left(\phi_r\right) \cdot sin\left(\phi_t\right)\right)
 \end{align*}
 
-An estimate of velocity\footnote{Specifically, the component of the velocity parallel to the vector from the radar sensor to the entitty} is calculated by the Doppler equation:
+An estimate of velocity\footnote{Specifically, the component of the velocity parallel to the vector from the radar sensor to the entity} is calculated by the Doppler equation:
 
 \begin{align*}
     \left|\vec{v_{\parallel}}\right| = -\frac{c \cdot \left(f_{recv} - f_{trans}\right)}{f_{trans}}.
@@ -991,7 +993,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 \attributes
 {
     \attribute{\_trans\_power}{float}{Transmit power of the Radar.}
-    \attribute{\_trans\_freq}{float}{Frequence of the Radar.}
+    \attribute{\_trans\_freq}{float}{Frequency of the Radar.}
     \attribute{\_gain}{float}{Gain of the Radar.}
     \attribute{\_aperture}{float}{Aperture of the Radar.}
     \attribute{\_prop\_fact}{float}{Propagation factor of the environment.}
@@ -1001,10 +1003,10 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 
 \operations
 {
-    \operation{\_\_init\_\_(trans\_power, trans\_freq, gain, aperature, prop\_fact, dwell\_time, angle)}{
+    \operation{\_\_init\_\_(trans\_power, trans\_freq, gain, aperture, prop\_fact, dwell\_time, angle)}{
         \begin{itemize*}
             \item \texttt{trans\_power}: Transmit power of the Radar.
-            \item \texttt{trans\_freq}: Frequence of the Radar.
+            \item \texttt{trans\_freq}: Frequency of the Radar.
             \item \texttt{gain}: Gain of the Radar.
             \item \texttt{aperture}: Aperture of the Radar.
             \item \texttt{prop\_fact}: Propagation factor of the environment.
