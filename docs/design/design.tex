@@ -594,6 +594,20 @@ Each entity in the world, be it a node or other world object, exists as a proces
 \subsubsection{Interface}
 \subsubsection{CommsEngine}
 
+\attributes{
+    \attribute{\_event\_api}{EventAPI}{The \texttt{EventAPI} instance}
+    \attribute{\_simulation}{Simulation}{The \texttt{Simulation} instance}
+}
+
+\operations{
+    \operation{\_\_init\_\_()}{None}{None}{Initializes the \texttt{CommsEngine}}
+    \operation{get\_node\_from\_agent(agent\_uid)}{The UID of the \texttt{Agent}}{An \texttt{Agent} instance}{Returns the \texttt{Agent} with the given UID}
+    \operation{set\_simulation(simulation)}{An instance of the \texttt{Simulation}}{None}{Sets the \texttt{CommsEngine}'s \texttt{Simulation} instance}
+    \operation{get\_event\_api()}{None}{An \texttt{EventAPI} instance}{Returns an instance of the \texttt{EventAPI}}
+    \operation{get\_simulation()}{None}{An \texttt{Simulation} instance}{Returns an instance of the \texttt{Simulation}}
+    \operation{\_on\_send(event)}{An \texttt{Event}}{None}{Abstract class}
+}
+
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}{Provides basic basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
 
