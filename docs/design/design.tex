@@ -33,7 +33,7 @@
 
 \newcommand{\operations}[1]{
 \begin{center}
-    \begin{longtable}{|p{3cm}|p{9cm + 2.0\tabcolsep}|}
+    \begin{longtable}{|p{4cm}|p{9cm + 2.0\tabcolsep}|}
     \hline
     \multicolumn{2}{|l|}{\cellcolor[gray]{0.5}{\textbf{Operations}}} \\ \hline
 #1
@@ -50,7 +50,7 @@
 
 \newcommand{\attributes}[1]{
     \begin{center}
-        \begin{tabular}{|p{3cm}|p{2cm}|p{7cm}|}
+        \begin{tabular}{|p{3cm}|p{3cm}|p{7cm}|}
             \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
             \rowcolor[gray]{0.8} Name & Type & Description \\ \hline 
             #1
@@ -335,8 +335,8 @@ entities running in it. }
 {The World maintains the entities running in the simulation.  It also maintains the networks being using within the simulation.}
 
 \attributes{
-    \attribute{\_entities}{Dictionary}{Maps entity ids to entities}
-    \attribute{\_networks}{Dictionary}{Maps network names to the network}
+    \attribute{\_entities}{dict(int : Entity)}{Maps entity ids to entities}
+    \attribute{\_networks}{dict(String : Network)}{Maps network names to the network}
     \attribute{\_event\_api}{EventAPI}{Event API for subscribing to and publish events}
 }
 
@@ -345,7 +345,7 @@ entities running in it. }
     \operation{add\_entity(entity)}
     { \texttt{entity}: Entity to be added to list of entities. }
     {None}{Adds an entity to \_entities.}
-    \operation{get\_entities()}{None}{Dictionary}{Returns the dictionary of entities}
+    \operation{get\_entities()}{None}{dict(int : Entity)}{Returns the dictionary of entities}
     \operation{get\_entity(uid)}
     {
         \texttt{uid}: Unique entity id. 
@@ -354,7 +354,7 @@ entities running in it. }
     {
         \texttt{network}: Network to add to the dictionary of networks.
     }{None}{Adds the given network to the dictionary of networks. }
-    \operation{get\_networks()}{None}{Dictionary}{Returns the dictionary of networks}
+    \operation{get\_networks()}{None}{dict(String : Network)}{Returns the dictionary of networks}
     \operation{get\_network(name)}
     {
         \texttt{name}: Name of the network. 
@@ -484,8 +484,8 @@ entities running in it. }
 \paragraph{Node}{Nodes are processes that aggregate agents. Each one has an interface that handles communication to the outside world (i.e. other nodes or agents). They inherit properties from the Entity class.}
 
 \attributes{
-    \attribute{\_interfaces}{Dictionary[name]=Interface}{A dictionary mapping the name of an network interface to the interface itself. }
-    \attribute{\_agents}{Dictionary[id]=Agent}{A dictionary mapping agent ids to the agents themselves.}
+    \attribute{\_interfaces}{dict(String : Interface)}{A dictionary mapping the name of an network interface to the interface itself. }
+    \attribute{\_agents}{dict(int : Agent)}{A dictionary mapping agent ids to the agents themselves.}
 }
 
 \operations{
