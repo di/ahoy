@@ -288,133 +288,114 @@ AHOY is intentionally designed to provide no specific user interface in the trad
 The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
 
 \subsection{Design Motivations}
-\paragraph{Communication}{The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.}
+\subsubsection{Communication}
+The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.
 
-\paragraph{Distribution Method}{Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.}
+\subsubsection{Distribution Method}
+Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.
 
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
-{ The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the
-entities running in it. }
-
+{ The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it. }
 
 \attributes{
-    \attribute{\_event\_api}{EventAPI}{Instance of the Event API }
+    \attribute{\_event\_api}{EventAPI}{Instance of the \texttt{EventAPI}}
     \attribute{\_startup\_acks}{list(int)}{A list of startup daemon ID's}
-    \attribute{\_comms\_module}{CommsEngine}{Communication Engine used to send and receive messages}
+    \attribute{\_comms\_module}{CommsEngine}{Communication engine used to send and receive messages}
     \attribute{\_world}{World}{Instance of the world maintained by the simulation}
 }
 
-
 \operations{
-    \operation{\_\_init\_\_(world\_inst, comms\_module}
+    \operation{\_\_init\_\_(world\_inst, comms\_module)}
     {
         \begin{itemize*}
             \item \texttt{world\_inst}: Instance of the world. 
-            \item \texttt{comms\_module}: Communication Engine for sending/receiving messages.
+            \item \texttt{comms\_module}: Communication engine used to send and receive messages.
         \end{itemize*}
-    }{None}{Instantiates the Simulation}
-    \operation{get\_world()}{None}{World}{Gets the World object being maintained}
-    \operation{get\_on\_ack\_startup(event)}{Event containing the startup daemon id.}{None}{Adds a startup daemon id to the \_startup\_acks list}
-    \operation{start(wait)}{Number of seconds to wait before starting.}{None}{Starts the Simulation. Startup daemons are alerted and the World and the entities within it are initialized}
-    \operation{stop()}{None}{None}{Stops the simulation. A StopSimulationEvent event is published.}
+    }{None}{Instantiates the simulation}
+    \operation{get\_world()}{None}{World}{Gets the \texttt{World} object being maintained}
+    \operation{get\_on\_ack\_startup(event)}{Event containing the startup daemon id.}{None}{Adds a startup daemon id to the \texttt{\_startup\_acks} list}
+    \operation{start(wait)}{Number of seconds to wait before starting.}{None}{Starts the simulation. Startup daemons are alerted and the \texttt{World} and the entities within it are initialized}
+    \operation{stop()}{None}{None}{Stops the simulation. A \texttt{StopSimulationEvent} event is published.}
 }
 
-
 \subsubsection{StartupDaemon}
-{Startup Daemons maintain processes running on distributed nodes. It is responsible for starting and terminating these processes when appropriate. }
+{Startup daemons maintain processes running on distributed nodes. It is responsible for starting and terminating these processes when appropriate.}
 
 \attributes{
-    \attribute{\_event\_api}{EventAPI}{Instance of the Event API. }
+    \attribute{\_event\_api}{EventAPI}{Instance of the \texttt{EventAPI}.}
     \attribute{\_phys\_id}{int}{Integer ID assigned to the daemon.}
-    \attribute{\_running\_pids}{int}{Process id's maintained by the daemon.}
-    \attribute{\_running}{boolean}{True if the daemon is running. }
-    \attribute{\_world}{World}{Instance of the World}
+    \attribute{\_running\_pids}{int}{Process IDs maintained by the daemon.}
+    \attribute{\_running}{bool}{True if the daemon is running.}
+    \attribute{\_world}{World}{Instance of the \texttt{World} object}
 }
 
 \operations{
-    \operation{\_\_init\_\_(phys\_id)}{The integer id of the daemon.}{None}{Instantiates the StartupDaemon.}
-    \operation{\_on\_startup(event)}{Event passed to the daemon on startup}{None}{Subscribes the daemon to the StartSimulationEvent and publishes an AckStartupEvent.  It also initializes the \_world attribute. }
-    \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \_running\_pids.}
-    \operation{\_start\_entity\_processes(entity)}{Entity to start and maintain.}{None}{Starts the entity passed in and adds its process id to the list \_running\_pids.}
-    \operation{\_on\_sim\_start(event)}{StartSimulationEvent published at the start of the simulation.}{None}{Grabs the list of entities to maintain from event and calls \_start\_entity\_process with each one.}
-    \operation{start()}{None}{None}{Starts the daemon. Subscribes to StartupEvent and StopSimulationEvent events.}
-    \operation{\_restart(event)}{Event that triggered the call to \_restart.}{None}{Resets the state of the daemon. All processes maintained are cleared.}
-    \operation{stop()}{None}{None}{Stops the daemon and sets \_running to false.}
+    \operation{\_\_init\_\_(phys\_id)}{The integer ID of the daemon.}{None}{Instantiates the \texttt{StartupDaemon}.}
+    \operation{\_on\_startup(event)}{Event passed to the daemon on startup}{None}{Subscribes the daemon to the \texttt{StartSimulationEvent} and publishes an \texttt{AckStartupEvent}. It also initializes the \texttt{\_world attribute}.}
+    \operation{terminate\_all()}{None}{None}{Kills all processes maintained in its list \texttt{\_running\_pids}.}
+    \operation{\_start\_entity\_processes(entity)}{Entity to start and maintain.}{None}{Starts the entity passed in and adds its process ID to the list \texttt{\_running\_pids}.}
+    \operation{\_on\_sim\_start(event)}{\texttt{StartSimulationEvent} published at the start of the simulation.}{None}{Gets the list of entities to maintain from \texttt{event} and calls \texttt{\_start\_entity\_process} with each one.}
+    \operation{start()}{None}{None}{Starts the daemon. Subscribes to \texttt{StartupEvent} and \texttt{StopSimulationEvent} events.}
+    \operation{\_restart(event)}{Event that triggered the call to \texttt{\_restart}.}{None}{Resets the state of the daemon. All processes maintained are cleared.}
+    \operation{stop()}{None}{None}{Stops the daemon and sets \texttt{\_running} to false.}
 }
 
 \subsubsection{World}
-{The World maintains the entities running in the simulation.  It also maintains the networks being using within the simulation.}
+{The World maintains the entities running in the simulation. It also maintains the networks being used within the simulation.}
 
 \attributes{
-    \attribute{\_entities}{dict(int : Entity)}{Maps entity ids to entities}
+    \attribute{\_entities}{dict(int : Entity)}{Maps entity IDs to entities}
     \attribute{\_networks}{dict(String : Network)}{Maps network names to the network}
-    \attribute{\_event\_api}{EventAPI}{Event API for subscribing to and publish events}
+    \attribute{\_event\_api}{EventAPI}{\texttt{EventAPI} for subscribing to and publishing events}
 }
 
 \operations{
-    \operation{\_\_init\_\_()}{None}{None}{Instantiates the World.}
-    \operation{add\_entity(entity)}
-    { \texttt{entity}: Entity to be added to list of entities. }
-    {None}{Adds an entity to \_entities.}
+    \operation{\_\_init\_\_()}{None}{None}{Instantiates the \texttt{World}.}
+    \operation{add\_entity(entity)}{Entity to be added to list of entities.}{None}{Adds an entity to \_entities.}
     \operation{get\_entities()}{None}{dict(int : Entity)}{Returns the dictionary of entities}
-    \operation{get\_entity(uid)}
-    {
-        \texttt{uid}: Unique entity id. 
-    }{Entity}{Returns the entity that has id uid.}
-    \operation{add\_network(network)}
-    {
-        \texttt{network}: Network to add to the dictionary of networks.
-    }{None}{Adds the given network to the dictionary of networks. }
+    \operation{get\_entity(uid)}{Unique entity id.}{Entity}{Returns the entity that has ID \texttt{uid}.}
+    \operation{add\_network(network)}{Network to add to the dictionary of networks.}{None}{Adds the given network to the dictionary of networks. }
     \operation{get\_networks()}{None}{dict(String : Network)}{Returns the dictionary of networks}
-    \operation{get\_network(name)}
-    {
-        \texttt{name}: Name of the network. 
-    }{Entity}{Returns the network whose name is the same as the parameter}
-    \operation{initialize()}{None}{None}{Initializes the World. Instantiates \_event\_api, starts it, and subscribes the World to events.}
-    \operation{\_on\_entity\_move(event)}
-    {
-        \texttt{event}: EntityMoveEvent event with information on new entity values. 
-    }{None}{Finds the entity in \_entities given by the event and updates that entities position, forward velocity, and linear velocity.}
-    \operation{pickle()}{None}{Serialized World}{Serializes the World with base 64 encoding.}
-    \operation{from\_pickle(pickled)}
-    {
-        \texttt{pickled}: Serialized version of the World. 
-    }{World}{Deserializes a pickled verson of the World.}
+    \operation{get\_network(name)}{Name of the network.}{Entity}{Returns the network whose name is the same as the parameter}
+    \operation{initialize()}{None}{None}{Initializes the \texttt{World}. Instantiates \texttt{\_event\_api}, starts it, and subscribes the \texttt{World} to events.}
+    \operation{\_on\_entity\_move(event)}{\texttt{EntityMoveEvent} event with information on new entity values.}{None}{Finds the entity in \texttt{\_entities} given by the event and updates that entity's position and velocity.}
+    \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{World} with Base64 encoding.}
+    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{World} object.}{\texttt{World} object}{Deserializes a pickled verson of the \texttt{World} object.}
 }
     
 \subsubsection{EventAPI}
-{The EventAPI is used to communicate events across the event channel.  It allows entities to subscribe to certain events or publish the occurrence of events. When an event occurs, it will handle any function calls an entity wishes to make during that event. }
+{The \texttt{EventAPI} is used to communicate events across the event channel. It allows entities to subscribe to certain events or publish the occurrence of events. When an event occurs, it will handle any function calls an entity wishes to make during that event.}
 
 \attributes{
-    \attribute{\_subscriptions}{dictionary}{Holds event subscriptions for an entity. Keyed by event type. The values are method calls to be made on an event. }
-    \attribute{\_running}{boolean}{True if the EventAPI is running.}
-    \attribute{\_tcp\_conn}{Socket}{A socket, designated by the user, for EventAPI to communication over}
-    \attribute{\_sock}{Socket}{A socket for EventAPI to communicate over}
-    \attribute{\_ip}{string}{IP address to communicate over}
-    \attribute{\_port}{int}{port number to communicate over}
+    \attribute{\_subscriptions}{dictionary}{Holds event subscriptions for an entity. Keyed by event type. The values are method calls to be made on an event.}
+    \attribute{\_running}{bool}{True if the \texttt{EventAPI} is running.}
+    \attribute{\_tcp\_conn}{socket}{An optional TCP socket that will be used instead of the multicast channel to access the \texttt{EventAPI}}
+    \attribute{\_sock}{socket}{A socket for \texttt{EventAPI} to communicate over}
+    \attribute{\_ip}{string}{IP address to communicate on}
+    \attribute{\_port}{int}{Port number to communicate on}
 }
 
 \operations{
-    \operation{\_\_init\_\_(tcp\_conn=None)}{tcp\_conn: A socket for the EventAPI to communicate over}{None}{Instantiates an EventAPI}
+    \operation{\_\_init\_\_(tcp\_conn)}{A socket for the \texttt{EventAPI} to communicate over}{None}{Instantiates an \texttt{EventAPI}}
     \operation{\_setup\_mc()}{None}{None}{Initializes the multicast channel to communicate on.}
-    \operation{publish(event,dealy\_sec=None)}
+    \operation{publish(event,dealy\_sec)}
     {
         \begin{itemize*}
             \item \texttt{event}: The event to be published. 
             \item \texttt{delay}: Number of seconds to wait before publishing. 
         \end{itemize*}
     }{None}{Publishes the occurrence of an event over the event channel.}
-    \operation{\_delay(event, delay\_sec=None)}
+    \operation{\_delay(event, delay\_sec)}
     {
         \begin{itemize*}
             \item \texttt{event}: The event to delay.
             \item \texttt{delay\_sec}: Number of seconds to delay the event. 
         \end{itemize*}
     }{None}{Delays an event for a given number of seconds.}
-    \operation{push\_raw(raw)}{\texttt{raw}: Data to send over a connection. }{None}{Sends raw data over the current connection. }
+    \operation{push\_raw(raw)}{Data to send over a connection.}{None}{Sends raw data over the current connection.}
     \operation{subscribe(event\_type, callback, **args)}
     {
         \begin{itemize*}
@@ -423,15 +404,13 @@ entities running in it. }
             \item \texttt{**args}: arguments to pass to callback.
         \end{itemize*}
     }{None}{Sets a callback function to be made at a given event type.}
-    \operation{unsubscribe\_all(event\_type)}{\texttt{event\_type}: The type of event to remove all subscriptions from.}
-    {None}{Removes all subscriptions to the given event type.}
+    \operation{unsubscribe\_all(event\_type)}{The type of event to remove all subscriptions from.}{None}{Removes all subscriptions to the given event type.}
     \operation{clear\_subscriptions()}{None}{None}{Removes all subscriptions.}
-    \operation{\_process(data)}{ \texttt{data}: Serialized event information.}
-    {None}{Processes which callbacks need to be made based on the given data.}
+    \operation{\_process(data)}{Serialized event information.}{None}{Processes which callbacks need to be made based on the given data.}
     \operation{run()}{None}{None}{Listens for events over the socket and processes them.}
     \operation{\_tcp\_assemble()}{None}{Packet}{Builds a packet to be sent over the network.}
-    \operation{start()}{None}{Thread}{Runs the EventAPI in a thread and returns the thread.}
-    \operation{stop()}{None}{None}{Stops the EventAPI from running. }
+    \operation{start()}{None}{Thread}{Runs the \texttt{EventAPI} in a thread and returns the thread.}
+    \operation{stop()}{None}{None}{Stops the \texttt{EventAPI} from running. }
 }
     
 \subsubsection{Entity}
@@ -442,24 +421,28 @@ entities running in it. }
     \attribute{\_long}{float}{Current longitude.}
     \attribute{\_agl}{float}{Distance above ground level.}
     \attribute{\_rcs}{float}{Approximate cross-sectional area.}
-    \attribute{\_event\_api}{EventAPI}{The EventAPI for an entity.}
+    \attribute{\_event\_api}{EventAPI}{The \texttt{EventAPI} for an entity.}
     \attribute{\_world}{World}{The World instance.}
-    \attribute{\_velocity}{list(float)}{The vector velocity of the entity.}
+    \attribute{\_velocity}{\texttt{list(float)}}{The vector velocity of the entity.}
     \attribute{\_forward\_velocity}{float}{The forward velocity of the entity.}
     \attribute{\_sensors}{dict(String : Sensor)}{Sensors connected to the entity.}
 }
 
 \operations{
-    \operation{add\_sensor(name, sensor)}{\texttt{name}: Name of the sensor.  \texttt{sensor}: Sensor instance}{None}{Adds a sensor and associates it with a name.}
-    \operation{get\_sensor(name)}{\texttt{name}: Name of the sensor}{Sensor instance}{Gets a sensor by name.}
-    \operation{set\_rcs(rcs)}{\texttt{rcs}: Cross sectional-area}{None}{Sets the cross-sectional area.}
+    \operation{add\_sensor(name, sensor)}
+    {
+        \begin{itemize*}
+            \item \texttt{name}: Name of the sensor.
+            \item \texttt{sensor}: Sensor instance
+        \end{itemize*}
+    }{None}{Adds a sensor and associates it with a name.}
+    \operation{get\_sensor(name)}{Name of the sensor}{Sensor instance}{Gets a sensor by name.}
+    \operation{set\_rcs(rcs)}{Cross sectional-area}{None}{Sets the cross-sectional area.}
     \operation{get\_rcs()}{None}{Cross-sectional area}{The cross-sectional area.}
-    \operation{get\_lin\_velocity()}{None}{list(float)}{Returns the velocity as a vector of three numbers.}
-    \operation{get\_forward\_velocity()}{None}{float}{Returns the forward velocity.}
-    \operation{set\_lin\_velocity(v)}{\texttt{v}: A vector of three floating point numbers describing the velocity.}{None}{Sets the vector velocity of the entity.}
-    \operation{set\_forward\_velocity(v)}{\texttt{v}: Floating point number to assign to the forward velocity.}{None}{Sets the forward velocity of the entity.}
-    \operation{set\_world(world)}{\texttt{world}: World instance}{None}{Sets the World instance for the entity}
-    \operation{get\_world()}{None}{World}{Returns the World instance.}
+    \operation{get\_velocity()}{None}{A tuple of the velocity vectors}{Returns the velocity as a vector of three numbers.}
+    \operation{set\_velocity(v)}{A vector of three floating point numbers describing the velocity.}{None}{Sets the vector velocity of the entity.}
+    \operation{set\_world(world)}{The \texttt{World} instance}{None}{Sets the \texttt{World} instance for the entity}
+    \operation{get\_world()}{None}{A \texttt{World} instance}{Returns the \texttt{World} instance.}
     \operation{set\_position(lat,long,agl)}
     {
         \begin{itemize*}
@@ -488,13 +471,13 @@ entities running in it. }
             \item \texttt{forward\_vel}: Forward velocity to move with.
             \item \texttt{vert\_vel}: Vertical velocity to move with. 
         \end{itemize*}
-    }{None}{Moves the entity to the given coordinates in steps by smaller distances using its velocity and MAX\_DISTANCE.}
-    \operation{get\_position()}{None}{list(float)}{Returns a list of the latitude, longitude, and above ground location in that order.}
+    }{None}{Moves the entity to the given coordinates in steps by smaller distances.}
+    \operation{get\_position()}{None}{A tuple containing lat, lon and agl}{Returns a list of the latitude, longitude, and above ground location in that order.}
     \operation{pickle()}{None}{Serialized Entity}{Serializes the entity.}
-    \operation{from\_pickle(pickled)}{\texttt{pickled}:Serialized entity.}{Entity}{Deserializes an entity.}
-    \operation{get\_event\_api()}{None}{EventAPI}{Returns the entities EventAPI.}
-    \operation{get\_uid()}{None}{int}{Returns the entities unique id.}
-    \operation{initialize()}{None}{None}{Initializes the entity.}
+    \operation{from\_pickle(pickled)}{A serialized \texttt{Entity}.}{An \texttt{Entity} object}{De-serializes an entity.}
+    \operation{get\_event\_api()}{None}{An \texttt{EventAPI} instance}{Returns the entity's \texttt{EventAPI}.}
+    \operation{get\_uid()}{None}{ID of the \texttt{Entity} instance}{Returns the entity's unique ID.}
+    \operation{initialize()}{None}{None}{Initializes the \texttt{Entity}.}
 }
 \begin{figure}[!htb]
   \centering
@@ -523,18 +506,18 @@ entities running in it. }
 
 \attributes{
     \attribute{\_interfaces}{dict(String : Interface)}{A dictionary mapping the name of an network interface to the interface itself. }
-    \attribute{\_agents}{dict(int : Agent)}{A dictionary mapping agent ids to the agents themselves.}
+    \attribute{\_agents}{dict(int : Agent)}{A dictionary mapping agent IDs to the agents themselves.}
 }
 
 \operations{
-    \operation{\_\_init\_\_(uid)}{\texttt{uid}: Unique id assigned to the node.}{None}{Instantiates the Node.}
-    \operation{get\_agent\_uids()}{None}{list(int)}{Returns a list of all agent ids belonging to that node.}
-    \operation{add\_interface(interface)}{\texttt{interface}: Network interface to add to the node.}{None}{Adds a network interface to the node.}
-    \operation{remove\_interface(name)}{\texttt{name}: The name of the interface to remove.}{None}{Removes an network interface from the node.}
-    \operation{get\_interface(name)}{\texttt{name}: The name of the interface to return.}{Interface}{Returns a network interface with the given name.}
-    \operation{get\_interfaces()}{None}{list(Interface)}{Returns a list of all network interfaces belonging to the node.}
-    \operation{add\_agent(agent\_inst)}{\texttt{agent\_inst}: Agent to add to the node.}{None}{Adds an agent to the list of agents owned by the node.}
-    \operation{get\_interface\_on\_net(network\_name)}{\texttt{network\_name}:Network name associated with an interface.}{None}{Returns the interface associated with the given network name.}
+    \operation{\_\_init\_\_(uid)}{Unique ID assigned to the node.}{None}{Instantiates the \texttt{Node}.}
+    \operation{get\_agent\_uids()}{None}{A list of the agent UIDs}{Returns a list of all agent IDs belonging to that node.}
+    \operation{add\_interface(interface)}{Network interface to add to the node.}{None}{Adds a network interface to the node.}
+    \operation{remove\_interface(name)}{The name of the interface to remove.}{None}{Removes an network interface from the node.}
+    \operation{get\_interface(name)}{The name of the interface to return.}{Interface}{Returns a network interface with the given name.}
+    \operation{get\_interfaces()}{None}{A list of network interfaces}{Returns a list of all network interfaces belonging to the node.}
+    \operation{add\_agent(agent\_inst)}{Agent to add to the node.}{None}{Adds an agent to the list of agents owned by the node.}
+    \operation{get\_interface\_on\_net(network\_name)}{Network name associated with an interface.}{None}{Returns the interface associated with the given network name.}
     \operation{send(message,src\_agent)}
     {
         \begin{itemize*}
@@ -626,7 +609,7 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 
 \subsubsection{Built-in Events}
 Built-in events are specific Event classes provided by default to any emulation. These embody the basic events for a network simulation, but users are encouraged to develop and add their own as well.
-\paragraph{LinkEvent}{Published when a network link between two entities changes within the simulation.}
+\paragraph{LinkEvent}{Published when a network link between two entities' changes within the simulation.}
 
 \attributes{
     \attribute{\_up}{bool}{Whether the link is currently up (connected)}
@@ -731,7 +714,7 @@ Built-in events are specific Event classes provided by default to any emulation.
     \operation{get\_lon()}{None}{Longitude}{Gets the new longitude of the entity that moved}
     \operation{get\_agl()}{None}{AGL}{Gets the new AGL of the entity that moved}
     \operation{get\_velocity()}{None}{Velocity}{Gets the velocity of the entity that moved}
-}
+)}
 
 \paragraph{StartupEvent}
 \paragraph{AckStartupEvent}
