@@ -21,6 +21,7 @@
 \usepackage{calc}
 \usepackage{float}
 \usepackage{longtable}
+\usepackage{amsmath}
 
 \renewenvironment{itemize*}
     {\begin{itemize}
@@ -611,9 +612,9 @@ Each entity in the world, be it a node or other world object, exists as a proces
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}{Provides basic basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
 
-\begin{equation}
+\begin{align*}
     P_r = P_t - \left(l_0 - 10 \cdot \gamma \cdot log_{10}\left(\frac{d}{d_0}\right) + X_g\right)
-\end{equation}
+\end{align*}
 
 where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an arbitrary reference distance, $l_0$ is the loss at that distance, $d$ is the actual distance between the two interfaces, and $X_g$ is a constant accounting for flat-fading.  If this power falls below the sensitivity of the receiver, the message will not be received.}
 \paragraph{EthernetCommsEngine}
@@ -730,7 +731,7 @@ Built-in events are specific Event classes provided by default to any emulation.
     \operation{get\_velocity()}{None}{Velocity}{Gets the velocity of the entity that moved}
 }
 
-\paragraph{StartupEvent}
+\paragraph{StartupEvent}{Event requesting all daemons on the event channel to respond with their IDs.  Further, a \texttt{World} instance is sent out which stored by the daemons until a \texttt{StartSimulationEvent} is received.}
 \attributes
 {
     \attribute{\_world}{World}{Instance of the \texttt{World} to be used in the simulation.}
@@ -741,7 +742,8 @@ Built-in events are specific Event classes provided by default to any emulation.
     \operation{\_\_init\_\_(world)}{Instance of the world to be used in the simulation.}{None}{Instantiates a new \texttt{StartupEvent}.}
     \operation{get\_world()}{None}{\texttt{World} instance to be used in the simulation.}{Gets the world instance which will be used after \texttt{StartSimulationEvent} is received.}
 }
-\paragraph{AckStartupEvent}
+
+\paragraph{AckStartupEvent}{Event published by all daemons in response to a \texttt{StartupEvent}.  Allows the simulation to allocate entities equally.}
 \attributes
 {
     \attribute{\_daemon\_id}{int}{ID of the daemon which sent the ACK.}
@@ -752,7 +754,8 @@ Built-in events are specific Event classes provided by default to any emulation.
     \operation{\_\_init\_\_(daemon\_id)}{ID of the daemon.}{None}{Instantiates a new \texttt{AckStartupEvent}.}
     \operation{get\_daemon\_id()}{None}{ID of the ACKing daemon.}{Gets the ID of the ACKing daemon.}
 }
-\paragraph{StartSimulationEvent}
+
+\paragraph{StartSimulationEvent}{Event used to trigger a simulation to begin.  Issuing this allocates entities across daemons.}
 \attributes
 {
     \attribute{\_entity\_mapping}{dict(int : int)}{Mapping of daemon IDs to entity IDs.}
@@ -763,7 +766,8 @@ Built-in events are specific Event classes provided by default to any emulation.
     \operation{\_\_init\_\_(entity\_mapping)}{Daemon to entity ID mapping.}{None}{Instantiates a new \texttt{StartSimulationEvent}.}
     \operation{get\_mapping()}{None}{Mapping of daemon IDs to entity IDs.}{Daemons receive this event and start only the entities which they have been allocated.}
 }
-\paragraph{StopSimulationEvent}
+
+\paragraph{StopSimulationEvent}{An event that stops the simulation.  All simulation state information on daemons is reset.}
 \operations
 {
     \operation{\_\_init\_\_()}{None}{None}{Instantiates a new \texttt{StopSimulationEvent}.}
@@ -782,22 +786,28 @@ Built-in events are specific Event classes provided by default to any emulation.
 \subsubsection{Sensor}
 
 \subsubsection{Built-in Sensors}
-\paragraph{RadarSensor}{AHOY includes a Radar sensor which provides an estimated location of nearby entities along with velocity estimation.  The location of each node is estimated with:
-\begin{equation}
-    \frac{d = t \cdot c}{2}.
-\end{equation}
+\paragraph{RadarSensor}{AHOY includes a Radar sensor which provides an estimated location of nearby entities along with velocity estimation.  This sensor sweeps angular areas surrounding it and calculates the distance to the closest entity in that area with:
+\begin{align*}
+    d = \frac{t \cdot c}{2}
+\end{align*}
+
+Based on the latitude ($\phi_r$) and longitude ($\lambda_r$) of the radar sensor, along with the bearing $\theta$ of the sweep area, the entity's location $\left(\phi_t, \lambda_t\right)$ can be estimated with:
+\begin{align*}
+    \phi_t &=& asin\left(sin\left(\phi_r\right) \cdot cos\left(d/R_{e}\right) + cos\left(\phi_r\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\theta\right)\right) \\ 
+    \lambda_t &=& \lambda_t + atan\left(sin\left(\theta\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\phi_r\right), cos\left(d/R_{e}\right)-sin\left(\phi_r\right) \cdot sin\left(\phi_t\right)\right)
+\end{align*}
 
 An estimate of velocity\footnote{Specifically, the component of the velocity parallel to the vector from the radar sensor to the entitty} is calculated by the Doppler equation:
 
-\begin{equation}
+\begin{align*}
     \left|\vec{v_{\parallel}}\right| = -\frac{c \cdot \left(f_{recv} - f_{trans}\right)}{f_{trans}}.
-\end{equation}
+\end{align*}
 
 Further, pathloss of radio waves is incorporated. The received power, $P_r$, to the radar sensor is given by:
 
-\begin{equation}
+\begin{align*}
     P_r = \frac{P_t G_t A_r \sigma F^4}{\left(4 \pi\right)^4 d^4}
-\end{equation}
+\end{align*}
 
 where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the aperture area, $\sigma$ is the cross-sectional area of the target, $F$ is a propagation factor, and $d$ is the distance from the radar station to the target.  If $P_r$ falls below the sensitivity of the antenna, the target will not be detected.
 
