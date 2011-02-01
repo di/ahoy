@@ -60,7 +60,7 @@
 
 \newcommand{\attributes}[1]{
     \begin{center}
-        \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
+        \begin{tabular}{|p{3.5cm}|p{3.5cm}|p{7cm}|}
             \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
             \rowcolor[gray]{0.8} Name & Type & Description \\ \hline 
             #1
@@ -882,23 +882,23 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsection{Agent Components}
 \subsubsection{Agent}
-{An \texttt{Agent} is an intelligent algorithm that makes decisions based on data it receives from its environment and its beliefs about the current state of the system. Agents are run as threads on distributed nodes. }
+{An \texttt{Agent} is an intelligent algorithm that makes decisions based on data it receives from its environment and its beliefs about the current state of the system. \texttt{Agent}s are run as threads on distributed nodes. }
 
 \attributes{
     \attribute{\_owner\_node}{\texttt{Node}}{Node that owns the \texttt{Agent}}
     \attribute{\_uid}{int}{Unique identifier.}
-    \attribute{\_behaviors}{dict(entity: [\texttt{Condition},\texttt{Action}])}{Behavior map linking events to actions.}
+    \attribute{\_behaviors}{dict(entity : [\texttt{Condition},\texttt{Action}])}{Behavior map linking \texttt{Event}s to \texttt{Action}s.}
 }
 
 \operations{
-    \operation{get\_uid()}{None}{UID}{Returns the unique ID.}
-    \operation{get\_owner\_node()}{None}{Owner \texttt{Node}}{Returns the node that owns the agent.}
+    \operation{get\_uid()}{None}{The \texttt{Agent}'s UID}{Returns the unique ID.}
+    \operation{get\_owner\_node()}{None}{The \texttt{Node} on which this \texttt{Agent} is running}{Returns the node that owns the agent.}
     \operation{start()}{None}{A thread}{Returns the \texttt{Agent} thread.}
-    \operation{on\_message(event)}{Event generating a message.}{None}{Abstract class for handling message events.}
-    \operation{run()}{None}{None}{Abstract class for starting the \texttt{Agent} thread.}
-    \operation{add\_behavior(behavior)}{list([\texttt{Condition},\texttt{Event},\texttt{Action}])}{None}{Adds a behavior tuple to the \texttt{Agent}.}
-    \operation{remove\_behavior(behavior)}{list[\texttt{Condition},\texttt{Event},\texttt{Action}]}{None}{Removes the specified behavior tuple.}
-    \operation{\_on\_event(event)}{An \texttt{Event}.}{None}{Performs an \texttt{Action} based on the \texttt{Event} and \texttt{Condition} associated with it.}
+    \operation{on\_message(event)}{An instance of a \texttt{CommunicationRecvEvent} containing a \texttt{Message}.}{None}{Abstract method for handling message events.}
+    \operation{run()}{None}{None}{Abstract method for starting the \texttt{Agent} thread.}
+    \operation{add\_behavior(behavior)}{A behavior tuple in the form (\texttt{Condition}, \texttt{Event}, \texttt{Action})}{None}{Adds a behavior tuple to the \texttt{Agent}.}
+    \operation{remove\_behavior(behavior)}{A behavior tuple in the form (\texttt{Condition}, \texttt{Event}, \texttt{Action})}{None}{Removes the specified behavior tuple.}
+    \operation{\_on\_event(event)}{An \texttt{Event} which may result in an \texttt{Action}.}{None}{Performs an \texttt{Action} based on the \texttt{Event} and \texttt{Condition} associated with it.}
     \operation{\_init\_behaviors()}{None}{None}{Initializes the \texttt{Agent} behaviors.}
 }
 
@@ -934,7 +934,7 @@ Built-in events are specific Event classes provided by default to any emulation.
 }
 
 \operations{
-    \operation{\_\_init\_\_(node,lat,lon.alt)}
+    \operation{\_\_init\_\_(node,lat,lon,alt)}
     {
         \begin{itemize*}
             \item \texttt{node}: The \texttt{Entity} being moved. 
