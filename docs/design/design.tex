@@ -33,7 +33,7 @@
 
 \newcommand{\operations}[1]{
 \begin{center}
-    \begin{longtable}{|p{4cm}|p{9cm + 2.0\tabcolsep}|}
+    \begin{longtable}{|p{4cm}|p{10cm + 2.0\tabcolsep}|}
     \hline
     \multicolumn{2}{|l|}{\cellcolor[gray]{0.5}{\textbf{Operations}}} \\ \hline
 #1
@@ -50,7 +50,7 @@
 
 \newcommand{\attributes}[1]{
     \begin{center}
-        \begin{tabular}{|p{3cm}|p{3cm}|p{7cm}|}
+        \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
             \multicolumn{3}{|l|}{\cellcolor[gray]{0.5}{\textbf{Attributes}}} \\ \hline
             \rowcolor[gray]{0.8} Name & Type & Description \\ \hline 
             #1
@@ -363,7 +363,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
     \operation{get\_network(name)}{Name of the network.}{Entity}{Returns the network whose name is the same as the parameter}
     \operation{initialize()}{None}{None}{Initializes the \texttt{World}. Instantiates \texttt{\_event\_api}, starts it, and subscribes the \texttt{World} to events.}
     \operation{\_on\_entity\_move(event)}{\texttt{EntityMoveEvent} event with information on new entity values.}{None}{Finds the entity in \texttt{\_entities} given by the event and updates that entity's position and velocity.}
-    \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{World} with Base64 encoding.}
+    \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{World}.}
     \operation{from\_pickle(pickled)}{Serialized version of the \texttt{World} object.}{\texttt{World} object}{Deserializes a pickled verson of the \texttt{World} object.}
 }
     
@@ -536,7 +536,26 @@ Each entity in the world, be it a node or other world object, exists as a proces
     \operation{run()}{None}{None}{Starts the node. Interfaces and agents are all initialized}
 }
 
-\paragraph{ScriptedEntity}
+\paragraph{ScriptedEntity}{An entity that moves based on a pre-scripted mobility plan.}
+
+\attributes
+{
+    \attribute{\_waypoints}{list((lat, lon, agl))}{Waypoints to follow.}
+    \attribute{\_vel}{float}{Velocity with which the entity should move.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(uid, waypoints, vel)}{
+        \begin{itemize*}
+            \item \texttt{uid}: Unique ID for the entity.
+            \item \texttt{waypoints}: Waypoints to follow.
+            \item \texttt{vel}: Velocity of movement
+        \end{itemize*}
+    }{None}{Instantiates a \texttt{ScriptedEntity} which will move along a specified set of waypoints at a specific velocity.}
+    \operation{run()}{None}{None}{Starts the entity.}
+}
+
 \subsubsection{Startup Sequence}
 \begin{figure}[!htb]
   \centering
@@ -606,7 +625,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
     \operation{set\_simulation(simulation)}{An instance of the \texttt{Simulation}}{None}{Sets the \texttt{CommsEngine}'s \texttt{Simulation} instance}
     \operation{get\_event\_api()}{None}{An \texttt{EventAPI} instance}{Returns an instance of the \texttt{EventAPI}}
     \operation{get\_simulation()}{None}{An \texttt{Simulation} instance}{Returns an instance of the \texttt{Simulation}}
-    \operation{\_on\_send(event)}{An \texttt{Event}}{None}{Abstract class}
+    \operation{\_on\_send(event)}{An \texttt{Event}}{None}{Abstract method which is invoked whenever a node transmits a message.}
 }
 
 \subsubsection{Built-in CommsEngines}
@@ -620,7 +639,14 @@ where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an
 \paragraph{EthernetCommsEngine}
 
 \subsection{Event Components}
-\subsubsection{Event}
+\subsubsection{Event}{Event is the base abstract class from which all other events descend.  This class provides picking and unpickling methods used to send events over the event channel.}
+
+\operations
+{
+    \operation{\_\_init\_\_()}{None}{None}{Instantiates a new event.}
+    \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{Event}.}
+    \operation{from\_pickle(pickled)}{Serialized version of the \texttt{Event} object.}{\texttt{Event} object}{Deserializes a pickled verson of the \texttt{Event} object.}
+}
 
 \subsubsection{Built-in Events}
 Built-in events are specific Event classes provided by default to any emulation. These embody the basic events for a network simulation, but users are encouraged to develop and add their own as well.
@@ -775,15 +801,25 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 \subsection{Agent Components}
 \subsubsection{Agent}
-
 \subsubsection{Condition}
-
 \subsubsection{Action}
+
 \subsubsection{Built-in Actions}
 \paragraph{MoveAction}
 
 \subsection{Sensor Components}
 \subsubsection{Sensor}
+\attributes
+{
+    \attribute{\_subscribers}{list(function)}{List of functions to call when the sensor has new data.}
+}
+
+\operations
+{
+    \operation{\_publish\_data(event)}{An event containing data to publish.}{None}{Called by the sensor to pass new data to all callbacks}
+    \operation{subscribe(callback)}{A callback function.}{None}{Subscribes to the sensor.  Any time new data is available, \texttt{callback} will be invoked and passed the data.}
+    \operation{run()}{None}{None}{Abstract method.  Called to start the sensor.}
+}
 
 \subsubsection{Built-in Sensors}
 \paragraph{RadarSensor}{AHOY includes a Radar sensor which provides an estimated location of nearby entities along with velocity estimation.  This sensor sweeps angular areas surrounding it and calculates the distance to the closest entity in that area with:
@@ -810,8 +846,34 @@ Further, pathloss of radio waves is incorporated. The received power, $P_r$, to 
 \end{align*}
 
 where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the aperture area, $\sigma$ is the cross-sectional area of the target, $F$ is a propagation factor, and $d$ is the distance from the radar station to the target.  If $P_r$ falls below the sensitivity of the antenna, the target will not be detected.
-
 }
+
+\attributes
+{
+    \attribute{\_trans\_power}{float}{Transmit power of the Radar.}
+    \attribute{\_trans\_freq}{float}{Frequence of the Radar.}
+    \attribute{\_gain}{float}{Gain of the Radar.}
+    \attribute{\_aperture}{float}{Aperture of the Radar.}
+    \attribute{\_prop\_fact}{float}{Propagation factor of the environment.}
+    \attribute{\_angle}{float}{Sweep angle of the Radar.}
+    \attribute{\_dwell\_time}{float}{Time spent sweeping each \texttt{\_angle}.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(trans\_power, trans\_freq, gain, aperature, prop\_fact, dwell\_time, angle)}{
+        \begin{itemize*}
+            \item \texttt{trans\_power}: Transmit power of the Radar.
+            \item \texttt{trans\_freq}: Frequence of the Radar.
+            \item \texttt{gain}: Gain of the Radar.
+            \item \texttt{aperture}: Aperture of the Radar.
+            \item \texttt{prop\_fact}: Propagation factor of the environment.
+            \item \texttt{angle}: Sweep angle of the Radar.
+            \item \texttt{dwell\_time}: Time spent sweeping each \texttt{\_angle}.
+        \end{itemize*}}{None}{Instantiates a new \texttt{RadarSensor}.}
+    \operation{run()}{None}{None}{Starts the Radar.}
+}
+
 \subsection{Utility Components}
 \subsubsection{Geo}
 \operations{
