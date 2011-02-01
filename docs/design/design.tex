@@ -334,11 +334,188 @@ entities running in it. }
 }
 
 \subsubsection{World}
-\subsubsection{EventAPI} % TODO: Create UML for this
+{The World maintains the entities running in the simulation.  It also maintains the networks being using within the simulation.}
 
+\attributes{
+    \attribute{\_entities}{Dictionary}{Maps entity ids to entities}
+    \attribute{\_networks}{Dictionary}{Maps network names to the network}
+    \attribute{\_event\_api}{EventAPI}{Event API for subscribing to and publish events}
+}
+
+\operations{
+    \operation{\_\_init\_\_()}{None}{None}{Instantiates the World.}
+    \operation{add\_entity(entity)}
+    { \texttt{entity}: Entity to be added to list of entities. }
+    {None}{Adds an entity to \_entities.}
+    \operation{get\_entities()}{None}{Dictionary}{Returns the dictionary of entities}
+    \operation{get\_entity(uid)}
+    {
+        \texttt{uid}: Unique entity id. 
+    }{Entity}{Returns the entity that has id uid.}
+    \operation{add\_network(network)}
+    {
+        \texttt{network}: Network to add to the dictionary of networks.
+    }{None}{Adds the given network to the dictionary of networks. }
+    \operation{get\_networks()}{None}{Dictionary}{Returns the dictionary of networks}
+    \operation{get\_network(name)}
+    {
+        \texttt{name}: Name of the network. 
+    }{Entity}{Returns the network whose name is the same as the parameter}
+    \operation{initialize()}{None}{None}{Initializes the World. Instantiates \_event\_api, starts it, and subscribes the World to events.}
+    \operation{\_on\_entity\_move(event)}
+    {
+        \texttt{event}: EntityMoveEvent event with information on new entity values. 
+    }{None}{Finds the entity in \_entities given by the event and updates that entities position, forward velocity, and linear velocity.}
+    \operation{pickle()}{None}{Serialized World}{Serializes the World with base 64 encoding.}
+    \operation{from\_pickle(pickled)}
+    {
+        \texttt{pickled}: Serialized version of the World. 
+    }{World}{Deserializes a pickled verson of the World.}
+}
+    
+\subsubsection{EventAPI} % TODO: Create UML for this
+{The EventAPI is used to communicate events across the event channel.  It allows entities to subscribe to certain events or publish the occurrence of events. When an event occurs, it will handle any function calls an entity wishes to make during that event. }
+
+\attributes{
+    \attribute{\_subscriptions}{dictionary}{Holds event subscriptions for an entity. Keyed by event type. The values are method calls to be made on an event. }
+    \attribute{\_running}{boolean}{True if the EventAPI is running.}
+    \attribute{\_tcp\_conn}{Socket}{A socket, designated by the user, for EventAPI to communication over}
+    \attribute{\_sock}{Socket}{A socket for EventAPI to communicate over}
+    \attribute{\_ip}{string}{IP address to communicate over}
+    \attribute{\_port}{int}{port number to communicate over}
+}
+
+\operations{
+    \operation{\_\_init\_\_(tcp\_conn=None)}{tcp\_conn: A socket for the EventAPI to communicate over}{None}{Instantiates an EventAPI}
+    \operation{\_setup\_mc()}{None}{None}{Initializes the multicast channel to communicate on.}
+    \operation{publish(event,dealy\_sec=None)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: The event to be published. 
+            \item \texttt{delay}: Number of seconds to wait before publishing. 
+        \end{itemize*}
+    }{None}{Publishes the occurrence of an event over the event channel.}
+    \operation{\_delay(event, delay\_sec=None)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: The event to delay.
+            \item \texttt{delay\_sec}: Number of seconds to delay the event. 
+        \end{itemize*}
+    }{None}{Delays an event for a given number of seconds.}
+    \operation{push\_raw(raw)}{\texttt{raw}: Data to send over a connection. }{None}{Sends raw data over the current connection. }
+    \operation{subscribe(event\_type, callback, **args)}
+    {
+        \begin{itemize*}
+            \item \texttt{event\_type}: Event type being subscribed to. 
+            \item \texttt{callback}: Method to call on event event\_type.
+            \item \texttt{**args}: arguments to pass to callback.
+        \end{itemize*}
+    }{None}{Sets a callback function to be made at a given event type.}
+    \operation{unsubscribe\_all(event\_type)}{\texttt{event\_type}: The type of event to remove all subscriptions from.}
+    {None}{Removes all subscriptions to the given event type.}
+    \operation{clear\_subscriptions()}{None}{None}{Removes all subscriptions.}
+    \operation{\_process(data)}{ \texttt{data}: Serialized event information.}
+    {None}{Processes which callbacks need to be made based on the given data.}
+    \operation{run()}{None}{None}{Listens for events over the socket and processes them.}
+    \operation{\_tcp\_assemble()}{None}{Packet}{Builds a packet to be sent over the network.}
+    \operation{start()}{None}{Thread}{Runs the EventAPI in a thread and returns the thread.}
+    \operation{stop()}{None}{None}{Stops the EventAPI from running. }
+}
+    
 \subsubsection{Entity}
+\attributes{
+    \attribute{MAX\_DISTANCE}{const float}{Maximum distance the entity can move in kilometers}
+    \attribute{\_uid}{int}{Unique user id of the entity.}
+    \attribute{\_lat}{float}{Current latitude.}
+    \attribute{\_long}{float}{Current longitude.}
+    \attribute{\_agl}{float}{Distance above ground level.}
+    \attribute{\_rcs}{TODO}{TODO}
+    \attribute{\_event\_api}{EventAPI}{The EventAPI for an entity.}
+    \attribute{\_world}{World}{The World instance.}
+    \attribute{\_velocity}{list[float]}{The vector velocity of the entity.}
+    \attribute{\_forward\_velocity}{float}{The forward velocity of the entity.}
+}
+
+\operations{
+    \operation{set\_rcs(rcs)}{\texttt{rcs}: TODO}{None}{TODO}
+    \operation{get\_rcs()}{None}{TODO}{TODO}
+    \operation{get\_lin\_velocity()}{None}{list[float]}{Returns the velocity as a vector of three numbers}
+    \operation{get\_forward\_velocity()}{None}{float}{Returns the forward velocity.}
+    \operation{set\_lin\_velocity(v)}{\texttt{v}: A vector of three floating point numbers describing the velocity.}{None}{Sets the vector velocity of the entity.}
+    \operation{set\_forward\_velocity(v)}{\texttt{v}: Floating point number to assign to the forward velocity.}{None}{Sets the forward velocity of the entity.}
+    \operation{set\_world(world)}{\texttt{world}: World instance}{None}{Sets the World instance for the entity}
+    \operation{get\_world()}{None}{World}{Returns the World instance.}
+    \operation{set\_position(lat,long,agl)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude to assign the entity. 
+            \item \texttt{long}: Longitude to assign the entity. 
+            \item \texttt{agl}: Above ground location to assign the entity. 
+        \end{itemize*}
+    }{None}{Sets the latitude, longitude, and above ground location for the entity.}
+    \operation{move(lat,lon,agl,forward\_vel,vert\_vel,block=False)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude to move to.
+            \item \texttt{lon}: Longitude to move to.
+            \item \texttt{agl}: Above ground location to move to. 
+            \item \texttt{forward\_vel}: Forward velocity to move with.
+            \item \texttt{vert\_vel}: Vertical velocity to move with. 
+            \item \texttt{block}: If true, moves the entity in a new thread.
+        \end{itemize*}
+    }{None}{Moves the entity to the given coordinates.}
+    \operation{\_iterative\_move(lat,lon,agl,forward\_vel,vert\_vel)}
+    {
+        \begin{itemize*}
+            \item \texttt{lat}: Latitude to move to.
+            \item \texttt{lon}: Longitude to move to.
+            \item \texttt{agl}: Above ground location to move to. 
+            \item \texttt{forward\_vel}: Forward velocity to move with.
+            \item \texttt{vert\_vel}: Vertical velocity to move with. 
+        \end{itemize*}
+    }{None}{Moves the entity to the given coordinates in steps by smaller distances using its velocity and MAX\_DISTANCE.}
+    \operation{get\_position()}{None}{list[float]}{Returns a list of the latitude, longitude, and above ground location in that order.}
+    \operation{pickle()}{None}{Serialized Entity}{Serializes the entity.}
+    \operation{from\_pickle(pickled)}{\texttt{pickled}:Serialized entity.}{Entity}{Deserializes an entity.}
+    \operation{get\_event\_api()}{None}{EventAPI}{Returns the entities EventAPI.}
+    \operation{get\_uid()}{None}{int}{Returns the entities unique id.}
+    \operation{initialize()}{None}{None}{Initializes the entity.}
+}
+
 \subsubsection{Built-in Entities}
-\paragraph{Node}
+\paragraph{Node}{Nodes are processes that aggregate agents. Each one has an interface that handles communication to the outside world (i.e. other nodes or agents). They inherit properties from the Entity class.}
+
+\attributes{
+    \attribute{\_interfaces}{Dictionary[name]=Interface}{A dictionary mapping the name of an network interface to the interface itself. }
+    \attribute{\_agents}{Dictionary[id]=Agent}{A dictionary mapping agent ids to the agents themselves.}
+}
+
+\operations{
+    \operation{\_\_init\_\_(uid)}{\texttt{uid}: Unique id assigned to the node.}{None}{Instantiates the Node.}
+    \operation{get\_agent\_uids()}{None}{list[int]}{Returns a list of all agent ids belonging to that node.}
+    \operation{add\_interface(interface)}{\texttt{interface}: Network interface to add to the node.}{None}{Adds a network interface to the node.}
+    \operation{remove\_interface(name)}{\texttt{name}: The name of the interface to remove.}{None}{Removes an network interface from the node.}
+    \operation{get\_interface(name)}{\texttt{name}: The name of the interface to return.}{Interface}{Returns a network interface with the given name.}
+    \operation{get\_interfaces()}{None}{list[Interface]}{Returns a list of all network interfaces belonging to the node.}
+    \operation{add\_agent(agent\_inst)}{\texttt{agent\_inst}: Agent to add to the node.}{None}{Adds an agent to the list of agents owned by the node.}
+    \operation{get\_interface\_on\_net(network\_name)}{\texttt{network\_name}:Network name associated with an interface.}{None}{Returns the interface associated with the given network name.}
+    \operation{send(message,src\_agent)}
+    {
+        \begin{itemize*}
+            \item \texttt{message}: Message to send. 
+            \item \texttt{src\_agent} Agent sending the message.
+        \end{itemize*}
+    }{None}{Sends a message from a specified agent over a node interface.}
+    \operation{\_on\_message(event,**kwds)}
+    {
+        \begin{itemize*}
+            \item \texttt{event}: An event that has occurred. 
+            \item \texttt{**kwds}: Arguments associated with the callback for an event.
+        \end{itemize*}
+    }{None}{Passes an event on to the agent it is meant to reach.}
+    \operation{run()}{None}{None}{Starts the node. Interfaces and agents are all initialized}
+}
+
 \paragraph{ScriptedEntity}
 \subsubsection{Startup Sequence}
 \begin{figure}[!htb]
