@@ -4,7 +4,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fullpage}    % Use the whole page
 \usepackage{fancyhdr}    % Nice headers/footers
-%\usepackage{mdwlist}     % For itemize* and enumerate*
 \usepackage{graphicx}    % Importing graphics
 \usepackage{hyperref}    % Hyperlink references and URLs
 \usepackage[figure,table]{hypcap} % Hyperlink points to the top of figures
@@ -23,8 +22,8 @@
 \usepackage{float}
 \usepackage{longtable}
 
-\renewenvironment{itemize*}%
-    {\begin{itemize}%
+\renewenvironment{itemize*}
+    {\begin{itemize}
         \setlength{\itemsep}{0pt}%
         \setlength{\parskip}{0pt}%
         \setlength{\partopsep}{0pt}%
@@ -242,8 +241,18 @@ These documents have been used as reference materials for various technologies i
 \subsection{Description of Problem}
 The AHOY application bridges network and agent simulators. It must provide an entirely event-driven, real-time system to ultimately allow for human-in-the-loop interaction with agents. It must enable scenarios and network topologies to be easily defined, and similarly make writing custom agents extremely simple. The Event API must be comprehensive to provide flexibility for the user in terms of visualization and data collection. Finally, AHOY must be able to effortlessly distribute an experiment across physical machines, so that scaling limitations are not a user issue.
 
-\subsection{Subsystem Diagram}
-\begin{figure}%[!ht]
+\subsection{Subsystem}
+As shown in Figure~\ref{fig-subsystem}, AHOY is comprised of seven primary components.
+
+\paragraph{Simulation}{Inializes simulations and provides a communication engine for other components.}
+\paragraph{Communications}{Handles simulation of network links and hardware.}
+\paragraph{World}{Maintains world state.  An identical instance of this is maintained by all Entities and the Simulation.}
+\paragraph{Entities}{Physical objects within the simulated world.  These include Nodes and World Objects.}
+\paragraph{Agents}{Provide logic that interacts with the environment, other agents, and sensors.}
+\paragraph{Interfaces}{Connect virtual nodes to each other.  Provide a means for communication}
+\paragraph{Sensors}{Sense some aspect of the vitual world and provide data to local agents.}
+
+\begin{figure}
     \centering
     \begin{tikzpicture}[node distance=.5cm]
         \node [component] (Entity) {\textbf{Entities}};
@@ -251,8 +260,10 @@ The AHOY application bridges network and agent simulators. It must provide an en
         \node [component, right of=World] (Simulation) {\textbf{Simulation}};
         \node [component, below left of=Entity] (Agent) {\textbf{Agents}};
         \node [component, below right of=Entity] (Sensor) {\textbf{Sensors}};
+        \node [component, below of=Simulation, yshift=.9cm] (Communications) {\textbf{Communications}};
         \node [component, below of=Entity] (Interface) {\textbf{Interfaces}};
         \draw [draw, <-, >=open diamond] (Simulation) -- (World);
+        \draw [draw, <-, >=open diamond] (Simulation) -- (Communications);
         \draw [draw, ->, >=open diamond] (Entity) -- (World);
         \draw [draw, <-, >=open diamond] (Entity) -- (Agent);
         \draw [draw, <-, >=open diamond] (Entity) -- (Sensor);
