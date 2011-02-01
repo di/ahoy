@@ -969,8 +969,8 @@ Built-in events are specific Event classes provided by default to any emulation.
 
 Based on the latitude ($\phi_r$) and longitude ($\lambda_r$) of the radar sensor, along with the bearing $\theta$ of the sweep area, the entity's location $\left(\phi_t, \lambda_t\right)$ can be estimated with:
 \begin{align*}
-    \phi_t &=& asin\left(sin\left(\phi_r\right) \cdot cos\left(d/R_{e}\right) + cos\left(\phi_r\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\theta\right)\right) \\ 
-    \lambda_t &=& \lambda_t + atan\left(sin\left(\theta\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\phi_r\right), cos\left(d/R_{e}\right)-sin\left(\phi_r\right) \cdot sin\left(\phi_t\right)\right)
+    \phi_t &=& sin^{-1}\left(sin\left(\phi_r\right) \cdot cos\left(d/R_{e}\right) + cos\left(\phi_r\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\theta\right)\right) \\ 
+    \lambda_t &=& \lambda_t + tan^{-1}\left(sin\left(\theta\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\phi_r\right), cos\left(d/R_{e}\right)-sin\left(\phi_r\right) \cdot sin\left(\phi_t\right)\right)
 \end{align*}
 
 An estimate of velocity\footnote{Specifically, the component of the velocity parallel to the vector from the radar sensor to the entitty} is calculated by the Doppler equation:
