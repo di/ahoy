@@ -717,9 +717,43 @@ Built-in events are specific Event classes provided by default to any emulation.
 )}
 
 \paragraph{StartupEvent}
+\attributes
+{
+    \attribute{\_world}{World}{Instance of the \texttt{World} to be used in the simulation.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(world)}{Instance of the world to be used in the simulation.}{None}{Instantiates a new \texttt{StartupEvent}.}
+    \operation{get\_world()}{None}{\texttt{World} instance to be used in the simulation.}{Gets the world instance which will be used after \texttt{StartSimulationEvent} is received.}
+}
 \paragraph{AckStartupEvent}
+\attributes
+{
+    \attribute{\_daemon\_id}{int}{ID of the daemon which sent the ACK.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(daemon\_id)}{ID of the daemon.}{None}{Instantiates a new \texttt{AckStartupEvent}.}
+    \operation{get\_daemon\_id()}{None}{ID of the ACKing daemon.}{Gets the ID of the ACKing daemon.}
+}
 \paragraph{StartSimulationEvent}
+\attributes
+{
+    \attribute{\_entity\_mapping}{dict(int : int)}{Mapping of daemon IDs to entity IDs.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(entity\_mapping)}{Daemon to entity ID mapping.}{None}{Instantiates a new \texttt{StartSimulationEvent}.}
+    \operation{get\_mapping()}{None}{Mapping of daemon IDs to entity IDs.}{Daemons receive this event and start only the entities which they have been allocated.}
+}
 \paragraph{StopSimulationEvent}
+\operations
+{
+    \operation{\_\_init\_\_()}{None}{None}{Instantiates a new \texttt{StopSimulationEvent}.}
+}
 
 \subsection{Agent Components}
 \subsubsection{Agent}
