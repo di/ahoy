@@ -17,6 +17,7 @@ from ahoy.action import Action
 from ahoy.actions.move import MoveAction 
 from ahoy.condition import Condition
 from ahoy.events.communication import CommunicationSendEvent
+from ahoy.conditions.srccondition import SourceCondition
 
 world = World()
 wlan = Network('wlan0')
@@ -40,11 +41,11 @@ n2.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n2)
 
 act = MoveAction(n1,1,1,0)
-con = Condition()
+con = SourceCondition(2)
 ca1.add_behavior([con,CommunicationSendEvent,act])
 
 act2 = MoveAction(n2,-1,-1,2)
-con2 = Condition()
+con2 = SourceCondition(1)
 ca2.add_behavior([con2,CommunicationSendEvent,act2])
 
 if __name__ == '__main__' :
