@@ -366,11 +366,11 @@ Each entity in the world, be it a node or other world object, exists as a proces
 \operations{
     \operation{\_\_init\_\_()}{None}{None}{Instantiates the \texttt{World}.}
     \operation{add\_entity(entity)}{Entity to be added to list of entities.}{None}{Adds an entity to \_entities.}
-    \operation{get\_entities()}{None}{dict(int : Entity)}{Returns the dictionary of entities}
-    \operation{get\_entity(uid)}{Unique entity id.}{Entity}{Returns the entity that has ID \texttt{uid}.}
+    \operation{get\_entities()}{None}{Dictionary mapping IDs to their entities.}{Returns the dictionary of entities}
+    \operation{get\_entity(uid)}{Unique entity id.}{The entity with UID \texttt{uid}.}{Returns the entity that has ID \texttt{uid}.}
     \operation{add\_network(network)}{Network to add to the dictionary of networks.}{None}{Adds the given network to the dictionary of networks. }
-    \operation{get\_networks()}{None}{dict(String : Network)}{Returns the dictionary of networks}
-    \operation{get\_network(name)}{Name of the network.}{Entity}{Returns the network whose name is the same as the parameter}
+    \operation{get\_networks()}{None}{Dictionary mapping network names to \texttt{Network} instances.}{Returns the dictionary of networks}
+    \operation{get\_network(name)}{Name of the network.}{Gets the network with name \texttt{name}.}{Returns the network whose name is the same as the parameter}
     \operation{initialize()}{None}{None}{Initializes the \texttt{World}. Instantiates \texttt{\_event\_api}, starts it, and subscribes the \texttt{World} to events.}
     \operation{\_on\_entity\_move(event)}{\texttt{EntityMoveEvent} event with information on new entity values.}{None}{Finds the entity in \texttt{\_entities} given by the event and updates that entity's position and velocity.}
     \operation{pickle()}{None}{Serialized World}{Serializes the \texttt{World}.}
