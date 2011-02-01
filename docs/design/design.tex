@@ -664,14 +664,40 @@ Each entity in the world, be it a node or other world object, exists as a proces
 }
 
 \subsubsection{Built-in CommsEngines}
-\paragraph{LogLossCommsEngine}{Provides basic basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
+\paragraph{LogLossCommsEngine}{Provides basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
 
 \begin{align*}
     P_r = P_t - \left(l_0 - 10 \cdot \gamma \cdot log_{10}\left(\frac{d}{d_0}\right) + X_g\right)
 \end{align*}
 
 where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an arbitrary reference distance, $l_0$ is the loss at that distance, $d$ is the actual distance between the two interfaces, and $X_g$ is a constant accounting for flat-fading.  If this power falls below the sensitivity of the receiver, the message will not be received.}
-\paragraph{EthernetCommsEngine}
+
+\operations
+{
+    \operation{\_\_init\_\_()}{none}{none}{instantiates a new \texttt{loglosscommsengine}.}
+    \operation{\_get\_rx\_power(src\_uid, dest\_uid, src\_power}{
+        \begin{itemize*}
+            \item \texttt{src\_uid}: uid of transmitting node.
+            \item \texttt{dest\_uid}: uid of destination node.
+            \item \texttt{src\_power}: power of transmitter.
+        \end{itemize*}}{the received power in watts.}{calculates the pathloss between two nodes.}
+    \operation{\_should\_deliver(src\_uid, dest\_uid, src\_power, recv\_sensitivity)}{
+        \begin{itemize*}
+            \item \texttt{src\_uid}: uid of transmitting node.
+            \item \texttt{dest\_uid}: uid of destination node.
+            \item \texttt{src\_power}: power of transmitter.
+            \item \texttt{recv\_sensitivity}: receiver sensitivity.
+        \end{itemize*}}{bool}{determines if the link between two nodes is strong enough to deliver messages.  calls \texttt{\_get\_rx\_power()} for pathloss.}
+    \operation{\_on\_send(event)}{instance of \texttt{communicationsendevent}}{none}{determines what occurs when a node transmits a message.}
+    \operation{\_on\_movement(event)}{instance of \texttt{entitymoveevent}}{none}{updates links based on new node locations.}
+}
+
+\paragraph{EthernetCommsEngine}{Provides basic support for Ethernet communications.}
+\operations
+{
+    \operation{\_\_init\_\_()}{None}{None}{Instantiates a new \texttt{EthernetCommsEngine}.}
+    \operation{\_on\_send(event)}{Instance of \texttt{CommunicationSendEvent}}{None}{Determines what occurs when a node transmits a message.}
+}
 
 \subsection{Event Components}
 \subsubsection{Event}{Event is the base abstract class from which all other events descend.  This class provides picking and unpickling methods used to send events over the event channel.}
