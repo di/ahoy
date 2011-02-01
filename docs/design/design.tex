@@ -574,7 +574,13 @@ entities running in it. }
 \subsubsection{CommsEngine}
 
 \subsubsection{Built-in CommsEngines}
-\paragraph{LogLossCommsEngine}
+\paragraph{LogLossCommsEngine}{Provides basic basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
+
+\begin{equation}
+    P_r = P_t - \left(l_0 - 10 \cdot \gamma \cdot log_{10}\left(\frac{d}{d_0}\right) + X_g\right)
+\end{equation}
+
+where $P_t$ is the transmit power, $\gamma$ is a path-loss exponent, $d_0$ is an arbitrary reference distance, $l_0$ is the loss at that distance, $d$ is the actual distance between the two interfaces, and $X_g$ is a constant accounting for flat-fading.  If this power falls below the sensitivity of the receiver, the message will not be received.}
 \paragraph{EthernetCommsEngine}
 
 \subsection{Event Components}
@@ -707,8 +713,26 @@ Built-in events are specific Event classes provided by default to any emulation.
 \subsubsection{Sensor}
 
 \subsubsection{Built-in Sensors}
-\paragraph{RadarSensor}
+\paragraph{RadarSensor}{AHOY includes a Radar sensor which provides an estimated location of nearby entities along with velocity estimation.  The location of each node is estimated with:
+\begin{equation}
+    \frac{d = t \cdot c}{2}.
+\end{equation}
 
+An estimate of velocity\footnote{Specifically, the component of the velocity parallel to the vector from the radar sensor to the entitty} is calculated by the Doppler equation:
+
+\begin{equation}
+    \left|\vec{v_{\parallel}}\right| = -\frac{c \cdot \left(f_{recv} - f_{trans}\right)}{f_{trans}}.
+\end{equation}
+
+Further, pathloss of radio waves is incorporated. The received power, $P_r$, to the radar sensor is given by:
+
+\begin{equation}
+    P_r = \frac{P_t G_t A_r \sigma F^4}{\left(4 \pi\right)^4 d^4}
+\end{equation}
+
+where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the aperture area, $\sigma$ is the cross-sectional area of the target, $F$ is a propagation factor, and $d$ is the distance from the radar station to the target.  If $P_r$ falls below the sensitivity of the antenna, the target will not be detected.
+
+}
 \subsection{Utility Components}
 \subsubsection{Geo}
 \operations{
