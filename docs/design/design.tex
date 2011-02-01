@@ -235,6 +235,7 @@ These documents have been used as reference materials for various technologies i
 	\item SPEYES: Sensing and Patrolling Enablers Yielding Effective SASO: \url{http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=1559616}
 	\item Service Sniffer Requirements Document: \url{http://servicesniffer.net/documents/requirements.html}
     \item Developing an Agent Systems Reference Architecture: \url{www.cs.drexel.edu/~dn53/papers/paper_cameraready.pdf}
+    \item One-way Radar Equation / RF Propagation \url{http://www.phys.hawaii.edu/~anita/new/papers/militaryHandbook/one-way.PDF}
 \end{itemize*}
 
 \section{Design Overview}
@@ -276,7 +277,9 @@ AHOY is intentionally designed to provide no specific user interface in the trad
 The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
 
 \subsection{Design Motivations}
-\paragraph{Communication}{The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{http://labs.cengen.com/emane/} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{http://cs.itd.nrl.navy.mil/work/norm/} protocol which provides the same QoS guarantees as TCP.}
+\paragraph{Communication}{The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architecutures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is instead used.  This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.}
+
+\paragraph{Distribution Method}{Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.}
 
 \section{Detailed System Design}
 
@@ -432,9 +435,12 @@ entities running in it. }
     \attribute{\_world}{World}{The World instance.}
     \attribute{\_velocity}{list(float)}{The vector velocity of the entity.}
     \attribute{\_forward\_velocity}{float}{The forward velocity of the entity.}
+    \attribute{\_sensors}{dict(String : Sensor)}{Sensors connected to the entity.}
 }
 
 \operations{
+    \operation{add\_sensor(name, sensor)}{\texttt{name}: Name of the sensor.  \texttt{sensor}: Sensor instance}{None}{Adds a sensor and associates it with a name.}
+    \operation{get\_sensor(name)}{\texttt{name}: Name of the sensor}{Sensor instance}{Gets a sensor by name.}
     \operation{set\_rcs(rcs)}{\texttt{rcs}: Cross sectional-area}{None}{Sets the cross-sectional area.}
     \operation{get\_rcs()}{None}{Cross-sectional area}{The cross-sectional area.}
     \operation{get\_lin\_velocity()}{None}{list(float)}{Returns the velocity as a vector of three numbers.}
