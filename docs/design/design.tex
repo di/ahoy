@@ -611,7 +611,42 @@ Each entity in the world, be it a node or other world object, exists as a proces
     \caption{Messaging sequence diagram}
     \label{fig-messageseq}
 \end{figure}
+
 \subsubsection{Interface}
+
+\attributes{
+    \attribute{\_name}{String}{The name of the \texttt{Interface}}
+    \attribute{\_owner}{Node}{The \texttt{node} on which the \texttt{Interface} resides}
+    \attribute{\_recv\_callback}{function}{The callback function}
+    \attribute{\_network\_name}{String}{The name of the \texttt{Network}}
+    \attribute{\_power}{float}{The power of the interface, if a wireless network}
+}
+
+\operations{
+    \operation{\_\_init\_\_(name, owner\_node, network, power)}
+    {
+        \begin{itemize*}
+            \item \texttt{name}: The name of the \texttt{Interface} 
+            \item \texttt{owner\_node}: The \texttt{Node} on which the \texttt{Interface} resides
+            \item \texttt{network}: The \texttt{Network} to which the \texttt{Interface} belongs
+            \item \texttt{power}: The power of the \texttt{Interface}, if wireless.
+        \end{itemize*}
+    }{None}{Sends a given message from the specified agent}
+    \operation{connect()}{None}{None}{Connects the \texttt{Interface} to the \texttt{Network}}
+    \operation{send(message\_inst, src\_agent)}
+    {
+        \begin{itemize*}
+            \item \texttt{message\_inst}: The \texttt{Message} that is being sent on the \texttt{Interface}
+            \item \texttt{src\_agent}: The \texttt{Agent} which is sending the \texttt{Message}
+        \end{itemize*}
+    }{None}{Sends a given message from the specified agent}
+    \operation{set\_recv\_callback(cb)}{The callback function}{None}{Sets the callback function for the interface}
+    \operation{get\_owner()}{None}{The \texttt{Node} which is the owner of the \texttt{Interface}}{Returns the \texttt{Node} which is the owner of the \texttt{Interface}}
+    \operation{get\_network\_name()}{None}{The name of the \texttt{Network} the \texttt{Interface} is part of}{Returns the name of the \texttt{Network} the \texttt{Interface} is part of}
+    \operation{get\_name()}{None}{The name of the \texttt{Interface}}{Returns the name of the interface}
+    \operation{get\_power()}{None}{The power of the \texttt{Interface}}{Returns the power of the interface}
+}
+
 \subsubsection{CommsEngine}
 
 \attributes{
