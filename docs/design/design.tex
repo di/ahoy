@@ -323,16 +323,16 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
         \node [component, below left of=Sensor] (RadarSensor) {\textbf{RadarSensor}};
         \node [component, below of=Action] (MoveAction) {\textbf{MoveAction}};
 
-        \node [component, below right of=Event, yshift=-0cm] (LinkEvent) {\textbf{LinkEvent}};
-        \node [component, below right of=Event, yshift=-1cm] (StartupEvent) {\textbf{StartupEvent}};
-        \node [component, below right of=Event, yshift=-2cm] (AckStartupEvent) {\textbf{AckStartupEvent}};
-        \node [component, below right of=Event, yshift=-3cm] (MoveEvent) {\textbf{EntityMoveEvent}};
-        \node [component, below right of=Event, yshift=-4cm] (StopSimulationEvent) {\textbf{StopSimulationEvent}};
-        \node [component, below right of=Event, yshift=-5cm] (StartSimulationEvent) {\textbf{StartSimulationEvent}};
-        \node [component, below right of=Event, yshift=-6cm] (CommunicationSendEvent) {\textbf{CommunicationSendEvent}};
-        \node [component, below right of=Event, yshift=-7cm] (CommunicationRecvEvent) {\textbf{CommunicationRecvEvent}};
+        \node [component, below right of=Event, yshift=-0cm, xshift=-1cm, anchor=west] (LinkEvent) {\textbf{LinkEvent}};
+        \node [component, below right of=Event, yshift=-1cm, xshift=-1cm, anchor=west] (StartupEvent) {\textbf{StartupEvent}};
+        \node [component, below right of=Event, yshift=-2cm, xshift=-1cm, anchor=west] (AckStartupEvent) {\textbf{AckStartupEvent}};
+        \node [component, below right of=Event, yshift=-3cm, xshift=-1cm, anchor=west] (MoveEvent) {\textbf{EntityMoveEvent}};
+        \node [component, below right of=Event, yshift=-4cm, xshift=-1cm, anchor=west] (StopSimulationEvent) {\textbf{StopSimulationEvent}};
+        \node [component, below right of=Event, yshift=-5cm, xshift=-1cm, anchor=west] (StartSimulationEvent) {\textbf{StartSimulationEvent}};
+        \node [component, below right of=Event, yshift=-6cm, xshift=-1cm, anchor=west] (CommunicationSendEvent) {\textbf{CommunicationSendEvent}};
+        \node [component, below right of=Event, yshift=-7cm, xshift=-1cm, anchor=west] (CommunicationRecvEvent) {\textbf{CommunicationRecvEvent}};
 
-        \draw[out=270, in=180, <-, >=open triangle 45]
+        \draw[out=270, in=180, <-, >=triangle 45, color=white, draw=black]
             (Event) to (LinkEvent)
             (Event) to (MoveEvent)
             (Event) to (StartupEvent)
