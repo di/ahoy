@@ -297,20 +297,52 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}[node distance=.5cm]
-        \node [component] (Entity) {\textbf{Entities}};
+    \begin{tikzpicture}[node distance=.1cm]
+        \node [component] (Entity) {\textbf{Entity}};
         \node [component, right of=Entity] (World) {\textbf{World}};
+        \node [component, below of=World] (EventAPI) {\textbf{EventAPI}};
+        \node [component, below of=EventAPI] (Network) {\textbf{Network}};
+        \node [component, below of=EventAPI, yshift=-4cm] (Event) {\textbf{Event}};
         \node [component, right of=World] (Simulation) {\textbf{Simulation}};
-        \node [component, below left of=Entity] (Agent) {\textbf{Agents}};
-        \node [component, below right of=Entity] (Sensor) {\textbf{Sensors}};
-        \node [component, below of=Simulation, yshift=.9cm] (Communications) {\textbf{Communications}};
-        \node [component, below of=Entity] (Interface) {\textbf{Interfaces}};
-        \draw [draw, <-, >=open diamond] (Simulation) -- (World);
-        \draw [draw, <-, >=open diamond] (Simulation) -- (Communications);
-        \draw [draw, ->, >=open diamond] (Entity) -- (World);
-        \draw [draw, <-, >=open diamond] (Entity) -- (Agent);
-        \draw [draw, <-, >=open diamond] (Entity) -- (Sensor);
-        \draw [draw, <-, >=open diamond] (Entity) -- (Interface);
+        \node [component, above of=Entity] (Sensor) {\textbf{Sensor}};
+        \node [component, below left of=Entity] (Node) {\textbf{Node}};
+        \node [component, left of=Entity] (ScriptedEntity) {\textbf{ScriptedEntity}};
+        \node [component, below left of=Node] (Agent) {\textbf{Agent}};
+        \node [component, below right of=Node] (Interface) {\textbf{Interface}};
+        \node [component, below of=Simulation] (CommsEngine) {\textbf{CommsEngine}};
+        \node [component, above left of=Agent] (Condition) {\textbf{Condition}};
+        \node [component, below left of=Agent] (Action) {\textbf{Action}};
+
+        \node [component, below left of=Event, xshift=-.5cm] (CommunicationSendEvent) {\textbf{CommunicationSendEvent}};
+        \node [component, below right of=Event, xshift=.5cm] (CommunicationRecvEvent) {\textbf{CommunicationRecvEvent}};
+        \node [component, above right of=Event] (LinkEvent) {\textbf{LinkEvent}};
+        \node [component, above left of=Event] (MoveEvent) {\textbf{MoveEvent}};
+        \node [component, above of=Event] (StopSimulationEvent) {\textbf{StopSimulationEvent}};
+        \node [component, right of=Event] (StartupEvent) {\textbf{StartupEvent}};
+        \node [component, left of=Event] (StartSimulationEvent) {\textbf{StartSimulationEvent}};
+        \node [component, below of=Event] (AckStartupEvent) {\textbf{AckStartupEvent}};
+
+        \path (CommunicationSendEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (CommunicationRecvEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (LinkEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (MoveEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (StopSimulationEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (StartupEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (StartSimulationEvent) edge[->, >=open triangle 45] node {} (Event);
+        \path (AckStartupEvent) edge[->, >=open triangle 45] node {} (Event);
+
+        \path (World) edge[<-, >=open diamond] node {} (EventAPI);
+        \path (CommsEngine) edge[<-, >=open diamond] node {} (EventAPI);
+        \path (Simulation) edge[<-, >=open diamond] node {} (World);
+        \path (Simulation) edge[<-, >=open diamond] node {} (CommsEngine);
+        \path (Entity) edge[->, >=open diamond] node {} (World);
+        \path (Entity) edge[<-, >=open diamond] node {} (Sensor);
+        \path (Entity) edge[<-, >=open triangle 45] node {} (Node);
+        \path (Entity) edge[<-, >=open triangle 45] node {} (ScriptedEntity);
+        \path (Node) edge[<-, >=open diamond] node {} (Agent);
+        \path (Node) edge[<-, >=open diamond] node {} (Interface);
+        \path (Agent) edge[<-, >=open diamond] node {} (Condition);
+        \path (Agent) edge[<-, >=open diamond] node {} (Action);
     \end{tikzpicture}
     \caption{Subsystem Diagram}
     \label{fig:subsystem}
