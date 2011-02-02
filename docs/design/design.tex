@@ -298,44 +298,59 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
 \begin{figure}
     \centering
     \begin{tikzpicture}[node distance=.1cm]
-        \node [component] (Entity) {\textbf{Entity}};
-        \node [component, right of=Entity] (World) {\textbf{World}};
-        \node [component, below of=World] (EventAPI) {\textbf{EventAPI}};
-        \node [component, below of=EventAPI] (Network) {\textbf{Network}};
-        \node [component, below of=EventAPI, yshift=-4cm] (Event) {\textbf{Event}};
-        \node [component, right of=World] (Simulation) {\textbf{Simulation}};
-        \node [component, above of=Entity] (Sensor) {\textbf{Sensor}};
-        \node [component, below left of=Entity] (Node) {\textbf{Node}};
-        \node [component, left of=Entity] (ScriptedEntity) {\textbf{ScriptedEntity}};
+        %%%%%%%
+        \node [component] (Simulation) {\textbf{Simulation}};
+        %%%%%%%
+        \node [component, below left of=Simulation] (World) {\textbf{World}};
+        \node [component, above left of=World] (StartupDaemon) {\textbf{StartupDaemon}};
+        \node [component, below right of=Simulation] (CommsEngine) {\textbf{CommsEngine}};
+        %%%%%%%
+        \node [component, below of=World] (Entity) {\textbf{Entity}};
+        \node [component, below right of=World] (EventAPI) {\textbf{EventAPI}};
+        \node [component, below of=CommsEngine] (LogLoss) {\textbf{LogLoss}};
+        \node [component, below right of=CommsEngine] (Ethernet) {\textbf{Ethernet}};
+        \node [component, below left of=World] (Network) {\textbf{Network}};
+        %%%%%%%
+        \node [component, below right of=EventAPI] (Event) {\textbf{Event}};
+        \node [component, below of=Entity] (Node) {\textbf{Node}};
+        \node [component, below left of=Entity] (Sensor) {\textbf{Sensor}};
+        \node [component, below right of=Entity] (ScriptedEntity) {\textbf{ScriptedEntity}};
         \node [component, below left of=Node] (Agent) {\textbf{Agent}};
         \node [component, below right of=Node] (Interface) {\textbf{Interface}};
-        \node [component, below of=Simulation] (CommsEngine) {\textbf{CommsEngine}};
-        \node [component, above left of=Agent] (Condition) {\textbf{Condition}};
-        \node [component, below left of=Agent] (Action) {\textbf{Action}};
+        \node [component, below left of=Agent] (Condition) {\textbf{Condition}};
+        \node [component, below right of=Agent] (Action) {\textbf{Action}};
+        %%%%%%%
+        \node [component, below left of=Sensor] (RadarSensor) {\textbf{RadarSensor}};
+        \node [component, below of=Action] (MoveAction) {\textbf{MoveAction}};
 
-        \node [component, below left of=Event, xshift=-.5cm] (CommunicationSendEvent) {\textbf{CommunicationSendEvent}};
-        \node [component, below right of=Event, xshift=.5cm] (CommunicationRecvEvent) {\textbf{CommunicationRecvEvent}};
-        \node [component, above right of=Event] (LinkEvent) {\textbf{LinkEvent}};
-        \node [component, above left of=Event] (MoveEvent) {\textbf{MoveEvent}};
-        \node [component, above of=Event] (StopSimulationEvent) {\textbf{StopSimulationEvent}};
-        \node [component, right of=Event] (StartupEvent) {\textbf{StartupEvent}};
-        \node [component, left of=Event] (StartSimulationEvent) {\textbf{StartSimulationEvent}};
-        \node [component, below of=Event] (AckStartupEvent) {\textbf{AckStartupEvent}};
+        \node [component, below right of=Event, yshift=-0cm] (LinkEvent) {\textbf{LinkEvent}};
+        \node [component, below right of=Event, yshift=-1cm] (StartupEvent) {\textbf{StartupEvent}};
+        \node [component, below right of=Event, yshift=-2cm] (AckStartupEvent) {\textbf{AckStartupEvent}};
+        \node [component, below right of=Event, yshift=-3cm] (MoveEvent) {\textbf{EntityMoveEvent}};
+        \node [component, below right of=Event, yshift=-4cm] (StopSimulationEvent) {\textbf{StopSimulationEvent}};
+        \node [component, below right of=Event, yshift=-5cm] (StartSimulationEvent) {\textbf{StartSimulationEvent}};
+        \node [component, below right of=Event, yshift=-6cm] (CommunicationSendEvent) {\textbf{CommunicationSendEvent}};
+        \node [component, below right of=Event, yshift=-7cm] (CommunicationRecvEvent) {\textbf{CommunicationRecvEvent}};
 
-        \path (CommunicationSendEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (CommunicationRecvEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (LinkEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (MoveEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (StopSimulationEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (StartupEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (StartSimulationEvent) edge[->, >=open triangle 45] node {} (Event);
-        \path (AckStartupEvent) edge[->, >=open triangle 45] node {} (Event);
+        \draw[out=270, in=180, <-, >=open triangle 45]
+            (Event) to (LinkEvent)
+            (Event) to (MoveEvent)
+            (Event) to (StartupEvent)
+            (Event) to (AckStartupEvent)
+            (Event) to (StopSimulationEvent)
+            (Event) to (StartSimulationEvent)
+            (Event) to (CommunicationSendEvent)
+            (Event) to (CommunicationRecvEvent);
 
         \path (World) edge[<-, >=open diamond] node {} (EventAPI);
         \path (CommsEngine) edge[<-, >=open diamond] node {} (EventAPI);
+        \path (CommsEngine) edge[<-, >=open triangle 45] node {} (LogLoss);
+        \path (CommsEngine) edge[<-, >=open triangle 45] node {} (Ethernet);
         \path (Simulation) edge[<-, >=open diamond] node {} (World);
+        \path (StartupDaemon) edge[<-, >=open diamond] node {} (World);
         \path (Simulation) edge[<-, >=open diamond] node {} (CommsEngine);
         \path (Entity) edge[->, >=open diamond] node {} (World);
+        \path (Network) edge[->, >=open diamond] node {} (World);
         \path (Entity) edge[<-, >=open diamond] node {} (Sensor);
         \path (Entity) edge[<-, >=open triangle 45] node {} (Node);
         \path (Entity) edge[<-, >=open triangle 45] node {} (ScriptedEntity);
@@ -343,6 +358,9 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
         \path (Node) edge[<-, >=open diamond] node {} (Interface);
         \path (Agent) edge[<-, >=open diamond] node {} (Condition);
         \path (Agent) edge[<-, >=open diamond] node {} (Action);
+        \path (Action) edge[<-, >=open triangle 45] node {} (MoveAction);
+        \path (Sensor) edge[<-, >=open triangle 45] node {} (RadarSensor);
+        \path (EventAPI) edge[<-, dashed, >=open triangle 45] node {} (Event);
     \end{tikzpicture}
     \caption{Subsystem Diagram}
     \label{fig:subsystem}
