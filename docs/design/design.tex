@@ -376,7 +376,32 @@ Each entity in the world, be it a node or other world object, exists as a proces
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
-{ The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it. }
+{The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it.
+
+This class is used by the end user to begin a simulation.  For example, the script in Figure~\ref{fig:exstartup} creates a scenario with five nodes, each with one \texttt{CustomAgent}.  Running this file will begin a scenario after waiting five seconds for \texttt{StartupDaemon}s to respond.
+
+\begin{figure}
+    \begin{verbatim}
+        from ahoy.simulation import Simulation
+        from ahoy.world import World
+        from ahoy.entities.node import Node
+        from ahoy.commsengines.logloss import LogLossComms
+
+        world = World()
+
+        for i in range(0, 5) :
+            node = Node(i)
+            node.add_agent(CustomAgent())
+            world.add_entity(node)
+
+        if __name__ == '__main__' :
+            sim = Simulation(world, LogLossComms())
+            sim.start(5)
+    \end{verbatim}
+    \caption{Example startup script}
+    \label{fig:exstartup}
+\end{figure}
+}
 
 \attributes{
     \attribute{\_event\_api}{EventAPI}{Instance of the \texttt{EventAPI}}
