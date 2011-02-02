@@ -22,6 +22,7 @@
 \usepackage{float}
 \usepackage{longtable}
 \usepackage{amsmath}
+\usepackage{appendix}
 
 \renewenvironment{itemize*}
     {\begin{itemize}
@@ -84,6 +85,12 @@
     pdftitle={AHOY Software Design Specification V\myversion},
     pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
 }
+
+% To make referencing sections more biggerer and clickyer 
+\newcommand{\rrref}[2]{\hyperref[#2]{#1}}
+\newcommand{\sref}[1]{\hyperref[#1]{Section~\ref*{#1}}}
+\newcommand{\fref}[1]{\hyperref[#1]{Figure~\ref*{#1}}}
+\newcommand{\aref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
 
 % So we can number subsubsections too
 \setcounter{secnumdepth}{5}
@@ -171,6 +178,7 @@
         node [very near start, auto=right] {#5}
         node [very near end, auto=right] {#6};
 }
+
 %END IMAGE
 %%% End tikz stuff %%%
 
@@ -192,13 +200,36 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 
 \setcounter{tocdepth}{4}
 \tableofcontents
+\label{toc}
 \pagebreak
 \listoffigures
+\label{lof}
 \pagebreak
 \pagenumbering{arabic}
 
+\section{Overview}
+% Some example references to play with
+% \ref{sec:purpose}
+% \autoref{sec:purpose}
+% \hyperref[sec:purpose]{Section~\ref*{sec:purpose}}
+% \rref{sec:purpose}
+% \rrref{Purpose}{sec:purpose}
+A general summary of AHOY is given in \sref{sec:introduction}, including a discussion of the project's purpose, scope and design goals.
+
+In \aref{app:uml_class_diagrams}, detailed object models are given for every class. A high-level contextual diagram relating these individual classes is given in \fref{fig:subsystem}, and the architectural organization of these modules as a distributed system is shown in \fref{fig:distribution}.
+
+In \sref{sec:user_interface}, design choices describing the lack of traditional user interface is explained. Similarly, \sref{sec:data_collection} outlines intentional system limitations regarding built-in storage for experimental data. 
+
+For explanations of complex algorithms used in the system, see \sref{sec:logloss} (Log-loss communications model) and \sref{sec:radar} (RADAR sensor modeling). 
+
+A traceability matrix showing the relation between each design element and each system requirement is shown in \sref{sec:requirements}. A glossary of relevant terms, acronyms and abbreviations is also available in \sref{sec:glossary}.
+
+A more complete index is available in the \rrref{Table of Contents}{toc}, including a \rrref{List of Figures}{lof}. 
+
 \section{Introduction}
+\label{sec:introduction}
 \subsection{Purpose}
+\label{sec:purpose}
 This design document defines the architecture of the AHOY application. AHOY consists of several software components, including those which make up the simulator, the networking engine, event controller, and the agent and sensor frameworks. The information presented here is intended for the development team, as well as the advisor and external stakeholders, which are currently Dr.~William Regli, Joseph Macker of the Naval Research Laboratory, and Dr.~Michal P\v{e}chou\v{e}k of Czech Technical University. 
 
 \subsection{Scope}
@@ -212,6 +243,7 @@ AHOY is designed to be used as a testbed for sensors and respective algorithms i
 The goals of AHOY's core design process is to provide a framework upon which researches can build custom agents, scenarios and topologies, and quickly and easily run an experiment using them. A modular distributed architecture allows for a wide scale of simulation size. Most importantly, the Event API allows developer to easily tailor custom user interfaces for existing applications or visualizers by providing a common interface to monitor every action within an executing experiment.
 
 \subsection{Definitions, Acronyms, and Abbreviations}
+\label{sec:glossary}
 \begin{description}
 \item[Agent]
 	Agents are simulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topologies.   
@@ -253,7 +285,7 @@ These documents have been used as reference materials for various technologies i
 The AHOY application bridges network and agent simulators. It must provide an entirely event-driven, real-time system to ultimately allow for human-in-the-loop interaction with agents. It must enable scenarios and network topologies to be easily defined, and similarly make writing custom agents extremely simple. The Event API must be comprehensive to provide flexibility for the user in terms of visualization and data collection. Finally, AHOY must be able to effortlessly distribute an experiment across physical machines, so that scaling limitations are not a user issue.
 
 \subsection{Subsystem}
-As shown in Figure~\ref{fig-subsystem}, AHOY is comprised of seven primary components.
+As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary components.
 
 \subsubsection{Simulation}{Initializes simulations and provides a communication engine for other components.}
 \subsubsection{Communications}{Handles simulation of network links and hardware.}
@@ -281,7 +313,7 @@ As shown in Figure~\ref{fig-subsystem}, AHOY is comprised of seven primary compo
         \draw [draw, <-, >=open diamond] (Entity) -- (Interface);
     \end{tikzpicture}
     \caption{Subsystem Diagram}
-    \label{fig-subsystem}
+    \label{fig:subsystem}
 \end{figure}
 
 \subsection{Distribution Diagram}
@@ -289,10 +321,11 @@ As shown in Figure~\ref{fig-subsystem}, AHOY is comprised of seven primary compo
     \centering
     \includegraphics[scale=.6]{../initial-pres/arch.pdf}
     \caption{Distribution Diagram}
-    \label{fig-distribution}
+    \label{fig:distribution}
 \end{figure}
 
 \subsection{User Interface Overview}
+\label{sec:user_interface}
 AHOY is intentionally designed to provide no specific user interface in the traditional sense. Instead, it provides an extensive and comprehensive API, for creating a simulation, interacting with an experiment as it is running, monitoring events from a global viewpoint, and recording the results of an experiment for analysis. This ultimately offers flexibility for the end user, as separate, pre-existing interfaces can be modified to support AHOY's software API, or simply created from scratch to explicitly satisfy the user's needs. 
 
 \subsection{Technologies Used}
@@ -511,7 +544,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
   \end{sequencediagram}
 
   \caption{Movement iteration}
-  \label{fig-movement}
+  \label{fig:movement}
 \end{figure}
 
 \subsubsection{Built-in Entities}
@@ -569,7 +602,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
 }
 
 \subsubsection{Startup Sequence}
-As shown in Figure~\ref{fig-startupseq}, the startup sequence for a simulation is comprised of three major steps.  Initially, the \texttt{Simulation} process publishes a \texttt{StartupEvent}, which results in all \texttt{StartupDaemon} processes responding with an \texttt{AckStartupEvent}.  These acknowledgements are then used by the \texttt{Simulation} to equally distribute \texttt{Entities} across the daemons.  This distribution is communicated with a \texttt{SimulationStartEvent} which contains a list of entities to bestarted on each daemon.  Additionally, this causes all daemons to start the simulation.
+As shown in Figure~\ref{fig:startupseq}, the startup sequence for a simulation is comprised of three major steps.  Initially, the \texttt{Simulation} process publishes a \texttt{StartupEvent}, which results in all \texttt{StartupDaemon} processes responding with an \texttt{AckStartupEvent}.  These acknowledgements are then used by the \texttt{Simulation} to equally distribute \texttt{Entities} across the daemons.  This distribution is communicated with a \texttt{SimulationStartEvent} which contains a list of entities to bestarted on each daemon.  Additionally, this causes all daemons to start the simulation.
 \begin{figure}[!htb]
   \centering
 
@@ -600,7 +633,7 @@ As shown in Figure~\ref{fig-startupseq}, the startup sequence for a simulation i
   \end{sequencediagram}
 
   \caption{Startup sequence}
-  \label{fig-startupseq}
+  \label{fig:startupseq}
 \end{figure}
 \subsection{Networking Components}
 \begin{figure}[!htb]
@@ -622,7 +655,7 @@ As shown in Figure~\ref{fig-startupseq}, the startup sequence for a simulation i
     \end{sequencediagram}
 
     \caption{Messaging sequence diagram}
-    \label{fig-messageseq}
+    \label{fig:messageseq}
 \end{figure}
 
 \subsubsection{Interface}
@@ -678,7 +711,7 @@ As shown in Figure~\ref{fig-startupseq}, the startup sequence for a simulation i
 
 \subsubsection{Built-in CommsEngines}
 \paragraph{LogLossCommsEngine}{Provides basic log-loss model for communications.  When messages are sent on a wireless network, the received power is calculated with:
-
+\label{sec:logloss}
 \begin{align*}
     P_r = P_t - \left(l_0 - 10 \cdot \gamma \cdot log_{10}\left(\frac{d}{d_0}\right) + X_g\right)
 \end{align*}
@@ -964,7 +997,8 @@ Built-in events are specific Event classes provided by default to any emulation.
 }
 
 \subsubsection{Built-in Sensors}
-\paragraph{RadarSensor}{AHOY includes a Radar sensor which provides an estimated location of nearby entities along with velocity estimation.  This sensor sweeps angular areas surrounding it and calculates the distance to the closest entity in that area with:
+\paragraph{RadarSensor}{AHOY includes a RADAR sensor which provides an estimated location of nearby entities along with velocity estimation.  This sensor sweeps angular areas surrounding it and calculates the distance to the closest entity in that area with:
+\label{sec:radar}
 \begin{align*}
     d = \frac{t \cdot c}{2}
 \end{align*}
@@ -992,12 +1026,12 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 
 \attributes
 {
-    \attribute{\_trans\_power}{float}{Transmit power of the Radar.}
-    \attribute{\_trans\_freq}{float}{Frequency of the Radar.}
-    \attribute{\_gain}{float}{Gain of the Radar.}
-    \attribute{\_aperture}{float}{Aperture of the Radar.}
+    \attribute{\_trans\_power}{float}{Transmit power of the RADAR.}
+    \attribute{\_trans\_freq}{float}{Frequency of the RADAR.}
+    \attribute{\_gain}{float}{Gain of the RADAR.}
+    \attribute{\_aperture}{float}{Aperture of the RADAR.}
     \attribute{\_prop\_fact}{float}{Propagation factor of the environment.}
-    \attribute{\_angle}{float}{Sweep angle of the Radar.}
+    \attribute{\_angle}{float}{Sweep angle of the RADAR.}
     \attribute{\_dwell\_time}{float}{Time spent sweeping each \texttt{\_angle}.}
 }
 
@@ -1005,15 +1039,15 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 {
     \operation{\_\_init\_\_(trans\_power, trans\_freq, gain, aperture, prop\_fact, dwell\_time, angle)}{
         \begin{itemize*}
-            \item \texttt{trans\_power}: Transmit power of the Radar.
-            \item \texttt{trans\_freq}: Frequency of the Radar.
-            \item \texttt{gain}: Gain of the Radar.
-            \item \texttt{aperture}: Aperture of the Radar.
+            \item \texttt{trans\_power}: Transmit power of the RADAR.
+            \item \texttt{trans\_freq}: Frequency of the RADAR.
+            \item \texttt{gain}: Gain of the RADAR.
+            \item \texttt{aperture}: Aperture of the RADAR.
             \item \texttt{prop\_fact}: Propagation factor of the environment.
-            \item \texttt{angle}: Sweep angle of the Radar.
+            \item \texttt{angle}: Sweep angle of the RADAR.
             \item \texttt{dwell\_time}: Time spent sweeping each \texttt{\_angle}.
         \end{itemize*}}{None}{Instantiates a new \texttt{RadarSensor}.}
-    \operation{run()}{None}{None}{Starts the Radar.}
+    \operation{run()}{None}{None}{Starts the RADAR.}
 }
 
 \subsection{Utility Components}
@@ -1076,8 +1110,10 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
     }{\texttt{(lat, lon)} tuple of new location}{Determines location after moving from a point, along a bearing, for a specific distance.}
 }
 \pagebreak
-\section{Appendix}
-\subsection{UML Class Diagrams}
+\appendix
+\appendixpage
+\section{UML Class Diagrams}
+\label{app:uml_class_diagrams}
 \begin{figure}[!ht]
     \centering
     \begin{tikzpicture}
@@ -1117,7 +1153,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for simulation}
-    \label{fig-simulation}
+    \label{fig:simulation}
 \end{figure}
 
 \begin{figure}
@@ -1140,7 +1176,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for startup daemon}
-    \label{fig-startupdaemon}
+    \label{fig:startupdaemon}
 \end{figure}
 
 \begin{figure}
@@ -1169,7 +1205,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for event API}
-    \label{fig-eventapi}
+    \label{fig:eventapi}
 \end{figure}
 
 \begin{figure}
@@ -1238,7 +1274,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for entities}
-    \label{fig-entities}
+    \label{fig:entities}
 \end{figure}
 \begin{figure}
     \centering
@@ -1262,7 +1298,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for interfaces}
-    \label{fig-interface}
+    \label{fig:interface}
 \end{figure}
 \begin{figure}
     \centering
@@ -1300,7 +1336,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for communication engines}
-    \label{fig-interface}
+    \label{fig:interface}
 \end{figure}
 
 \begin{figure}
@@ -1405,7 +1441,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         \path [draw, <-, >=open triangle 45] (event) -- (stop);
     \end{tikzpicture}}
     \caption{Class diagram for events}
-    \label{fig-events}
+    \label{fig:events}
 \end{figure}
 
 \begin{figure}
@@ -1429,7 +1465,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for agents}
-    \label{fig-agents}
+    \label{fig:agents}
 \end{figure}
 \begin{figure}
     \centering
@@ -1441,7 +1477,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for conditions}
-    \label{fig-condition}
+    \label{fig:condition}
 \end{figure}
 
 \begin{figure}
@@ -1467,7 +1503,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for actions}
-    \label{fig-actions}
+    \label{fig:actions}
 \end{figure}
 
 \begin{figure}
@@ -1503,7 +1539,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
             node [very near end, auto=right] {};
     \end{tikzpicture}
     \caption{Class diagram for sensors}
-    \label{fig-sensors}
+    \label{fig:sensors}
 \end{figure}
 \begin{figure}
     \centering
@@ -1519,7 +1555,7 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         }
     \end{tikzpicture}
     \caption{Class diagram for geographic utilities}
-    \label{fig-condition}
+    \label{fig:condition}
 \end{figure}
 
 \end{document}
