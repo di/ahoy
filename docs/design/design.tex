@@ -23,6 +23,7 @@
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{appendix}
+\usepackage{listings}   %for displaying code
 
 \renewenvironment{itemize*}
     {\begin{itemize}
@@ -390,35 +391,76 @@ This results in no additional overhead as new distributed nodes are added.  Furt
 \subsubsection{Distribution Method}
 Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.
 
+\subsection{Starting the Simulation}
+The simulation is configured within a startup script that initializes the world, entities within that world, agents, and the simulation itself.  All properties of these objects, such as interfaces for nodes or behaviors for agents, are also established within this script.  An example can be found in Figure-\ref{fig:exstartup} below.  It demonstrates a scenario with two nodes, each with a wireless network interface.  Each node is then assigned one agent and added to the \texttt{World}.  After all entities, agents, and world objects are instantiated, the \texttt{Simulation} is created and started.
+\begin{figure}
+    \begin{verbatim}
+import sys
+import signal
+from ahoy.simulation import Simulation
+from ahoy.world import World
+from ahoy.entities.node import Node
+from ahoy.commsengines.basic import BasicComms
+from ahoy.commsengines.logloss import LogLossComms
+from ahoy.interface import Interface
+from ahoy.agents.comms import CommsAgent
+from ahoy.network import Network
+from ahoy.tcpforward import TcpForward
+
+world = World()
+wlan = Network('wlan0')
+world.add_network(wlan)
+
+n1 = Node(0)
+n1.add_interface(Interface('wlan0', n1, wlan, 100))
+n1.set_position(39.9534, -75.1912, 0.02)
+
+agent1 = CommsAgent(n1,5,6,False)
+act1 = MoveAction(n1,1,1,0)
+con1 = SourceCondition(6)
+agent1.add_behavior([con1,CommunicationSendEvent,act1])
+n1.add_agent(agent1)
+world.add_entity(n1)
+
+n2 = Node(1)
+n2.add_interface(Interface('wlan0', n2, wlan, 100))
+n2.add_agent(CommsAgent(n2, 6, 5, False))
+n2.set_position(39.9534, -75.1912, 0.02)
+world.add_entity(n2)
+
+if __name__ == '__main__' :
+    sim = Simulation(world, LogLossComms())
+
+    def quit(signal, frame) :
+        print 'Stopping...'
+        sim.stop()
+        sys.exit(0)
+    signal.signal(signal.SIGINT, quit)
+
+    sim.start(2)
+
+    while True :
+        pass
+    \end{verbatim}
+    \caption{Example startup script}
+    \label{fig:exstartup}
+\end{figure}
+
+
+\pagebreak
+
+\subsection{Data Collection}
+\label{sec:data_collection}
+AHOY gives the end user the capability to monitor events being sent over the multicast event channel.  This allows them to capture only data that is relevant and store it in whatever format they desire.  It also potentially reduces the amount of data that needs to be stored, especially in large scale simulations.  An \texttt{Event} carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: \texttt{Entity} movements and positions, network traffic and connections, communication between entities, and actions take by agents.  
+
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
 {The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it.
 
-This class is used by the end user to begin a simulation.  For example, the script in Figure~\ref{fig:exstartup} creates a scenario with five nodes, each with one \texttt{CustomAgent}.  Running this file will begin a scenario after waiting five seconds for \texttt{StartupDaemon}s to respond.
-
-\begin{figure}
-    \begin{verbatim}
-        from ahoy.simulation import Simulation
-        from ahoy.world import World
-        from ahoy.entities.node import Node
-        from ahoy.commsengines.logloss import LogLossComms
-
-        world = World()
-
-        for i in range(0, 5) :
-            node = Node(i)
-            node.add_agent(CustomAgent())
-            world.add_entity(node)
-
-        if __name__ == '__main__' :
-            sim = Simulation(world, LogLossComms())
-            sim.start(5)
-    \end{verbatim}
-    \caption{Example startup script}
-    \label{fig:exstartup}
-\end{figure}
+This class is used by the end user to begin a simulation.  For example, the script in Figure~\ref{fig:exstartup} creates
+a scenario with two nodes, each with one \texttt{CommsAgent}.  Running this file will begin a scenario after waiting five seconds for \texttt{StartupDaemon}s to respond.
 }
 
 \attributes{
@@ -1184,7 +1226,12 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
         \end{itemize*}
     }{\texttt{(lat, lon)} tuple of new location}{Determines location after moving from a point, along a bearing, for a specific distance.}
 }
+
 \pagebreak
+
+
+
+
 \appendix
 \appendixpage
 \section{UML Class Diagrams}
