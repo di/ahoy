@@ -578,8 +578,8 @@ AHOY's \texttt{EventAPI} class provides end users with the capability of monitor
         \node (e1) [extnode, right of=tcp, xshift=3cm, yshift=1cm] {External \texttt{EventAPI} 0};
         \node (dots2) [below of=e1, yshift=.1cm] {$\vdots$};
         \node (e3) [extnode, below of=dots2] {External \texttt{EventAPI} $n$};
-        \path (e1.west) edge[<->, >=triangle 90] node {} (tcp);
-        \path (e3.west) edge[<->, >=triangle 90] node {} (tcp);
+        \path (e1.west) edge[<->, >=triangle 90, out=180, in=0] node {} (tcp.south);
+        \path (e3.west) edge[<->, >=triangle 90, out=180, in=0] node {} (tcp.south);
     \end{tikzpicture}
     \caption{Overview of \texttt{TcpForward} proxying events.}
     \label{fig:tcpforward}
