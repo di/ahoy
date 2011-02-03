@@ -430,8 +430,6 @@ Each entity in the world, be it a node or other world object, exists as a proces
     \label{fig:distribution}
 \end{figure}
 
-\subsection{Simulation Initialization}
-The simulation is configured within a startup script that initializes the world, entities within that world, agents, and the simulation itself.  Figure~\ref{fig:exstartup} below demonstrates a scenario with five nodes, each with a wireless network interface and a \texttt{CustomAgent} which has been implemented by the user.  After all entities, agents, and world objects are instantiated, the \texttt{Simulation} is created and started.
 \begin{figure}
     \begin{verbatim}
         from ahoy.simulation import Simulation
@@ -459,9 +457,8 @@ The simulation is configured within a startup script that initializes the world,
     \label{fig:exstartup}
 \end{figure}
 
-\subsection{Data Collection}
-\label{sec:data_collection}
-AHOY's \texttt{EventAPI} class provides end users with the capability of monitoring events published to the multicast event channel.  This allows users to collect only data which is relevant, and store it in whatever format desired.  It also potentially reduces the amount of data that needs to be stored, especially in large scale simulations.  An \texttt{Event} carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: \texttt{Entity} movements, network traffic and link events, and actions take by agents.  Figure~\ref{fig:exdatacollect} shows a sample Python script that counts the number of messages which were successfully received by the destination.
+\subsection{Simulation Initialization}
+The simulation is configured within a startup script that initializes the world, entities within that world, agents, and the simulation itself.  Figure~\ref{fig:exstartup} below demonstrates a scenario with five nodes, each with a wireless network interface and a \texttt{CustomAgent} which has been implemented by the user.  After all entities, agents, and world objects are instantiated, the \texttt{Simulation} is created and started.
 
 \begin{figure}
     \begin{verbatim}
@@ -489,6 +486,10 @@ AHOY's \texttt{EventAPI} class provides end users with the capability of monitor
     \caption{Example data collection script}
     \label{fig:exdatacollect}
 \end{figure}
+
+\subsection{Data Collection}
+\label{sec:data_collection}
+AHOY's \texttt{EventAPI} class provides end users with the capability of monitoring events published to the multicast event channel.  This allows users to collect only data which is relevant, and store it in whatever format desired.  It also potentially reduces the amount of data that needs to be stored, especially in large scale simulations.  An \texttt{Event} carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: \texttt{Entity} movements, network traffic and link events, and actions take by agents.  Figure~\ref{fig:exdatacollect} shows a sample Python script that counts the number of messages which were successfully received by the destination.
 
 \section{Detailed System Design}
 \subsection{Simulator Components}
