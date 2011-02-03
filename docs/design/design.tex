@@ -258,11 +258,20 @@ The goals of AHOY's core design process is to provide a framework upon which res
 \item[Scenario]
 	Scenario is comprised of a scripted language indicating the location simulated nodes within the virtual world. These nodes consist of agents (see definition of `Agent') and non-agent world objects such as planes, boats, ground vehicles, etc. 
 
+\item[Multicast]
+    A method of simultaniously delivering a message to many computers.
+
+\item[TCP]
+    Transmission Control Protocol.  A reliable, connection-oriented, communication method guaranteeing in-order, error-free delivery of all messages.
+
 \item[Terrain]
 	Terrain refers to the simulated landscape.  This includes such geography as the slope of the land, the tree density, water v.s. land surfaces, etc.
 
 \item[Topology]
 	Topology describes time-dependent connections between nodes and their characteristics (e.g. radio model). It is described with a scripting language which specifies the details of network interfaces on each simulated node, including radio models and throughput characteristics.  It describes any physical or wireless links that connect these interfaces.  Further, it indicates changes in linkage over time such as a wireless interface switches, wireless LANs, or a physical link being created or severed. 
+
+\item[UDP]
+    User Datagram Protocol.  A stateless, non-connection-oriented, communication method which does not guarantee in-order, error-free delivery of messages.
 
 \item[Visualizer]
 	The Visualizer allows the simulations to be superimposed over real-world topography.  This permits the user to examine the behavior of the agents.  It also allows for overlays such as link quality, traffic rates, and other metrics deemed important to specific components.
@@ -420,22 +429,43 @@ The simulation is configured within a startup script that initializes the world,
     \label{fig:exstartup}
 \end{figure}
 
-
 \pagebreak
 
 \subsection{Data Collection}
 \label{sec:data_collection}
-AHOY gives the end user the capability to monitor events being sent over the multicast event channel.  This allows them to capture only data that is relevant and store it in whatever format they desire.  It also potentially reduces the amount of data that needs to be stored, especially in large scale simulations.  An \texttt{Event} carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: \texttt{Entity} movements and positions, network traffic and connections, communication between entities, and actions take by agents.  
+AHOY's \texttt{EventAPI} class provides end users with the capability of monitoring events published to the multicast event channel.  This allows users to collect only data which is relevant, and store it in whatever format desired.  It also potentially reduces the amount of data that needs to be stored, especially in large scale simulations.  An \texttt{Event} carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: \texttt{Entity} movements, network traffic and link events, and actions take by agents.  Figure~\ref{fig:exdatacollect} shows a sample Python script that counts the number of messages which were successfully received by the destination.
 
+\begin{figure}
+    \begin{verbatim}
+        from ahoy.eventapi import EventAPI
+        from ahoy.events.communication import *
+        from ahoy.events.startup import SimulationStopEvent
+
+        sends = 0
+        recvs = 0
+
+        def _on_send(event) :
+            sends += 1
+
+        def _on_recv(event) :
+            recvs += 1
+
+        api = EventAPI()
+        api.subscribe(CommunicationSendEvent, _on_send)
+        api.subscribe(CommunicationRecvEvent, _on_recv)
+        api.subscribe(SimulationStop, api.stop())
+        api.join()
+
+        print '%s messages out of %s were received' % (recvs, sends)
+    \end{verbatim}
+    \caption{Example data collection script}
+    \label{fig:exdatacollect}
+\end{figure}
 \section{Detailed System Design}
 
 \subsection{Simulator Components}
 \subsubsection{Simulation}
-{The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it.
-
-This class is used by the end user to begin a simulation.  For example, the script in Figure~\ref{fig:exstartup} creates
-a scenario with two nodes, each with one \texttt{CommsAgent}.  Running this file will begin a scenario after waiting five seconds for \texttt{StartupDaemon}s to respond.
-}
+{The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it.  This class is used by the end user to begin a simulation.}
 
 \attributes{
     \attribute{\_event\_api}{EventAPI}{Instance of the \texttt{EventAPI}}
@@ -504,7 +534,7 @@ a scenario with two nodes, each with one \texttt{CommsAgent}.  Running this file
 }
     
 \subsubsection{EventAPI}
-{The \texttt{EventAPI} is used to communicate events across the event channel. It allows entities to subscribe to certain events or publish the occurrence of events. When an event occurs, it will handle any function calls an entity wishes to make during that event.}
+{The \texttt{EventAPI} is used to communicate events across the event channel. It allows entities to subscribe to certain events or publish the occurrence of events.}
 
 \attributes{
     \attribute{\_subscriptions}{dictionary}{Holds event subscriptions for an entity. Keyed by event type. The values are method calls to be made on an event.}
@@ -516,7 +546,7 @@ a scenario with two nodes, each with one \texttt{CommsAgent}.  Running this file
 }
 
 \operations{
-    \operation{\_\_init\_\_(tcp\_conn)}{A socket for the \texttt{EventAPI} to communicate over}{None}{Instantiates an \texttt{EventAPI}}
+    \operation{\_\_init\_\_(tcp\_conn=None)}{An optional TCP socket connected to a remote \texttt{TcpForwarder}.  If specified, the TCP socket will be used instead of the multicast channel.}{None}{Instantiates an \texttt{EventAPI}}
     \operation{\_setup\_mc()}{None}{None}{Initializes the multicast channel to communicate on.}
     \operation{publish(event,delay\_sec)}
     {
@@ -549,6 +579,66 @@ a scenario with two nodes, each with one \texttt{CommsAgent}.  Running this file
     \operation{start()}{None}{Thread}{Runs the \texttt{EventAPI} in a thread and returns the thread.}
     \operation{stop()}{None}{None}{Stops the \texttt{EventAPI} from running. }
 }
+
+\subsubsection{TcpForward}{The \texttt{TcpForward} class acts as a proxy to \texttt{EventAPI} instances outside of the multicast cloud as shown in Figure~\ref{fig:tcpforward}.  TCP is used as it allows bidirectional communication to instances behind NATs.  The file which contains this class will start the forwarder when run.}
+\attributes
+{
+    \attribute{\_api}{EventAPI}{An instance of an \texttt{EventAPI} listening on the multicast channel.}
+    \attribute{\_clients}{set(socket)}{A set of all external \texttt{EventAPI} instances to which traffic must be proxied.}
+    \attribute{\_tcp\_server}{socket}{A TCP socket accepting incoming connections.}
+}
+
+\operations
+{
+    \operation{\_\_init\_\_(port)}{Port number on which to listen.}{None}{Instantiates a \texttt{TcpForward} instance which will forward traffic (in both directions) between TCP clients and the multicast channel.}
+    \operation{start()}{None}{None}{Starts the \texttt{TcpForward} instance.}
+    \operation{\_acceptor()}{None}{None}{Started by \texttt{start()} in a separate thread to accept incoming TCP clients.}
+    \operation{\_listener(conn)}{Socket of incoming connection}{None}{Started by \texttt{\_acceptor} in a separate thread for each TCP connection.  Forwards events from \texttt{conn} to the multicast channel.}
+    \operation{\_on\_event(event)}{Event which occurred.}{None}{Called any time an event occurs on the multicast channel.  Forwards \texttt{event} to all TCP connections in \texttt{\_clients}.}
+}
+
+\begin{figure}
+    \centering
+    \usetikzlibrary{decorations.markings}
+    \tikzstyle{distnode} = [draw, rectangle, rounded corners, fill=MidnightBlue!10, minimum width=3.2cm]
+    \tikzstyle{extnode} = [draw, rectangle, rounded corners, fill=red!10, minimum width=3.2cm]
+    \tikzstyle{arrowed} = [->, bend right]
+    \begin{tikzpicture}
+        \node (simulation) [distnode, fill=MidnightBlue!25] {Simulation};
+        \node (d1) [distnode, below of=simulation] {Distributed Node 0};
+        \node (d2) [distnode, below of=d1] {Distributed Node 1};
+        \node (dots) [below of=d2, yshift=.1cm] {$\vdots$};
+        \node (d3) [distnode, below of=dots] {Distributed Node $n$};
+        \node (tcp) [distnode, fill=gray, right of=d1, xshift=4.6cm, yshift=-.95cm, rotate=90] {\texttt{TcpForward}};
+
+        \node (mc) [above of=tcp, xshift=-1.35cm, yshift=1.3cm] {Multicast Cloud};
+
+        \node (center) [left of=tcp, xshift=-1.5cm] {Events};
+        \draw[decoration={markings, 
+                mark=at position 0cm with {\arrow{triangle 90}},
+                mark=at position 2.09cm with {\arrow{triangle 90}},
+                mark=at position 4.19cm with {\arrow{triangle 90}}},
+                postaction={decorate}] (center) circle (1cm);
+        \draw[out=0, in=180, postaction={decorate}, decoration={markings, 
+                mark=at position 1.5cm with {\arrow{triangle 90 reversed}}}]
+             (center)+(0cm,1cm) to (tcp.north);
+        \draw[out=0, in=180, postaction={decorate}, decoration={markings, 
+                mark=at position 1.5cm with {\arrow{triangle 90}}}] (center)+(0.01cm,-1cm) to (tcp.north);
+        \begin{pgfonlayer}{background}
+            \path (simulation.west |- simulation.north)+(-.4,.4) node (a) {};
+            \path (d3.south -| d3.east)+(4,-.4) node (c) {};
+            \path[draw, dashed] (a) rectangle (c);
+        \end{pgfonlayer}
+
+        \node (e1) [extnode, right of=tcp, xshift=3cm, yshift=1cm] {External \texttt{EventAPI} 0};
+        \node (dots2) [below of=e1, yshift=.1cm] {$\vdots$};
+        \node (e3) [extnode, below of=dots2] {External \texttt{EventAPI} $n$};
+        \path (e1.west) edge[<->, >=triangle 90] node {} (tcp);
+        \path (e3.west) edge[<->, >=triangle 90] node {} (tcp);
+    \end{tikzpicture}
+    \caption{Overview of \texttt{TcpForward} proxying events.}
+    \label{fig:tcpforward}
+\end{figure}
     
 \subsubsection{Entity}
 \attributes{
@@ -1302,6 +1392,25 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
     \end{tikzpicture}
     \caption{Class diagram for event API}
     \label{fig:eventapi}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \umlclass[xshift=-2cm]{tcp}{TcpForward}{
+            \umlattr{\#}{\_api}{EventAPI}
+            \umlattr{\#}{\_clients}{set(socket)}
+            \umlattr{\#}{\_tcp\_server}{socket}
+        }{
+            \umlmethod{+}{\_\_init\_\_}{port : int}{void}
+            \umlmethod{\#}{\_acceptor}{}{void}
+            \umlmethod{\#}{\_listener}{conn : socket}{void}
+            \umlmethod{\#}{\_on\_event}{event : Event}{void}
+            \umlmethod{+}{start}{}{void}
+        }
+    \end{tikzpicture}
+    \caption{Class diagram for TCP forwarder}
+    \label{fig:tcpforward}
 \end{figure}
 
 \begin{figure}
