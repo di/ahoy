@@ -223,7 +223,7 @@ In \sref{sec:user_interface}, design choices describing the lack of traditional 
 
 For explanations of complex algorithms used in the system, see \sref{sec:logloss} (Log-loss communications model) and \sref{sec:radar} (RADAR sensor modeling). 
 
-A traceability matrix showing the relation between each design element and each system requirement is shown in \sref{sec:requirements}. A glossary of relevant terms, acronyms and abbreviations is also available in \sref{sec:glossary}.
+A traceability matrix showing the relation between each design element and each system requirement is shown in \sref{sec:requirements}. A glossary of relevant terms, acronyms and abbreviations is also available in \aref{sec:glossary}.
 
 A more complete index is available in the \rrref{Table of Contents}{toc}, including a \rrref{List of Figures}{lof}. 
 
@@ -243,40 +243,6 @@ AHOY is designed to be used as a testbed for sensors and respective algorithms i
 
 The goals of AHOY's core design process is to provide a framework upon which researches can build custom agents, scenarios and topologies, and quickly and easily run an experiment using them. A modular distributed architecture allows for a wide scale of simulation size. Most importantly, the Event API allows developer to easily tailor custom user interfaces for existing applications or visualizers by providing a common interface to monitor every action within an executing experiment.
 
-\subsection{Definitions, Acronyms, and Abbreviations}
-\label{sec:glossary}
-\begin{description}
-\item[Agent]
-	Agents are simulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topologies.   
-
-\item[Distribution]
-	Distribution refers to the process of distributing the simulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single simulation at the system's discretion.  A framework is provided to allow the user to distribute their simulation. 	
-
-\item[Node]
-	Nodes are virtual or physical machines that consist of agents and network interfaces.  If nodes are virtual, many nodes may run on one physical machine.  
-
-\item[Scenario]
-	Scenario is comprised of a scripted language indicating the location simulated nodes within the virtual world. These nodes consist of agents (see definition of `Agent') and non-agent world objects such as planes, boats, ground vehicles, etc. 
-
-\item[Multicast]
-    A method of simultaniously delivering a message to many computers.
-
-\item[TCP]
-    Transmission Control Protocol.  A reliable, connection-oriented, communication method guaranteeing in-order, error-free delivery of all messages.
-
-\item[Terrain]
-	Terrain refers to the simulated landscape.  This includes such geography as the slope of the land, the tree density, water v.s. land surfaces, etc.
-
-\item[Topology]
-	Topology describes time-dependent connections between nodes and their characteristics (e.g. radio model). It is described with a scripting language which specifies the details of network interfaces on each simulated node, including radio models and throughput characteristics.  It describes any physical or wireless links that connect these interfaces.  Further, it indicates changes in linkage over time such as a wireless interface switches, wireless LANs, or a physical link being created or severed. 
-
-\item[UDP]
-    User Datagram Protocol.  A stateless, non-connection-oriented, communication method which does not guarantee in-order, error-free delivery of messages.
-
-\item[Visualizer]
-	The Visualizer allows the simulations to be superimposed over real-world topography.  This permits the user to examine the behavior of the agents.  It also allows for overlays such as link quality, traffic rates, and other metrics deemed important to specific components.
-\end{description}
-
 \subsection{References%
   \label{references}%
 }
@@ -290,37 +256,22 @@ These documents have been used as reference materials for various technologies i
     \item One-way RADAR Equation / RF Propagation \url{http://www.phys.hawaii.edu/~anita/new/papers/militaryHandbook/one-way.PDF}
 \end{itemize*}
 
-\section{Design Overview}
+\section{Design Overview \& Motivations}
 \subsection{Description of Problem}
 The AHOY application bridges network and agent simulators. It must provide an entirely event-driven, real-time system to ultimately allow for human-in-the-loop interaction with agents. It must enable scenarios and network topologies to be easily defined, and similarly make writing custom agents extremely simple. The Event API must be comprehensive to provide flexibility for the user in terms of visualization and data collection. Finally, AHOY must be able to effortlessly distribute an experiment across physical machines, so that scaling limitations are not a user issue.
-
-\subsection{Subsystem}
-As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary components.
-
-\subsubsection{Simulation}{Initializes simulations and provides a communication engine for other components.}
-\subsubsection{Communications}{Handles simulation of network links and hardware.}
-\subsubsection{World}{Maintains world state.  An identical instance of this is maintained by all Entities and the Simulation.}
-\subsubsection{Entities}{Physical objects within the simulated world.  These include Nodes and World Objects.}
-\subsubsection{Agents}{Provide logic that interacts with the environment, other agents, and sensors.}
-\subsubsection{Interfaces}{Connect virtual nodes to each other.  Provide a means for communication}
-\subsubsection{Sensors}{Sense some aspect of the virtual world and provide data to local agents.}
 
 \begin{figure}
     \centering
     \begin{tikzpicture}[node distance=.1cm]
-        %%%%%%%
         \node [component] (Simulation) {\textbf{Simulation}};
-        %%%%%%%
         \node [component, below left of=Simulation] (World) {\textbf{World}};
         \node [component, above left of=World] (StartupDaemon) {\textbf{StartupDaemon}};
         \node [component, below right of=Simulation] (CommsEngine) {\textbf{CommsEngine}};
-        %%%%%%%
         \node [component, below of=World] (Entity) {\textbf{Entity}};
         \node [component, below right of=World] (EventAPI) {\textbf{EventAPI}};
         \node [component, below of=CommsEngine] (LogLoss) {\textbf{LogLoss}};
         \node [component, below right of=CommsEngine] (Ethernet) {\textbf{Ethernet}};
         \node [component, below left of=World] (Network) {\textbf{Network}};
-        %%%%%%%
         \node [component, below right of=EventAPI] (Event) {\textbf{Event}};
         \node [component, below of=Entity] (Node) {\textbf{Node}};
         \node [component, below left of=Entity] (Sensor) {\textbf{Sensor}};
@@ -329,10 +280,8 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
         \node [component, below right of=Node] (Interface) {\textbf{Interface}};
         \node [component, below left of=Agent] (Condition) {\textbf{Condition}};
         \node [component, below right of=Agent] (Action) {\textbf{Action}};
-        %%%%%%%
         \node [component, below left of=Sensor] (RadarSensor) {\textbf{RadarSensor}};
         \node [component, below of=Action] (MoveAction) {\textbf{MoveAction}};
-
         \node [component, below right of=Event, yshift=-0cm, xshift=-1cm, anchor=west] (LinkEvent) {\textbf{LinkEvent}};
         \node [component, below right of=Event, yshift=-1cm, xshift=-1cm, anchor=west] (StartupEvent) {\textbf{StartupEvent}};
         \node [component, below right of=Event, yshift=-2cm, xshift=-1cm, anchor=west] (AckStartupEvent) {\textbf{AckStartupEvent}};
@@ -376,7 +325,21 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
     \label{fig:subsystem}
 \end{figure}
 
-\subsection{Distribution Diagram}
+\subsection{Technologies Used}
+The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
+
+\subsection{User Interface Overview}
+\label{sec:user_interface}
+AHOY is intentionally designed to provide no specific user interface in the traditional sense. Instead, it provides an extensive and comprehensive API, for creating a simulation, interacting with an experiment as it is running, monitoring events from a global viewpoint, and recording the results of an experiment for analysis. This ultimately offers flexibility for the end user, as separate, pre-existing interfaces can be modified to support AHOY's software API, or simply created from scratch to explicitly satisfy the user's needs. 
+
+\subsection{Communication}
+The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is used instead.
+
+This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.
+
+\subsection{Distribution Method}
+Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel. See Figure~\ref{fig:distribution} for a detailed distribution diagram.
+
 \begin{figure}%[!ht]
     \centering
     \includegraphics[scale=.6]{../initial-pres/arch.pdf}
@@ -384,23 +347,7 @@ As shown in Figure~\ref{fig:subsystem}, AHOY is comprised of seven primary compo
     \label{fig:distribution}
 \end{figure}
 
-\subsection{User Interface Overview}
-\label{sec:user_interface}
-AHOY is intentionally designed to provide no specific user interface in the traditional sense. Instead, it provides an extensive and comprehensive API, for creating a simulation, interacting with an experiment as it is running, monitoring events from a global viewpoint, and recording the results of an experiment for analysis. This ultimately offers flexibility for the end user, as separate, pre-existing interfaces can be modified to support AHOY's software API, or simply created from scratch to explicitly satisfy the user's needs. 
-
-\subsection{Technologies Used}
-The AHOY project is written entirely in Python, an interpreted, general-purpose high-level programming language. It does not depend on any external or libraries or packages, aside from those provided by the standard library. These include: the \texttt{sys} and \texttt{time} modules for standard system functions, the \texttt{math} library for advanced calculations, the \texttt{threading}, \texttt{signal} and \texttt{subprocess} for managing the distributed system, and the \texttt{pickle}, \texttt{socket} and \texttt{struct} modules for organizing the multicast event channel.
-
-\subsection{Design Motivations}
-\subsubsection{Communication}
-The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information.  Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes.  This results in poor scaling with large numbers of nodes.  In AHOY, a multicast event channel is used instead.
-
-This results in no additional overhead as new distributed nodes are added.  Further, connections need not be maintained between nodes.  Due to the nature of multicast, it is possible that messages will be dropped or may arrive out of order.  However, many other frameworks, including EMANE\footnote{\url{http://labs.cengen.com/emane}} utilize multicast event channels with success.  Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.  In the event that messages are dropped or arrive out of order, AHOY can utilize NRL's NORM\footnote{\url{http://cs.itd.nrl.navy.mil/work/norm}} protocol which provides the same QoS guarantees as TCP.
-
-\subsubsection{Distribution Method}
-Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel.
-
-\subsection{Starting the Simulation}
+\subsection{Simulation Initialization}
 The simulation is configured within a startup script that initializes the world, entities within that world, agents, and the simulation itself.  Figure~\ref{fig:exstartup} below demonstrates a scenario with five nodes, each with a wireless network interface and a \texttt{CustomAgent} which has been implemented by the user.  After all entities, agents, and world objects are instantiated, the \texttt{Simulation} is created and started.
 \begin{figure}
     \begin{verbatim}
@@ -428,8 +375,6 @@ The simulation is configured within a startup script that initializes the world,
     \caption{Example startup script}
     \label{fig:exstartup}
 \end{figure}
-
-\pagebreak
 
 \subsection{Data Collection}
 \label{sec:data_collection}
@@ -461,8 +406,8 @@ AHOY's \texttt{EventAPI} class provides end users with the capability of monitor
     \caption{Example data collection script}
     \label{fig:exdatacollect}
 \end{figure}
-\section{Detailed System Design}
 
+\section{Detailed System Design}
 \subsection{Simulator Components}
 \subsubsection{Simulation}
 {The Simulation starts the entire process of sending and receiving events.  It maintains the list of startup daemons running on each node. In addition, it initializes the world within the simulation along with the entities running in it.  This class is used by the end user to begin a simulation.}
@@ -1292,12 +1237,36 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 }
 
 \pagebreak
-
-
-
-
 \appendix
 \appendixpage
+
+\section{Definitions, Acronyms, and Abbreviations}
+\label{sec:glossary}
+\begin{description}
+\item[Agent]
+	Agents are simulated pieces of software that run on nodes in the network. They consist of different algorithms that are relevant for the user to test on different scenarios and topologies.   
+\item[Distribution]
+	Distribution refers to the process of distributing the simulation across a multi-platform physical cluster.  This allows the system to exceed the number of nodes per platform for a single simulation at the system's discretion.  A framework is provided to allow the user to distribute their simulation. 	
+\item[Node]
+	Nodes are virtual or physical machines that consist of agents and network interfaces.  If nodes are virtual, many nodes may run on one physical machine.  
+\item[Scenario]
+	Scenario is comprised of a scripted language indicating the location simulated nodes within the virtual world. These nodes consist of agents (see definition of `Agent') and non-agent world objects such as planes, boats, ground vehicles, etc. 
+\item[Multicast]
+    A method of simultaniously delivering a message to many computers.
+\item[TCP]
+    Transmission Control Protocol.  A reliable, connection-oriented, communication method guaranteeing in-order, error-free delivery of all messages.
+\item[Terrain]
+	Terrain refers to the simulated landscape.  This includes such geography as the slope of the land, the tree density, water v.s. land surfaces, etc.
+\item[Topology]
+	Topology describes time-dependent connections between nodes and their characteristics (e.g. radio model). It is described with a scripting language which specifies the details of network interfaces on each simulated node, including radio models and throughput characteristics.  It describes any physical or wireless links that connect these interfaces.  Further, it indicates changes in linkage over time such as a wireless interface switches, wireless LANs, or a physical link being created or severed. 
+\item[UDP]
+    User Datagram Protocol.  A stateless, non-connection-oriented, communication method which does not guarantee in-order, error-free delivery of messages.
+\item[Visualizer]
+	The Visualizer allows the simulations to be superimposed over real-world topography.  This permits the user to examine the behavior of the agents.  It also allows for overlays such as link quality, traffic rates, and other metrics deemed important to specific components.
+\end{description}
+
+\pagebreak
+
 \section{UML Class Diagrams}
 \label{app:uml_class_diagrams}
 \begin{figure}[!ht]
@@ -1762,5 +1731,4 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
     \caption{Class diagram for geographic utilities}
     \label{fig:condition}
 \end{figure}
-
 \end{document}
