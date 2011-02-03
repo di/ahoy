@@ -340,9 +340,92 @@ This results in no additional overhead as new distributed nodes are added.  Furt
 \subsection{Distribution Method}
 Each entity in the world, be it a node or other world object, exists as a process on one of the physical distributed nodes.  Sensors attached to each entity run as threads within that process.  Node entities may have agents running as threads also.  This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel.  Additionally, this allows multiple agents within a single node to communicate off of the event-channel. See Figure~\ref{fig:distribution} for a detailed distribution diagram.
 
-\begin{figure}%[!ht]
+\begin{figure}
     \centering
-    \includegraphics[scale=.6]{../initial-pres/arch.pdf}
+    \def\mcwidth{14.5}
+    \def\mcheight{10}
+    \tikzstyle{disto} = [minimum height=9cm, minimum width=2.5cm, below of=mc, yshift=-4.2cm, draw, rectangle, rounded corners, fill=MidnightBlue!30]
+    \tikzstyle{ntext} = [scale=0.75, yshift=4.65cm, draw, rectangle, rounded corners, fill=white, minimum width=3cm, minimum height=0.55cm]
+    \tikzstyle{vnode} = [minimum height=1.85cm, minimum width=2cm, text width=1.5cm, draw, rectangle, yshift=-0.25cm, text badly centered, anchor=north, fill=white, densely dotted]
+    \tikzstyle{agent} = [scale=0.75, yshift=-0.5cm, anchor=north, rectangle, rounded corners, draw, minimum width=2.3cm, minimum height=0.53cm, fill=MidnightBlue!20]
+    \tikzstyle{vtext} = [scale=0.75, draw, rectangle, rounded corners, densely dotted, minimum width=3cm, fill=white, anchor=north]
+    \tikzstyle{start} = [minimum height=1.8cm, minimum width=2cm, text width=1.5cm, draw, rectangle, rounded corners, yshift=2.25cm, text badly centered, fill=MidnightBlue!10]
+    \tikzstyle{biggy} = [minimum height=8.4cm, minimum width=2cm, draw, rectangle, rounded corners, yshift=-1.05cm, fill=MidnightBlue!10]
+    
+    \begin{tikzpicture}
+        \node (mc) [draw, rectangle, rounded corners, dashed] {Multicast Event Channel};
+        
+        \node (n0) [disto, xshift=-5.5cm] {};
+            \node [above of=n0, ntext] {Display Node};
+            \node [above of=n0, biggy] {Visualizer};
+        
+        \node (n1) [disto, xshift=-2.75cm] {};
+            \node [above of=n1, ntext] {Head Node};
+            \node [above of=n1, biggy] {Simulator};
+        
+        \node (n2) [disto, xshift=-0cm] {};
+            \node [above of=n2, ntext] {Distributed Node};
+            \node (sd0) [above of=n2, start] {Startup Daemon};
+            \node (vn0) [below of=sd0, vnode, yshift=-0cm] {};
+                \node [above of=vn0, vtext] {V. Node 0};
+                \node [above of=vn0, agent, yshift=-0.15cm] {Agent 0};
+                \node [above of=vn0, agent, yshift=-0.75cm] {Agent 1};
+                \node [above of=vn0, agent, yshift=-1.35cm] {Agent 2};
+            \node (vn1) [below of=vn0, vnode] {};
+                \node [above of=vn1, vtext] {V. Node 1};
+                \node [above of=vn1, agent, yshift=-0.15cm] {Agent 0};
+                \node [above of=vn1, agent, yshift=-0.75cm] {Agent 1};
+                \node [above of=vn1, agent, yshift=-1.35cm] {Agent 2};
+            \node (vn2) [below of=vn1, vnode] {};
+                \node [above of=vn2, vtext] {V. Node 2};
+                \node [above of=vn2, agent, yshift=-0.15cm] {Agent 0};
+                \node [above of=vn2, agent, yshift=-0.75cm] {Agent 1};
+                \node [above of=vn2, agent, yshift=-1.35cm] {Agent 2};
+
+        \node (n3) [disto, xshift=2.75cm] {};
+            \node [above of=n3, ntext] {Distributed  Node};
+            \node (sd1) [above of=n3, start] {Startup Daemon};
+            \node (vn3) [below of=sd1, vnode, yshift=-0cm] {};
+                \node [above of=vn3, vtext] {V. Node 0};
+                \node [above of=vn3, agent, yshift=-0.15cm] {Agent 3};
+                \node [above of=vn3, agent, yshift=-0.75cm] {Sensor 0};
+                \node [above of=vn3, agent, yshift=-1.35cm] {Sensor 1};
+            \node (vn4) [below of=vn3, vnode] {};
+                \node [above of=vn4, vtext] {V. Node 1};
+                \node [above of=vn4, agent, yshift=-0.15cm] {Agent 3};
+                \node [above of=vn4, agent, yshift=-0.75cm] {Sensor 0};
+                \node [above of=vn4, agent, yshift=-1.35cm] {Sensor 1};
+            \node (vn5) [below of=vn4, vnode] {};
+                \node [above of=vn5, vtext] {V. Node 2};
+                \node [above of=vn5, agent, yshift=-0.15cm] {Agent 3};
+                \node [above of=vn5, agent, yshift=-0.75cm] {Sensor 0};
+                \node [above of=vn5, agent, yshift=-1.35cm] {Sensor 1};
+ 
+        \node (n4) [disto, xshift=5.5cm] {};
+            \node [above of=n4, ntext] {Distributed  Node};
+            \node (sd2) [above of=n4, start] {Startup Daemon};
+            \node (vn6) [below of=sd2, vnode, yshift=-0cm] {};
+                \node [above of=vn6, vtext] {V. Node 0};
+                \node [above of=vn6, agent, yshift=-0.15cm] {Agent 3};
+                \node [above of=vn6, agent, yshift=-0.75cm] {Sensor 0};
+                \node [above of=vn6, agent, yshift=-1.35cm] {Sensor 1};
+            \node (vn7) [below of=vn6, vnode] {};
+                \node [above of=vn7, vtext] {V. Node 1};
+                \node [above of=vn7, agent, yshift=-0.15cm] {Agent 3};
+                \node [above of=vn7, agent, yshift=-0.75cm] {Sensor 0};
+                \node [above of=vn7, agent, yshift=-1.35cm] {Sensor 1};
+            \node (vn8) [below of=vn7, vnode] {};
+                \node [above of=vn8, vtext] {V. Node 2};
+                \node [above of=vn8, agent, yshift=-0.15cm] {Logic};
+        
+        \draw[dashed]
+            (mc.west) to (-0.5*\mcwidth,0)
+            (-0.5*\mcwidth,0) to (-0.5*\mcwidth,-\mcheight)
+            (-0.5*\mcwidth,-\mcheight) to (0.5*\mcwidth,-\mcheight)
+            (0.5*\mcwidth,-\mcheight) to (0.5*\mcwidth,0)
+            (0.5*\mcwidth,0) to (mc.east);
+
+    \end{tikzpicture}
     \caption{Distribution Diagram}
     \label{fig:distribution}
 \end{figure}
