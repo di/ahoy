@@ -58,7 +58,7 @@ class Agent :
             possible_actions = self._behaviors[eventname]
             for p in possible_actions :
                 condition, action = p
-                if condition.is_met(event) : 
+                if condition.is_met(self, event) : 
                     action.perform()
 
     def _init_behaviors(self):

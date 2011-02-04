@@ -21,12 +21,13 @@ world.add_entity(n1)
 
 n2 = Node(1)
 n2.add_interface(Interface('wlan0', wlan, power=100))
-n2.add_agent(CommsAgent(6, 5, False))
+n2.add_agent(CommsAgent(6, 7, False))
 n2.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n2)
 
 n3 = Node(2)
 n3.add_interface(Interface('wlan0', wlan, power=100))
+n3.add_agent(CommsAgent(7, 5, False))
 n3.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n3)
 
