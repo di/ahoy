@@ -22,6 +22,15 @@ class Entity :
         self._velocity = (0, 0, 0)
         self._forward_velocity = 0
 
+        self._sensors = {}
+
+    def add_sensor(self, name, sensor) :
+        self._sensors[name] = sensor
+        sensor.set_owner(self)
+
+    def get_sensor(self, name) :
+        return self._sensor[name]
+
     def set_rcs(self, rcs) :
         self._rcs = rcs
 
@@ -141,6 +150,9 @@ class Entity :
         self._move_thread = None
         self._stop_move = False
         self._stopped_cond = Condition()
+
+        for sensor in self._sensors.values() :
+            Thread(target=sensor._run, args=(self.get_world(),)).start()
 
     def run(self) :
         pass
