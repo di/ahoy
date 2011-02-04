@@ -21,8 +21,8 @@ class RadarEvent(Event) :
         return self._target_location
 
 class RadarSensor(Sensor) :
-    def __init__(self, owner_uid, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
-        Sensor.__init__(self, owner_uid)
+    def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
+        Sensor.__init__(self)
         self._trans_power = trans_power
         self._trans_freq = trans_freq
         self._gain = gain
@@ -36,7 +36,7 @@ class RadarSensor(Sensor) :
         while True :
             angle_data = None
             for entity in self.get_world().get_entities() :
-                if entity.get_uid() == self.get_owner_uid() :
+                if entity.get_uid() == self.get_owner().get_uid() :
                     continue
                 lat, lon, agl = self.get_position()
                 e_lat, e_lon, e_agl = entity.get_position()
@@ -72,6 +72,7 @@ class RadarSensor(Sensor) :
                 location = None
                 distance = None
             self._publish_data(RadarEvent(antenna_bearing, distance, location))
+            print antenna_bearing, distance, location
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)

@@ -10,7 +10,7 @@ from ahoy.util.units import *
 world = World()
 
 node = Node(0)
-node.add_sensor('radar', RadarSensor(node.get_uid(), watts(6000), 25, 1, 5, 1, 3/360.0, 1))
+node.add_sensor('radar', RadarSensor(watts(6000), 25, 1, 5, 1, 3/360.0, 1))
 world.add_entity(node)
 
 if __name__ == '__main__' :

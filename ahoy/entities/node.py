@@ -23,6 +23,7 @@ class Node(Entity) :
 
     def add_agent(self, agent_inst) :
         self._agents[agent_inst.get_uid()] = agent_inst
+        agent_inst.set_owner_node(self)
 
     def get_interface_on_net(self, network_name) :
         for iface in self._interfaces.values() :

@@ -26,6 +26,7 @@ class Entity :
 
     def add_sensor(self, name, sensor) :
         self._sensors[name] = sensor
+        sensor.set_owner(self)
 
     def get_sensor(self, name) :
         return self._sensor[name]

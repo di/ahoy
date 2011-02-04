@@ -5,8 +5,8 @@ from ahoy.entity import Entity
 from ahoy.entities.node import Node
 
 class Agent :
-    def __init__(self, owner_node, uid) :
-        self._owner_node = owner_node
+    def __init__(self, uid) :
+        self._owner_node = None
         self._uid = uid
         self._behaviors = {}
 
@@ -15,6 +15,9 @@ class Agent :
 
     def get_owner_node(self) :
         return self._owner_node
+
+    def set_owner_node(self, owner_node) :
+        self._owner_node = owner_node
 
     def start(self) :
         self._init_behaviors()

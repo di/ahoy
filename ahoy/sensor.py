@@ -1,11 +1,14 @@
 class Sensor :
-    def __init__(self, owner_uid) :
-        self._owner_uid = owner_uid
+    def __init__(self) :
+        self._owner = None
         self._world = None
         self._subscribers = []
 
-    def get_owner_uid(self) :
-        return self._owner_uid
+    def get_owner(self) :
+        return self._owner
+
+    def set_owner(self, owner) :
+        self._owner = owner
 
     def subscribe(self, callback) :
         self._subscribers.append(callback)
