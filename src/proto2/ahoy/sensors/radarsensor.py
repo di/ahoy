@@ -38,7 +38,7 @@ class RadarSensor(Sensor) :
             for entity in self.get_world().get_entities() :
                 if entity.get_uid() == self.get_owner().get_uid() :
                     continue
-                lat, lon, agl = self.get_position()
+                lat, lon, agl = self.get_owner().get_position()
                 e_lat, e_lon, e_agl = entity.get_position()
 
                 lat = math.radians(lat)
@@ -66,7 +66,8 @@ class RadarSensor(Sensor) :
                         angle_data = (est_dist, est_orth_vel)
 
             if angle_data != None :
-                location = loc_from_bearing_dist(self._lat, self._long, math.degrees(antenna_bearing), angle_data[0])
+                llat, llon, _ = self.get_owner().get_position()
+                location = loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0])
                 distance = angle_data[0]
             else :
                 location = None
