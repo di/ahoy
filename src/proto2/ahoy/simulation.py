@@ -5,12 +5,10 @@ from ahoy.world import World
 from ahoy.events.startup import *
 
 class Simulation :
-    def __init__(self, world_inst, comms_module) :
+    def __init__(self, world_inst) :
         self._event_api = EventAPI()
         self._event_api.start()
         self._startup_acks = set([])
-        self._comms_module = comms_module
-        self._comms_module.set_simulation(self)
         self._world = world_inst
 
     def get_world(self) :

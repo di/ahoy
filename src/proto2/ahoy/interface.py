@@ -1,9 +1,9 @@
 from ahoy.events.communication import CommunicationRecvEvent, CommunicationSendEvent
 
 class Interface :
-    def __init__(self, name, owner_node, network, power) :
+    def __init__(self, name, network, power) :
         self._name = name
-        self._owner = owner_node
+        self._owner = None
         self._recv_callback = None
         self._network_name = network.get_name()
         self._power = power
@@ -25,6 +25,9 @@ class Interface :
 
     def get_owner(self) :
         return self._owner
+
+    def set_owner(self, owner) :
+        self._owner = owner
 
     def get_network_name(self) :
         return self._network_name

@@ -11,8 +11,8 @@ class LogLossComms(CommsEngine) :
         self.get_event_api().subscribe(EntityMoveEvent, self._on_movement)
 
     def _get_rx_power(self, src_uid, dest_uid, src_power) :
-        src_lat, src_lon, src_agl = self.get_simulation().get_world().get_entity(src_uid).get_position()
-        dest_lat, dest_lon, dest_agl = self.get_simulation().get_world().get_entity(dest_uid).get_position()
+        src_lat, src_lon, src_agl = self.get_world().get_entity(src_uid).get_position()
+        dest_lat, dest_lon, dest_agl = self.get_world().get_entity(dest_uid).get_position()
         distance = lin_distance(src_lat, src_lon, src_agl, dest_lat, dest_lon, dest_agl)
 
         # TODO: These parameters should be in the interface, not here.
@@ -36,8 +36,8 @@ class LogLossComms(CommsEngine) :
         source_node_uid = self.get_node_from_agent(event.get_src_agent_uid())
         dest_node_uid = self.get_node_from_agent(event.get_message().get_dest_agent())
 
-        src_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface(event.get_src_iface_name()).get_power()
-        dest_power = self.get_simulation().get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network()).get_power()
+        src_power = self.get_world().get_entity(source_node_uid).get_interface(event.get_src_iface_name()).get_power()
+        dest_power = self.get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network()).get_power()
 
         if self._should_deliver(source_node_uid, dest_node_uid, src_power, dest_power) :
             self.get_event_api().publish(CommunicationRecvEvent(event.get_src_agent_uid(), event.get_src_iface_name(), event.get_message(), event.get_network()))
@@ -46,14 +46,14 @@ class LogLossComms(CommsEngine) :
     # Simplify some of these if's...
     def _on_movement(self, event) :
         move_uid = event.get_uid()
-        for entity in self.get_simulation().get_world().get_entities() :
+        for entity in self.get_world().get_entities() :
             if isinstance(entity, Node) :
                 if move_uid != entity.get_uid() :
                     for iface in entity.get_interfaces() :
-                        network = self.get_simulation().get_world().get_network(iface.get_network_name())
+                        network = self.get_world().get_network(iface.get_network_name())
                         if network.both_in_network(move_uid, entity.get_uid()) :
-                            src_power = self.get_simulation().get_world().get_entity(move_uid).get_interface_on_net(network.get_name()).get_power()
-                            dest_power = self.get_simulation().get_world().get_entity(entity.get_uid()).get_interface_on_net(network.get_name()).get_power()
+                            src_power = self.get_world().get_entity(move_uid).get_interface_on_net(network.get_name()).get_power()
+                            dest_power = self.get_world().get_entity(entity.get_uid()).get_interface_on_net(network.get_name()).get_power()
                             if self._should_deliver(move_uid, entity.get_uid(), src_power, dest_power) :
                                 pathloss = self._get_rx_power(move_uid, entity.get_uid(), src_power)
                                 if network.check_cache(move_uid, entity.get_uid(), pathloss) :

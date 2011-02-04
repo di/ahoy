@@ -14,10 +14,15 @@ from ahoy.util.units import *
 
 world = World()
 
-wlan = Network('wlan0')
+wlan = Network('wlan0', LogLossComms())
 world.add_network(wlan)
 
-heli_areas = [(39.9558, -75.1386, 39.9475, -75.1314), (39.9468, -75.1396, 39.9419, -75.1314), (39.9410, -75.1420, 39.9360, -75.1321), (39.9330, -75.1418, 39.9281, -75.1311)]
+heli_areas = [
+    (39.9558, -75.1386, 39.9475, -75.1314), 
+    (39.9468, -75.1396, 39.9419, -75.1314), 
+    (39.9410, -75.1420, 39.9360, -75.1321), 
+    (39.9330, -75.1418, 39.9281, -75.1311)
+]
 for i, loc in enumerate(heli_areas) :
     print 'heli', i
     heli = Node(i)
@@ -49,7 +54,7 @@ for path in paths :
     world.add_entity(e)
 
 if __name__ == '__main__' :
-    sim = Simulation(world, LogLossComms())
+    sim = Simulation(world)
 
     def quit(signal, frame) :
         print 'Stopping...'

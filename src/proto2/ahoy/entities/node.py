@@ -11,6 +11,7 @@ class Node(Entity) :
 
     def add_interface(self, interface) :
         self._interfaces[interface.get_name()] = interface
+        interface.set_owner(self)
 
     def remove_interface(self, name) :
         del self._interface[name]
