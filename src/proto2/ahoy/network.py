@@ -12,6 +12,9 @@ class Network :
     def add_interface(self, interface) :
         self._interfaces.add(interface)
 
+    def get_interfaces(self) :
+        return self._interfaces
+
     def check_cache(self, node1_uid, node2_uid, pathloss=None) :
         if not self._link_cache.has_key((node1_uid, node2_uid)) or self._link_cache[(node1_uid, node2_uid)] != pathloss :
             # This is kind of a hack, but it's simpler than creating an

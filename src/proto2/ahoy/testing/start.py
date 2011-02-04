@@ -25,6 +25,11 @@ n2.add_agent(CommsAgent(6, 5, False))
 n2.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n2)
 
+n3 = Node(2)
+n3.add_interface(Interface('wlan0', wlan, 100))
+n3.set_position(39.9534, -75.1912, 0.02)
+world.add_entity(n3)
+
 if __name__ == '__main__' :
     sim = Simulation(world)
 
