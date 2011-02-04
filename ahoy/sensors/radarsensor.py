@@ -5,15 +5,11 @@ from ahoy.event import Event
 from ahoy.util.geo import *
 
 class RadarEvent(Event) :
-    def __init__(self, radar_loc, bearing, distance, target_location) :
+    def __init__(self, bearing, distance, target_location) :
         Event.__init__(self)
-        self._radar_loc = radar_loc
         self._bearing = bearing
         self._distance = distance
         self._target_location = target_location
-
-    def get_radar_loc(self) :
-        return self._radar_loc
 
     def get_bearing(self) :
         return self._bearing
@@ -25,7 +21,8 @@ class RadarEvent(Event) :
         return self._target_location
 
 class RadarSensor(Sensor) :
-    def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
+    def __init__(self, owner_uid, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
+        Sensor.__init__(self, owner_uid)
         self._trans_power = trans_power
         self._trans_freq = trans_freq
         self._gain = gain
@@ -39,7 +36,7 @@ class RadarSensor(Sensor) :
         while True :
             angle_data = None
             for entity in self.get_world().get_entities() :
-                if entity.get_uid() == self.get_uid() :
+                if entity.get_uid() == self.get_owner_uid() :
                     continue
                 lat, lon, agl = self.get_position()
                 e_lat, e_lon, e_agl = entity.get_position()
@@ -71,7 +68,6 @@ class RadarSensor(Sensor) :
             if angle_data != None :
                 location = loc_from_bearing_dist(self._lat, self._long, math.degrees(antenna_bearing), angle_data[0])
                 distance = angle_data[0]
-                print antenna_bearing, location
             else :
                 location = None
                 distance = None

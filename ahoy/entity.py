@@ -151,7 +151,7 @@ class Entity :
         self._stopped_cond = Condition()
 
         for sensor in self._sensors.values() :
-            Thread(target=sensor.run).start()
+            Thread(target=sensor._run, args=(self.get_world(),)).start()
 
     def run(self) :
         pass

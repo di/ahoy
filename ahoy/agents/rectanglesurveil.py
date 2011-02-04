@@ -4,8 +4,8 @@ from ahoy.agent import Agent
 from ahoy.event import Event
 
 class RectangleSurveilAgent(Agent) :
-    def __init__(self, owner_node, north_west, south_east, vel) :
-       Agent.__init__(self, owner_node)
+    def __init__(self, owner_node, id, north_west, south_east, vel) :
+       Agent.__init__(self, owner_node, id)
        self._north_west = north_west
        self._south_east = south_east
        self._vel = vel
