@@ -3,7 +3,7 @@ import signal
 from ahoy.simulation import Simulation
 from ahoy.world import World
 from ahoy.entities.node import Node
-from ahoy.entities.radarsensor2 import RadarSensor2
+from ahoy.sensors.radarsensor import RadarSensor
 from ahoy.entities.scripted import Scripted
 from ahoy.agents.rectanglesurveil import RectangleSurveilAgent
 from ahoy.commsengines.logloss import LogLossComms
@@ -24,13 +24,13 @@ for i, loc in enumerate(heli_areas) :
     heli.set_position(loc[0], loc[1], feet(i * 100))
     nw = (loc[0], loc[1])
     se = (loc[2], loc[3])
-    heli.add_agent(RectangleSurveilAgent(heli, nw, se, feet(150)))
+    heli.add_agent(RectangleSurveilAgent(heli, i, nw, se, feet(150)))
 
     heli.add_interface(Interface('wlan0', heli, wlan, 120))
     world.add_entity(heli)
 
 print 'radar', len(world.get_entities())
-radar = RadarSensor2(len(world.get_entities()), watts(6000), 25, 1, 5, 1, 3/360.0, 1)
+radar = RadarSensor(watts(6000), 25, 1, 5, 1, 3/360.0, 1)
 radar.set_position(39.9485, -75.1325, 0)
 world.add_entity(radar)
 

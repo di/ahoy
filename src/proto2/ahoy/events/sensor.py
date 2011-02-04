@@ -1,16 +1,8 @@
 from ahoy.event import Event
 
-class SensorEvent(Event) :
-    def __init__(self, sensor_id) :
+class RadarEvent(Event) :
+    def __init__(self, radar_loc, bearing, distance, target_location) :
         Event.__init__(self)
-        self._uid = sensor_id
-
-    def get_sensor_id(self) :
-        return self._uid
-
-class RadarEvent(SensorEvent) :
-    def __init__(self, sensor_id, radar_loc, bearing, distance, target_location) :
-        SensorEvent.__init__(self, sensor_id)
         self._radar_loc = radar_loc
         self._bearing = bearing
         self._distance = distance
