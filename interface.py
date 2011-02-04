@@ -13,7 +13,7 @@ class Interface :
         # Connected to same network & this node received the message? (not necessarily a destination)
         if event.get_network() == self._network_name and self._owner.get_uid() in event.get_recvrs() :
             # Is the message bound for a local agent?
-            if event.get_message().get_dest_agent() in self.get_owner().get_agent_uids():
+            if event.get_message().get_dest_agent() == '*' or event.get_message().get_dest_agent() in self.get_owner().get_agent_uids() :
                 if self._recv_callback != None :
                     self._recv_callback(event, iface=self)
             else :

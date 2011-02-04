@@ -39,13 +39,18 @@ class Node(Entity) :
                 return iface
         return None
 
-    def send(self, message, src_agent) :
-        for iface in self._interfaces.values() :
-            network = self.get_world().get_network(iface.get_network_name())
+    def send(self, message, src_agent, iface=None) :
+        assert not (message.get_dest_agent() == '*' and iface == None)
+        if iface == None :
+            for iface in self._interfaces.values() :
+                network = self.get_world().get_network(iface.get_network_name())
 
-            node_uid = self.get_world().get_agent_mapping()[message.get_dest_agent()]
-            if network.both_in_network(self.get_uid(), node_uid) :
-                iface.send(message, src_agent.get_uid())
+                node_uid = self.get_world().get_agent_mapping()[message.get_dest_agent()]
+                if network.both_in_network(self.get_uid(), node_uid) :
+                    iface.send(message, src_agent.get_uid())
+                    break
+        else :
+            iface.send(message, src_agent.get_uid())
 
     def _on_message(self, event, **kwds) :
         self._agents[event.get_message().get_dest_agent()].on_message(event)
