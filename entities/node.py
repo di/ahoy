@@ -5,6 +5,13 @@ class Node(Entity) :
         Entity.__init__(self, uid)
         self._interfaces = {}
         self._agents = {}
+        self._routing_agent = None
+
+    def set_routing_agent(self, agent) :
+        self._routing_agent = agent
+
+    def get_routing_agent(self) :
+        return self._routing_agent
 
     def get_agent_uids(self) :
         return self._agents.keys()
