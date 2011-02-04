@@ -1352,6 +1352,57 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
 \end{description}
 
 \pagebreak
+\section{Requirements Trace}
+\label{sec:requirements}
+
+The beginning of each row represents a requirement identifier.
+\vspace{5pt}
+
+\begin{center}
+\small\addtolength{\tabcolsep}{-3pt}
+
+
+\begin{tabular}{ | c || c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+\hline
+% & \multicolumn{27}{|c|}{Requirement Identifier} \\ \hline
+& \begin{sideways}4.1.1\end{sideways} & \begin{sideways}4.1.2\end{sideways} & \begin{sideways}4.1.3\end{sideways} & \begin{sideways}4.1.4\end{sideways} & \begin{sideways}4.1.5\end{sideways} & \begin{sideways}4.1.6\end{sideways} & \begin{sideways}4.1.7.1\end{sideways} & \begin{sideways}4.1.7.2\end{sideways} & \begin{sideways}4.1.8\end{sideways} & \begin{sideways}4.2.1\end{sideways} & \begin{sideways}4.2.2\end{sideways} & \begin{sideways}4.2.3.1\end{sideways} & \begin{sideways}4.2.3.2\end{sideways} & \begin{sideways}4.3.1\end{sideways} & \begin{sideways}4.3.2\end{sideways} & \begin{sideways}4.3.2.1\end{sideways} & \begin{sideways}4.3.2.2\end{sideways} & \begin{sideways}4.3.2.3\end{sideways} & \begin{sideways}4.3.2.4\end{sideways} & \begin{sideways}4.3.2.5\end{sideways} & \begin{sideways}4.3.2.6\end{sideways} & \begin{sideways}4.3.2.7\end{sideways} & \begin{sideways}4.3.2.8\end{sideways} & \begin{sideways}4.4.1\end{sideways} & \begin{sideways}4.4.2\end{sideways} & \begin{sideways}4.4.3\end{sideways} & \begin{sideways}4.4.4.1\end{sideways} & \begin{sideways}4.5.1\end{sideways} & \begin{sideways}4.5.2.1\end{sideways} & \begin{sideways}4.6.1\end{sideways} \\ \hline \hline
+
+\hline
+   %~ 3.1.1.1 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.2 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.3 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.4 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.5 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.6 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.7 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.8 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   %~ 3.1.1.9 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
+   3.1.2.1 &x& &x& & & & & & & & & & & & & & & & & & & & & & & & & & &  \\ \hline
+   3.1.2.2 &x& & & &x& & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.2.3 &x& & & &x&x& & & & & & & & & & & & & & & & & & & & & & & & \\ \hline 
+   3.1.2.4 &x& & & & &x& & & & & & & & & & & & & & & & &x& & & & & & & \\ \hline
+   3.1.2.5 &x& & &x&?& & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.2.6 &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.3.1 & & & & & & &x& & &x& & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.3.2 & & &x& & & & & & &x&x&x&x& & & & & & & & & & & & & & &?& & \\ \hline
+   3.1.3.3 & & & & & & & & & & &x& & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.4.1 & & & & & &x& & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.4.2 & & & & & &x& &x& & & & & & & & & & & & & & & & & &x& & & & \\ \hline
+   3.1.4.3 & & & & & & & & & & & & & &x& & & & &x& & & & & & & & & & & \\ \hline
+   3.1.4.4 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.5.1 & &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.5.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.5.3 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.6.1 & &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.6.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.7.1 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.8.1 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+   3.1.8.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
+
+\end{tabular}
+\end{center}
+
+\pagebreak
 
 \section{UML Class Diagrams}
 \label{app:uml_class_diagrams}
@@ -1817,58 +1868,5 @@ where $P_t$ is the transmit power, $G_t$ is the antenna gain, $A_r$ is the apert
     \caption{Class diagram for geographic utilities}
     \label{fig:condition}
 \end{figure}
-
-\pagebreak
-\section{Requirements Trace}
-\label{sec:requirements}
-
-The beginning of each row represents a requirement identifier.
-\vspace{5pt}
-
-\begin{center}
-\small\addtolength{\tabcolsep}{-3pt}
-
-
-\begin{tabular}{ | c || c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
-\hline
-% & \multicolumn{27}{|c|}{Requirement Identifier} \\ \hline
-& \begin{sideways}4.1.1\end{sideways} & \begin{sideways}4.1.2\end{sideways} & \begin{sideways}4.1.3\end{sideways} & \begin{sideways}4.1.4\end{sideways} & \begin{sideways}4.1.5\end{sideways} & \begin{sideways}4.1.6\end{sideways} & \begin{sideways}4.1.7.1\end{sideways} & \begin{sideways}4.1.7.2\end{sideways} & \begin{sideways}4.1.8\end{sideways} & \begin{sideways}4.2.1\end{sideways} & \begin{sideways}4.2.2\end{sideways} & \begin{sideways}4.2.3.1\end{sideways} & \begin{sideways}4.2.3.2\end{sideways} & \begin{sideways}4.3.1\end{sideways} & \begin{sideways}4.3.2\end{sideways} & \begin{sideways}4.3.2.1\end{sideways} & \begin{sideways}4.3.2.2\end{sideways} & \begin{sideways}4.3.2.3\end{sideways} & \begin{sideways}4.3.2.4\end{sideways} & \begin{sideways}4.3.2.5\end{sideways} & \begin{sideways}4.3.2.6\end{sideways} & \begin{sideways}4.3.2.7\end{sideways} & \begin{sideways}4.3.2.8\end{sideways} & \begin{sideways}4.4.1\end{sideways} & \begin{sideways}4.4.2\end{sideways} & \begin{sideways}4.4.3\end{sideways} & \begin{sideways}4.4.4.1\end{sideways} & \begin{sideways}4.5.1\end{sideways} & \begin{sideways}4.5.2.1\end{sideways} & \begin{sideways}4.6.1\end{sideways} \\ \hline \hline
-
-\hline
-   %~ 3.1.1.1 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.2 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.3 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.4 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.5 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.6 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.7 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.8 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   %~ 3.1.1.9 &&&&&&&&&&&&&&&&&&&&&&&&&&& \\ \hline
-   3.1.2.1 &x& &x& & & & & & & & & & & & & & & & & & & & & & & & & & &  \\ \hline
-   3.1.2.2 &x& & & &x& & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.2.3 &x& & & &x&x& & & & & & & & & & & & & & & & & & & & & & & & \\ \hline 
-   3.1.2.4 &x& & & & &x& & & & & & & & & & & & & & & & &x& & & & & & & \\ \hline
-   3.1.2.5 &x& & &x&?& & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.2.6 &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.3.1 & & & & & & &x& & &x& & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.3.2 & & &x& & & & & & &x&x&x&x& & & & & & & & & & & & & & &?& & \\ \hline
-   3.1.3.3 & & & & & & & & & & &x& & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.4.1 & & & & & &x& & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.4.2 & & & & & &x& &x& & & & & & & & & & & & & & & & & &x& & & & \\ \hline
-   3.1.4.3 & & & & & & & & & & & & & &x& & & & &x& & & & & & & & & & & \\ \hline
-   3.1.4.4 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.5.1 & &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.5.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.5.3 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.6.1 & &x& & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.6.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.7.1 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.8.1 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-   3.1.8.2 & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & \\ \hline
-
-\end{tabular}
-\end{center}
-
-\pagebreak
 
 \end{document}
