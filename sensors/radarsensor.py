@@ -73,7 +73,8 @@ class RadarSensor(Sensor) :
                 location = None
                 distance = None
             self._publish_data(RadarEvent(antenna_bearing, distance, location))
-            print antenna_bearing, distance, location
+            if distance != None and location != None :
+                print antenna_bearing, distance, location
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)

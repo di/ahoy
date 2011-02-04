@@ -5,8 +5,8 @@ from ahoy.message import Message
 from ahoy.util.units import *
 
 class CommsAgent(Agent) :
-    def __init__(self, owner_node, uid, dest, move) :
-        Agent.__init__(self, owner_node, uid)
+    def __init__(self, uid, dest, move) :
+        Agent.__init__(self, uid)
         self._dest = dest
         self._move = move
 

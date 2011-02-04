@@ -20,6 +20,8 @@ class World :
 
     def add_network(self, network) :
         self._networks[network.get_name()] = network
+        network._comms_engine.set_world(self)
+        del network._comms_engine
 
     def get_networks(self) :
         return self._networks.values()

@@ -1,8 +1,10 @@
 class Network :
-    def __init__(self, name) :
+    def __init__(self, name, comms_engine) :
         self._name = name
         self._interfaces = set([])
         self._link_cache = {}
+        self._comms_engine = comms_engine
+        comms_engine.set_network_name(name)
 
     def get_name(self) :
         return self._name
