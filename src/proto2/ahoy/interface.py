@@ -1,12 +1,12 @@
 from ahoy.events.communication import CommunicationRecvEvent, CommunicationSendEvent
 
 class Interface :
-    def __init__(self, name, network, power) :
+    def __init__(self, name, network, **kwds) :
         self._name = name
         self._owner = None
         self._recv_callback = None
         self._network_name = network.get_name()
-        self._power = power
+        self._attrs = kwds
         network.add_interface(self)
 
     def _on_communication(self, event) :
@@ -41,5 +41,7 @@ class Interface :
     def get_name(self) :
         return self._name
 
-    def get_power(self) :
-        return self._power
+    def __getitem__(self, key) :
+        if self._attrs.has_key(key) :
+            return self._attrs[key]
+        return None

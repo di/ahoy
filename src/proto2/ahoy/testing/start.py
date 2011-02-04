@@ -14,19 +14,19 @@ wlan = Network('wlan0', LogLossComms())
 world.add_network(wlan)
 
 n1 = Node(0)
-n1.add_interface(Interface('wlan0', wlan, 100))
+n1.add_interface(Interface('wlan0', wlan, power=100))
 n1.add_agent(CommsAgent(5, 6, False))
 n1.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n1)
 
 n2 = Node(1)
-n2.add_interface(Interface('wlan0', wlan, 100))
+n2.add_interface(Interface('wlan0', wlan, power=100))
 n2.add_agent(CommsAgent(6, 5, False))
 n2.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n2)
 
 n3 = Node(2)
-n3.add_interface(Interface('wlan0', wlan, 100))
+n3.add_interface(Interface('wlan0', wlan, power=100))
 n3.set_position(39.9534, -75.1912, 0.02)
 world.add_entity(n3)
 

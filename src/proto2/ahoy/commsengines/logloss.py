@@ -34,17 +34,14 @@ class LogLossComms(CommsEngine) :
 
     def _on_send(self, event) :
         source_node_uid = self.get_node_from_agent(event.get_src_agent_uid())
-#        dest_node_uid = self.get_node_from_agent(event.get_message().get_dest_agent())
-
-        src_power = self.get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network()).get_power()
-#        dest_power = self.get_world().get_entity(dest_node_uid).get_interface_on_net(event.get_network()).get_power()
+        src_power = self.get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network())['power']
 
         recvrs = set([])
         for iface in self.get_world().get_network(event.get_network()).get_interfaces() :
             node = iface.get_owner()
             dest_node_uid = node.get_uid()
             if source_node_uid != dest_node_uid :
-                dest_power = node.get_interface_on_net(event.get_network()).get_power()
+                dest_power = node.get_interface_on_net(event.get_network())['power']
                 if self._should_deliver(source_node_uid, dest_node_uid, src_power, dest_power) :
                     recvrs.add(node.get_uid())
         self.get_event_api().publish(CommunicationRecvEvent(event.get_src_agent_uid(), recvrs, event.get_message(), event.get_network()))
@@ -59,8 +56,8 @@ class LogLossComms(CommsEngine) :
                     for iface in entity.get_interfaces() :
                         network = self.get_world().get_network(iface.get_network_name())
                         if network.both_in_network(move_uid, entity.get_uid()) :
-                            src_power = self.get_world().get_entity(move_uid).get_interface_on_net(network.get_name()).get_power()
-                            dest_power = self.get_world().get_entity(entity.get_uid()).get_interface_on_net(network.get_name()).get_power()
+                            src_power = self.get_world().get_entity(move_uid).get_interface_on_net(network.get_name())['power']
+                            dest_power = self.get_world().get_entity(entity.get_uid()).get_interface_on_net(network.get_name())['power']
                             if self._should_deliver(move_uid, entity.get_uid(), src_power, dest_power) :
                                 pathloss = self._get_rx_power(move_uid, entity.get_uid(), src_power)
                                 if network.check_cache(move_uid, entity.get_uid(), pathloss) :
