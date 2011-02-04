@@ -15,10 +15,12 @@ class Interface :
             # Is the message bound for a local agent?
             if event.get_message().get_dest_agent() == '*' or event.get_message().get_dest_agent() in self.get_owner().get_agent_uids() :
                 if self._recv_callback != None :
+                    if self._owner.get_routing_agent() is not None :
+                        self._owner.get_routing_agent().handle_delivery(event, self)
                     self._recv_callback(event, iface=self)
             else :
                 if self._owner.get_routing_agent() is not None :
-                    self._owner.get_routing_agent().handle(event, self)
+                    self._owner.get_routing_agent().handle_forward(event, self)
 
     def connect(self) :
         self._owner.get_event_api().subscribe(CommunicationRecvEvent, self._on_communication)
