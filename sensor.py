@@ -1,7 +1,11 @@
 class Sensor :
-    def __init__(self) :
+    def __init__(self, **kwds) :
         self._owner = None
         self._world = None
+        if kwds.has_key('use_event_channel') :
+            self._use_event_channel = True
+        else :
+            self._use_event_channel = False
         self._subscribers = []
 
     def get_owner(self) :
@@ -16,6 +20,8 @@ class Sensor :
     def _publish_data(self, event) :
         for cb in self._subscribers :
             cb(event)
+        if self._use_event_channel :
+            self._owner.get_event_api().publish(event)
 
     def get_world(self) :
         return self._world
