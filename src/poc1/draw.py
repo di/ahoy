@@ -47,7 +47,6 @@ class ProofOfConcept :
             y = int(((lat-self.tl_lat)/self.d_lat)*600)
             return (x,y)
         except :
-            print lat, lon, self.tl_lon, self.tl_lat
             return (0,0)
 
     def _get_ll(self, x, y) :
@@ -72,24 +71,16 @@ class ProofOfConcept :
         self._nodelist[uid] = (self._get_pix(lat, lon),type)
 
     def _on_radar(self, event) :
-        uid = event.get_sensor_id()
+        uid = event.get_owner_uid()
         t_loc = event.get_target_location()
         bear = round(math.degrees(event.get_bearing()))
-        (lat,lon,agl) = event.get_radar_loc()
         
         self._current_radar_bearing = bear
-        self._current_radar_loc = self._get_pix(lat, lon)
+        self._current_radar_loc = self._nodelist[uid][0]
 
         self._radarlist[bear] = t_loc
-        #if t_loc is not None :
-        #    (t_lat,t_lon) = t_loc 
-            #print int(math.degrees(bear))
-            #print self._get_pix(t_lat, t_lon)
-
-        self._nodelist[uid] = (self._get_pix(lat, lon),'RadarSensor2')
-
+       
     def send_bound(self, dx, dy, ux, uy) :
-        #print dx, dy, ux, uy
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
 
@@ -98,13 +89,9 @@ class ProofOfConcept :
         self._event_api.publish(RectangleSurveilMove(2, p1, p2))
         self._event_api.publish(RectangleSurveilMove(3, p1, p2))
 
-        print p1, p2
-
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
             (x, y), type = self._nodelist[uid]
-            #print type
-            #self.draw_node((100,255,100), (x,y))
             self.draw_node((x,y),type)
 
     def draw_radar(self) :
