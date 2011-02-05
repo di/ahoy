@@ -1,12 +1,12 @@
 import math
 import time
 from ahoy.sensor import Sensor
-from ahoy.event import Event
+from ahoy.events.sensor import SensorEvent
 from ahoy.util.geo import *
 
-class RadarEvent(Event) :
-    def __init__(self, bearing, distance, target_location) :
-        Event.__init__(self)
+class RadarEvent(SensorEvent) :
+    def __init__(self, owner_uid, bearing, distance, target_location) :
+        SensorEvent.__init__(self, owner_uid)
         self._bearing = bearing
         self._distance = distance
         self._target_location = target_location
@@ -21,8 +21,8 @@ class RadarEvent(Event) :
         return self._target_location
 
 class RadarSensor(Sensor) :
-    def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle) :
-        Sensor.__init__(self)
+    def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle, **kwds) :
+        Sensor.__init__(self, **kwds)
         self._trans_power = trans_power
         self._trans_freq = trans_freq
         self._gain = gain
@@ -72,7 +72,7 @@ class RadarSensor(Sensor) :
             else :
                 location = None
                 distance = None
-            self._publish_data(RadarEvent(antenna_bearing, distance, location))
+            self._publish_data(RadarEvent(self.get_owner().get_uid(), antenna_bearing, distance, location))
             if distance != None and location != None :
                 print antenna_bearing, distance, location
 

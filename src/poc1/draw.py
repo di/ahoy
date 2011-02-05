@@ -8,7 +8,7 @@ from ahoy.agents.rectanglesurveil import *
 from ahoy.eventapi import EventAPI
 from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
-from ahoy.events.sensor import RadarEvent
+from ahoy.sensors.radarsensor import RadarEvent
 
 pygame.init()
 surface = pygame.display.set_mode((800,600))

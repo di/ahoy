@@ -31,13 +31,13 @@ for i, loc in enumerate(heli_areas) :
     se = (loc[2], loc[3])
     heli.add_agent(RectangleSurveilAgent(i, nw, se, feet(150)))
 
-    heli.add_interface(Interface('wlan0', heli, wlan, 120))
+    heli.add_interface(Interface('wlan0', wlan, power=120))
     world.add_entity(heli)
 
 print 'radar', len(world.get_entities())
 radar = Node(len(world.get_entities()))
 radar.set_position(39.9485, -75.1325, 0)
-radar.add_sensor('radar', RadarSensor(watts(6000), 25, 1, 5, 1, 3/360.0, 1))
+radar.add_sensor('radar', RadarSensor(watts(6000), 25, 1, 5, 1, 3/360.0, 1, use_event_channel=True))
 world.add_entity(radar)
 
 paths = [
