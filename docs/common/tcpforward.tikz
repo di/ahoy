@@ -1,0 +1,48 @@
+\def\mcwidth{7.75}
+\def\mcheight{5.25}
+\tikzstyle{distnode} = [draw, rectangle, rounded corners, fill=gray!50, minimum width=3.2cm]
+\tikzstyle{extnode} = [draw, rectangle, rounded corners, fill=gray!15, minimum width=3.2cm]
+\tikzstyle{arrowed} = [->, bend right]
+\pgfdeclarelayer{background}
+
+\begin{tikzpicture}
+    %\node (mc) [above of=tcp, xshift=-1.35cm, yshift=1.3cm] {Multicast Cloud};
+    \node (mc) [draw, rectangle, rounded corners, dashed] {Multicast Event Channel};
+    
+    \draw[dashed]
+        (mc.west) to (-0.5*\mcwidth,0)
+        (-0.5*\mcwidth,0) to (-0.5*\mcwidth,-\mcheight)
+        (-0.5*\mcwidth,-\mcheight) to (0.5*\mcwidth,-\mcheight)
+        (0.5*\mcwidth,-\mcheight) to (0.5*\mcwidth,0)
+        (0.5*\mcwidth,0) to (mc.east);
+
+    \node (simulation) [distnode, fill=gray!25, below left of=mc, xshift=-1cm] {Simulation};
+    \node (d1) [distnode, below of=simulation] {Distributed Node 0};
+    \node (d2) [distnode, below of=d1] {Distributed Node 1};
+    \node (dots) [below of=d2, yshift=.1cm] {$\vdots$};
+    \node (d3) [distnode, below of=dots] {Distributed Node $n$};
+    \node (tcp) [distnode, fill=gray, right of=d1, xshift=4.6cm, yshift=-.95cm, rotate=90] {\texttt{TcpForward}};
+
+    \node (center) [left of=tcp, xshift=-1.5cm] {Events};
+    \draw[decoration={markings, 
+            mark=at position 0cm with {\arrow{triangle 90}},
+            mark=at position 2.09cm with {\arrow{triangle 90}},
+            mark=at position 4.19cm with {\arrow{triangle 90}}},
+            postaction={decorate}] (center) circle (1cm);
+    \draw[out=0, in=180, postaction={decorate}, decoration={markings, 
+            mark=at position 1.5cm with {\arrow{triangle 90 reversed}}}]
+         (center)+(0cm,1cm) to (tcp.north);
+    \draw[out=0, in=180, postaction={decorate}, decoration={markings, 
+            mark=at position 1.5cm with {\arrow{triangle 90}}}] (center)+(0.01cm,-1cm) to (tcp.north);
+    \begin{pgfonlayer}{background}
+        \path (simulation.west |- simulation.north)+(-.4,.4) node (a) {};
+        \path (d3.south -| d3.east)+(4,-.4) node (c) {};
+        \path[draw, dashed] (a) rectangle (c);
+    \end{pgfonlayer}
+
+    \node (e1) [extnode, right of=tcp, xshift=3cm, yshift=1cm] {External \texttt{EventAPI} 0};
+    \node (dots2) [below of=e1, yshift=.1cm] {$\vdots$};
+    \node (e3) [extnode, below of=dots2] {External \texttt{EventAPI} $n$};
+    \path (e1.west) edge[<->, >=triangle 90, out=180, in=0] node {} (tcp.south);
+    \path (e3.west) edge[<->, >=triangle 90, out=180, in=0] node {} (tcp.south);
+\end{tikzpicture}
