@@ -156,16 +156,19 @@ These documents have been used as reference materials for various technologies i
 
 \subsection{StartupDaemon}
 \subsubsection{Daemon Acknowledges StartupEvent}
-\testcase{TODO}{TODO}{TODO}
+\testcase{Set up a network configuration which requires a daemon.  Configure at least one agent to run.  Insert a print of a confirmation message when the simulation sends out a StartupEvent to the multicast channel, and when StartupDaemon receives such a StartupEvent.}{Start the simulation.}{Both of the newly added messages should be found in the output after the simulation is started.}
 
 \subsubsection{Daemon Publishes AckStartupEvent}
-\testcase{TODO}{TODO}{TODO}
+\testcase{Add confirmation message to be printed when Simulation publishes StartupEvent, when StartupDaemon receives a StartupEvent, when StartupDaemon is about to publish an AckStartupEvent, and when the Simulation receives an AckStartupEvent.}{Start the simulation.}{The newly added confirmation messages should be found in the output of AHOY after the Simulation is started.}
 
 \subsubsection{Daemon Starts on StartSimulationEvent}
-\testcase{TODO}{TODO}{TODO}
+\testcase{Configure a network and at least one agent to run during the simulation.  Insert a confirmation message to be printed in start method of StartupDaemon.}{Start the simulation.}{For each StartupDaemon that should run, the newly created startup confirmation message should be found in the output.}
 
 \subsubsection{Daemon Starts all Processes at StartSimulationEvent}
-\testcase{TODO}{TODO}{TODO}
+\testcase{Configure at least one process to be run during the simulation.  In StartupDaemon`s _on_sim_start function, add a confirmation message stating number of local_entities found to be started.}{Start the simulation.}{For each daemon that runs, confirm that the number of processes it starts is equal to the number it found it has to start.  The number of processes a daemon starts can be found by counting the number of messages StartupDaemon prints when starting a new process.  This is done in the StartupDaemon`s _start_entity_process function.}
+
+\subsubsection{Daemon Terminates all Processes on StopSimulationEvent}
+\testcase{Configure a simulation with at least one entity running.  Insert message to print number the number of StartupDaemon`s _running_pids at the end of StartupDaemon`s _restart function.}{Start the simulation. Invoke StopSimulationEvent to be published to the event channel.}{Each daemon that is running should output the newly created confirmation message and show it has 0 processes running.}
 
 \subsection{World}
 \subsubsection{Entities are Added Successfully}
