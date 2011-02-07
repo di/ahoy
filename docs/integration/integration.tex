@@ -165,10 +165,10 @@ These documents have been used as reference materials for various technologies i
 \testcase{Configure a network with at least one daemon running, and configure at least one agent to run during the simulation.  Insert a confirmation message to be printed in start method of StartupDaemon.}{Start the simulation.}{For each StartupDaemon that should run, the newly created startup confirmation message should be found in the output.}
 
 \subsubsection{Daemon Starts all Processes at StartSimulationEvent}
-\testcase{Configure at least one process to be run during the simulation.  In StartupDaemon`s _on_sim_start function, add a confirmation message stating number of local_entities found to be started.}{Start the simulation.}{For each daemon that runs, confirm that the number of processes it starts is equal to the number it found it has to start.  The number of processes a daemon starts can be found by counting the number of messages StartupDaemon prints when starting a new process.  This is done in the StartupDaemon`s _start_entity_process function.}
+\testcase{Configure at least one process to be run during the simulation.  In StartupDaemon's _on_sim_start function, add a confirmation message stating number of local_entities found to be started.}{Start the simulation.}{For each daemon that runs, confirm that the number of processes it starts is equal to the number it found it has to start.  The number of processes a daemon starts can be found by counting the number of messages StartupDaemon prints when starting a new process.  This is done in the StartupDaemon's _start_entity_process function.}
 
 \subsubsection{Daemon Terminates all Processes on StopSimulationEvent}
-\testcase{Configure a simulation with at least one entity running.  Insert message to print number the number of StartupDaemon`s _running_pids at the end of StartupDaemon`s _restart function.}{Start the simulation. Invoke StopSimulationEvent to be published to the event channel.}{Each daemon that is running should output the newly created confirmation message and show it has 0 processes running.}
+\testcase{Configure a simulation with at least one entity running.  Insert message to print number the number of StartupDaemon's _running_pids at the end of StartupDaemon's _restart function.}{Start the simulation. Invoke StopSimulationEvent to be published to the event channel.}{Each daemon that is running should output the newly created confirmation message and show it has 0 processes running.}
 
 \subsection{World}
 \subsubsection{Entities are Added Successfully}
@@ -208,13 +208,16 @@ These documents have been used as reference materials for various technologies i
 
 \subsection{Entity}
 \subsubsection{Setting/Retrieving Sensors}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, create a sensor and call the add_sensor method on an entity.  On the same entity, then call get_sensor(s_name), replacing s_name with the name of the sensor that was just added to that entity.  Finally, print the name of the sensor that this method returns.}{Start the simulation through the script.}{The name the script prints out should be the same as the name of the sensor the script tried to add to the entity at the beginning of the test.}
+
+\subsubsection{Setting/Retrieving Cross-sectional Area}
 \testcase{TODO}{TODO}{TODO}
 
-\subsubsection{Setting/Retrieving Cross-sectional  Area}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Setting/Retrieving Linear Velocity}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call set_lin_velocity(v), replacing v with a numerical value. Then, call get_lin_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get_lin_velocity() should be equal to the value passed to the set_lin_velocity function.}
 
-\subsubsection{Setting/Retrieving Velocity}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Setting/Retrieving Forward Velocity}}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call set_forward_velocity(v), replacing v with a numerical value. Then, call get_forward_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get_forward_velocity() should be equal to the value passed to the set_forward_velocity function.}
 
 \subsubsection{Setting/Retrieving World}
 \testcase{TODO}{TODO}{TODO}
