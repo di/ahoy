@@ -436,22 +436,29 @@ that produced by the Doppler equation, also found in section 4.5.2.1 of the Desi
 \section{Utility Components}
 \subsection{Geo}
 \subsubsection{Haversine Distance Calculated Correctly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Call Geo.haver\_distance with latitude and longitude arguments.}{A correct Haversine distance is returned.}
 
 \subsubsection{Linear Distance Calculated Correctly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Geo.linear\_distance is called with latitude and longitude arguments}{The correct linear distance between
+the points is returned.}
 
 \subsubsection{Lat/Lon/Agl Converted to Cartesian Coords}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Geo.sph\_to\_lin is called with a latitude, longitude, and above ground location in that order.}{A
+correct conversion into Cartesian coordinates is returned.}
 
 \subsubsection{Cartesian Coords Converted to Lat/Lon/Agl}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Geo.lin\_to\_sph is called with Cartesian x, y, and z coordinates.}{The input coordinates are correctly
+converted to latitude, longitude, and above aground location points.}
 
 \subsubsection{Kilometers converted to radians Correctly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Geo.loc\_from\_bearing\_dist is called with appropriate latitude and longitude inputs.}{The kilometers along
+the latitude and longitude lines are
+correctly converted to radians and returned.}
 
 \subsubsection{Location and Bearing Calculated Correctly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{}{Geo.loc\_from\_bearing\_dist is called with valid longitude/latitude points along with a bearing and
+distance.}{The correct location of an object after moving from the given lat/lon at the given bearing for the given
+distance is returned.}
 
 
 
