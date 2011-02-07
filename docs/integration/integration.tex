@@ -295,20 +295,25 @@ given UID is returned.}
 
 \subsection{LogLossCommsEngine}
 \subsubsection{Pathloss Calculated Correctly}
-\testcase{A Simulation is running with at least two \texttt{Node}s and a \texttt{LogLossCommsEngine}. }{Call
-\_get\_rx\_power with appropriate source \texttt{Node} and destination \texttt{Node} IDs. A valid number should be
-passed as the third argument for the source power. }{The function should return a number equivalent to what is expected
-by the equation in 4.2.3.1 of the AHOY Design Document.}
+\testcase{A Simulation is running with at least two \texttt{Node}s and a \texttt{LogLossCommsEngine}. }{Call \_get\_rx\_power with appropriate source \texttt{Node} and destination \texttt{Node} IDs. A valid number should be passed as the third argument for the source power. }{The function should return a number equivalent to what is expected by the equation in 4.2.3.1 of the AHOY Design Document.}
 
 \subsubsection{Determines if a Message can be Delivered}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A Simulation is running with at least two \texttt{Node}s and a \texttt{LogLossCommsEngine}. }{Call
+\_should\_deliver with appropriate source \texttt{Node} and destination \texttt{Node} IDs. A valid number should be
+passed as the third argument for the source power.  The fourth argument should be a number representing the minimum
+power sensitivity required to send the message. }{The function should return True if the equation in section 4.2.3.1 of
+the AHOY Design Document, using the \texttt{Node} positions and the source power as input, yields a result greater than
+or equal to the minimum power required. Otherwise it returns false.}
 
 \subsubsection{Links Updated After Movement}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} is running with at least two \texttt{Node}s and a \texttt{LogLossCommsEngine}.}{Send an
+EntityMoveEvent.}{The LogLossCommsEngine checks all links between the \texttt{Node}s.  If any links are created or nodes
+separate beyond a linkable distance, a \texttt{LinkEvent} should be published by the \texttt{LogLossCommsEngine}.}
 
 \subsection{EthernetCommsEngine}
 \subsubsection{Proper Action Taken on CommunicationSendEvent}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} is running with multiple \texttt{Node}s and an \texttt{EthernetCommsEngine}.}{Publish a
+CommunicationSendEvent. }{The action assigned to the \texttt{EthernetCommsEngine} take occurs.}
 
 \section{Event Components}
 \subsection{Event}
@@ -378,41 +383,54 @@ by the equation in 4.2.3.1 of the AHOY Design Document.}
 \section{Agent Components}
 \subsection{Agent}
 \subsubsection{Behaviors Initialized}
-\testcase{TODO}{TODO}{TODO}
+\testcase{An \texttt{Agent} has been created in a startup script.}{Add multiple behavior tuples to the \texttt{Agent}.
+Start the \texttt{Simulation}.}{The \_behaviors dict should contain a key for each \texttt{Event}, and at least one 
+\texttt{Condition} and \texttt{Action} pair for each \texttt{Event}.}
 
-\subsubsection{Action Triggered When Condition is True}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Action Not Triggered When Condition is False}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Action Triggered Appropriately}
+\testcase{A Simulation is running with at least one \texttt{Agent} with assigned behaviors.}{Publish an \texttt{Event}
+that the \texttt{Agent} uses as a key in its behavior dict.}{For each \texttt{Action} / \texttt{Behavior} pair
+associated in the \texttt{Agent}'s behavior map, the \texttt{Condition} is tested.  If it returns true, the
+\texttt{Action} is performed.  If it returns false, the \texttt{Action} is not performed.}
 
 \subsubsection{Proper Behavior Removed}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} is running with at least one \texttt{Agent} with assigned behaviors.}{Call the
+\texttt{Agent}'s remove\_behavior method with a behavior tuple.}{If the Agent contains a behavior set containing the
+same \texttt{Event}, \texttt{Action}, and \texttt{Condition} pairs, that behavior is removed from the \texttt{Agent}'s
+behavior map.}
 
-\subsection{Condition}
+%\subsection{Condition}
 %Not sure what to do here. Its completely abstract
-\subsubsection{TODO}
-\testcase{TODO}{TODO}{TODO}
+%\subsubsection{TODO}
+%\testcase{TODO}{TODO}{TODO}
 
-\subsection{Action}
-\subsubsection{Action Performed When Called}
-\testcase{TODO}{TODO}{TODO}
+%\subsection{Action}
+%\subsubsection{Action Performed When Called}
+%\testcase{An \texttt{Action} has been created.}{Call the \texttt{Action}'s perform method.}{}
 
 \subsection{MoveAction}
 \subsubsection{Proper Entity is Moved}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{MoveAction} has been instantiated.}{Call the perform method of the \texttt{MoveAction}.}{The
+\texttt{Entity} in the \_entity attribute changes its position.}
 
-\subsubsection{Entity is Given Proper Lat/Lon/AGL}
-\testcase{TODO}{TODO}{TODO}
 
 \section{Sensor Components}
 \subsection{Sensor}
 \subsubsection{Event Data Passed to Callbacks}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} is running with a \texttt{Sensor} running on a \texttt{Node}. The \texttt{Sensor} has
+subscribed at least one callback function.}{The \_publish\_data method is called during an \texttt{Event}.}{The
+\texttt{Event} is passed to all callback functions subscribed to by the \texttt{Sensor}. If \_use\_event\_channel
+attribute of the \texttt{Sensor} is True, then the \texttt{EventAPI} of the \texttt{Sensor}'s owner publishes the same
+\texttt{Event}.}
 
 \subsection{RadarSensor}
 \subsubsection{Objects Properly Detected}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} is running with multiple \texttt{Node}s and a \texttt{RadarSensor} running on one of the
+\texttt{Node}s.}{The run method of the \texttt{RadarSensor} is called.}{For each object in the \texttt{Simulation}, if
+the pathloss of an object relative to the radar antenna is below the sensitivity of an antenna, the object is not
+detected.  Otherwise, its distance is calculated for each entity should be the same as the result of the distance
+equation in section 4.5.2.1 of AHOY's Design Document. The velocity of the entity being detected should be equivalent to
+that produced by the Doppler equation, also found in section 4.5.2.1 of the Design Document.}
 
 
 \section{Utility Components}
