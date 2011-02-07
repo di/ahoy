@@ -146,13 +146,10 @@ These documents have been used as reference materials for various technologies i
 
 \section{Simulation Components}
 \subsection{Simulation}
-\subsubsection{Starting the Simulation}
-
-\testcase{TODO}{TODO}{TODO}
 
 \subsubsection{Simulation Acknowledges Startup Daemons}
 
-\testcase{TODO}{TODO}{TODO}
+\testcase{\texttt{Simulation} and \texttt{StartupDaemon} objects are instantiated. At least one \texttt{StartupDaemon} should be created. The start() operation has been called on the \texttt{Simulation}. }{Publish an \texttt{AckStartupEvent} from each \texttt{StartupDaemon} using their \texttt{EventAPI}.}{\_on\_ack\_startup is called for every \texttt{AckStartupEvent} published.  There are id's in the \_startup\_acks list for every \texttt{StartupDaemon} publishing the event.}
 
 \subsection{StartupDaemon}
 \subsubsection{Daemon Acknowledges StartupEvent}
@@ -195,26 +192,30 @@ get\_network(n\_name) on the world object, replacing n\_name with the name of th
 
 \subsection{EventAPI}
 \subsubsection{Events are Published}
-\testcase{TODO}{TODO}{TODO}
+\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s publish operation using the created \texttt{Event} and a delay time of 0 seconds.}{The \texttt{Event} should be sent over the Event Channel.}
 
-\subsubsection{Events are Delayed}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Events can be Delayed}
+\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s publish operation using the created \texttt{Event} and any time 't' greater than 0 for the second argument.}{The \texttt{Event} should be sent over the Event Channel 't' seconds later.}
 
 \subsubsection{Raw Data is successfully passed}
-\testcase{TODO}{TODO}{TODO}
+\testcase{\texttt{EventAPI} has been instantiated. Raw data has been created.}{Pass the raw data to the \texttt{EventAPI}'s push\_raw operation.}{The data can be seen and picked up over the current connection.}
+
 
 \subsubsection{Subscribed Events Trigger Callbacks}
-\testcase{TODO}{TODO}{TODO}
+\testcase{\texttt{EventAPI} has been instantiated.  An \texttt{Event} has been instantiated. A function exists that can be called by the EventAPI.}{Call the \texttt{EventAPI}'s subscribe method with the event as the first argument, the function as the second, and any arguments for the function to follow.}{When the event subscribed to occurs, the function is called with all arguments supplied. }
 
 \subsubsection{Entity can Unsubscribe from an Event}
-\testcase{TODO}{TODO}{TODO}
+\testcase{An EventAPI has subscribed to an \texttt{Event} with a callback function.}{Call the \texttt{EventAPI}'s unsubscribe\_all method with the same \texttt{Event} type subscribed to.}{Publish an \texttt{Event} of the same type. The callback function should not be executed.}
 
 \subsection{TCPForward}
 \subsubsection{Data Received Successfully}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{TCPForward} object has been instantiated with a valid port number.}{Call the start method of the
+\texttt{TCPForward} object. Send an \texttt{Event} over the socket to the same port. }{The \_listener method should be called soon
+after the message is sent. The raw \texttt{Event} should be sent over the Event Channel. }
 
 \subsubsection{Events Forwarded to Clients}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{TCPForward} object has been created with at least 1 client.}{Publish an \texttt{Event} over the
+Event Channel.}{All clients should receive the \texttt{Event}.}
 
 \subsection{Entity}
 \subsubsection{Setting/Retrieving Sensors}
@@ -271,21 +272,33 @@ simulation, call set\_lin\_velocity(v), replacing v with a numerical value. Then
 \section{Networking Components}
 \subsection{Interface}
 \subsubsection{Messages Sent}
-\testcase{TDOO}{TODO}{TODO}
+\testcase{An \texttt{Interface} has been instantiated with a \texttt{node} that contains at least one
+\texttt{Agent}.}{Call the connect method. Pass a \texttt{Message} to the send\_message method using a valid
+\texttt{Agent} ID as the second argument.}{The message should appear on the Event Channel as a
+\texttt{CommunicationSendEvent}.}
 
 \subsubsection{Proper Function Called When Message Received}
-\testcase{TDOO}{TODO}{TODO}
+\testcase{An \texttt{Interface} has been instantiated with a proper network name and a \texttt{Node} containing at least
+one \texttt{Agent}. Set\_recv\_callback has been called on the \texttt{Interface} with a valid function.}{Call the connect method of the \texttt{Interface}.  Publish an \texttt{Event} over the Event
+Channel that contains the same network\_name as the \texttt{Interface} and a destination \texttt{Agent} ID.  The ID
+should belong to an \texttt{Agent} on the owner \texttt{Node}.}{The function callback specified in the \_recv\_callback
+of the \texttt{Interface} is called.}
 
 \subsection{CommsEngine}
-\subsubsection{Agent Returned by UID}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Node Returned by Agent UID}
+\testcase{A \texttt{Simulation} has been created with at least one \texttt{Agent} running on a \texttt{Node}. }{Call the
+get\_node\_from\_agent method with a valid \texttt{Agent} ID.}{The \texttt{Node} running that \texttt{Agent} with the
+given UID is returned.}
 
-\subsubsection{Simulation Properly Set}
-\testcase{TODO}{TODO}{TODO}
+%\subsubsection{Simulation Properly Set}
+%\testcase{TODO}{TODO}{TODO}
 
 \subsection{LogLossCommsEngine}
 \subsubsection{Pathloss Calculated Correctly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{A Simulation is running with at least two \texttt{Node}s and a \texttt{LogLossCommsEngine}. }{Call
+\_get\_rx\_power with appropriate source \texttt{Node} and destination \texttt{Node} IDs. A valid number should be
+passed as the third argument for the source power. }{The function should return a number equivalent to what is expected
+by the equation in 4.2.3.1 of the AHOY Design Document.}
 
 \subsubsection{Determines if a Message can be Delivered}
 \testcase{TODO}{TODO}{TODO}
