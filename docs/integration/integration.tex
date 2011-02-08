@@ -149,46 +149,37 @@ These documents have been used as reference materials for various technologies i
 
 \subsubsection{Simulation Acknowledges Startup Daemons}
 
-\testcase{\texttt{Simulation} and \texttt{StartupDaemon} objects are instantiated. At least one \texttt{StartupDaemon} should be created. The start() operation has been called on the \texttt{Simulation}. }{Publish an \texttt{AckStartupEvent} from each \texttt{StartupDaemon} using their \texttt{EventAPI}.}{\_on\_ack\_startup is called for every \texttt{AckStartupEvent} published.  There are id's in the \_startup\_acks list for every \texttt{StartupDaemon} publishing the event.}
+\testcase{\texttt{Simulation} and \texttt{StartupDaemon} objects are instantiated. At least one \texttt{StartupDaemon} should be created. The \texttt{start()} operation has been called on the \texttt{Simulation}. }{Publish an \texttt{AckStartupEvent} from each \texttt{StartupDaemon} using their \texttt{EventAPI}.}{\texttt{\_on\_ack\_startup} is called for every \texttt{AckStartupEvent} published.  There are id's in the \texttt{\_startup\_acks} list for every \texttt{StartupDaemon} publishing the event.}
 
 \subsection{StartupDaemon}
 \subsubsection{Daemon Acknowledges StartupEvent}
-\testcase{Set up a network configuration with at least one daemon.  Configure at least one agent to run.  Insert a print of a confirmation message when the simulation sends out a StartupEvent to the multicast channel, and when StartupDaemon receives such a StartupEvent.}{Start the simulation.}{Both of the newly added messages should be found in the output after the simulation is started.}
+\testcase{Set up a network configuration with at least one daemon.  Configure at least one agent to run.  Insert a print of a confirmation message when the simulation sends out a \texttt{StartupEvent} to the multicast channel, and when \texttt{StartupDaemon} receives such a \texttt{StartupEvent}.}{Start the simulation.}{Both of the newly added messages should be found in the output after the simulation is started.}
 
 \subsubsection{Daemon Publishes AckStartupEvent}
 \testcase{Set up a network configuration with at least one daemon.  Add confirmation message to be printed when Simulation publishes StartupEvent, when StartupDaemon receives a StartupEvent, when StartupDaemon is about to publish an AckStartupEvent, and when the Simulation receives an AckStartupEvent.}{Start the simulation.}{The newly added confirmation messages should be found in the output after the Simulation is started.}
 
 \subsubsection{Daemon Starts on StartSimulationEvent}
-\testcase{Configure a network with at least one daemon running, and configure at least one agent to run during the simulation.  Insert a confirmation message to be printed in start method of StartupDaemon.}{Start the simulation.}{For each StartupDaemon that should run, the newly created startup confirmation message should be found in the output.}
+\testcase{Configure a network with at least one daemon running, and configure at least one agent to run during the simulation.  Insert a confirmation message to be printed in start method of \texttt{StartupDaemon}.}{Start the simulation.}{For each \texttt{StartupDaemon} that should run, the newly created startup confirmation message should be found in the output.}
 
 \subsubsection{Daemon Starts all Processes at StartSimulationEvent}
-\testcase{Configure at least one process to be run during the simulation.  In StartupDaemon's \_on\_sim\_start function,
-add a confirmation message stating number of local\_entities found to be started.}{Start the simulation.}{For each
-daemon that runs, confirm that the number of processes it starts is equal to the number it found it has to start.  The
-number of processes a daemon starts can be found by counting the number of messages StartupDaemon prints when starting a
-new process.  This is done in the StartupDaemons \_start\_entity\_process function.}
+\testcase{Configure at least one process to be run during the simulation.  In \texttt{StartupDaemon}'s \texttt{\_on\_sim\_start} function, add a confirmation message stating number of \texttt{local\_entities} found to be started.}{Start the simulation.}{For each daemon that runs, confirm that the number of processes it starts is equal to the number it found it has to start.  The number of processes a daemon starts can be found by counting the number of messages \texttt{StartupDaemon} prints when starting a new process.  This is done in the \texttt{StartupDaemon}'s \texttt{\_start\_entity\_process} function.}
 
 \subsubsection{Daemon Terminates all Processes on StopSimulationEvent}
-\testcase{Configure a simulation with at least one entity running.  Insert message to print number the number of
-StartupDaemon's \_running\_pids at the end of StartupDaemon's \_restart function.}{Start the simulation. Invoke StopSimulationEvent to be published to the event channel.}{Each daemon that is running should output the newly created confirmation message and show it has 0 processes running.}
+\testcase{Configure a simulation with at least one entity running.  Insert message to print number the number of StartupDaemon's \texttt{\_running\_pids} at the end of \texttt{StartupDaemon}'s \texttt{\_restart} function.}{Start the simulation. Invoke \texttt{StopSimulationEvent} to be published to the event channel.}{Each daemon that is running should output the newly created confirmation message and show it has 0 processes running.}
 
 \subsection{World}
 \subsubsection{Entities are Added Successfully}
-\testcase{Configure the simulation to have more than one entity.  Insert print statement which outputs the total number
-of entities at the end of World's add\_entity function.}{Start the simulation.}{For each entity configured, a message should have printed confirming the addition of a new entity.  Each time the message prints, the number of total entities should increment by one.}
+\testcase{Configure the simulation to have more than one entity.  Insert print statement which outputs the total number of entities at the end of \texttt{World}'s \texttt{add\_entity} function.}{Start the simulation.}{For each entity configured, a message should have printed confirming the addition of a new entity.  Each time the message prints, the number of total entities should increment by one.}
 
 \subsubsection{World Returns Entity by UID}
-\testcase{Configure a world that contains at least one entity. In the startup script, call get\_entity(id) on the world
-object, replacing id with the ID assigned to an entity. Then, print out the value returned by that entity`s  get\_uid() function.}{Start the simulation.}{The uid printed by the startup script should be equal to the uid assigned to the entity when it was first created.}
+\testcase{Configure a world that contains at least one entity. In the startup script, call \texttt{get\_entity(id)} on the world
+object, replacing id with the ID assigned to an entity. Then, print out the value returned by that entity`s  \texttt{get\_uid()} function.}{Start the simulation.}{The uid printed by the startup script should be equal to the uid assigned to the entity when it was first created.}
 
 \subsubsection{Networks are Added Successfully}
-\testcase{Configure the world to contain at least one network.  In the add\_network function of World, insert statement
-displaying the total length of self.\_networks after the network has been added. The print statement should include the
-name of the network at self.\_networks[-1].}{Start the simulation.}{For each of the networks configured, a statement should be outputted stating the name of the network, and the number of total networks should increment by one as each network is added.}
+\testcase{Configure the world to contain at least one network.  In the \texttt{add\_network} function of World, insert statement displaying the total length of \texttt{self.\_networks} after the network has been added. The print statement should include the name of the network at \texttt{self.\_networks[-1]}.}{Start the simulation.}{For each of the networks configured, a statement should be outputted stating the name of the network, and the number of total networks should increment by one as each network is added.}
 
 \subsubsection{World Returns Networks by Name}
-\testcase{Configure at least one network.  In the startup script, after the simulation is started, call
-get\_network(n\_name) on the world object, replacing n\_name with the name of the network that was configured.  Print out the name of the network that this function calls.}{Start the simulation by running the startup script (and starting any necessary daemons).}{The name of the network that is printed by the startup script should be the same as the network that was configured.}
+\testcase{Configure at least one network.  In the startup script, after the simulation is started, call \texttt{get\_network(n\_name)} on the world object, replacing \texttt{n\_name} with the name of the network that was configured.  Print out the name of the network that this function calls.}{Start the simulation by running the startup script, and starting any necessary daemons.}{The name of the network that is printed by the startup script should be the same as the network that was configured.}
 
 \subsection{EventAPI}
 \subsubsection{Events are Published}
@@ -219,24 +210,19 @@ Event Channel.}{All clients should receive the \texttt{Event}.}
 
 \subsection{Entity}
 \subsubsection{Setting/Retrieving Sensors}
-\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the
-simulation, create a sensor and call the add\_sensor method on an entity.  On the same entity, then call
-get\_sensor(s\_name), replacing s\_name with the name of the sensor that was just added to that entity.  Finally, print the name of the sensor that this method returns.}{Start the simulation through the script.}{The name the script prints out should be the same as the name of the sensor the script tried to add to the entity at the beginning of the test.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting up the simulation, create a sensor and call the \texttt{add\_sensor} method on an entity.  On the same entity, then call \texttt{get\_sensor(s\_name)}, replacing \texttt{s\_name} with the name of the sensor that was just added to that entity.  Finally, print the name of the sensor that this method returns.}{Start the simulation through the script.}{The name the script prints out should be the same as the name of the sensor the script tried to add to the entity at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Cross-sectional Area}
-\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the
-simulation, call the \texttt{set\_rsc(val)} method on an entity. Replace \texttt{val} with a numeric value. On the same entity, then call
-\texttt{get\_rcs()}, and print the value that this method returns.}{Start the simulation through the script.}{The value the script prints out should be equal to the value the script tried to set the cross-sectional area to at the beginning of the test.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting up the simulation, call the \texttt{set\_rsc(val)} method on an entity. Replace \texttt{val} with a numeric value. On the same entity, then call \texttt{get\_rcs()}, and print the value that this method returns.}{Start the simulation through the script.}{The value the script prints out should be equal to the value the script tried to set the cross-sectional area to at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Linear Velocity}
-\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the
-simulation, call set\_lin\_velocity(v), replacing v with a numerical value. Then, call get\_lin\_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get\_lin\_velocity() should be equal to the value passed to the set\_lin\_velocity function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting up the simulation, call \texttt{set\_lin\_velocity(v)}, replacing \texttt{v} with a numerical value. Then, call \texttt{get\_lin\_velocity()} on the same entity.}{Start the simulation through the script.}{The value returned by \texttt{get\_lin\_velocity()} should be equal to the value passed to the \texttt{set\_lin\_velocity function}.}
 
 \subsubsection{Setting/Retrieving Forward Velocity}
-\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call set\_forward\_velocity(v), replacing v with a numerical value. Then, call get\_forward\_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get\_forward\_velocity() should be equal to the value passed to the set\_forward\_velocity function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting up the simulation, call set\_forward\_velocity(v), replacing v with a numerical value. Then, call get\_forward\_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get\_forward\_velocity() should be equal to the value passed to the set\_forward\_velocity function.}
 
 \subsubsection{Setting/Retrieving World}
-\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call \texttt{set\_world(w)}, replacing \texttt{w} with the world initially created. Then, call \texttt{get\_world()} on the same entity.}{Start the simulation through the script.}{The memory address of the object returned by \texttt{get\_world()} should be the same as the address of the world passed to the \texttt{set\_world} function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting up the simulation, call \texttt{set\_world(w)}, replacing \texttt{w} with the world initially created. Then, call \texttt{get\_world()} on the same entity.}{Start the simulation through the script.}{The memory address of the object returned by \texttt{get\_world()} should be the same as the address of the world passed to the \texttt{set\_world} function.}
 
 \subsubsection{Setting/Retrieving Position}
 \testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call \texttt{set\_position(lat,long,agl)}. Replace \texttt{lat} and \texttt{long} with valid latitude and longitude values, and replace \texttt{agl} with a numerical value for distance above ground level for this entity. Then, call \texttt{get\_position()} on the same entity.}{Start the simulation through the script.}{The value returned by \texttt{get\_position()} should be equal to the value passed to the \texttt{set\_position} function.}
@@ -249,16 +235,16 @@ simulation, call set\_lin\_velocity(v), replacing v with a numerical value. Then
 
 \subsection{Node}
 \subsubsection{Add an Interface}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, create a \texttt{Node}.  In the \texttt{add\_interface()} function of \texttt{Node}, insert a statement displaying the total length of \texttt{self.\_interfaces} after the interface has been added. The print statement should include the name of the interface that was just added at \texttt{self.\_interfaces[name]}, where \texttt{name} is the name of the interface.  Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface} function.}{Run the startup script.}{A statement should be outputted stating the name of the interface just added, and the number of total interfaces should increment by one for each interface added.}
 
 \subsubsection{Remove an Interface}
 \testcase{TDOO}{TODO}{TODO}
 
 \subsubsection{Add an Agent}
-\testcase{TDOO}{TODO}{TODO}
+\testcase{In the \texttt{add\_agent()} function of \texttt{Node}, insert a statement displaying the total length of \texttt{self.\_agents.keys()} after an agent has been added. The print statement should include the id of the agent that was just added at \texttt{self.\_agents[id]}, where \texttt{id} is the id of the agent.  Then, in a startup script, create an \texttt{Agent} and pass it to the node's \texttt{add\_agent} function.}{Run the startup script.}{A statement should be outputted stating the id of the agent just added, and the number of total agents should increment by one for each \texttt{Agent} added.}
 
 \subsubsection{Send a Message}
-\testcase{TDOO}{TODO}{TODO}
+\testcase{In a script, create an \texttt{Agent} and a \texttt{Node}.TODO}{Run the startup script.}{TODO}
 
 \subsubsection{Events Passed to Proper Agents}
 \testcase{TDOO}{TODO}{TODO}
@@ -345,12 +331,12 @@ CommunicationSendEvent. }{The action assigned to the \texttt{EthernetCommsEngine
 
 \subsection{StartSimulationEvent}
 \subsubsection{Daemon to Entity Mapping Maintained}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, create an EventAPI object, start it, and subscribe to event of type \texttt{StartSimulationEvent}. Whenever a \texttt{StartSimulationEvent} occurs, output the keys and values of the dictionary returned by calling \texttt{get\_mapping()} on the \texttt{StartSimulationEvent} that occurred. In the script, create a dictionary containing integers as both keys and values. Publish a \texttt{StartSimulationEvent}, and pass it this dictionary.}{Run the startup script.}{The dictionary returned by the \texttt{get\_mapping()} function should be identical to the dictionary passed by the script when publishing the \texttt{StartSimulationEvent}.}
 
 \subsection{StopSimulationEvent}
-%Not sure what a good test case would be here
-\subsubsection{TODO}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Capable of Being Invoked}
+\testcase{In a startup script, create an EventAPI object, start it, and subscribe to event of type \texttt{StopSimulationEvent}. Whenever a \texttt{StopSimulationEvent} occurs, output a statement confirming that it occurred. In the script, publish a \texttt{StopSimulationEvent}.}{Run the startup script.}{The statement confirming the \texttt{StopSimulationEvent} occurred should be output.}
+
 
 \section{Agent Components}
 \subsection{Agent}
