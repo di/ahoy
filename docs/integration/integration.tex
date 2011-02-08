@@ -229,24 +229,25 @@ is created. The \texttt{start()} operation has been called on the \texttt{Simula
 \testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{pickle()} on an \texttt{Entity}. Then, call \texttt{from\_pickle()} on the object that was returned by \texttt{pickle()}.}{Start the \texttt{Simulation} through the script.}{The \texttt{Entity} returned by \texttt{from\_pickle()} has the same values for all of its properties as the \texttt{Entity} passed to the \texttt{pickle()} function.}
 
 \subsection{Node}
-\subsubsection{Add an Interface}
-\testcase{In a startup script, create a \texttt{Node}.  In the \texttt{add\_interface()} function of \texttt{Node}, insert a statement displaying the total length of \texttt{self.\_interfaces} after the \texttt{Interface} has been added. The print statement includes the name of the \texttt{Interface} that was just added at \texttt{self.\_interfaces[name]}, where \texttt{name} is the name of the \texttt{Interface}.  Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function.}{Run the startup script.}{A statement is outputted stating the name of the \texttt{Interface} just added, and the number of total \texttt{Interface}s is incremented by one for each \texttt{Interface} added.}
+\subsubsection{Add and Get an Interface}
+\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{get\_interface(name)} on the \texttt{Node}, replacing \texttt{name} with the name of the \texttt{Interface} that was just added.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} increments by one after the \texttt{add\_interface()} function is called. The \texttt{Interface} at \texttt{self.\_interfaces[name]}, where \texttt{name} is the name of the \texttt{Interface} just added, is the \texttt{Interface} that was just added.  The object returned by the \texttt{get\_interface(name)} function is the \texttt{Interface} that was just added.}
 
 \subsubsection{Remove an Interface}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{remove\_interface(name)} on the \texttt{Node}, replacing \texttt{name} with the name of the \texttt{Interface} that was just added.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} decrements by one after the \texttt{remove\_interface()} function is called.}
 
 \subsubsection{Add an Agent}
-\testcase{In the \texttt{add\_agent()} function of \texttt{Node}, insert a statement displaying the total length of \texttt{self.\_agents.keys()} after an agent has been added. The print statement includes the ID of the agent that was just added at \texttt{self.\_agents[id]}, where \texttt{id} is the ID of the agent.  Then, in a startup script, create an \texttt{Agent} and pass it to the \texttt{Node}'s \texttt{add\_agent()} function.}{Run the startup script.}{A statement is outputted stating the ID of the agent just added, and the number of total agents is incrementd by one for each \texttt{Agent} added.}
+\testcase{In a startup script, create a \texttt{Node}.  Then, create an \texttt{Agent} and pass it to the \texttt{Node}'s \texttt{add\_agent()} function.}{Run the startup script.}{The \texttt{Agent} that was passed to the \texttt{add\_agent()} function is in \texttt{Node}'s \texttt{\_agents[ID}, where \texttt{ID} is the ID of the \texttt{Agent}. The total length of \texttt{self.\_agents.keys()} is incrementd by one for each \texttt{Agent} added.}
 
 \subsubsection{Send a Message}
-\testcase{In a script, create an \texttt{Agent} and a \texttt{Node}.TODO}{Run the startup script.}{TODO}
+\testcase{In a script, create an \texttt{Agent}, a \texttt{Node}, and an \texttt{Interface}.  Add the \texttt{Interface} to the \texttt{Node} by calling its \texttt{add\_interface()} method. Create a message to be sent.  Call the \texttt{Node}'s \texttt{send(message, src\_agent)} function, passing the created message and \texttt{Agent} to it.}{Run the startup script.}{The message that was passed to \texttt{Node}'s \texttt{send()} function is sent over its \texttt{Interface}.}
 
-\subsubsection{Events Passed to Proper Agents}
-\testcase{TODO}{TODO}{TODO}
+%	Destination agents not specified. Is this not outside the scope of Node?
+%\subsubsection{Events Passed to Proper Agents}
+%\testcase{TODO}{TODO}{TODO}
 
 \subsection{ScriptedEntity}
 \subsubsection{Scripted Entity Runs}
-\testcase{TODO}{TODO}{TODO}
+\testcase{Configure a \texttt{ScriptedEntity} to run in simulation.}{Start the simulation.}{The output messages the configured \texttt{ScriptedEntity} outputs by default indicate that it is moving as it was configured.}
 
 \section{Networking Components}
 \subsection{Interface}
