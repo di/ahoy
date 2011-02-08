@@ -245,7 +245,7 @@ simulation, call set\_lin\_velocity(v), replacing v with a numerical value. Then
 \testcase{In a startup script, configure the world to contain an entity. Before starting the simulation, have the script create an EventAPI object, call its \texttt{start()} method, and subscribe to \texttt{EntityMoveEvent}s. On each such event, print out the new position and id of the entity which published this event. In the script, after starting up the simulation, call \texttt{move(..)} on the entity. Also, insert a print statement into \texttt{Entity}'s \texttt{\_iterate\_move} function, and output each intended new location. Finally, call \texttt{get\_position()} on the same entity.}{Start the simulation through the script.}{The output statements should indicate that the entity in the simulation is moving towards the location that was passed into the \texttt{move} function of that entity.  It should eventually reach this destination.}
 
 \subsubsection{Pickle/Deserialize Properly}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call \texttt{pickle()} on an entity. Then, call \texttt{from\_pickle()} on the object that was returned by \texttt{pickle()}.}{Start the simulation through the script.}{The entity returned by \texttt{from\_pickle()} should have the same values for all of its properties as the entity passed to the \texttt{pickle()} function.}
 
 \subsection{Node}
 \subsubsection{Add an Interface}
@@ -316,11 +316,8 @@ CommunicationSendEvent. }{The action assigned to the \texttt{EthernetCommsEngine
 
 \section{Event Components}
 \subsection{Event}
-\subsubsection{Event is Serialized}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Event is Deserialized}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Event is Serialized/Deserialized}
+\testcase{In a startup script, create an event of a type that is extended from the \texttt{Event} class. In the script, call \texttt{pickle()} on the event. Then, call \texttt{from\_pickle()} on the object that was returned by \texttt{pickle()}.}{Run the startup script. Do this for each type of event.}{The event returned by \texttt{from\_pickle()} should have the same values for all of its properties as the event passed to the \texttt{pickle()} function.}
 
 \subsection{LinkEvent}
 \subsubsection{Determines if Nodes are Linked}
