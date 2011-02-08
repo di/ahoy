@@ -224,7 +224,9 @@ simulation, create a sensor and call the add\_sensor method on an entity.  On th
 get\_sensor(s\_name), replacing s\_name with the name of the sensor that was just added to that entity.  Finally, print the name of the sensor that this method returns.}{Start the simulation through the script.}{The name the script prints out should be the same as the name of the sensor the script tried to add to the entity at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Cross-sectional Area}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the
+simulation, call the \texttt{set\_rsc(val)} method on an entity. Replace \texttt{val} with a numeric value. On the same entity, then call
+\texttt{get\_rcs()}, and print the value that this method returns.}{Start the simulation through the script.}{The value the script prints out should be equal to the value the script tried to set the cross-sectional area to at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Linear Velocity}
 \testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the
@@ -234,18 +236,15 @@ simulation, call set\_lin\_velocity(v), replacing v with a numerical value. Then
 \testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call set\_forward\_velocity(v), replacing v with a numerical value. Then, call get\_forward\_velocity() on the same entity.}{Start the simulation through the script.}{The value returned by get\_forward\_velocity() should be equal to the value passed to the set\_forward\_velocity function.}
 
 \subsubsection{Setting/Retrieving World}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call \texttt{set\_world(w)}, replacing \texttt{w} with the world initially created. Then, call \texttt{get\_world()} on the same entity.}{Start the simulation through the script.}{The memory address of the object returned by \texttt{get\_world()} should be the same as the address of the world passed to the \texttt{set\_world} function.}
 
-\subsubsection{Position Change}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Setting/Retrieving Position}
+\testcase{In a startup script, configure the world to contain at least one entity. In the script, after starting up the simulation, call \texttt{set\_position(lat,long,agl)}. Replace \texttt{lat} and \texttt{long} with valid latitude and longitude values, and replace \texttt{agl} with a numerical value for distance above ground level for this entity. Then, call \texttt{get\_position()} on the same entity.}{Start the simulation through the script.}{The value returned by \texttt{get\_position()} should be equal to the value passed to the \texttt{set\_position} function.}
 
 \subsubsection{Moving to a New Position}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, configure the world to contain an entity. Before starting the simulation, have the script create an EventAPI object, call its \texttt{start()} method, and subscribe to \texttt{EntityMoveEvent}s. On each such event, print out the new position and id of the entity which published this event. In the script, after starting up the simulation, call \texttt{move(..)} on the entity. Also, insert a print statement into \texttt{Entity}'s \texttt{\_iterate\_move} function, and output each intended new location. Finally, call \texttt{get\_position()} on the same entity.}{Start the simulation through the script.}{The output statements should indicate that the entity in the simulation is moving towards the location that was passed into the \texttt{move} function of that entity.  It should eventually reach this destination.}
 
-\subsubsection{Entity Pickled Properly}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Entity Deserialized Properly}
+\subsubsection{Pickle/Deserialize Properly}
 \testcase{TODO}{TODO}{TODO}
 
 \subsection{Node}
