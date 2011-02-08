@@ -320,52 +320,28 @@ CommunicationSendEvent. }{The action assigned to the \texttt{EthernetCommsEngine
 \testcase{In a startup script, create an event of a type that is extended from the \texttt{Event} class. In the script, call \texttt{pickle()} on the event. Then, call \texttt{from\_pickle()} on the object that was returned by \texttt{pickle()}.}{Run the startup script. Do this for each type of event.}{The event returned by \texttt{from\_pickle()} should have the same values for all of its properties as the event passed to the \texttt{pickle()} function.}
 
 \subsection{LinkEvent}
-\subsubsection{Determines if Nodes are Linked}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Maintains All Assigned Properties}
+\testcase{In a startup script, create a network and two nodes, and configure them to run in the simulation. Also create an EventAPI object, start it, and subscribe to event of type \texttt{LinkEvent}. Whenever a \texttt{LinkEvent} occurs, output all of its properties by calling \texttt{get\_up()}, \texttt{get\_uid1()}, \texttt{get\_uid2()}, \texttt{get\_network\_name()}, \texttt{get\_pathloss()} on the \texttt{LinkEvent} that occurred. In the script, after starting the simulation, publish a \texttt{LinkEvent}.}{Start the simulation through the script.}{The values returned by each of the get functions should be equivalent to their corresponding values of the \texttt{LinkEvent} that was published by the script.}
 
 \subsection{CommunicationSendEvent}
-\subsubsection{Message is Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Source Agent UID Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Interface is Known}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Maintains All Assigned Properties}
+\testcase{In a startup script, create a network and two nodes, and configure them to run in the simulation. Also create an EventAPI object, start it, and subscribe to event of type \texttt{CommunicationSendEvent}. Whenever a \texttt{CommunicationSendEvent} occurs, output all of its properties by calling \texttt{get\_src\_agent\_uid()}, \texttt{get\_src\_iface\_name()}, \texttt{get\_message()}, \texttt{get\_network()} on the \texttt{CommunicationSendEvent} that occurred. In the script, after starting the simulation, publish a \texttt{CommunicationSendEvent}.}{Start the simulation through the script.}{The values returned by each of the get functions should be equivalent to their corresponding values of the \texttt{CommunicationSendEvent} that was published by the script.}
 
 \subsection{CommunicationRecvEvent}
-\subsubsection{Message is Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Source Agent UID Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Interface is Known}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Maintains All Assigned Properties}
+\testcase{In a startup script, create a network and two nodes, and configure them to run in the simulation. Also create an EventAPI object, start it, and subscribe to event of type \texttt{CommunicationRecvEvent}. Whenever a \texttt{CommunicationRecvEvent} occurs, output all of its properties by calling \texttt{get\_src\_agent\_uid()}, \texttt{get\_src\_iface\_name()}, \texttt{get\_message()}, \texttt{get\_network()} on the \texttt{CommunicationRecvEvent} that occurred. In the script, after starting the simulation, publish a \texttt{CommunicationRecvEvent}.}{Start the simulation through the script.}{The values returned by each of the get functions should be equivalent to their corresponding values of the \texttt{CommunicationRecvEvent} that was published by the script.}
 
 \subsection{EntityMoveEvent}
-\subsubsection{UID Info Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Latitude Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Longitude Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Above Ground Location Maintained}
-\testcase{TODO}{TODO}{TODO}
-
-\subsubsection{Velocity Maintained}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Maintains All Assigned Properties}
+\testcase{In a startup script, create an entity to run in the simulation. Also create an EventAPI object, start it, and subscribe to event of type \texttt{EntityMoveEvent}. Whenever a \texttt{EntityMoveEvent} occurs, output all of its properties by calling \texttt{get\_uid()}, \texttt{get\_lat()}, \texttt{get\_lon()}, \texttt{get\_agl()}, \texttt{get\_velocity()} on the \texttt{EntityMoveEvent} that occurred. In the script, after starting the simulation, publish a \texttt{EntityMoveEvent}.}{Start the simulation through the script.}{The values returned by each of the get functions should be equivalent to their corresponding values of the \texttt{EntityMoveEvent} that was published by the script.}
 
 \subsection{StartupEvent}
-\subsubsection{World Instance Maintained}
-\testcase{TODO}{TODO}{TODO}
+\subsubsection{Maintains World Property}
+\testcase{In a startup script, create an entity to run in the simulation. Also create an EventAPI object, start it, and subscribe to event of type \texttt{StartupEvent}. When a \texttt{StartupEvent} occurs, call the \texttt{get\_world()} function on that \texttt{StartupEvent}. Then, output the memory location and type of the object that this function returns.  Verify that a \texttt{StartupEvent} will be called when the simulation is started. Right before this event is published, output the memory location of the world object being passed to the \texttt{StartupEvent}.}{Start the simulation through the script.}{The memory location returned by the function should be the the same as the memory location of the world object being passed to the \texttt{StartupEvent}. Also, the object returned by the function should be of type \texttt{World}.}
 
 \subsection{AckStartupEvent}
 \subsubsection{Daemon ID Maintained}
-\testcase{TODO}{TODO}{TODO}
+\testcase{In a startup script, create an EventAPI object, start it, and subscribe to event of type \texttt{AckStartupEvent}. Whenever a \texttt{AckStartupEvent} occurs, output the value returned by calling \texttt{get\_daemon\_id()} on the \texttt{AckStartupEvent} that occurred. In the script, after starting the simulation, publish an \texttt{AckStartupEvent}.}{Start the simulation through the script.}{The value returned by the \texttt{get\_daemon\_id()} function should be equal to the value passed by the script when publishing the \texttt{EntityMoveEvent}.}
 
 \subsection{StartSimulationEvent}
 \subsubsection{Daemon to Entity Mapping Maintained}
