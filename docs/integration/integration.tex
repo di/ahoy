@@ -169,81 +169,77 @@ is created. The \texttt{start()} operation has been called on the \texttt{Simula
 
 \subsection{World}
 \subsubsection{Entities are Added Successfully}
-\testcase{Configure the \texttt{Simulation} to have more than one \texttt{Entity}.  Ensure that AHOY adds \texttt{Entity}s by calling the \texttt{World}'s \texttt{add\_entity(entity)} function.}{Start the \texttt{Simulation}.}{For each \texttt{Entity} configured, \texttt{World}'s \texttt{add\_entity(entity)} function is called.  Each time the function is called, the number of total \texttt{\_entities} of \texttt{World} is incrementd by one.}
+\testcase{Configure the \texttt{Simulation} to have more than one \texttt{Entity}.  Ensure that AHOY adds \texttt{Entity}s by calling the \texttt{World}'s \texttt{add\_entity()} function.}{Start the \texttt{Simulation}.}{For each \texttt{Entity} configured, \texttt{World}'s \texttt{add\_entity()} function is called.  Each time the function is called, the number of total \texttt{\_entities} of \texttt{World} is incremented by one.}
 
 \subsubsection{World Returns Entity by UID}
-\testcase{Configure a world that contains at least one \texttt{Entity}. In the startup script, call \texttt{get\_entity(ID)} on the world object, replacing \texttt{ID} with the \texttt{ID} assigned to an \texttt{Entity}.}{Start the \texttt{Simulation}.}{The UID returned by the \texttt{get\_entity(id)} function is equal to the UID assigned to the \texttt{Entity} when it was first created.}
+\testcase{Configure a world that contains at least one \texttt{Entity}. In the startup script, call \texttt{get\_entity()} on the world object.}{Start the \texttt{Simulation}.}{The UID returned by the \texttt{get\_entity()} function is equal to the UID assigned to the \texttt{Entity} when it was first created.}
 
 \subsubsection{Networks are Added Successfully}
-\testcase{Configure the \texttt{World} to contain at least one \texttt{Network}.  Confirm that the networks are added to the \texttt{World} by calling the \texttt{add\_network(network)} function of \texttt{World}.}{Start the \texttt{Simulation}.}{For each of the \texttt{Network}s configured, the \texttt{add\_network(network)} function is called, and the total length of \texttt{self.\_networks} increments by one as each \texttt{Network} is added.  The name of the network at \texttt{self.\_networks[-1]} is the name of the network last added, if there has been at least one network added.}
+\testcase{Configure the \texttt{World} to contain at least one \texttt{Network}.  Confirm that the networks are added to the \texttt{World} by calling the \texttt{add\_network()} function of \texttt{World}.}{Start the \texttt{Simulation}.}{For each of the \texttt{Network}s configured, the \texttt{add\_network()} function is called, and the total length of \texttt{self.\_networks} increments by one as each \texttt{Network} is added.  The name of the network at \texttt{self.\_networks[-1]} is the name of the network last added, if there has been at least one network added.}
 
 \subsubsection{World Returns Networks by Name}
-\testcase{Configure at least one \texttt{Network}.  In the startup script, after the \texttt{Simulation} is started, call \texttt{get\_network(n\_name)} on the world object, replacing \texttt{n\_name} with the name of the \texttt{Network} that was configured.}{Start the \texttt{Simulation} by running the startup script, and starting any necessary daemons.}{The name of the \texttt{Network} that is returned by the startup script calling the \texttt{get\_network(n\_name)} is the same as the name of \texttt{Network} that was configured.}
+\testcase{Configure at least one \texttt{Network}.  In the startup script, after the \texttt{Simulation} is started, call \texttt{get\_network()} on the world object.}{Start the \texttt{Simulation} by running the startup script, and starting any necessary daemons.}{The name of the \texttt{Network} that is returned by the startup script calling the \texttt{get\_network()} is the same as the name of \texttt{Network} that was configured.}
 
 \subsection{EventAPI}
 \subsubsection{Events are Published}
-\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s \texttt{publish(event,delay\_sec)} operation using the created \texttt{Event} and a delay time of 0 seconds.}{The \texttt{Event} is sent over the Event Channel.}
+\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s \texttt{publish()} operation using the created \texttt{Event} and a delay time of 0 seconds.}{The \texttt{Event} is sent over the Event Channel.}
 
 \subsubsection{Events can be Delayed}
 \testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s publish operation using the created \texttt{Event} and any time $t$ greater than 0 for the second argument.}{The \texttt{Event} is sent over the Event Channel $t$ seconds later.}
 
 \subsubsection{Raw Data is successfully passed}
-\testcase{\texttt{EventAPI} has been instantiated. Raw data has been created.}{Pass the raw data to the \texttt{EventAPI}'s \texttt{push\_raw(raw)} operation.}{The data can be seen and picked up over the current connection.}
+\testcase{\texttt{EventAPI} has been instantiated. Raw data has been created.}{Pass the raw data to the \texttt{EventAPI}'s \texttt{push\_raw()} operation.}{The data can be seen and picked up over the current connection.}
 
 \subsubsection{Subscribed Events Trigger Callbacks}
-\testcase{\texttt{EventAPI} has been instantiated.  An \texttt{Event} has been instantiated. A function exists that can be called by the \texttt{EventAPI}.}{Call the \texttt{EventAPI}'s \texttt{subscribe(event\_type, callback, **args)} method with the \texttt{Event} as the first argument, the function as the second, and any arguments for the function to follow.}{When the \texttt{Event} subscribed to occurs, the function is called with all arguments supplied. }
+\testcase{\texttt{EventAPI} has been instantiated.  An \texttt{Event} has been instantiated. A function exists that can be called by the \texttt{EventAPI}.}{Call the \texttt{EventAPI}'s \texttt{subscribe()}.}{When the \texttt{Event} subscribed to occurs, the function is called with all arguments supplied. }
 
 \subsubsection{Entity can Unsubscribe from an Event}
-\testcase{An \texttt{EventAPI} has subscribed to an \texttt{Event} with a callback function.}{Call the \texttt{EventAPI}'s \texttt{unsubscribe\_all(event\_type)} method with the same \texttt{Event} type subscribed to.}{Publish an \texttt{Event} of the same type. The callback function is not executed.}
+\testcase{An \texttt{EventAPI} has subscribed to an \texttt{Event} with a callback function.}{Call the \texttt{EventAPI}'s \texttt{unsubscribe\_all()} method with the same \texttt{Event} type subscribed to.}{Publish an \texttt{Event} of the same type. The callback function is not executed.}
 
 \subsection{TCPForward}
 \subsubsection{Data Received Successfully}
-\testcase{A \texttt{TCPForward} object has been instantiated with a valid port number.}{Call the \texttt{start()} method of the \texttt{TCPForward} object. Send an \texttt{Event} over the socket to the same port. }{The \texttt{\_listener(conn)} method is called soon after the message is sent. The raw \texttt{Event} is sent over the Event Channel. }
+\testcase{A \texttt{TCPForward} object has been instantiated with a valid port number.}{Call the \texttt{start()} method of the \texttt{TCPForward} object. Send an \texttt{Event} over the socket to the same port. }{The \texttt{\_listener()} method is called soon after the message is sent. The raw \texttt{Event} is sent over the Event Channel. }
 
 \subsubsection{Events Forwarded to Clients}
 \testcase{A \texttt{TCPForward} object has been created with at least 1 client.}{Publish an \texttt{Event} over the Event Channel.}{All clients receive the \texttt{Event}.}
 
 \subsection{Entity}
 \subsubsection{Setting/Retrieving Sensors}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, create a sensor and call the \texttt{add\_sensor} method on an \texttt{Entity}.  On the same \texttt{Entity}, then call \texttt{get\_sensor(s\_name)}, replacing \texttt{s\_name} with the name of the sensor that was just added to that \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The name the \texttt{get\_sensor(s\_name)} function returns is the same as the name of the sensor the script tried to add to the \texttt{Entity} at the beginning of the test.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, create a sensor and call the \texttt{add\_sensor()} method on an \texttt{Entity}.  On the same \texttt{Entity}, then call \texttt{get\_sensor()}.}{Start the \texttt{Simulation} through the script.}{The name the \texttt{get\_sensor()} function returns is the same as the name of the sensor the script tried to add to the \texttt{Entity} at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Cross-sectional Area}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call the \texttt{set\_rsc(val)} method on an \texttt{Entity}. Replace \texttt{val} with a numeric value. On the same \texttt{Entity}, then call \texttt{get\_rcs()}.}{Start the \texttt{Simulation} through the script.}{The value \texttt{get\_rcs()} returns is equal to the value the script tried to set the cross-sectional area to at the beginning of the test.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call the \texttt{set\_rsc()} method on an \texttt{Entity}.  On the same \texttt{Entity}, then call \texttt{get\_rcs()}.}{Start the \texttt{Simulation} through the script.}{The value \texttt{get\_rcs()} returns is equal to the value the script tried to set the cross-sectional area to at the beginning of the test.}
 
 \subsubsection{Setting/Retrieving Linear Velocity}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_lin\_velocity(v)}, replacing \texttt{v} with a numerical value. Then, call \texttt{get\_lin\_velocity()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_lin\_velocity()} is equal to the value passed to the \texttt{set\_lin\_velocity()} function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_lin\_velocity()}. Then, call \texttt{get\_lin\_velocity()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_lin\_velocity()} is equal to the value passed to the \texttt{set\_lin\_velocity()} function.}
 
 \subsubsection{Setting/Retrieving Forward Velocity}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_forward\_velocity(v)}, replacing \texttt{v} with a numerical value. Then, call \texttt{get\_forward\_velocity()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_forward\_velocity()} is equal to the value passed to the \texttt{set\_forward\_velocity()} function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_forward\_velocity()}. Then, call \texttt{get\_forward\_velocity()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_forward\_velocity()} is equal to the value passed to the \texttt{set\_forward\_velocity()} function.}
 
 \subsubsection{Setting/Retrieving World}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_world(w)}, replacing \texttt{w} with the world initially created. Then, call \texttt{get\_world()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The memory address of the object returned by \texttt{get\_world()} is the same as the address of the world passed to the \texttt{set\_world()} function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_world()}. Then, call \texttt{get\_world()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The memory address of the object returned by \texttt{get\_world()} is the same as the address of the world passed to the \texttt{set\_world()} function.}
 
 \subsubsection{Setting/Retrieving Position}
-\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_position(lat,long,agl)}. Replace \texttt{lat} and \texttt{long} with valid latitude and longitude values, and replace \texttt{agl} with a numerical value for distance above ground level for this \texttt{Entity}. Then, call \texttt{get\_position()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_position()} is equal to the value passed to the \texttt{set\_position()} function.}
+\testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{set\_position()}. Then, call \texttt{get\_position()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{The value returned by \texttt{get\_position()} is equal to the value passed to the \texttt{set\_position()} function.}
 
 \subsubsection{Moving to a New Position}
-\testcase{In a startup script, configure the world to contain an \texttt{Entity}.  In the script, after starting the \texttt{Simulation}, call \texttt{move(..)} on the \texttt{Entity}. Then, call \texttt{get\_position()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{Each time the \texttt{Entity} makes a move towards its destination, it decides its next position in its \texttt{\_iterate\_move()} function. A series of \texttt{EntityMoveEvent} published by the \texttt{Entity} indicate that the \texttt{Entity} in the \texttt{Simulation} is moving towards the location that was passed into the \texttt{move()} function of that \texttt{Entity}. It eventually reaches this destination.}
+\testcase{In a startup script, configure the world to contain an \texttt{Entity}.  In the script, after starting the \texttt{Simulation}, call \texttt{move()} on the \texttt{Entity}. Then, call \texttt{get\_position()} on the same \texttt{Entity}.}{Start the \texttt{Simulation} through the script.}{Each time the \texttt{Entity} makes a move towards its destination, it decides its next position in its \texttt{\_iterate\_move()} function. A series of \texttt{EntityMoveEvent} published by the \texttt{Entity} indicate that the \texttt{Entity} in the \texttt{Simulation} is moving towards the location that was passed into the \texttt{move()} function of that \texttt{Entity}. It eventually reaches this destination.}
 
 \subsubsection{Pickle/Deserialize Properly}
 \testcase{In a startup script, configure the world to contain at least one \texttt{Entity}. In the script, after starting the \texttt{Simulation}, call \texttt{pickle()} on an \texttt{Entity}. Then, call \texttt{from\_pickle()} on the object that was returned by \texttt{pickle()}.}{Start the \texttt{Simulation} through the script.}{The \texttt{Entity} returned by \texttt{from\_pickle()} has the same values for all of its properties as the \texttt{Entity} passed to the \texttt{pickle()} function.}
 
 \subsection{Node}
 \subsubsection{Add and Get an Interface}
-\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{get\_interface(name)} on the \texttt{Node}, replacing \texttt{name} with the name of the \texttt{Interface} that was just added.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} increments by one after the \texttt{add\_interface()} function is called. The \texttt{Interface} at \texttt{self.\_interfaces[name]}, where \texttt{name} is the name of the \texttt{Interface} just added, is the \texttt{Interface} that was just added.  The object returned by the \texttt{get\_interface(name)} function is the \texttt{Interface} that was just added.}
+\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{get\_interface()} on the \texttt{Node}.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} increments by one after the \texttt{add\_interface()} function is called.}
 
 \subsubsection{Remove an Interface}
-\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{remove\_interface(name)} on the \texttt{Node}, replacing \texttt{name} with the name of the \texttt{Interface} that was just added.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} decrements by one after the \texttt{remove\_interface()} function is called.}
+\testcase{In a startup script, create a \texttt{Node}. Then, create an \texttt{Interface} and pass it to the node's \texttt{add\_interface()} function. Finally, call the \texttt{remove\_interface()} on the \texttt{Node}.}{Run the startup script.}{The total length of \texttt{self.\_interfaces} of \texttt{Node} decrements by one after the \texttt{remove\_interface()} function is called.}
 
 \subsubsection{Add an Agent}
-\testcase{In a startup script, create a \texttt{Node}.  Then, create an \texttt{Agent} and pass it to the \texttt{Node}'s \texttt{add\_agent()} function.}{Run the startup script.}{The \texttt{Agent} that was passed to the \texttt{add\_agent()} function is in \texttt{Node}'s \texttt{\_agents[ID}, where \texttt{ID} is the ID of the \texttt{Agent}. The total length of \texttt{self.\_agents.keys()} is incrementd by one for each \texttt{Agent} added.}
+\testcase{In a startup script, create a \texttt{Node}.  Then, create an \texttt{Agent} and pass it to the \texttt{Node}'s \texttt{add\_agent()} function.}{Run the startup script.}{The \texttt{Agent} that was passed to the \texttt{add\_agent()} function is in \texttt{Node}'s \texttt{\_agents}. The total length of \texttt{self.\_agents.keys()} is incremented by one for each \texttt{Agent} added.}
 
 \subsubsection{Send a Message}
-\testcase{In a script, create an \texttt{Agent}, a \texttt{Node}, and an \texttt{Interface}.  Add the \texttt{Interface} to the \texttt{Node} by calling its \texttt{add\_interface()} method. Create a message to be sent.  Call the \texttt{Node}'s \texttt{send(message, src\_agent)} function, passing the created message and \texttt{Agent} to it.}{Run the startup script.}{The message that was passed to \texttt{Node}'s \texttt{send()} function is sent over its \texttt{Interface}.}
-
-%	Destination agents not specified. Is this not outside the scope of Node?
-%\subsubsection{Events Passed to Proper Agents}
-%\testcase{TODO}{TODO}{TODO}
+\testcase{In a script, create an \texttt{Agent}, a \texttt{Node}, and an \texttt{Interface}.  Add the \texttt{Interface} to the \texttt{Node} by calling its \texttt{add\_interface()} method. Create a message to be sent.  Call the \texttt{Node}'s \texttt{send()} function.}{Run the startup script.}{The message that was passed to \texttt{Node}'s \texttt{send()} function is sent over its \texttt{Interface}.}
 
 \subsection{ScriptedEntity}
 \subsubsection{Scripted Entity Runs}
@@ -259,10 +255,7 @@ is created. The \texttt{start()} operation has been called on the \texttt{Simula
 
 \subsection{CommsEngine}
 \subsubsection{Node Returned by Agent UID}
-\testcase{A \texttt{Simulation} has been created with at least one \texttt{Agent} running on a \texttt{Node}. }{Call the \texttt{get\_node\_from\_agent()} method with a valid \texttt{Agent} ID.}{The \texttt{Node} running that \texttt{Agent} with the given UID is returned.}
-
-%\subsubsection{Simulation Properly Set}
-%\testcase{TODO}{TODO}{TODO}
+\testcase{A \texttt{Simulation} has been created with at least one \texttt{Agent} running on a \texttt{Node}.}{Call the \texttt{get\_node\_from\_agent()} method with a valid \texttt{Agent} ID.}{The \texttt{Node} running that \texttt{Agent} with the given UID is returned.}
 
 \subsection{LogLossCommsEngine}
 \subsubsection{Pathloss Calculated Correctly}
@@ -326,15 +319,6 @@ is created. The \texttt{start()} operation has been called on the \texttt{Simula
 \subsubsection{Proper Behavior Removed}
 \testcase{A \texttt{Simulation} is running with at least one \texttt{Agent} with assigned behaviors.}{Call the \texttt{Agent}'s \texttt{remove\_behavior()} method with a behavior tuple.}{If the Agent contains a behavior set containing the same \texttt{Event}, \texttt{Action}, and \texttt{Condition} pairs, that behavior is removed from the \texttt{Agent}'s behavior map.}
 
-%\subsection{Condition}
-%Not sure what to do here. Its completely abstract
-%\subsubsection{TODO}
-%\testcase{TODO}{TODO}{TODO}
-
-%\subsection{Action}
-%\subsubsection{Action Performed When Called}
-%\testcase{An \texttt{Action} has been created.}{Call the \texttt{Action}'s perform method.}{}
-
 \subsection{MoveAction}
 \subsubsection{Proper Entity is Moved}
 \testcase{A \texttt{MoveAction} has been instantiated.}{Call the perform method of the \texttt{MoveAction}.}{The \texttt{Entity} in the \texttt{\_entity} attribute changes its position.}
@@ -351,24 +335,22 @@ is created. The \texttt{start()} operation has been called on the \texttt{Simula
 \section{Utility Components}
 \subsection{Geo}
 \subsubsection{Haversine Distance Calculated Correctly}
-\testcase{}{Call \texttt{haver\_distance()} with latitude and longitude arguments.}{A correct Haversine distance is returned.}
+\testcase{None}{Call \texttt{haver\_distance()} with latitude and longitude arguments.}{A correct Haversine distance is returned.}
 
 \subsubsection{Linear Distance Calculated Correctly}
-\testcase{}{Call \texttt{linear\_distance()} with latitude and longitude arguments}{The correct linear distance between the points is returned.}
+\testcase{None}{Call \texttt{linear\_distance()} with latitude and longitude arguments}{The correct linear distance between the points is returned.}
 
 \subsubsection{Lat/Lon/Agl Converted to Cartesian Coords}
-\testcase{}{Call \texttt{sph\_to\_lin()} with a latitude, longitude, and above ground location in that order.}{A correct conversion into Cartesian coordinates is returned.}
+\testcase{None}{Call \texttt{sph\_to\_lin()} with a latitude, longitude, and above ground location in that order.}{A correct conversion into Cartesian coordinates is returned.}
 
 \subsubsection{Cartesian Coords Converted to Lat/Lon/Agl}
-\testcase{}{Call \texttt{lin\_to\_sph()} with Cartesian x, y, and z coordinates.}{The input coordinates are correctly converted to latitude, longitude, and above aground location points.}
+\testcase{None}{Call \texttt{lin\_to\_sph()} with Cartesian x, y, and z coordinates.}{The input coordinates are correctly converted to latitude, longitude, and above aground location points.}
 
 \subsubsection{Kilometers converted to radians Correctly}
-\testcase{}{Call \texttt{loc\_from\_bearing\_dist()} with appropriate latitude and longitude inputs.}{The kilometers along the latitude and longitude lines are correctly converted to radians and returned.}
+\testcase{None}{Call \texttt{loc\_from\_bearing\_dist()} with appropriate latitude and longitude inputs.}{The kilometers along the latitude and longitude lines are correctly converted to radians and returned.}
 
 \subsubsection{Location and Bearing Calculated Correctly}
-\testcase{}{Call \texttt{loc\_from\_bearing\_dist()} with valid longitude/latitude points along with a bearing and
-distance.}{The correct location of an object after moving from the given lat/lon at the given bearing for the given
-distance is returned.}
+\testcase{None}{Call \texttt{loc\_from\_bearing\_dist()} with valid longitude/latitude points along with a bearing and distance.}{The correct location of an object after moving from the given lat/lon at the given bearing for the given distance is returned.}
 
 \pagebreak
 \appendix
