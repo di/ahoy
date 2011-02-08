@@ -124,7 +124,7 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \label{sec:purpose}
 %TODO Add number of modules or parts of the system
 %TODO Add short list of modules or parts of the system
-This document lays out the integration test plan for AHOY. It defines the test cases for the interaction between the (NUMBER) modules of the system: (TODO). The integration test plan for this system is based on the project requirements set forth in the Software Requirements Specification document while taking into consideration the system architecture as laid out in the Software Design Specification. The information presented here is intended for the development team, as well as the advisor and external stakeholders, which are currently Dr.~William Regli, Joseph Macker of the Naval Research Laboratory, and Dr.~Michal P\v{e}chou\v{e}k of Czech Technical University. 
+This document lays out the integration test plan for AHOY. It defines the test cases for the interaction between the 6 modules of the system: Simulation Components, Networking Components, Event Components, Agent Components, Sensor Components, and Utility Components. The integration test plan for this system is based on the project requirements set forth in the Software Requirements Specification document while taking into consideration the system architecture as laid out in the Software Design Specification. The information presented here is intended for the development team, as well as the advisor and external stakeholders, which are currently Dr.~William Regli, Joseph Macker of the Naval Research Laboratory, and Dr.~Michal P\v{e}chou\v{e}k of Czech Technical University. 
 
 \subsection{Scope}
 The goal of the AHOY project is to provide a system for testing multiple agents across varying scenarios and topologies, in a distributed, event-driven way. AHOY gives the user the ability to quantitatively examine the effectiveness of specific agent designs as well as a focus on additional factors relevant to the network, including network connectivity, connection fidelity, and the agent's ability to process and transmit data.
@@ -148,7 +148,8 @@ These documents have been used as reference materials for various technologies i
 
 \subsubsection{Simulation Acknowledges Startup Daemons}
 
-\testcase{\texttt{Simulation} and \texttt{StartupDaemon} objects are instantiated. At least one \texttt{StartupDaemon} is created. The \texttt{start()} operation has been called on the \texttt{Simulation}. }{Publish an \texttt{AckStartupEvent} from each \texttt{StartupDaemon} using their \texttt{EventAPI}.}{\texttt{\_on\_ack\_startup} is called for every \texttt{AckStartupEvent} published.  There are ID's in the \texttt{\_startup\_acks} list for every \texttt{StartupDaemon} publishing the \texttt{Event}.}
+\testcase{\texttt{Simulation} and \texttt{StartupDaemon} objects are instantiated. At least one \texttt{StartupDaemon}
+is created. The \texttt{start()} operation has been called on the \texttt{Simulation}. }{Publish an \texttt{AckStartupEvent} from each \texttt{StartupDaemon} using their \texttt{EventAPI}.}{\texttt{\_on\_ack\_startup()} is called for every \texttt{AckStartupEvent} published.  There are ID's in the \texttt{\_startup\_acks} list for every \texttt{StartupDaemon} publishing the \texttt{Event}.}
 
 \subsection{StartupDaemon}
 \subsubsection{Daemon Acknowledges StartupEvent}
@@ -161,43 +162,43 @@ These documents have been used as reference materials for various technologies i
 \testcase{Configure a \texttt{Network} with at least one daemon running, and configure at least one agent to run during the \texttt{Simulation}.  Confirm that \texttt{Daemon} listens to \texttt{StartSimulationEvent}.}{Start the \texttt{Simulation}.}{For each \texttt{StartupDaemon} that is run, that \texttt{StartupDaemon}'s \texttt{start()} method is called upon receiving a \texttt{StartSimulationEvent}.}
 
 \subsubsection{Daemon Starts all Processes at StartSimulationEvent}
-\testcase{Configure at least one process to be run during the \texttt{Simulation}.  In \texttt{StartupDaemon}'s \texttt{\_on\_sim\_start} function, add a confirmation message stating number of \texttt{local\_entities} found to be started.}{Start the \texttt{Simulation}.}{For each daemon that runs, the number of processes it starts is equal to the number it was given to start.  For each process a \texttt{Daemon} has to run, the \texttt{\_start\_entity\_process} function is called.}
+\testcase{Configure at least one process to be run during the \texttt{Simulation}.  In \texttt{StartupDaemon}'s \texttt{\_on\_sim\_start()} function, add a confirmation message stating number of \texttt{local\_entities} found to be started.}{Start the \texttt{Simulation}.}{For each daemon that runs, the number of processes it starts is equal to the number it was given to start.  For each process a \texttt{Daemon} has to run, the \texttt{\_start\_entity\_process()} function is called.}
 
 \subsubsection{Daemon Terminates all Processes on StopSimulationEvent}
 \testcase{Configure a \texttt{Simulation} with at least one \texttt{Entity} running.}{Start the \texttt{Simulation}. Invoke \texttt{StopSimulationEvent} to be published to the Event Channel.}{Each daemon that is running has 0 processes running after receiving the \texttt{StopSimulationEvent}.}
 
 \subsection{World}
 \subsubsection{Entities are Added Successfully}
-\testcase{Configure the \texttt{Simulation} to have more than one \texttt{Entity}.  Ensure that AHOY adds \texttt{Entity}s by calling the \texttt{World}'s \texttt{add\_entity} function.}{Start the \texttt{Simulation}.}{For each \texttt{Entity} configured, \texttt{World}'s \texttt{add\_entity} function is called.  Each time the function is called, the number of total \texttt{\_entities} of \texttt{World} is incrementd by one.}
+\testcase{Configure the \texttt{Simulation} to have more than one \texttt{Entity}.  Ensure that AHOY adds \texttt{Entity}s by calling the \texttt{World}'s \texttt{add\_entity(entity)} function.}{Start the \texttt{Simulation}.}{For each \texttt{Entity} configured, \texttt{World}'s \texttt{add\_entity(entity)} function is called.  Each time the function is called, the number of total \texttt{\_entities} of \texttt{World} is incrementd by one.}
 
 \subsubsection{World Returns Entity by UID}
 \testcase{Configure a world that contains at least one \texttt{Entity}. In the startup script, call \texttt{get\_entity(ID)} on the world object, replacing \texttt{ID} with the \texttt{ID} assigned to an \texttt{Entity}.}{Start the \texttt{Simulation}.}{The UID returned by the \texttt{get\_entity(id)} function is equal to the UID assigned to the \texttt{Entity} when it was first created.}
 
 \subsubsection{Networks are Added Successfully}
-\testcase{Configure the world to contain at least one \texttt{Network}.  Confirm that the networks are added to the world by calling the \texttt{add\_network} function of World.}{Start the \texttt{Simulation}.}{For each of the \texttt{Network}s configured, the \texttt{add\_network} function is called, and the total length of \texttt{self.\_networks} increments by one as each \texttt{Network} is added.  The name of the network at \texttt{self.\_networks[-1]} is the name of the network last added, if there has been at least one network added.}
+\testcase{Configure the \texttt{World} to contain at least one \texttt{Network}.  Confirm that the networks are added to the \texttt{World} by calling the \texttt{add\_network(network)} function of \texttt{World}.}{Start the \texttt{Simulation}.}{For each of the \texttt{Network}s configured, the \texttt{add\_network(network)} function is called, and the total length of \texttt{self.\_networks} increments by one as each \texttt{Network} is added.  The name of the network at \texttt{self.\_networks[-1]} is the name of the network last added, if there has been at least one network added.}
 
 \subsubsection{World Returns Networks by Name}
 \testcase{Configure at least one \texttt{Network}.  In the startup script, after the \texttt{Simulation} is started, call \texttt{get\_network(n\_name)} on the world object, replacing \texttt{n\_name} with the name of the \texttt{Network} that was configured.}{Start the \texttt{Simulation} by running the startup script, and starting any necessary daemons.}{The name of the \texttt{Network} that is returned by the startup script calling the \texttt{get\_network(n\_name)} is the same as the name of \texttt{Network} that was configured.}
 
 \subsection{EventAPI}
 \subsubsection{Events are Published}
-\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s publish operation using the created \texttt{Event} and a delay time of 0 seconds.}{The \texttt{Event} is sent over the Event Channel.}
+\testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s \texttt{publish(event,delay\_sec)} operation using the created \texttt{Event} and a delay time of 0 seconds.}{The \texttt{Event} is sent over the Event Channel.}
 
 \subsubsection{Events can be Delayed}
 \testcase{An \texttt{EventAPI} has been instantiated. An \texttt{Event} has been created.}{Call the \texttt{EventAPI}'s publish operation using the created \texttt{Event} and any time $t$ greater than 0 for the second argument.}{The \texttt{Event} is sent over the Event Channel $t$ seconds later.}
 
 \subsubsection{Raw Data is successfully passed}
-\testcase{\texttt{EventAPI} has been instantiated. Raw data has been created.}{Pass the raw data to the \texttt{EventAPI}'s \texttt{push\_raw} operation.}{The data can be seen and picked up over the current connection.}
+\testcase{\texttt{EventAPI} has been instantiated. Raw data has been created.}{Pass the raw data to the \texttt{EventAPI}'s \texttt{push\_raw(raw)} operation.}{The data can be seen and picked up over the current connection.}
 
 \subsubsection{Subscribed Events Trigger Callbacks}
-\testcase{\texttt{EventAPI} has been instantiated.  An \texttt{Event} has been instantiated. A function exists that can be called by the \texttt{EventAPI}.}{Call the \texttt{EventAPI}'s subscribe method with the \texttt{Event} as the first argument, the function as the second, and any arguments for the function to follow.}{When the \texttt{Event} subscribed to occurs, the function is called with all arguments supplied. }
+\testcase{\texttt{EventAPI} has been instantiated.  An \texttt{Event} has been instantiated. A function exists that can be called by the \texttt{EventAPI}.}{Call the \texttt{EventAPI}'s \texttt{subscribe(event\_type, callback, **args)} method with the \texttt{Event} as the first argument, the function as the second, and any arguments for the function to follow.}{When the \texttt{Event} subscribed to occurs, the function is called with all arguments supplied. }
 
 \subsubsection{Entity can Unsubscribe from an Event}
-\testcase{An \texttt{EventAPI} has subscribed to an \texttt{Event} with a callback function.}{Call the \texttt{EventAPI}'s unsubscribe\_all method with the same \texttt{Event} type subscribed to.}{Publish an \texttt{Event} of the same type. The callback function is not executed.}
+\testcase{An \texttt{EventAPI} has subscribed to an \texttt{Event} with a callback function.}{Call the \texttt{EventAPI}'s \texttt{unsubscribe\_all(event\_type)} method with the same \texttt{Event} type subscribed to.}{Publish an \texttt{Event} of the same type. The callback function is not executed.}
 
 \subsection{TCPForward}
 \subsubsection{Data Received Successfully}
-\testcase{A \texttt{TCPForward} object has been instantiated with a valid port number.}{Call the start method of the \texttt{TCPForward} object. Send an \texttt{Event} over the socket to the same port. }{The \texttt{\_listener} method is called soon after the message is sent. The raw \texttt{Event} is sent over the Event Channel. }
+\testcase{A \texttt{TCPForward} object has been instantiated with a valid port number.}{Call the \texttt{start()} method of the \texttt{TCPForward} object. Send an \texttt{Event} over the socket to the same port. }{The \texttt{\_listener(conn)} method is called soon after the message is sent. The raw \texttt{Event} is sent over the Event Channel. }
 
 \subsubsection{Events Forwarded to Clients}
 \testcase{A \texttt{TCPForward} object has been created with at least 1 client.}{Publish an \texttt{Event} over the Event Channel.}{All clients receive the \texttt{Event}.}
