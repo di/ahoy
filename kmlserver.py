@@ -5,7 +5,7 @@ from ahoy.events.move import EntityMoveEvent
 from ahoy.eventapi import EventAPI
 
 class KmlServer :
-    def __init__(self, port) :
+    def __init__(self, port, model_map) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.bind(('', port))
         self._sock.listen(1)
@@ -13,6 +13,7 @@ class KmlServer :
         self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._pos = {}
+        self._model_map = model_map
         self._first = True
 
     def _on_move(self, event) :
@@ -22,6 +23,7 @@ class KmlServer :
         s = ''
         for uid, loc in self._pos.iteritems() :
             lat, long, agl = loc
+            model = self._model_map[uid]
             if self._first :
                 s += '''<Placemark>
                 <Model>
@@ -32,10 +34,10 @@ class KmlServer :
                 <altitude>%s</altitude>
                 </Location>
                 <Link>
-                <href>file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/ss_united_states.dae</href>
+                <href>%s</href>
                 </Link>
                 </Model>
-                </Placemark>\n''' % (uid, long, lat, agl)
+                </Placemark>\n''' % (uid, long, lat, agl, model)
             else :
                 s += '''
                 <Update>
@@ -76,4 +78,7 @@ class KmlServer :
             Thread(target=self._handle, args=(conn,)).start()
 
 if __name__ == '__main__' :
-    KmlServer(int(sys.argv[1])).start()
+    mapping = {}
+    for i in range(0, 10) :
+        mapping[i] = 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/ss_united_states.dae'
+    KmlServer(int(sys.argv[1]), mapping).start()
