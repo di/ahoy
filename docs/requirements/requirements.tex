@@ -322,6 +322,17 @@ It is assumed that a user, administrator, or developer has the ability to instal
 	\paragraph{Networks} The Scenario Definition specifies networks to which interfaces may connect.  Networks are described with a unique identifier and physical layer model (e.g. 802.11, Ethernet).
 	\paragraph{Interfaces} The Scenario Definition specifies the interfaces on each virtual node and on which network they are connected.
 
+\subsubsection{Agent Definition}
+    \paragraph{Behaviors} Agent Definitions specify precondition-trigger-action tuples.  When the trigger occurs, if and only if the precondition is met, the action will be invoked.
+    \paragraph{Logic} Agent Definitions may specify logic in addition to behaviors.  This can be any code which should be run when the agent is started.
+
+\subsubsection{Sensor Definition}
+    \paragraph{Behavior} Sensor Definitions specify the data which should be made available to the entity on which the sensor is running.
+
+\subsubsection{Network Model}
+    \paragraph{Deliverable} Network Models determine if a message should be delivered to the indicated destination.
+    \paragraph{Links} Network Models publishes link-up and link-down events via the API.
+
 \subsubsection{Distribution Framework}
 	\paragraph{Physical Distribution} The Distribution Framework distributes virtual entities evenly across physical nodes. Further, it handles the establishment and initialization of entities, sensors, and agents on their respective physical entity.
 	\paragraph{Simulation Server} The Distribution Framework organizes physical nodes to interact with the simulation server.

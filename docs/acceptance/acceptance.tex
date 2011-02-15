@@ -229,8 +229,8 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     \begin{itemize}
         \item Successful completion of Unit Tests, the Integration Test and a System Test.
         \item Setup and inspection of the testing environment to satisfies the System Requirements of the Software Requirements Specification.
-        \item Reciept of a copy of the latest version of the Software Requirements Specification.
-        \item Reciept of a copy of the latest version of the user-related documentation.
+        \item Receipt of a copy of the latest version of the Software Requirements Specification.
+        \item Receipt of a copy of the latest version of the user-related documentation.
         \item Appropriate resourcing of the latest released version of AHOY.
         \item Consent of the Project Leader.
         \item Consent of the Client.
@@ -310,65 +310,19 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         Movement and communication occur at real-time speeds as reflected by the logs.
     }
-    \testentry{Limitations of Movement}{
-        The simulation engine is running, and the user creates a scenario mobile objects.
-    }{
-        The scenario attempts to move the object into an invalid location.
-    }{
-        The simulation engine moves the object as close to the invalid location as possible.
-    }
-    \testentry{Collision Prevention}{
-        The simulation engine is running, and the simulation contains mobile objects and static objects.
-    }{
-        The scenario attempts to move one world object into another world object.
-    }{
-        The simulation engine moves the object as close to the invalid location as possible.
-    }
     \testentry{Maximum Models}{
-        The simulation engine is running, and the user creates a scenario containing 300 models.
+        The simulation engine is running, and the user creates a scenario containing 500 models.
     }{
         The user loads and starts the created scenario.
     }{
-        The simulation engine shows 300 models.
+        The simulation engine shows 500 models.
     }
-    \testentry{User Intervention}{
-        The simulation engine is running.
+    \testentry{Startup}{
+        The user has created a scenario.
     }{
-        The user inputs an event into the simulation.
+        The scenario is loaded into the simulation.
     }{
-        The event is reflected by the simulation engine.
-    } 
-    \testentry{Modularity}{
-        The user is running a simulation, and a visualizer or other application is running and subscribed to the Event Channel.
-    }{
-        The user terminates the execution of the visualization or application.
-    }{
-        The simulation continues to run.
-    }
-
-%___________________________________________________________________________
-
-\subsubsection{Network Definition}
-    \testentry{Interfaces}{
-        The user creates a scenario with a node which has an interface.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The simulator has a node with an interface.
-    }
-    \testentry{Networks}{
-        The user creates a scenario with a node which has an interface, connected to a network.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The simulator has a node with an interface, connected to a network.
-    }
-    \testentry{Links}{
-        The user creates a scenario with two nodes, each of which has an interface that are connected to one another.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The simulator has two nodes, each of which with an interface that are connected to one another.
+        The scenario starts and is distributed.
     }
 
 %___________________________________________________________________________
@@ -381,40 +335,77 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The simulator has a node at the specified location.
     }
-    \testentry{Mobility}{
-        The user creates a scenario with a node which has multiple event-based locations.
+    \testentry{Agents}{
+        The user creates a scenario with a node which has a local agent.
     }{
         The user loads and starts the created scenario.
     }{
-        The simulator has a node which moves to the specified locations as a response to their respective events.
+        The agent runs on the node.
     }
-    \testentry{Events}{
-        The user creates a scenario with an agent which has an action based on the occurrence of an event.
+    \testentry{Sensors}{
+        The user creates a scenario with a node which has a local sensor.
     }{
         The user loads and starts the created scenario.
     }{
-        The simulator has a node which appropriately responds to the specified event.
+        The sensor runs on the node.
     }
-
-%___________________________________________________________________________
-
-\subsubsection{Agent Framework}
-    \testentry{Agent Location}{
-        The user creates a scenario with a node which has an agent.
+    \testentry{Networks}{
+        The user creates a scenario with a node which has an interface, connected to a network.
     }{
         The user loads and starts the created scenario.
     }{
-        The simulator executes the specified agent on the specified node.
+        The simulator has a node with an interface, connected to a network.
     }
-    \testentry{Startup}{
-        The user creates a scenario with a node which has an agent and startup parameters.
+    \testentry{Interfaces}{
+        The user creates a scenario with a node which has an interface.
     }{
         The user loads and starts the created scenario.
     }{
-        The simulator executes the specified agent on the specified node and applies the startup parameters.
+        The simulator has a node with an interface.
     }
 
 %___________________________________________________________________________
+
+\subsubsection{Agent Definition}
+    \testentry{Behaviors}{
+        The user creates a scenario containing a node with an agent.  The agent has at least one behavior.
+    }{
+        The user starts the scenario.
+    }{
+        The agent behaves as intended.
+    }
+    \testentry{Logic}{
+        The user creates a scenario containing a node with an agent.  The agent has additional code to be run at startup.
+    }{
+        The user starts the scenario.
+    }{
+        The agent runs the specified code.
+    }
+
+\subsubsection{Sensor Definition}
+    \testentry{Behaviors}{
+        The user creates a scenario containing an entity with a sensor.
+    }{
+        The user starts the scenario.
+    }{
+        The sensor makes available the proper information to the entity.
+    }
+
+\subsubsection{Network Model}
+    \testentry{Deliverable}{
+        The user creates a scenario containing two nodes on a network.  One agent on each node sends messages to the other agent.
+    }{
+        The user starts the scenario.
+    }{
+        The messages are received if and only if the network model determines each should be delivered.
+    }
+    \testentry{Links}{
+        The user creates a scenario containing two nodes on a network.
+    }{
+        The user starts the scenario.
+    }{
+        Link-up and link-down events are published to the event-channel as determined by the network model.
+    }
 
 \subsubsection{Distribution Framework}
     \testentry{Physical Distribution}{
@@ -467,7 +458,7 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The user loads and starts the created scenario.
     }{
-        The simulation engine stores and parses the loaded scenario.
+        The simulation runs the scenario.
     }
 
 %___________________________________________________________________________
