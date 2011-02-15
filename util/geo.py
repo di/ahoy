@@ -3,8 +3,8 @@ import math
 def haver_distance(lat1, lon1, lat2, lon2) :
     r = 6371
     dLat = float(math.radians(lat2-lat1))
-    dLon = float(math.radians(lon2-lon1))
-    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
+    dlon = float(math.radians(lon2-lon1))
+    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     return r * c
 
@@ -76,7 +76,7 @@ def loc_from_bearing_dist(lat, lon, bearing, dist) :
     return new_lat, new_lon
 
 def bearing_from_pts(lat1, lon1, lat2, lon2) :
-    dLon = float(math.radians(lon2-lon1))
-    y = math.sin(dLon) * math.cos(lat2)
-    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1)*math.cos(lat2)*math.cos(dLon)
-    return math.degrees(math.atan2(y, x))
+    dlon = float(math.radians(lon1-lon2))
+    y = math.sin(dlon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1)*math.cos(lat2)*math.cos(dlon)
+    return (math.degrees(math.atan2(y, x)) + 180) % 360
