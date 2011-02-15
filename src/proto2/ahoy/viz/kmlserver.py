@@ -29,7 +29,8 @@ class KmlServer :
         for uid, loc in self._pos.iteritems() :
             lat, long, agl, last = loc
             model, rotate = self._model_map[uid]
-            bearing = bearing_from_pts(last[0], last[1], lat, long) - rotate
+            bearing = bearing_from_pts(lat, long, last[0], last[1]) - rotate
+            print uid, bearing
             if self._first :
                 s += '''<Placemark>
                 <Model>
@@ -76,7 +77,6 @@ class KmlServer :
             s = '<Document>\n' + s + '</Document>\n'
         else :
             s = '<NetworkLinkControl>\n' + s + '</NetworkLinkControl>\n'
-        print s
         return s
 
     def _handle(self, conn) :
@@ -98,6 +98,9 @@ class KmlServer :
 
 if __name__ == '__main__' :
     mapping = {}
-    for i in range(0, 10) :
+    for i in range(0, 4) :
+        mapping[i] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/predator_b.dae', 0)
+    mapping[4] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/radar.dae', 0)
+    for i in range(5, 9) :
         mapping[i] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', 90)
     KmlServer(int(sys.argv[1]), mapping).start()
