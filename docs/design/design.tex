@@ -443,7 +443,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
         from mylibrary.customagent import CustomAgent
 
         world = World()
-        wlan = Network('wireless-network')
+        wlan = Network('wireless-network', LogLossComms())
 
         for i in range(0, 5) :
             node = Node(i)
@@ -452,7 +452,7 @@ Each entity in the world, be it a node or other world object, exists as a proces
             world.add_entity(node)
 
         if __name__ == '__main__' :
-            sim = Simulation(world, LogLossComms())
+            sim = Simulation(world)
             sim.start(5)
     \end{verbatim}
     \caption{Example startup script}
