@@ -74,3 +74,9 @@ def loc_from_bearing_dist(lat, lon, bearing, dist) :
     new_lat = math.degrees(math.asin(math.sin(lat)*math.cos(dist/R) + math.cos(lat)*math.sin(dist/R)*math.cos(bearing)))
     new_lon = math.degrees(lon + math.atan2(math.sin(bearing)*math.sin(dist/R)*math.cos(lat), math.cos(dist/R)-math.sin(lat)*math.sin(new_lat)))
     return new_lat, new_lon
+
+def bearing_from_pts(lat1, lon1, lat2, lon2) :
+    dLon = float(math.radians(lon2-lon1))
+    y = math.sin(dLon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1)*math.cos(lat2)*math.cos(dLon)
+    return math.degrees(math.atan2(y, x))
