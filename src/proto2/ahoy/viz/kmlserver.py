@@ -28,8 +28,8 @@ class KmlServer :
         s = ''
         for uid, loc in self._pos.iteritems() :
             lat, long, agl, last = loc
-            bearing = bearing_from_pts(last[0], last[1], lat, long) - 90
-            model = self._model_map[uid]
+            model, rotate = self._model_map[uid]
+            bearing = bearing_from_pts(last[0], last[1], lat, long) - rotate
             if self._first :
                 s += '''<Placemark>
                 <Model>
@@ -99,5 +99,5 @@ class KmlServer :
 if __name__ == '__main__' :
     mapping = {}
     for i in range(0, 10) :
-        mapping[i] = 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae'
+        mapping[i] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', 90)
     KmlServer(int(sys.argv[1]), mapping).start()
