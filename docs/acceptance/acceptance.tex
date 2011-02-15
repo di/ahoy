@@ -133,7 +133,7 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsection{References%
     \label{references}%
 }
-    For the AHOY project requirements, please see the Software Requirements Specification document for this project. The most recent version of this document is available at \url{http://code.google.com/p/ahoy/}.
+    For the AHOY project requirements, please see the Software Requirements Specification document for this project. The most recent version of this document is available at \url{http://ahoy.googlecode.com/}.
 
 %___________________________________________________________________________
 
@@ -178,7 +178,7 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
 \subsection{Test Structure%
     \label{structure}%
 }
-    The Acceptance Test Plan will consist of a subset of test cases and methods, previously utilized in the Unit Tests, Integration Test and System Test conducted on the AHOY. The test cases will be carefully selected and agreed upon by both the developer and the client, and will allow for the most adequate verification of the functional requirements of the AHOY, as listed in the Software Requirements Document, without the extensiveness of the full-scale System Test.
+    The Acceptance Test Plan consists of a subset of test cases and methods, previously utilized in the Unit Tests, Integration Test and System Test conducted on the AHOY. The test cases have been carefully selected and agreed upon by both the developer and the client, and allow for the most adequate verification of the functional requirements of the AHOY, as listed in the Software Requirements Document, without the extensiveness of the full-scale System Test.
 
     It is essential that all appropriate Unit Tests, Integration Test and the System Test were successfully performed for AHOY prior to the Acceptance Test Plan and their results were reported and presented to the client.
 
@@ -302,82 +302,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     \label{functional}%
 }
 
-\subsubsection{Visualization}
-    \testentry{Terrain}{
-        The visualization engine is running.
-    }{
-        The user navigates the visualizer to any specific real-world location.
-    }{
-        The proper terrain for the location is shown.
-    }
-    \testentry{World Objects}{
-        The visualization engine is running, and the user creates a scenario containing mobile and static world objects.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The visualization engine shows mobile and static world objects.
-    }
-    \testentry{Mobile Agents}{
-        The visualization engine is running, and the user creates a scenario containing mobile nodes.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The visualization engine shows mobile nodes.
-    }
-    \testentry{Path-drawing}{
-        The visualization engine is running, and the simulation contains an object.
-    }{
-        The simulator moves an object to a new location.
-    }{
-        The visualization engine draws the path for the object to move.
-    }
-    \testentry{Maximum Models}{
-        The visualization engine is running, and the user creates a scenario containing 300 models.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        The visualization engine shows 300 models.
-    }
-    \testentry{Modularity}{
-        The visualization engine is running, and the user is running a simulation.
-    }{
-        The user terminates the execution of the visualization engine.
-    }{
-        The simulation continues to run.
-    }
-    \testentry{Timing}{
-        The visualization engine is running, and the user creates a scenario containing timed events.
-    }{
-        The user loads and starts the created scenario.
-    }{
-        Movement and communication occur at real-time speeds in the visualizer.
-    }
-    \testentry{Viewpoints}{
-        The visualization engine is running, and the user is running a simulation.
-    }{
-        The user executes a second visualization engine.
-    }{
-        The new visualization engine shows a different viewpoint than the original.
-    }
-    \testentry{Viewpoints}{
-        The visualization engine is running.
-    }{
-        The user changes the viewpoint.
-    }{
-        The visualization engine shows a new viewpoint.
-    }
-    %\paragraph{Terrain} The Visualization Engine displays varying types of terrain, as defined by the environment.
-    %\paragraph{World Objects} The Visualization Engine displays mobile and static world objects, as defined by the scenario.
-    %\paragraph{Mobile Agents} The Visualization Engine displays mobile nodes.
-    %\paragraph{Path-finding} The Visualization Engine finds the path for an object to move to a given coordinate.
-    %\paragraph{Maximum Models} The Visualization Engine is able to display 300 models in a given scenario.
-    %\paragraph{Modularity} The Visualization Engine component is modular, i.e. it can be removed from the framework without affecting functionality (with the exception of the visuals).
-    %\paragraph{Timing} The Visualization Engine runs in real-time.
-    %\paragraph{Viewpoints} The Visualization Engine is able to display the world from more than one point of view.
-    %\paragraph{Viewpoints} The Visualization Engine is able to display the world from any given point of view.
-
-%___________________________________________________________________________
-
 \subsubsection{Simulation Engine}
     \testentry{Timing}{
         The simulation engine is running, and the user creates a scenario containing timed events.
@@ -392,13 +316,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
         The scenario attempts to move the object into an invalid location.
     }{
         The simulation engine moves the object as close to the invalid location as possible.
-    }
-    \testentry{Path-finding}{
-        The simulation engine is running, and the simulation contains an object.
-    }{
-        The simulator moves an object to a new location.
-    }{
-        The visualization engine finds the path for the object to move.
     }
     \testentry{Collision Prevention}{
         The simulation engine is running, and the simulation contains mobile objects and static objects.
@@ -420,13 +337,14 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
         The user inputs an event into the simulation.
     }{
         The event is reflected by the simulation engine.
+    } 
+    \testentry{Modularity}{
+        The user is running a simulation, and a visualizer or other application is running and subscribed to the Event Channel.
+    }{
+        The user terminates the execution of the visualization or application.
+    }{
+        The simulation continues to run.
     }
-    %\paragraph{Timing} The Simulation Engine runs in real-time.
-    %\paragraph{Limitations of Movement} The Simulation Engine limits the movement of models to specific areas or types of terrain (e.g. boats may only move on river).
-    %\paragraph{Path-drawing} The Simulation Engine finds the path for an object to move to a given coordinate.
-    %\paragraph{Collision Prevention} When finding a path, the Simulation Engine ensures the path will not steer an agent to navigate into world objects.
-    %\paragraph{Maximum Models} The Simulation Engine keeps in memory up to 300 nodes.
-    %\paragraph{User Intervention} The Simulation Engine allows for the interruption or change of events by human input.
 
 %___________________________________________________________________________
 
@@ -452,9 +370,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The simulator has two nodes, each of which with an interface that are connected to one another.
     }
-	%\paragraph{Interfaces} The definition language specifies interfaces on each virtual node.  Specifically, each interface is described with a physical model (radio, wired, etc.) and an appropriate link-layer protocol.
-	%\paragraph{Networks} The definition language specifies networks to which interfaces may interact.  Networks are described with a unique identifier and physical layer model (e.g. radio propagation model).
-	%\paragraph{Links} The definition language specifies one-to-one links between interfaces.  A link is	described by a physical layer model.
 
 %___________________________________________________________________________
 
@@ -480,10 +395,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The simulator has a node which appropriately responds to the specified event.
     }
-	%\paragraph{Location} The scenario definition language defines the location of agent and non-agent world objects.
-	%\paragraph{Mobility} The scenario definition language describes the mobility or each virtual node as a function of time.
-	%\paragraph{Events} Mobility is alterable as a result of events, specified in the scenario definition.
-	%\paragraph{Non-node Behavior} The scenario definition language describes the movement of and events triggered by entities other than virtual nodes.
 
 %___________________________________________________________________________
 
@@ -502,9 +413,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The simulator executes the specified agent on the specified node and applies the startup parameters.
     }
-	%\paragraph{Agent Location} The agent framework specifies on which virtual node(s) a given agent should operate.
-	%\paragraph{Startup} The agent framework specifies the startup parameters of each agent.
-	%\paragraph{Collection} The agent framework specifies the output parameters of each agent instance.
 
 %___________________________________________________________________________
 
@@ -528,22 +436,26 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The user executes the simulation engine, and loads and starts the created scenario.
     }{
-        The physical nodes communicate hierarchically with the simulation server.
+        The physical nodes communicate and coordinate with the simulation server.
     }
-	%\paragraph{Physical Distribution} The distribution framework distributes virtual nodes evenly across physical nodes. Further, it handles the establishment and initialization of agents on their respective physical node.
-	%\paragraph{Simulation Server} The distribution framework organizes physical nodes hierarchically to interact with the simulation server.
-
+    
 %___________________________________________________________________________
 
-\subsubsection{Data Aggregation}
-    \testentry{Data Aggregation}{
+\subsubsection{Event Channel}
+    \testentry{Distributed Event Channel}{
+        The user networks multiple physical machines together and creates a scenario containing multiple nodes with agents.
+    }{
         The user executes the simulation engine, and loads and starts the created scenario.
     }{
-        The user subscribes to the event channel API via an external application.
-    }{
-        The user's application receives events from the event channel API in real-time.
+        The physical nodes share simulation data across a multicast Event Channel.
     }
-    %\paragraph{Real-Time Event Subscription} The simulator has an open API channel which should be used to monitor real-time events published by the simulation.
+    \testentry{Event Channel Subscription}{
+        The user executes the simulation engine, and loads and starts the created scenario.
+    }{
+        The user subscribes to the Event Channel API via an external application.
+    }{
+        The user's application receives events from the Event Channel API in real-time.
+    }
 
 %___________________________________________________________________________
 
@@ -557,8 +469,6 @@ AHOY is an event-based simulation environment used to compare the effectiveness 
     }{
         The simulation engine stores and parses the loaded scenario.
     }
-    %\paragraph{Outside Databases} No outside database system is used for data storage, unless it is introduced by the user via the API
-    %\paragraph{Scenario Definitions} Scenario definitions, including the topology and agents, are stored and parsed by the system
 
 %___________________________________________________________________________
 \pagebreak
