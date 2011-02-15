@@ -24,7 +24,6 @@ heli_areas = [
     (39.9330, -75.1418, 39.9281, -75.1311)
 ]
 for i, loc in enumerate(heli_areas) :
-    print 'heli', i
     heli = Node(i)
     heli.set_position(loc[0], loc[1], feet(i * 100))
     nw = (loc[0], loc[1])
@@ -34,7 +33,6 @@ for i, loc in enumerate(heli_areas) :
     heli.add_interface(Interface('wlan0', wlan, power=120))
     world.add_entity(heli)
 
-print 'radar', len(world.get_entities())
 radar = Node(len(world.get_entities()))
 radar.set_position(39.9485, -75.1325, 0)
 radar.add_sensor('radar', RadarSensor(watts(6000), 25, 1, 5, 1, 3/360.0, 1, use_event_channel=True))
@@ -48,7 +46,6 @@ paths = [
 ]
 
 for path in paths :
-    print 'boat', len(world.get_entities())
     e = Scripted(len(world.get_entities()), path[2:], path[0], 0)
     e.set_position(*path[1])
     world.add_entity(e)
