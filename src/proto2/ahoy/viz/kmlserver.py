@@ -6,16 +6,26 @@ from ahoy.eventapi import EventAPI
 from ahoy.util.geo import *
 
 class KmlServer :
-    def __init__(self, port, model_map) :
+    def __init__(self, port) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.bind(('', port))
         self._sock.listen(1)
         self._event_api = EventAPI()
-        self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._pos = {}
-        self._model_map = model_map
+        self._model_map = {}
         self._first = True
+
+    def add_model(self, uid, model, **kwds) :
+        if not kwds.has_key('scale') :
+            kwds['scale'] = 1
+        if not kwds.has_key('heading') :
+            kwds['heading'] = 0
+        if not kwds.has_key('tilt') :
+            kwds['tilt'] = 0
+        if not kwds.has_key('roll') :
+            kwds['roll'] = 0
+        self._model_map[uid] = { 'model' : model, 'args' : kwds }
 
     def _on_move(self, event) :
         if self._pos.has_key(event.get_uid()) :
@@ -28,9 +38,9 @@ class KmlServer :
         s = ''
         for uid, loc in self._pos.iteritems() :
             lat, long, agl, last = loc
-            model, rotate = self._model_map[uid]
-            bearing = bearing_from_pts(lat, long, last[0], last[1]) - rotate
-            print uid, bearing
+            model = self._model_map[uid]['model']
+            args = self._model_map[uid]['args']
+            bearing = bearing_from_pts(lat, long, last[0], last[1]) - args['heading']
             if self._first :
                 s += '''<Placemark>
                 <Model>
@@ -41,15 +51,20 @@ class KmlServer :
                         <altitude>%s</altitude>
                     </Location>
                     <Orientation id="o%s">
-                        <heading>0.0</heading>
-                        <tilt>0.0</tilt>
-                        <roll>0.0</roll>
+                        <heading>%s</heading>
+                        <tilt>%s</tilt>
+                        <roll>%s</roll>
                     </Orientation>
+                    <Scale>
+                        <x>%s</x>
+                        <y>%s</y>
+                        <z>%s</z>
+                    </Scale>
                     <Link>
                         <href>%s</href>
                     </Link>
                 </Model>
-                </Placemark>\n''' % (uid, long, lat, agl, uid, model)
+                </Placemark>\n''' % (uid, long, lat, agl, uid, args['heading'], args['tilt'], args['roll'], args['scale'], args['scale'], args['scale'], model)
             else :
                 s += '''
                 <Update>
@@ -65,8 +80,6 @@ class KmlServer :
                     <Change>
                         <Orientation targetId="o%s">
                             <heading>%s</heading>
-                            <tilt>0.0</tilt>
-                            <roll>0.0</roll>
                         </Orientation>
                     </Change>
                 </Update>
@@ -92,15 +105,16 @@ class KmlServer :
         conn.close()
 
     def start(self) :
+        self._event_api.start()
         while True :
             conn, addr = self._sock.accept()
             Thread(target=self._handle, args=(conn,)).start()
 
 if __name__ == '__main__' :
-    mapping = {}
+    server = KmlServer(int(sys.argv[1]))
     for i in range(0, 4) :
-        mapping[i] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/predator_b.dae', 0)
-    mapping[4] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/radar.dae', 0)
+        server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/predator_b.dae')
+    server.add_model(4, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/radar.dae')
     for i in range(5, 9) :
-        mapping[i] = ('file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', 90)
-    KmlServer(int(sys.argv[1]), mapping).start()
+        server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', heading=90, scale=.3)
+    server.start()
