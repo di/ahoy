@@ -44,7 +44,7 @@ class Agent :
     def remove_behavior(self, behavior):
         precondition, event, action = behavior
         if self._behaviors.has_key(event) :
-            for p in self._behaviors[event]:
+            for p in self._behaviors[event] :
                 mycondition, myaction = p
                 if mycondition == precondition and myaction == action :
                     self._behaviors[event].remove(p)
@@ -62,5 +62,5 @@ class Agent :
                     action.perform()
 
     def _init_behaviors(self):
-        for event in self._behaviors.keys():
+        for event in self._behaviors.keys() :
             self.get_owner_node().get_event_api().subscribe(event, self._on_event)
