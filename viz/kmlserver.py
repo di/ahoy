@@ -3,6 +3,7 @@ import sys
 from threading import Thread
 from ahoy.events.move import EntityMoveEvent
 from ahoy.eventapi import EventAPI
+from ahoy.util.geo import *
 
 class KmlServer :
     def __init__(self, port, model_map) :
@@ -17,45 +18,65 @@ class KmlServer :
         self._first = True
 
     def _on_move(self, event) :
-        self._pos[event.get_uid()] = (event.get_lat(), event.get_long(), event.get_agl())
+        if self._pos.has_key(event.get_uid()) :
+            last = self._pos[event.get_uid()][0:3]
+        else :
+            last = (0, 0, 0)
+        self._pos[event.get_uid()] = (event.get_lat(), event.get_long(), event.get_agl(), last)
 
     def _get_contents(self) :
         s = ''
         for uid, loc in self._pos.iteritems() :
-            lat, long, agl = loc
+            lat, long, agl, last = loc
+            bearing = bearing_from_pts(last[0], last[1], lat, long) - 90
             model = self._model_map[uid]
             if self._first :
                 s += '''<Placemark>
                 <Model>
-                <altitudeMode>absolute</altitudeMode>
-                <Location id="%s">
-                <longitude>%s</longitude>
-                <latitude>%s</latitude>
-                <altitude>%s</altitude>
-                </Location>
-                <Link>
-                <href>%s</href>
-                </Link>
+                    <altitudeMode>absolute</altitudeMode>
+                    <Location id="%s">
+                        <longitude>%s</longitude>
+                        <latitude>%s</latitude>
+                        <altitude>%s</altitude>
+                    </Location>
+                    <Orientation id="o%s">
+                        <heading>0.0</heading>
+                        <tilt>0.0</tilt>
+                        <roll>0.0</roll>
+                    </Orientation>
+                    <Link>
+                        <href>%s</href>
+                    </Link>
                 </Model>
-                </Placemark>\n''' % (uid, long, lat, agl, model)
+                </Placemark>\n''' % (uid, long, lat, agl, uid, model)
             else :
                 s += '''
                 <Update>
-                <Change>
-                <Location targetId="%s">
-                    <longitude>%s</longitude>
-                    <latitude>%s</latitude>
-                    <altitude>%s</altitude>
-                </Location>
-                </Change>
+                    <Change>
+                        <Location targetId="%s">
+                            <longitude>%s</longitude>
+                            <latitude>%s</latitude>
+                            <altitude>%s</altitude>
+                        </Location>
+                    </Change>
                 </Update>
-                \n''' % (uid, long, lat, agl)
+                <Update>
+                    <Change>
+                        <Orientation targetId="o%s">
+                            <heading>%s</heading>
+                            <tilt>0.0</tilt>
+                            <roll>0.0</roll>
+                        </Orientation>
+                    </Change>
+                </Update>
+                \n''' % (uid, long, lat, agl, uid, bearing)
 
         if self._first :
             self._first = False
             s = '<Document>\n' + s + '</Document>\n'
         else :
             s = '<NetworkLinkControl>\n' + s + '</NetworkLinkControl>\n'
+        print s
         return s
 
     def _handle(self, conn) :
@@ -68,8 +89,6 @@ class KmlServer :
             data += contents
             data += '</kml>'
             conn.send(data)
-            print data
-            print '\n'
         conn.close()
 
     def start(self) :
@@ -80,5 +99,5 @@ class KmlServer :
 if __name__ == '__main__' :
     mapping = {}
     for i in range(0, 10) :
-        mapping[i] = 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/ss_united_states.dae'
+        mapping[i] = 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae'
     KmlServer(int(sys.argv[1]), mapping).start()
