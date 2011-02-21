@@ -4,7 +4,6 @@ import signal
 from ahoy.eventapi import EventAPI
 from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
-from ahoy.events.sensor import RadarEvent
 
 class SdtInterface :
     def __init__(self, ip, port, sdt_port) :
@@ -19,7 +18,6 @@ class SdtInterface :
         t = self._event_api.start()
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
-        self._event_api.subscribe(RadarEvent, self._on_radar)
         t.join()
 
     def _send(self, msg) :

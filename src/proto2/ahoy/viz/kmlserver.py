@@ -7,11 +7,15 @@ from ahoy.eventapi import EventAPI
 from ahoy.util.geo import *
 
 class KmlServer :
-    def __init__(self, port) :
+    def __init__(self, ip, port, offer_port) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._sock.bind(('', port))
+        self._sock.bind(('', offer_port))
         self._sock.listen(1)
-        self._event_api = EventAPI()
+
+        self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._remote_sock.connect((ip, port))
+
+        self._event_api = EventAPI(self._remote_sock)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._pos = {}
@@ -160,7 +164,7 @@ class KmlServer :
             Thread(target=self._handle, args=(conn,)).start()
 
 if __name__ == '__main__' :
-    server = KmlServer(int(sys.argv[1]))
+    server = KmlServer(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
     for i in range(0, 4) :
         server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/predator_b.dae')
     server.add_model(4, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/radar.dae')
