@@ -24,12 +24,12 @@ class Entity :
 
         self._sensors = {}
 
-    def get_param(self, param, default=None) :
+    def get_parameter(self, param, default=None) :
         if self._params.has_key(param) :
             return self._params[param]
         return default
 
-    def set_param(self, param, value) :
+    def set_parameter(self, param, value) :
         self._params[param] = value
 
     def add_sensor(self, name, sensor) :
