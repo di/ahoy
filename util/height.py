@@ -4,6 +4,7 @@ from numpy import *
 from ahoy.util.geo import *
 
 class Elevation :
+    DATA_PATH = '../data/' # TODO: remove this
     def __init__(self) :
         self._cached = {}
 
@@ -27,7 +28,7 @@ class Elevation :
     def _get_height_array(self, fn) :
         if fn in self._cached.keys() :
             return self._cached[fn]
-        f = open(fn, 'rb')
+        f = open(Elevation.DATA_PATH + fn, 'rb')
         contents = f.read()
         f.close()
         data = flipud(((fromstring(string=contents, dtype='int16')).byteswap()).reshape(1201,1201))
@@ -42,36 +43,36 @@ class Elevation :
         dlon = lon - left
         return height_array[int(dlat / degrees_per_index)][int(dlon / degrees_per_index)]
 
-    def get_height_along(self, lat1, lon1, lat2, lon2, sample_dist_km=5/1000.0) :
+    def get_height_along(self, lat1, lon1, lat2, lon2, d=10/1000.0) :
+        lat = lat1
+        lon = lon1
         heights = []
-        lat = math.radians(lat1)
-        lon = math.radians(lon1)
-        lat2 = math.radians(lat2)
-        lon2 = math.radians(lon2)
+        i = 0
         while True :
-            y = math.sin(lon2 - lon) * math.cos(lat2)
-            x = math.cos(lat) * math.sin(lat2) - math.sin(lat) * math.cos(lat2) * math.cos(lon2 - lon)
-            bearing = math.atan2(y, x)
+            y = math.sin(lon - lon2) * math.cos(lat2)
+            x = math.cos(lat) * math.sin(lat2) - math.sin(lat) * math.cos(lat2) * math.cos(lon - lon2)
+            bearing = math.degrees(math.atan2(y, x))
 
-            R = 6378.1 #km
-            lat = math.asin(math.sin(lat)*math.cos(sample_dist_km/R) + math.cos(lat)*math.sin(sample_dist_km/R)*math.cos(bearing))
-            lon = lon + math.atan2(math.sin(bearing)*math.sin(sample_dist_km/R)*math.cos(lat), math.cos(sample_dist_km/R)-math.sin(lat)*math.sin(lat2))
-            lat_d = math.degrees(lat)
-            lon_d = math.degrees(lon)
+            R = 6378.1
+            lat, lon = loc_from_bearing_dist(lat, lon, bearing, d)
+            heights.append((lat, lon, d*i, self.get_height_at(lat, lon)))
+            i += 1
 
-            heights.append((lat_d, lon_d, self.get_height_at(lat_d, lon_d)))
-            if haver_distance(lat, lon, lat2, lon2) < sample_dist_km :
+            if haver_distance(lat, lon, lat2, lon2) < d :
                 return heights
 
-if __name__ == '__main__' :
-    lat = float(sys.argv[1])
-    lon = float(sys.argv[2])
-    lat2 = float(sys.argv[3])
-    lon2 = float(sys.argv[4])
+    def get_above(self, lat, lon, bearing, d=10/1000.0) :
+        # Ignore the current position, start at *d*km away
+        height0 = self.get_height_at(lat, lon)
+        lat0, lon0 = lat, lon
+        lat, lon = loc_from_bearing_dist(lat, lon, bearing, d)
+        i = 0
+        while True :
+            R = 6378.1
+            lat, lon = loc_from_bearing_dist(lat, lon, bearing, d)
 
-    e = Elevation()
-
-    heights = e.get_height_along(lat, lon, lat2, lon2)
-
-    for i, data in enumerate(heights) :
-        print i, data[0], data[1], data[2]
+            height = self.get_height_at(lat, lon)
+            if height > height0 :
+                # TODO: Could never terminate, but rarely.  Possibly fix.
+                return lat, lon, haver_distance(lat0, lon0, lat, lon), height
+            i += 1

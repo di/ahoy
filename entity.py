@@ -16,7 +16,7 @@ class Entity :
         self._lat = 0
         self._long = 0
         self._agl = 0
-        self._rcs = 20 # m^2
+        self._params = {}
         self._event_api = None
         self._world = None
         self._velocity = (0, 0, 0)
@@ -24,18 +24,20 @@ class Entity :
 
         self._sensors = {}
 
+    def get_param(self, param, default=None) :
+        if self._params.has_key(param) :
+            return self._params[param]
+        return default
+
+    def set_param(self, param, value) :
+        self._params[param] = value
+
     def add_sensor(self, name, sensor) :
         self._sensors[name] = sensor
         sensor.set_owner(self)
 
     def get_sensor(self, name) :
         return self._sensor[name]
-
-    def set_rcs(self, rcs) :
-        self._rcs = rcs
-
-    def get_rcs(self) :
-        return self._rcs
 
     def get_lin_velocity(self) :
         return self._velocity

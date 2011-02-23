@@ -40,7 +40,7 @@ class SdtInterface :
 
 if __name__ == '__main__' :
     if len(sys.argv) < 3 :
-        print '    usage: python mcpull <remote_ip> <remote_port> <local_sdt_port>'
+        print '    usage: python %s <remote_ip> <remote_port> <local_sdt_port>' % sys.argv[0]
         sys.exit(0)
 
     pull = SdtInterface(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
