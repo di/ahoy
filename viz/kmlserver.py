@@ -54,52 +54,81 @@ class KmlServer :
         s = ''
         for uid, loc in self._pos.iteritems() :
             lat, long, agl, last = loc
-            model = self._model_map[uid]['model']
-            args = self._model_map[uid]['args']
-            bearing = bearing_from_pts(lat, long, last[0], last[1]) - args['heading']
-            if self._first :
-                s += '''<Placemark>
-                <Model>
-                    <altitudeMode>absolute</altitudeMode>
-                    <Location id="%s">
-                        <longitude>%s</longitude>
-                        <latitude>%s</latitude>
-                        <altitude>%s</altitude>
-                    </Location>
-                    <Orientation id="o%s">
-                        <heading>%s</heading>
-                        <tilt>%s</tilt>
-                        <roll>%s</roll>
-                    </Orientation>
-                    <Scale>
-                        <x>%s</x>
-                        <y>%s</y>
-                        <z>%s</z>
-                    </Scale>
-                    <Link>
-                        <href>%s</href>
-                    </Link>
-                </Model>
-                </Placemark>\n''' % (uid, long, lat, agl, uid, args['heading'], args['tilt'], args['roll'], args['scale'], args['scale'], args['scale'], model)
-            else :
-                s += '''
-                <Update>
-                    <Change>
-                        <Location targetId="%s">
+            if self._model_map.has_key(uid) :
+                model = self._model_map[uid]['model']
+                args = self._model_map[uid]['args']
+                bearing = bearing_from_pts(lat, long, last[0], last[1]) - args['heading']
+                if self._first :
+                    s += '''<Placemark>
+                    <Model>
+                        <altitudeMode>absolute</altitudeMode>
+                        <Location id="%s">
                             <longitude>%s</longitude>
                             <latitude>%s</latitude>
                             <altitude>%s</altitude>
                         </Location>
-                    </Change>
-                </Update>
-                <Update>
-                    <Change>
-                        <Orientation targetId="o%s">
+                        <Orientation id="o%s">
                             <heading>%s</heading>
+                            <tilt>%s</tilt>
+                            <roll>%s</roll>
                         </Orientation>
-                    </Change>
-                </Update>
-                \n''' % (uid, long, lat, agl, uid, bearing)
+                        <Scale>
+                            <x>%s</x>
+                            <y>%s</y>
+                            <z>%s</z>
+                        </Scale>
+                        <Link>
+                            <href>%s</href>
+                        </Link>
+                    </Model>
+                    </Placemark>\n''' % (uid, long, lat, agl, uid, args['heading'], args['tilt'], args['roll'], args['scale'], args['scale'], args['scale'], model)
+                else :
+                    s += '''
+                    <Update>
+                        <Change>
+                            <Location targetId="%s">
+                                <longitude>%s</longitude>
+                                <latitude>%s</latitude>
+                                <altitude>%s</altitude>
+                            </Location>
+                        </Change>
+                    </Update>
+                    <Update>
+                        <Change>
+                            <Orientation targetId="o%s">
+                                <heading>%s</heading>
+                            </Orientation>
+                        </Change>
+                    </Update>
+                    \n''' % (uid, long, lat, agl, uid, bearing)
+            else :
+                if self._first :
+                    s += '''
+                    <Style id="icon">
+                        <IconStyle>
+                            <Icon>
+                                <href>file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/icon.png</href>
+                            </Icon>
+                        </IconStyle>
+                    </Style>
+                    <Placemark>
+                        <styleUrl>#icon</styleUrl>
+                        <Point id="%s">
+                            <name>%s</name>
+                            <altitudeMode>absolute</altitudeMode>
+                            <coordinates>%s,%s,%s</coordinates>
+                        </Point>
+                    </Placemark>\n''' % (uid, uid, long, lat, agl)
+                else :
+                    s += '''
+                    <Update>
+                        <Change>
+                            <Point targetId="%s">
+                                <coordinates>%s,%s,%s</coordinates>
+                            </Point>
+                        </Change>
+                    </Update>
+                    \n''' % (uid, long, lat, agl)
 
         for link in self._last_links :
 #            if link not in self._links :
@@ -141,6 +170,7 @@ class KmlServer :
         if self._first :
             self._first = False
             s = '<Document id="main">\n' + s + '</Document>\n'
+            print s + '\n-----------------------------'
         else :
             s = '<NetworkLinkControl>\n' + s + '</NetworkLinkControl>\n'
         return s
@@ -165,9 +195,9 @@ class KmlServer :
 
 if __name__ == '__main__' :
     server = KmlServer(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
-    for i in range(0, 4) :
+    '''for i in range(0, 4) :
         server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/predator_b.dae')
     server.add_model(4, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/radar.dae')
     for i in range(5, 9) :
-        server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', heading=90, scale=.3)
+        server.add_model(i, 'file:///Users/arosenfeld/ahoy/trunk/src/proto2/ahoy/viz/ss_united_states.dae', heading=90, scale=.3)'''
     server.start()
