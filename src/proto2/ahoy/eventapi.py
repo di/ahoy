@@ -19,7 +19,7 @@ class EventAPI :
     def _setup_mc(self) :
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 0)
+        #self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 0)
         try :
             self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         except :

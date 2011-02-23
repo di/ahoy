@@ -33,15 +33,7 @@ class SonarSensor(Sensor) :
         lat, lon, agl = self.get_owner().get_position()
         for angle in range(0, 360) :
             e_lat, e_lon, e_dist, e_height = self._elevation.get_above(lat, lon, angle)
-            '''<Placemark>
-                <name>test</name>
-                <Point>
-                    <coordinates>%s, %s</coordinates>
-                </Point>
-            </Placemark>''' % (e_lon, e_lat)
-            print angle, e_lat, e_lon
-
-            edges.append(e_dist)
+            edges.append([e_dist, self._get_snr(e_dist * 1000, 0)])
         return edges
 
     def _get_noise(self) :
@@ -70,6 +62,12 @@ class SonarSensor(Sensor) :
             total += 2 * (distance / n) / self._get_sound_speed(y)
         return total * (distance / (2*n))
 
+    def _get_snr(self, distance, target_strength) :
+        loss = 10 * math.log(distance, 10) # cylindrical spreading
+        #print '>', target_strength, distance, loss
+        snr = self._source_level - 2*loss + target_strength - self._get_noise() - 10 * math.log(self._source_bw, 10)
+        return snr
+
     def run(self) :
         self._edges = self._get_edges()
         while True :
@@ -84,17 +82,15 @@ class SonarSensor(Sensor) :
                     #TODO: use prop time
                     distance = math.sqrt(haver_distance(lat, lon, e_lat, e_lon)**2 + (agl - e_agl)**2) * 1000
 
-                    loss = 10 * math.log(distance, 10) # cylindrical spreading
-                    target_strength = entity.get_parameter('sonar_level', 0)
-                    snr = self._source_level - 2*loss + target_strength - self._get_noise() - 10 * math.log(self._source_bw, 10)
+                    snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
-                    if distance*1000 < detects[bearing] and snr >= self._min_snr :
-                        detects[bearing] = distance*1000
+                    if distance/1000 < detects[bearing][0] and snr >= self._min_snr :
+                        detects[bearing] = [distance/1000, snr]
 
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
                 merged_detects[detector_start] = detects[detector_start:detector_start + self._angles]
-                #print detector_start, ','.join(map(lambda e: str(e), merged_detects[detector_start]))
+                print detector_start, ','.join(map(lambda e: str(e[0]) + '=' + str(e[1]), merged_detects[detector_start]))
 
             self._publish_data(SonarEvent(self.get_owner().get_uid(), merged_detects))
             time.sleep(self._interval)

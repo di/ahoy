@@ -17,6 +17,11 @@ node.set_position(39.95102, -75.13517, 0) #middle river
 
 world.add_entity(node)
 
+node1 = Node(1)
+node1.set_position(39.94302, -75.13753, 0)
+node1.set_parameter('sonar_level', 25)
+world.add_entity(node1)
+
 if __name__ == '__main__' :
     sim = Simulation(world)
 
