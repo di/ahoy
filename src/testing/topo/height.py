@@ -31,9 +31,11 @@ class Elevation :
         contents = f.read()
         f.close()
         data = flipud(((fromstring(string=contents, dtype='int16')).byteswap()).reshape(1201,1201))
+        self._cached[fn] = data
         return data
 
     def get_height_at(self, lat, lon, degrees_per_index=3/3600.0) :
+        print lat, lon
         height_array = self._get_height_array(self._get_filename(lat, lon))
         left = math.floor(lon)
         bot = math.floor(lat)
@@ -41,25 +43,27 @@ class Elevation :
         dlon = lon - left
         return height_array[int(dlat / degrees_per_index)][int(dlon / degrees_per_index)]
 
-    def get_height_along(self, lat1, lon1, lat2, lon2, sample_dist_km=5/1000.0) :
+    def _loc_from_bearing_dist(self, lat, lon, bearing, dist) :
+        R = 6378.1
+        lat = math.radians(lat)
+        lon = math.radians(lon)
+        bearing = math.radians(bearing)
+        new_lat = math.degrees(math.asin(math.sin(lat)*math.cos(dist/R) + math.cos(lat)*math.sin(dist/R)*math.cos(bearing)))
+        new_lon = math.degrees(lon + math.atan2(math.sin(bearing)*math.sin(dist/R)*math.cos(lat), math.cos(dist/R)-math.sin(lat)*math.sin(new_lat)))
+        return new_lat, new_lon
+
+    def get_height_along(self, lat1, lon1, lat2, lon2, d=10/1000.0) :
+        lat = lat1
+        lon = lon1
+        heights = []
         while True :
-            y = math.sin(lon2 - lon1) * math.cos(lat2)
-            x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2 - lon1)
-            bearing = math.atan2(y, x)
+            y = math.sin(lon - lon2) * math.cos(lat2)
+            x = math.cos(lat) * math.sin(lat2) - math.sin(lat) * math.cos(lat2) * math.cos(lon - lon2)
+            bearing = math.degrees(math.atan2(y, x))
 
             R = 6378.1 #km
-            new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(sample_dist_km/R)*math.cos(bearing)))
-            new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(sample_dist_km/R)*math.cos(lat1), math.cos(sample_dist_km/R)-math.sin(lat1)*math.sin(new_lat)))
+            lat, lon = self._loc_from_bearing_dist(lat, lon, bearing, d)
+            heights.append(self.get_height_at(lat, lon))
 
-            if haver_distance(new_lat, new_lon, lat2, lon2) < sample_dist_km :
-                return distances
-
-if __name__ == '__main__' :
-    lat = float(sys.argv[1])
-    lon = float(sys.argv[2])
-
-    e = Elevation()
-
-    height = e.get_height_at(lat, lon)
-
-    print 'Height: %s m' % height
+            if haver_distance(lat, lon, lat2, lon2) < d :
+                return heights

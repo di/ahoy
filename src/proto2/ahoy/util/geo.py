@@ -65,7 +65,6 @@ def linear_to_degree(lat, lon, lat_km, lon_km) :
 
     return lat_km/km_per_lat, lon_km/km_per_lon
 
-
 def loc_from_bearing_dist(lat, lon, bearing, dist) :
     R = 6378.1
     lat = math.radians(lat)

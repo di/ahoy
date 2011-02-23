@@ -29,11 +29,12 @@ for r, row in enumerate(data) :
     for c, cell in enumerate(row) :
         y = r
         x = c
-        v = int(min(255, 255*(cell / 100.0)))
+        v = int(min(255, 255*(cell / 20.0)))
         if v <= 0 :
-            pixels[x,len(row) - 1 - y] = (0,0,0)#(v, v, v)
+            pixels[x,len(row) - 1 - y] = (0,255,0)
         else :
-            pixels[x,len(row) - 1 - y] = (255,255,255)#(v, v, v)
+            pixels[x,len(row) - 1 - y] = (v,v,v)
+            #pixels[x,len(row) - 1 - y] = (255,255,255)
 
 #        print '%s,%s %s (%s, %s = %s)' % (south_lat + lat_change*y*(3/3600.0), west_lon + lon_change*x*(3/3600.0), cell, x, y, v)
 img.save('out.png')
