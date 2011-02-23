@@ -90,7 +90,7 @@ class SonarSensor(Sensor) :
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
                 merged_detects[detector_start] = detects[detector_start:detector_start + self._angles]
-                print detector_start, ','.join(map(lambda e: str(e[0]) + '=' + str(e[1]), merged_detects[detector_start]))
+                #print detector_start, ','.join(map(lambda e: str(e[0]) + '=' + str(e[1]), merged_detects[detector_start]))
 
             self._publish_data(SonarEvent(self.get_owner().get_uid(), merged_detects))
             time.sleep(self._interval)
