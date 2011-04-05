@@ -1,0 +1,99 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{type1cm}
+\usepackage{eso-pic}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{pgf}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+
+%% Goodbye \reducify, there's a new sheriff in town.
+%% Originally from Knuth, claimed by Regli,
+%% macro'd-ified by Evan, global-ified by Chris Cannon.
+\usepackage{tweaklist}
+\renewcommand{\itemhook}{
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\topsep}{0pt}
+    \setlength{\itemsep}{0pt}
+}
+\renewcommand{\enumhook}{
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\topsep}{0pt}
+    \setlength{\itemsep}{0pt}
+}
+
+\def\reducify{
+  %% Evan's awesome macro;
+  %% put this at the top of any list
+  %% to reducify the space between elements
+  %% From REGLI: Dude's this is mine!  I gave it to him!
+  %% From REGLI: to clarify, the bellow commands are my hack, Evan
+  %% macro'd-ified them.
+  \parindent 0pt
+  \parskip   0pt
+  \itemsep   0pt
+  \topsep    0pt
+  \parsep    0pt
+}
+
+\begin{document}
+\title{AHOY: A Distributed, Event-Based Agent Simulator}
+\author{
+\IEEEauthorblockN{Dustin S. Ingram, Aaron M. Rosenfeld, Maria J. Kolakowska, Frank J. Clark, and William C. Regli}
+\IEEEauthorblockA{Department of Computer Science\\
+College of Engineering\\
+Drexel University, Philadelphia, PA\\
+Email: \{dustin, ar374, mjk75, fjc28, regli\}@cs.drexel.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+% TODO: Re-focus if necessary 
+AHOY is an event-based simulation environment designed to test networked multi-agent systems. Through user-defined, interchangeable component models, the effectiveness of different combinations of software agents, network configurations, and sensors can be tested in real-world environments. Scenario definitions specify a high-level model of a simulation's attributes, allowing for nondeterministic experiment progression. Real-time execution enables the integration of human interaction with the simulation. The distributed simulation engine provides the ability to run large-scale, complex experiments, reducing the cost of otherwise economically infeasible experiments.
+\end{abstract}
+
+\section{Introduction \& Goals}
+% TODO: Eliminate 'user'
+% TODO: Combine goals, they're repetitive
+AHOY is designed to be used as a testbed for sensors and respective algorithms in the laboratory against virtual operations using data from simulated sensors and nodes. It provides the ability to independently and quickly vary the network topology, application suites, environment, or any other aspect of the emulation. This variability is essential to the collection of experimental data which would be cost-prohibitive to produce in a real-world scenario.
+
+The overall goal of the AHOY project is to provide a system for testing multiple agents across varying scenarios and topologies in a distributed, event-driven way. AHOY provides the ability to quantitatively examine the effectiveness of specific agent designs as well as a focus on additional factors relevant to the network, including network connectivity, connection fidelity, and the agent's ability to process and transmit data.
+
+The goals of AHOY's core design process is to provide a framework upon which researchers can build custom agents, scenarios and topologies, and quickly and easily run an experiment using them. A modular distributed architecture allows for a widely scaled simulation. Most importantly, an Event API allows developers to easily tailor custom user interfaces for existing applications or visualizers by providing a common interface to monitor every action within an executing experiment.
+
+\section{Design Overview}\label{sec:background}
+\subsection{User Interface Overview}
+% TODO: Extend on this
+AHOY is intentionally designed to provide no specific user interface, in the traditional sense. Instead, it provides an extensive and comprehensive API, for creating a simulation, interacting with an experiment as it is running, monitoring events from a global viewpoint, and recording the results of an experiment for analysis. This ultimately offers flexibility for the end user, as separate, pre-existing interfaces can be modified to support AHOY's software API, or simply be created from scratch to explicitly satisfy the user's needs.
+
+\subsection{Communication}
+% TODO: Need to frame the communication design a little better.
+% TODO: This might be too detailed.
+The method by which distributed nodes communicate must provide fast, reliable, in-order delivery of event information. Many other architectures use pair-wise TCP connections to guarantee reliability and ordered delivery, but result in significant overhead from the $n \cdot (n-1)$ connections with $n$ distributed nodes. This results in poor scaling with large quantities of nodes.
+
+% TODO: Need to specify: this reduces the complexity of sending events to every node, but more nodes create more event-data and therefore, overhead
+% TODO: Maybe shouldn't footnote EMANE here, instead introduce it somewhere else?
+In AHOY, a multicast event channel is used instead. This results in no additional overhead as new distributed nodes are added. Further, connections need not be maintained between nodes. Due to the nature of multicast, it is possible that messages will be dropped or arrive out of order. However, many other frameworks utilize multicast event channels with success. Further, AHOY assumes all distributed nodes are running on the same subnet. In this situation, packet loss and delay is generally minimal.
+
+\subsection{Distribution Method}
+% TODO: This is a little ahead of itself -- what is 'world'?
+Each entity in the simulation, be it a node or other world object, exists as a process on one of the physically distributed nodes. Sensors attached to each entity run as threads within that process. Node entities may have agents running as threads as well. This model was chosen to minimize cross-machine communications as data generated from sensors need only be sent between threads of execution rather than across the event channel. Additionally, this allows multiple agents within a single node to communicate via the event-channel. 
+
+\subsection{Data Collection}
+% TODO: This is really bad! Too many specific class references
+AHOY's Event API provides end users with the capability of monitoring events published to the multicast event channel. This allows users to selectively collect and store relevant data, potentially reducing the quantity of data to be stored, especially in large scale simulations. Each event carries information about the state of the system as it changes, allowing the user to monitor a range of activity including, but not limited to: entity movements, network traffic and link events, and actions taken by agents, and sensor data. 
+\end{document}
