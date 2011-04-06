@@ -1,3 +1,4 @@
+import math
 import time
 from ahoy.sensor import Sensor
 from ahoy.events.sensor import SensorEvent
@@ -13,24 +14,27 @@ class CameraEvent(SensorEvent) :
         return self._visible
 
 class CameraSensor(Sensor) :
-    def __init__(self, bearing, fov) :
+    def __init__(self, fov) :
         Sensor.__init__(self)
-        self._bearing = bearing
         self._fov = fov
 
     def run(self) :
         while True :
             visible = []
+
             lat, lon, agl = self.get_owner().get_position()
+            app_size = agl / math.cos(self._fov / 2.0)
+            min_lat = lat - app_size
+            max_lat = lat + app_size
+            min_lon = lon - app_size
+            max_lon = lon + app_size
+
             for entity in self.get_world().get_entities() :
                 if entity.get_uid() == self.get_owner().get_uid() :
                     continue
                 e_lat, e_lon, e_agl = entity.get_position()
-                bearing = bearing_from_pts(lat, long, e_lat, e_lon)
-                diff = (bearing - self._bearing) % 360
-                diff = min(diff, abs(diff - 360))
-                if diff <= self._fov :
-                    visible.append(bearing)
+                if min_lat <= e_lat <= max_lat and min_lon <= e_lon <= max_lon :
+                    visible.append((e_lat, e_lon, e_agl))
 
             self._publish_data(CameraEvent(self.get_owner().get_uid(), visible))
             time.sleep(self._interval)
