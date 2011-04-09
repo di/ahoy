@@ -44,17 +44,25 @@ class ChemicalSensor(Sensor) :
 
                 lat, lon, agl = self.get_owner().get_position()
 
+                # spill location
                 spill_lat, spill_lon = self._spill_event.get_location()
-                distance = haver_distance( lat, lon, spill_lat, spill_lon )
-                # for now, assuming spill spreads at a constant rate (does not slow down)
-                time_to_reach_sensor = distance / self._spill_event.get_intensity()
 
-                time.sleep(time_to_reach_sensor)
-                self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self._loc) )
-                # clear spill event data
-                self._spill_occurred = False
-                self._spill_event = None
+                # if spill location is by latitude above the spill, just ignore the spill.
+                # This is for AHOY team's demo purposes only, as spill will only travel south.
+                if spill_lat < lat:
+                    self._spill_occurred = False
+                    self._spill_event = None
+                else:
 
+                    distance = haver_distance( lat, lon, spill_lat, spill_lon )
+                    # for now, assuming spill spreads at a constant rate (does not slow down)
+                    time_to_reach_sensor = distance / self._spill_event.get_intensity()
+
+                    time.sleep(time_to_reach_sensor)
+                    self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self._loc) )
+                    # clear spill event data
+                    self._spill_occurred = False
+                    self._spill_event = None
 
             time.sleep( self._interval )
 
