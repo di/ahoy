@@ -16,14 +16,14 @@ class AISShip(Agent) :
         self._agl = 0.2; 
         self._vert_vel = 0; 
         #self._pathfile = pathfile
-        
-        self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._path_conn.connect(('', port))
+        self._port = port       
 
 
     def run(self) :
+        self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._path_conn.connect(('', self._port))
         print "==Running=="
-        olat, olon = self.get_owner_node().get_position()
+        olat, olon, oagl = self.get_owner_node().get_position()
         self._lat = str(olat)
         self._lon = str(olon)
         while True:
