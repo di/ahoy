@@ -1,25 +1,52 @@
 import random
+import sys
+import socket
 import time
+from threading import Thread
 
 class AISDataGen():
-    def __init__(self, data=None):
+    def __init__(self, port, data=None):
      
         self.probs_ = {}
-        if(data == None):   
+        if(data == None or data == ""):   
             self.file_ = "AIS_probs.dat"
         else:
             self.file_ = data
-
+        
+        self._tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._tcp_server.bind(('', port))
+        self._tcp_server.listen(1)
         #self.initialize()
 
+    def start(self) :
+        t = Thread(target=self._acceptor)
+        t.start()
+        return t
+
+    def _acceptor(self) :
+        while True :
+            conn, addr = self._tcp_server.accept()
+            #self._clients.add(conn)
+            Thread(target=self._listener, args=(conn,)).start()
+
+    def _listener(self, conn) :
+        while True:
+            data = conn.recv(1024)
+            print "RECEIVED: " + data
+            lat,lon = data.split(',')
+            lat,lon = self.get_next_location(lat,lon)
+            conn.send(lat+","+lon)
+        conn.close()
 
     #Reads in the values to the probs dict
     def initialize(self):
+        print "Initializing..."
         file = open(self.file_,'r')
         for line in file:
             line = line.rstrip('\n')
             data = line.split(':')
             self._addTransition(data)
+        print "Done initializing."
 
     #adds a transition to the probs dict
     #data is a list of lat,lon,and probability of reaching 
@@ -32,7 +59,8 @@ class AISDataGen():
 
 
     def get_next_location(self, latfrom, lonfrom):
-        key = str(latfrom) + "," + str(lonfrom)
+        #key = str(latfrom) + "," + str(lonfrom)
+        key = latfrom + "," + lonfrom
         if(not self.probs_.has_key(key)):
             return [latfrom, lonfrom]
 
@@ -48,19 +76,25 @@ class AISDataGen():
                 n = n + chance
                 if(n <= rand):
                     lat, lon = to_loc[i].split(',')
-                    return [float(lat),float(lon)]
+                    #return [float(lat),float(lon)]
+                    return [lat,lon]
 
             #if we made it this far we know its the last location
             #that we need. 
             lat,lon = to_loc[len(to_loc)-1].split(',')
-            return [float(lat),float(lon)]
+            #return [float(lat),float(lon)]
+            return [lat,lon]
 
-#This section was for testing
+if __name__ == '__main__' :
+    if len(sys.argv) < 2 :
+        print 'usage: python aisdatagen.py <port> <filepath>'
+        sys.exit(0)
+    port = int(sys.argv[1])
+    filepath = ""
+    if(len(sys.argv) >= 3):
+        filepath = sys.argv[2]
+    datagen = AISDataGen(port, filepath)
+    datagen.initialize()
+    print 'Starting datagen on', port
+    datagen.start().join()
 
-#loc = [39.881592,-75.172737]
-#datagen = AISDataGen()
-#loc = [39.860668, -75.224197]
-#while(True):
-#    print loc
-#    loc = datagen.get_next_location(loc[0],loc[1])
-#    time.sleep(2)

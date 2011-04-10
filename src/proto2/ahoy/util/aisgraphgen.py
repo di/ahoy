@@ -2,7 +2,7 @@ import random
 import time
 import networkx
 
-class AISDataGen():
+class AISGraphGen():
     def __init__(self, data=None):
      
         if(data == None):   
