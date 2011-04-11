@@ -2,20 +2,9 @@ import math
 import time
 from ahoy.sensor import Sensor
 from ahoy.events.sensor import SensorEvent
-from ahoy.event import Event
+from ahoy.events.chemical import ChemicalSpillEvent
+from ahoy.eventapi import EventAPI
 from ahoy.util.geo import *
-
-class ChemicalSpillEvent(Event) :
-    def __init__(self, owner_uid, location, intensity) :
-        SensorEvent.__init__(self, owner_uid)
-        self._location = location
-        self._intensity = intensity
-
-    def get_location(self):
-        return self._location
-
-    def get_intensity(self):
-        return self._intensity
 
 class ChemicalDetectEvent(SensorEvent) :
     def __init__(self, owner_uid, location) :
@@ -26,12 +15,17 @@ class ChemicalDetectEvent(SensorEvent) :
         return self._location
 
 class ChemicalSensor(Sensor) :
-    def __init__(self, loc, interval) :
+    def __init__(self, interval) :
         Sensor.__init__(self)
-        self._loc = loc
         self._interval = interval
         self._spill_occurred = False
         self._spill_event = None
+        self._event_api = None
+
+    def initialize(self):
+        self._event_api = EventAPI()
+        self._event_api.start()
+        self._event_api.subscribe(ChemicalSpillEvent, self._on_spill)
 
     def run(self) :
         while True :
@@ -53,13 +47,16 @@ class ChemicalSensor(Sensor) :
                     self._spill_occurred = False
                     self._spill_event = None
                 else:
-
                     distance = haver_distance( lat, lon, spill_lat, spill_lon )
                     # for now, assuming spill spreads at a constant rate (does not slow down)
                     time_to_reach_sensor = distance / self._spill_event.get_intensity()
+                    time_to_reach_sensor *= self._interval
+                    print 'Sensor at ', self.get_owner().get_uid(), ' will go off at ', time_to_reach_sensor
 
+                    # wait until chemical spill would have reached self, then publish ChemicalDetectEvent
                     time.sleep(time_to_reach_sensor)
                     self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self._loc) )
+
                     # clear spill event data
                     self._spill_occurred = False
                     self._spill_event = None
