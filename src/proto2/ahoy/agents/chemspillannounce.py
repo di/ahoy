@@ -6,11 +6,11 @@ from ahoy.events.chemical import ChemicalSpillEvent
 
 # Publishes a single chemical spill event at a given time
 class ChemicalSpillAnnounceAgent(Agent) :
-    def __init__(self, owner_node, interval, announce_time, intensity) :
+    def __init__(self, owner_node, interval, announce_time, rate) :
         Agent.__init__(self, owner_node)
         self._interval = interval
         self._announce_time = announce_time
-        self._announce_intensity = intensity
+        self._announce_rate = rate
         self._total_time = 0
         self._announced_spill = False
         self._event_api = None
@@ -29,9 +29,9 @@ class ChemicalSpillAnnounceAgent(Agent) :
 
         while not self._announced_spill:
             if self._total_time > self._announce_time:
-                # pass owner_uid, location, intensity=5
+                # pass owner_uid, location, rate=5
                 print 'Agent about to publish ChemicalSpillEvent....'
-                self._event_api.publish( ChemicalSpillEvent(self.get_owner_node().get_position(), self._announce_intensity))
+                self._event_api.publish( ChemicalSpillEvent(self.get_owner_node().get_position(), self._announce_rate))
                 self._announced_spill = True
             else:
                 print 'the time has not yet come!'
