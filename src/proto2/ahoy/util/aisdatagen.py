@@ -16,7 +16,7 @@ class AISDataGen():
         self._tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._tcp_server.bind(('', port))
         self._tcp_server.listen(1)
-        #self.initialize()
+        self.initialize()
 
     def start(self) :
         t = Thread(target=self._acceptor)
@@ -98,3 +98,10 @@ if __name__ == '__main__' :
     print 'Starting datagen on', port
     datagen.start().join()
 
+#loc = [39.881592,-75.172737]
+datagen = AISDataGen()
+#loc = [39.860668, -75.224197]
+#while(True):
+#    print loc
+#    loc = datagen.get_next_location(loc[0],loc[1])
+#    time.sleep(2)

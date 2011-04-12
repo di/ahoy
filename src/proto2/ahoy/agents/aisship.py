@@ -33,14 +33,13 @@ class AISShip(Agent) :
             newpos = self._path_conn.recv(1024)
             print "Received " + newpos
             self._move(newpos)            
-            time.sleep(5)
 
 
     def _move(self, posdata):
         lat, lon = posdata.split(',')
         self._lat = lat
         self._lon = lon
-        self.get_owner_node().move(float(self._lat), float(self._lon), self._agl, self._forward_vel, self._vert_vel)
+        self.get_owner_node().move(float(self._lat), float(self._lon), self._agl, self._forward_vel, self._vert_vel, True)
 
 #if __name__ == '__main__':
 #    lat = "39.881592"
