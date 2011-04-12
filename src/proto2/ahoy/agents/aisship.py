@@ -19,16 +19,16 @@ class AISShip(Agent) :
     def run(self) :
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
-        print "==Running=="
+        uid = self.get_owner_node().get_uid()
         olat, olon, oagl = self.get_owner_node().get_position()
         self._lat = str(olat)
         self._lon = str(olon)
         while True:
             posdata = (self._lat) + "," + (self._lon)
-            print "Sending " + posdata
+            print str(uid) + " sending " + posdata
             self._path_conn.send(posdata); 
             newpos = self._path_conn.recv(1024)
-            print "Received " + newpos
+            print str(uid) + " received " + newpos
             self._move(newpos)            
 
 
