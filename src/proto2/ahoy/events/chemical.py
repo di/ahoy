@@ -1,8 +1,8 @@
 from ahoy.event import Event
 
 class ChemicalSpillEvent(Event) :
-    def __init__(self, owner_uid, location, intensity) :
-        SensorEvent.__init__(self, owner_uid)
+    def __init__(self, location, intensity) :
+        Event.__init__(self)
         self._location = location
         self._intensity = intensity
 

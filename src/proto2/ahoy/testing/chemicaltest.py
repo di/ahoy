@@ -22,7 +22,7 @@ world.add_entity(node1)
 
 node2 = Node(2)
 node2.set_position(39.892223,-75.196788, 0) #immediately east of I-95 bridge, on water
-node2.add_agent( ChemicalSpillAnnounceAgent(2, 1, 9, 5) )   #interval, announce time, spill intensity
+node2.add_agent( ChemicalSpillAnnounceAgent(2, 1, 4, 5) )   #ID, interval, announce time, spill intensity
 world.add_entity(node2)
 
 if __name__ == '__main__' :

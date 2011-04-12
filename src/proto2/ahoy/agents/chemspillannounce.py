@@ -14,19 +14,26 @@ class ChemicalSpillAnnounceAgent(Agent) :
         self._total_time = 0
         self._announced_spill = False
         self._event_api = None
+        print 'created ChemicalSpillAnnounceAgent'
 
-    def initialize(self):
-        self._event_api = EventAPI()
-        self._event_api.start()
+##    def initialize(self):
+##        print 'Initializing ChemicalSpillAnnounceAgent'
+##        self._event_api = EventAPI()
+##        self._event_api.start()
 
     def run(self) :
         ##o_lat, o_lon, o_agl = self.get_owner_node().get_position()
 
-        if not self._announced_spill:
+        self._event_api = EventAPI()
+        self._event_api.start()
+
+        while not self._announced_spill:
             if self._total_time > self._announce_time:
                 # pass owner_uid, location, intensity=5
                 print 'Agent about to publish ChemicalSpillEvent....'
-                self._event_api.publish( ChemicalSpillEvent(self.get_owner_node().get_uid(), self.get_owner_node.get_position(), self._announce_intensity))
+                self._event_api.publish( ChemicalSpillEvent(self.get_owner_node().get_position(), self._announce_intensity))
                 self._announced_spill = True
-        time.sleep( self._interval )
-        self._total_time += self._interval
+            else:
+                print 'the time has not yet come!'
+            time.sleep( self._interval )
+            self._total_time += self._interval

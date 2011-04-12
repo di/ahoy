@@ -22,12 +22,17 @@ class ChemicalSensor(Sensor) :
         self._spill_event = None
         self._event_api = None
 
-    def initialize(self):
+##    def initialize(self):
+##        self._event_api = EventAPI()
+##        self._event_api.start()
+##        self._event_api.subscribe(ChemicalSpillEvent, self._on_spill)
+
+    def run(self) :
+
         self._event_api = EventAPI()
         self._event_api.start()
         self._event_api.subscribe(ChemicalSpillEvent, self._on_spill)
 
-    def run(self) :
         while True :
 
             # If sensors aren't listening/publishing directly to API,
@@ -39,7 +44,7 @@ class ChemicalSensor(Sensor) :
                 lat, lon, agl = self.get_owner().get_position()
 
                 # spill location
-                spill_lat, spill_lon = self._spill_event.get_location()
+                spill_lat, spill_lon, spill_agl = self._spill_event.get_location()
 
                 # if spill location is by latitude above the spill, just ignore the spill.
                 # This is for AHOY team's demo purposes only, as spill will only travel south.
@@ -55,7 +60,7 @@ class ChemicalSensor(Sensor) :
 
                     # wait until chemical spill would have reached self, then publish ChemicalDetectEvent
                     time.sleep(time_to_reach_sensor)
-                    self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self._loc) )
+                    self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self.get_owner().get_position() ) )
 
                     # clear spill event data
                     self._spill_occurred = False
