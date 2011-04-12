@@ -98,6 +98,8 @@ if __name__ == '__main__' :
     print 'Starting datagen on', port
     datagen.start().join()
 
+<<<<<<< .mine
+<<<<<<< .mine
 #loc = [39.881592,-75.172737]
 datagen = AISDataGen()
 #loc = [39.860668, -75.224197]
@@ -105,3 +107,14 @@ datagen = AISDataGen()
 #    print loc
 #    loc = datagen.get_next_location(loc[0],loc[1])
 #    time.sleep(2)
+=======
+>>>>>>> .r508
+=======
+#loc = [39.881592,-75.172737]
+datagen = AISDataGen()
+#loc = [39.860668, -75.224197]
+#while(True):
+#    print loc
+#    loc = datagen.get_next_location(loc[0],loc[1])
+#    time.sleep(2)
+>>>>>>> .r509

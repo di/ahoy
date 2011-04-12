@@ -11,11 +11,8 @@ class AISShip(Agent) :
     def __init__(self, owner_node, forward_vel, port) :
         Agent.__init__(self, owner_node)
         self._forward_vel = forward_vel
-        #self._lat = start_lat
-        #self._lon = start_lon
         self._agl = 0.2; 
         self._vert_vel = 0; 
-        #self._pathfile = pathfile
         self._port = port       
 
 
