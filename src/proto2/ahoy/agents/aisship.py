@@ -11,12 +11,14 @@ class AISShip(Agent) :
     def __init__(self, owner_node, forward_vel, port) :
         Agent.__init__(self, owner_node)
         self._forward_vel = forward_vel
-        self._agl = 0.2; 
-        self._vert_vel = 0; 
-        self._port = port       
-
-
+        self._agl = 0.002 
+        self._vert_vel = 0
+        self._port = port 
+        self._use_ais = True
+        self._man_paths = []     
+        
     def run(self) :
+        self.get_owner_node().get_interface('wlan0').set_recv_callback(self._changedata) 
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
         uid = self.get_owner_node().get_uid()
@@ -25,12 +27,25 @@ class AISShip(Agent) :
         self._lon = str(olon)
         while True:
             posdata = (self._lat) + "," + (self._lon)
-            print str(uid) + " sending " + posdata
-            self._path_conn.send(posdata); 
-            newpos = self._path_conn.recv(1024)
-            print str(uid) + " received " + newpos
+            newpos = ""
+            if self._use_ais:
+                print str(uid) + " sending " + posdata
+                self._path_conn.send(posdata)
+                newpos = self._path_conn.recv(1024)
+                print str(uid) + " received " + newpos
+            else:
+                #TODO: What happens when the path is done? 
+                newpos = self._man_paths.pop(0)    
             self._move(newpos)            
 
+
+    #  Changes the path data for the ais ship based on whats sent in
+    #  the event. WARNING: The format of the message is tbd
+    def _changedata(self, event):
+        print "CHANGING DATA"
+        self._use_ais = False
+        newpaths = event.get_message().get_payload()
+        self._man_paths = newpaths.split(';')
 
     def _move(self, posdata):
         lat, lon = posdata.split(',')
