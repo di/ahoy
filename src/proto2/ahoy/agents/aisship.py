@@ -8,7 +8,7 @@ from ahoy.util.aisdatagen import AISDataGen
 
 
 class AISShip(Agent) :
-    def __init__(self, owner_node, forward_vel, port) :
+    def __init__(self, uid, forward_vel, port) :
         Agent.__init__(self, owner_node)
         self._forward_vel = forward_vel
         self._agl = 0.002 
@@ -18,6 +18,12 @@ class AISShip(Agent) :
         self._man_paths = []     
         
     def run(self) :
+        lat,lon,agl = self.get_owner_node().get_position()
+        while True:
+            print "Running"
+            self.get_owner_node().set_position(lat,lon,agl)
+            time.sleep(1)
+        '''
         self.get_owner_node().get_interface('wlan0').set_recv_callback(self._changedata) 
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
@@ -40,7 +46,8 @@ class AISShip(Agent) :
             else:
                 #TODO: What happens when the path is done? 
                 newpos = self._man_paths.pop(0)    
-            self._move(newpos)            
+            self._move(newpos)  
+        '''          
 
 
     #  Changes the path data for the ais ship based on whats sent in

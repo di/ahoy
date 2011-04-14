@@ -32,6 +32,7 @@ class EventAPI :
 
     def publish(self, event, delay_sec=None) :
         if delay_sec == None :
+            #print "@@\n" + str(event.pickle()) + "$$\n"
             self.push_raw(event.pickle())
         else :
             Thread(tartget=self._delay, args=(event, delay_sec))
@@ -59,6 +60,7 @@ class EventAPI :
         self._subscriptions = {}
 
     def _process(self, data) :
+        print data
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if self._subscriptions.has_key(All) :
