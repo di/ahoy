@@ -62,7 +62,6 @@ class EventAPI :
         self._subscriptions = {}
 
     def _process(self, data) :
-        print data
         event_inst = Event.from_pickle(data)
         keys = filter(lambda e : isinstance(event_inst, e), self._subscriptions.keys())
         if self._subscriptions.has_key(All) :
@@ -77,7 +76,8 @@ class EventAPI :
     def run(self) :
         while self._running :
             if self._tcp_conn == None :
-                data, addr = self._sock.recvfrom(2147483647)
+                #data, addr = self._sock.recvfrom(2147483647)
+                data, addr = self._sock.recvfrom(32768)
             else :
                 data = self._tcp_assemble()
             if data != None :
