@@ -22,9 +22,13 @@ class AISShip(Agent) :
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
         uid = self.get_owner_node().get_uid()
-        olat, olon, oagl = self.get_owner_node().get_position()
-        self._lat = str(olat)
-        self._lon = str(olon)
+        #olat, olon, oagl = self.get_owner_node().get_position()
+        self._path_conn.send("INIT")
+        orig_pos = self._path_conn.recv(1024)
+        self._lat, self._lon = orig_pos.split(',')
+        self.get_owner_node().set_position(float(self._lat),float(self._lon),self._agl)
+        #self._lat = str(olat)
+        #self._lon = str(olon)
         while True:
             posdata = (self._lat) + "," + (self._lon)
             newpos = ""

@@ -25,31 +25,21 @@ world = World()
 wlan = Network('wlan0', LogLossComms())
 world.add_network(wlan)
 
+
+for i in range(0,2):
+	n = Node(i)
+	n.add_interface(Interface('wlan0',wlan, power=120))
+	ship = AISShip(n,0.0203,12346)
+	n.add_agent(ship)
+	world.add_entity(n)
+
+'''
 n1 = Node(0)
-n1.add_interface(Interface('wlan0', wlan, power=120))
-#n2 = Node(1)
-#n2.add_interface(Interface('wlan0',wlan, power=120))
-#n3 = Node(2)
-#n3.add_interface(Interface('wlan0',wlan, power=120))
-
-
-#smalls = SmallShip(n1, 1, 0.0203)
-ship1 = AISShip(n1, 0.0203, 12346)
-#ship2 = AISShip(n2,0.0300,12346)
-#ship3 = AISShip(n3, 0.05,12346)
-
-#n1.add_agent(smalls)
-n1.add_agent(ship1)
-#n2.add_agent(ship2)
-#n3.add_agent(ship3)
-
-n1.set_position(39.881592, -75.172737, 0.02)
-#n2.set_position(39.881592, -75.158836, 0.02)
-#n3.set_position(39.926441, -75.135262, 0.02)
+n1.add_interface(Interface('wlan0',wlan,power=120))
+ship = AISShip(n1,0.023,12346)
+n1.add_agent(ship)
 world.add_entity(n1)
-#world.add_entity(n2)
-#world.add_entity(n3)
-
+'''
 
 if __name__ == '__main__' :
     sim = Simulation(world)

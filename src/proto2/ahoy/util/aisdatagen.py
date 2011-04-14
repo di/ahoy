@@ -1,4 +1,5 @@
 import random
+from random import choice
 import sys
 import socket
 import time
@@ -31,10 +32,13 @@ class AISDataGen():
     def _listener(self, conn) :
         while True:
             data = conn.recv(1024)
-            print "RECEIVED: " + data
-            lat,lon = data.split(',')
-            lat,lon = self.get_next_location(lat,lon)
-            conn.send(lat+","+lon)
+            if(data == "INIT"):
+                conn.send(self.get_rand_location())
+            else:
+                print "RECEIVED: " + data
+                lat,lon = data.split(',')
+                lat,lon = self.get_next_location(lat,lon)
+                conn.send(lat+","+lon)
         conn.close()
 
     #Reads in the values to the probs dict
@@ -57,6 +61,9 @@ class AISDataGen():
 
 
 
+    def get_rand_location(self):
+        return choice(self.probs_.keys())
+    
     def get_next_location(self, latfrom, lonfrom):
         #key = str(latfrom) + "," + str(lonfrom)
         key = latfrom + "," + lonfrom
