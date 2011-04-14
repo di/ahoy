@@ -8,17 +8,18 @@ from ahoy.util.aisdatagen import AISDataGen
 
 
 class AISShip(Agent) :
-    def __init__(self, uid, forward_vel, port) :
+    def __init__(self, uid, forward_vel, port, iface_name) :
         Agent.__init__(self, uid)
         self._forward_vel = forward_vel
         self._agl = 0.002 
         self._vert_vel = 0
         self._port = port 
         self._use_ais = True
+        self._iface_name = iface_name
         self._man_paths = []     
         
     def run(self) :
-        self.get_owner_node().get_interface('wlan0').set_recv_callback(self._changedata) 
+        self.get_owner_node().get_interface(self._iface_name).set_recv_callback(self._changedata) 
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
         uid = self.get_owner_node().get_uid()
@@ -60,7 +61,7 @@ class AISShip(Agent) :
     def _publishmove(self):
         uid = self.get_uid()
         message = str(uid) + "," + self._lat + "," + self._lon + "," + str(self._agl) + "," + str(self._forward_vel)
-        self.get_owner_node().get_interface("wlan0").send(message, uid)
+        self.get_owner_node().get_interface(self._iface_name).send(message, uid)
 
 #if __name__ == '__main__':
 #    lat = "39.881592"
