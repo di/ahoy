@@ -42,7 +42,9 @@ class EventAPI :
 
     def push_raw(self, raw) :
         if self._tcp_conn == None :
-            self._sock.sendto(raw, (self._ip, self._port))
+            while len(raw) > 0 :
+                sent = self._sock.sendto(raw, (self._ip, self._port))
+                raw = raw[sent:]
         else :
             self._tcp_conn.send(struct.pack('>L', len(raw)))
             self._tcp_conn.send(raw)
@@ -75,10 +77,13 @@ class EventAPI :
     def run(self) :
         while self._running :
             if self._tcp_conn == None :
-                data, addr = self._sock.recvfrom(4096)
+                data, addr = self._sock.recvfrom(2147483647)
             else :
                 data = self._tcp_assemble()
             if data != None :
+                import hashlib
+                m = hashlib.md5()
+                m.update(data)
                 self._process(data)
 
     def _tcp_assemble(self) :
