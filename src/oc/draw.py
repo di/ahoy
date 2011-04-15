@@ -17,6 +17,7 @@ pygame.display.set_caption("Operations Center")
 surface = pygame.display.set_mode((1280,800))
 image_surface = pygame.image.load("map_big.png")
 # 461, 282
+center = (-1770,-2000)
 
 class ProofOfConcept :
     def __init__(self, ip, port) :
@@ -47,16 +48,18 @@ class ProofOfConcept :
         self._event_api.subscribe(SensorEvent, self._on_sensor)
 
     def _get_pix(self, lat, lon) :
+        global center
+        cx, cy = center
         try :
-            x = int(((lon-self.tl_lon)/self.d_lon)*800)
-            y = int(((lat-self.tl_lat)/self.d_lat)*600)
+            x = int(((lon-self.tl_lon)/self.d_lon)*4800)+cx
+            y = int(((lat-self.tl_lat)/self.d_lat)*4800)+cy
             return (x,y)
         except :
             return (0,0)
 
     def _get_ll(self, x, y) :
-        lon = ((x/800.0)*self.d_lon)+self.tl_lon
-        lat = ((y/600.0)*self.d_lat)+self.tl_lat
+        lon = ((x/4800.0)*self.d_lon)+self.tl_lon
+        lat = ((y/4800.0)*self.d_lat)+self.tl_lat
         return (lat,lon)
 
     def _on_link(self, event) :
@@ -73,7 +76,8 @@ class ProofOfConcept :
         lat = event.get_lat()
         type = event.get_type()
         
-        self._nodelist[uid] = (self._get_pix(lat, lon),type)
+        #self._nodelist[uid] = (self._get_pix(lat, lon),type)
+        self._nodelist[uid] = ((lat, lon),type)
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -103,13 +107,14 @@ class ProofOfConcept :
 
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
-            (x, y), type = self._nodelist[uid]
-            self.draw_node((x,y),type)
+            (lat, lon), type = self._nodelist[uid]
+            self.draw_node(self._get_pix(lat,lon),type)
+            #print x,y
 
     def draw_radar(self) :
         if self._current_radar_loc is not None :
-            x = int(self._current_radar_loc[0] + 800*math.cos(math.radians(self._current_radar_bearing-90)))
-            y = int(self._current_radar_loc[1] + 600*math.sin(math.radians(self._current_radar_bearing-90)))
+            x = int(self._current_radar_loc[0] + 4800*math.cos(math.radians(self._current_radar_bearing-90)))
+            y = int(self._current_radar_loc[1] + 4800*math.sin(math.radians(self._current_radar_bearing-90)))
             pygame.draw.line(surface, (0,255,0), self._current_radar_loc, (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
@@ -139,8 +144,8 @@ class ProofOfConcept :
         for link, up in self._links.iteritems() :
            if up :
                if self._nodelist.has_key(link[0]) and self._nodelist.has_key(link[1]) :
-                   p1 = self._nodelist[link[0]][0]
-                   p2 = self._nodelist[link[1]][0]
+                   p1 = self._get_pix(self._nodelist[link[0]][0])
+                   p2 = self._get_pix(self._nodelist[link[1]][0])
                    pygame.draw.line(surface, (255, 0, 0), p1, p2, 2)
         self._link_lock.release()
 
@@ -150,14 +155,13 @@ class ProofOfConcept :
         self.draw_links()
 
 def main() :
-
-    center = (-1770,-2000)
     
     def quit(signal, frame) :
         pygame.quit()
         sys.exit()
 
     def redraw(move=(0,0)) :
+        global center
         pygame.display.flip()
         new = map(operator.sub, center, move)
         surface.blit(image_surface,new)
@@ -189,10 +193,12 @@ def main() :
             ux, uy = pygame.mouse.get_pos()
         else:
             if gotFirst :
+                global center
                 center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
                 #poc.send_bound(dx, dy, ux, uy)
             gotFirst = False    
         #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
+        print center
         redraw((dx-ux, dy-uy)) 
 main()
