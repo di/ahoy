@@ -1,18 +1,21 @@
 import pygame
 from pygame.locals import *
 import os, sys
-import socket, sys, signal
+import socket, sys, signal, operator
 from threading import Lock
 from ahoy.util.geo import *
 from ahoy.agents.rectanglesurveil import *
 from ahoy.eventapi import EventAPI
 from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
+from ahoy.events.chemical import ChemicalSpillEvent
+from ahoy.events.sensor import SensorEvent
 from ahoy.sensors.radarsensor import RadarEvent
 
 pygame.init()
-surface = pygame.display.set_mode((800,600))
-image_surface = pygame.image.load("image.png")
+pygame.display.set_caption("Operations Center")
+surface = pygame.display.set_mode((1280,800))
+image_surface = pygame.image.load("map_big.png")
 # 461, 282
 
 class ProofOfConcept :
@@ -25,8 +28,8 @@ class ProofOfConcept :
         self._current_radar_bearing = None
         self._current_radar_loc = None
 
-        self.tl_lat, self.tl_lon = (39.960609,-75.17086)
-        self.br_lat, self.br_lon = (39.920993,-75.102625)
+        self.tl_lat, self.tl_lon = (40.0140,-75.3321)
+        self.br_lat, self.br_lon = (39.7590,-75.0000)
         self.d_lat = self.br_lat-self.tl_lat
         self.d_lon = self.br_lon-self.tl_lon
 
@@ -40,6 +43,8 @@ class ProofOfConcept :
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(RadarEvent, self._on_radar)
+        self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
+        self._event_api.subscribe(SensorEvent, self._on_sensor)
 
     def _get_pix(self, lat, lon) :
         try :
@@ -79,7 +84,14 @@ class ProofOfConcept :
         self._current_radar_loc = self._nodelist[uid][0]
 
         self._radarlist[bear] = t_loc
-       
+    
+    def _on_chemspill(self, event) :
+        loc = event.get_location()
+        int = event.get_intensity()
+
+    def _on_sensor(self, event) :
+        uid = event.get_owner_uid() 
+
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
@@ -132,30 +144,43 @@ class ProofOfConcept :
                    pygame.draw.line(surface, (255, 0, 0), p1, p2, 2)
         self._link_lock.release()
 
+    def draw(self) :
+        self.draw_nodes()
+        self.draw_radar()
+        self.draw_links()
+
 def main() :
+
+    center = (-1770,-2000)
     
     def quit(signal, frame) :
         pygame.quit()
         sys.exit()
 
-    def redraw() :
+    def redraw(move=(0,0)) :
         pygame.display.flip()
-        surface.blit(image_surface,(0,0))
-        poc.draw_nodes()
-        poc.draw_radar()
-        poc.draw_links()
+        new = map(operator.sub, center, move)
+        surface.blit(image_surface,new)
+        try :
+            poc.draw()
+        except NameError :
+            pass
+        return new
 
-    poc = ProofOfConcept(sys.argv[1], int(sys.argv[2]))
+    if len(sys.argv) > 2 :
+        poc = ProofOfConcept(sys.argv[1], int(sys.argv[2]))
     signal.signal(signal.SIGINT, quit)
     redraw()
     dx, dy, ux, uy = 0,0,0,0
     gotFirst = False
 
     while True:
+        if pygame.key.get_mods() & KMOD_SHIFT:
+            pass
+            #print "shift"
         for event in pygame.event.get():
             if event.type == QUIT:
                 quit(None, None)
-                #pygame.quit(); sys.exit()
 
         if pygame.mouse.get_pressed()[0] :
             if not gotFirst :
@@ -164,8 +189,10 @@ def main() :
             ux, uy = pygame.mouse.get_pos()
         else:
             if gotFirst :
-                poc.send_bound(dx, dy, ux, uy)
+                center = redraw((dx-ux, dy-uy)) 
+                dx, dy, ux, uy = 0,0,0,0
+                #poc.send_bound(dx, dy, ux, uy)
             gotFirst = False    
-        pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
-        redraw() 
+        #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
+        redraw((dx-ux, dy-uy)) 
 main()
