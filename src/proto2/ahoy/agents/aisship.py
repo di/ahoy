@@ -46,11 +46,14 @@ class AISShip(Agent) :
 
     #  Changes the path data for the ais ship based on whats sent in
     #  the event. WARNING: The format of the message is tbd
-    def _changedata(self, event):
-        print "CHANGING DATA"
-        self._use_ais = False
-        newpaths = event.get_message().get_payload()
-        self._man_paths = newpaths.split(';')
+    def _changedata(self, event, iface=None):
+        payload = event.get_message().get_payload()
+        if(event.get_src_agent_uid() != self.get_uid() and payload.startswith("DIVERT")):
+            print "CHANGING DATA"
+            print str(event.get_src_agent_uid()) + " = " + str(self.get_uid())
+            self._use_ais = False
+            newpaths = payload
+            self._man_paths = newpaths.split(';')
 
     def _move(self, posdata):
         lat, lon = posdata.split(',')
@@ -61,7 +64,8 @@ class AISShip(Agent) :
     def _publishmove(self):
         uid = self.get_uid()
         message = str(uid) + "," + self._lat + "," + self._lon + "," + str(self._agl) + "," + str(self._forward_vel)
-        self.get_owner_node().get_interface(self._iface_name).send(message, uid)
+        m = Message(message,'*')
+        self.get_owner_node().get_interface(self._iface_name).send(m, uid)
 
 #if __name__ == '__main__':
 #    lat = "39.881592"

@@ -29,7 +29,7 @@ wlan = Network('wlan0', LogLossComms())
 world.add_network(wlan)
 
 
-for i in range(0,2):
+for i in range(0,20):
 	n = Node(i)
 	n.add_interface(Interface('wlan0',wlan, power=120))
 	ship = AISShip((i + 21),0.0203,12346, 'wlan0')
