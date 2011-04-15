@@ -36,7 +36,6 @@ for i in range(0,2):
 	n.add_agent(ship)
 	world.add_entity(n)
 
-
 # SW tip of airport
 sonar1n = Node(len(world.get_entities()))
 sonar1n.set_position(39.8560599677, -75.255277528, 0)
@@ -53,7 +52,8 @@ world.add_entity(sonar2n)
 radarn = Node(len(world.get_entities()))
 radarn.set_position(39.886597, -75.166043, 0)
 radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1))
-world.add_entity(sonar2n)
+world.add_entity(radarn)
+
 
 if __name__ == '__main__' :
     sim = Simulation(world)
