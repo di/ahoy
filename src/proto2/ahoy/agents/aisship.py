@@ -13,17 +13,18 @@ class AISShip(Agent) :
         self._forward_vel = forward_vel
         self._agl = 0.002 
         self._vert_vel = 0
-        self._port = port 
-        self._use_ais = True
-        self._iface_name = iface_name
-        self._man_paths = []     
+        self._port = port # The port it communicates to the AISDataGen with 
+        self._use_ais = True  #if True, uses AISDataGen info to move
+        self._iface_name = iface_name  #interface on the node it communicates ais info through
+        self._man_paths = []     #list of paths to follow given by human operator
         
     def run(self) :
+        #sets the callback to listen for divert events
         self.get_owner_node().get_interface(self._iface_name).set_recv_callback(self._changedata) 
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._path_conn.connect(('', self._port))
         uid = self.get_owner_node().get_uid()
-        #olat, olon, oagl = self.get_owner_node().get_position()
+        # Gets a random initial position from AISDataGen
         self._path_conn.send("INIT")
         orig_pos = self._path_conn.recv(1024)
         self._lat, self._lon = orig_pos.split(',')
@@ -61,6 +62,7 @@ class AISShip(Agent) :
         self._lon = lon
         self.get_owner_node().move(float(self._lat), float(self._lon), self._agl, self._forward_vel, self._vert_vel, True)
 
+    #publishes its own AIS position 
     def _publishmove(self):
         uid = self.get_uid()
         message = str(uid) + "," + self._lat + "," + self._lon + "," + str(self._agl) + "," + str(self._forward_vel)
