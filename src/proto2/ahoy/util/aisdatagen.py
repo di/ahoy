@@ -6,7 +6,7 @@ import time
 from threading import Thread
 
 class AISDataGen():
-    def __init__(self, port, data=None):
+    def __init__(self, hostname, port, data=None):
      
         self.probs_ = {}
         if(data == None or data == ""):   
@@ -15,7 +15,7 @@ class AISDataGen():
             self.file_ = data
         
         self._tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._tcp_server.bind(('', port))
+        self._tcp_server.bind((hostname, port))
         self._tcp_server.listen(1)
 
     def start(self) :
@@ -92,14 +92,15 @@ class AISDataGen():
             return [lat,lon]
 
 if __name__ == '__main__' :
-    if len(sys.argv) < 2 :
-        print 'usage: python aisdatagen.py <port> <filepath>'
+    if len(sys.argv) < 3 :
+        print 'usage: python aisdatagen.py <hostname> <port> <filepath>'
         sys.exit(0)
-    port = int(sys.argv[1])
+    host = sys.argv[1]
+    port = int(sys.argv[2])
     filepath = ""
-    if(len(sys.argv) >= 3):
-        filepath = sys.argv[2]
-    datagen = AISDataGen(port, filepath)
+    if(len(sys.argv) >= 4):
+        filepath = sys.argv[3]
+    datagen = AISDataGen(host, port, filepath)
     datagen.initialize()
     print 'Starting datagen on', port
     datagen.start().join()
