@@ -1,0 +1,218 @@
+\RequirePackage{fix-cm}
+\documentclass[titlepage]{article}
+
+\usepackage{fullpage}   % Use the whole page
+\usepackage{fancyhdr}   % Nice headers/footers
+\usepackage{graphicx}   % Importing graphics
+\usepackage{graphics}   % Importing graphics
+\usepackage{mdwlist}    % For itemize* and enumerate*
+\usepackage{hyperref}   % Hyperlink references and URLs
+\usepackage{subfig}
+\usepackage{appendix}
+\usepackage{listings}
+%\usepackage{todonotes}
+\usepackage[usenames,dvipsnames]{xcolor}	% Logo
+\usepackage{tikz,ifthen}			% Logo
+\usepackage{pgf}				% Logo
+\usepackage{scalefnt}				% Logo
+\usepgfmodule{shapes}				% Logo
+\usepgfmodule{plot}				% Logo
+\usetikzlibrary{shapes,snakes,arrows,decorations}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={AHOY Software Requirements Specification V7},
+    pdfauthor={Dustin Ingram, Aaron Rosenfeld, Maria Kolakowska, Frank Clark}
+}
+
+% So we can number paragraphs too
+\setcounter{secnumdepth}{5}
+
+% For headers and footers
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{25pt}
+\pagestyle{fancy}
+	
+% Page style for the title page
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% Just so we don't have to specify this twice
+\newcommand\mytitle{Software Requirements Specification}
+\newcommand\mydate{\today}
+
+
+\newcommand{\cbox}[0]{
+    \CheckBox[height=5pt,width=5pt]{}
+}
+
+% Page style for every other page
+\fancyhf{} % clear all header and footer fields
+\fancyhead[L]{AHOY}
+\fancyhead[C]{\mytitle}
+\fancyhead[R]{\mydate}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\title{\textbf{\mytitle}}
+\author{
+	Frank Clark \\\url{francis.j.clark@drexel.edu}
+    \and Dustin Ingram \\\url{dustin.s.ingram@drexel.edu}
+	\and Maria Kolakowska \\\url{maria.j.kolakowska@drexel.edu}
+    \and Aaron Rosenfeld \\\url{aaron.rosenfeld@drexel.edu}
+}
+\date{\mydate\\Version 7}
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{figure}
+   % \vspace{-2em}
+    \centering
+    \scalebox{0.8}{\input{../common/logo.tikz}}
+    \vspace{-4em}
+\end{figure}
+
+\maketitle
+
+\setcounter{tocdepth}{4}
+\pagebreak
+\pagebreak
+\pagenumbering{arabic}
+
+%\listoftodos
+
+\begin{Form}
+
+\section{Specific Requirements%
+  \label{specific-requirements}%
+}
+
+\subsection{Functional Requirements%
+    \label{functional}%
+}
+
+\subsubsection{Simulation Engine}
+	The following applies to AHOY's Simulation Engine:
+    \paragraph{Timing} The Simulation Engine runs in real-time.\cbox
+    \paragraph{Maximum Models} The Simulation Engine keeps in memory up to 500 nodes.\cbox
+    \paragraph{Startup} The Simulation Engine interprets the scenario definition and distributes world entities to distributed nodes.\cbox
+    \paragraph{Shutdown} The Simulation Engine responds to any shutdown requests from the user and terminates the simulation.\cbox
+
+\subsubsection{Scenario Definition}
+	\paragraph{Location} The Scenario Definition defines existence and location of all world entities.\cbox
+    \paragraph{Agents} The Scenario Definition defines the agents which run on each virtual node.\cbox
+    \paragraph{Sensors} The Scenario Definition defines the sensors which run on each virtual entity.\cbox
+	\paragraph{Networks} The Scenario Definition specifies networks to which interfaces may connect.  Networks are described with a unique identifier and physical layer model (e.g. 802.11, Ethernet).\cbox
+	\paragraph{Interfaces} The Scenario Definition specifies the interfaces on each virtual node and on which network they are connected.\cbox
+
+\subsubsection{Agent Definition}
+    \paragraph{Behaviors} Agent Definitions specify precondition-trigger-action tuples.  When the trigger occurs, if and only if the precondition is met, the action will be invoked.\cbox
+    \paragraph{Logic} Agent Definitions may specify logic in addition to behaviors.  This can be any code which should be run when the agent is started.\cbox
+
+\subsubsection{Sensor Definition}
+    \paragraph{Behavior} Sensor Definitions specify the data which should be made available to the entity on which the sensor is running.\cbox
+
+\subsubsection{Network Model}
+    \paragraph{Deliverable} Network Models determine if a message should be delivered to the indicated destination.\cbox
+    \paragraph{Links} Network Models publishes link-up and link-down events via the API.\cbox
+
+\subsubsection{Distribution Framework}
+	\paragraph{Physical Distribution} The Distribution Framework distributes virtual entities evenly across physical nodes. Further, it handles the establishment and initialization of entities, sensors, and agents on their respective physical entity.\cbox
+	\paragraph{Simulation Server} The Distribution Framework organizes physical nodes to interact with the simulation server.\cbox
+
+%___________________________________________________________________________
+
+\subsubsection{Data Storage%
+  \label{data-storage}%
+}
+    \paragraph{Outside Databases} No outside database system is used for data storage, unless it is introduced by the user via the API.\cbox
+    \paragraph{Scenario Definitions} Scenario definitions are stored as Python files.\cbox
+
+%___________________________________________________________________________
+
+\subsection{Non-Functional Requirements} 
+%___________________________________________________________________________
+
+\subsubsection{Hardware Interfaces%
+  \label{hardware-interfaces}%
+}
+
+AHOY requires that the machine running the system has at least one network interface for distribution.  If distribution is not desirable, only a loopback (\texttt{lo}) interface is necessary.\cbox
+%___________________________________________________________________________
+
+\subsubsection{Software Interfaces%
+  \label{software-interfaces}%
+}
+
+AHOY relies on the installation of Python version 2.6.0 or higher.  Python version 3.0 and higher is not supported.\cbox
+
+%___________________________________________________________________________
+
+\subsubsection{Memory Constraints%
+  \label{memory-constraints}%
+}
+
+AHOY requires all distributed machines to have at least 4GB of RAM.\cbox
+
+%___________________________________________________________________________
+
+\subsubsection{Site Adaptation Requirements%
+  \label{site-adaptation-requirements}%
+}
+
+AHOY requires that the system is configured per-site to create a distributed simulation, or to interact on-the-fly.\cbox
+
+%__________________________________________________________________________
+
+\subsubsection{Operating System%
+  \label{operating-system}%
+}
+
+AHOY is able to run on Unix, Linux, and Mac\cbox
+
+%__________________________________________________________________________
+
+\subsubsection{Processor% 
+  \label{processor}%
+}
+
+AHOY requires at least a 32- or 64-bit x86 3.0 GHz processor\cbox
+
+%__________________________________________________________________________
+
+\subsection{Input Formats%
+  \label{input-formats}%
+}
+
+The AHOY input format is a single Python script for each scenario.  No additional input formats are used.\cbox
+
+%___________________________________________________________________________
+
+\subsection{Output Formats%
+  \label{output-formats}%
+}
+
+AHOY does not natively output data to files.  Users may subscribe to the event channel via the API to record any information necessary.\cbox
+
+%___________________________________________________________________________
+\subsection{Extensibility%
+  \label{extensibility}%
+}
+\subsubsection{Customization}
+    \paragraph{Custom Scenarios} The system provides a means for users to create custom scenarios.\cbox
+    \paragraph{Custom Agents} The system provides a means for users to create custom agents.\cbox
+    \paragraph{Custom Networks} The system provides a means for users to create custom network models.\cbox
+    \paragraph{Custom Sensors} The system provides a means for users to create custom sensors.\cbox
+
+
+
+\end{Form}
+
+\end{document}
