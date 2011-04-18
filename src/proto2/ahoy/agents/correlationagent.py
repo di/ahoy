@@ -24,7 +24,7 @@ class CorrelationAgent(Agent):
         self._sensor_data = {}
         self._ais_data = {}
     
-    def run():
+    def run(self):
         self.get_owner_node().get_interface(self._iface_s1).set_recv_callback(self._s1_data)
         self.get_owner_node().get_interface(self._iface_s2).set_recv_callback(self._s2_data)
         self.get_owner_node().get_interface(self._iface_r1).set_recv_callback(self._r1_data)

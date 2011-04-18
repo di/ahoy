@@ -15,11 +15,13 @@ class SonarEvent(SensorEvent) :
         return self._detects
 
     def __str__(self) :
-        '''s = ''
-        for start, dets in self._detects :
-            s += '%s %s' % (start, ','.join(dets))
-        return s'''
-        return ''
+        s = ''
+        '''
+        for bearing, detect in self._detects.iteritems() :
+            print bearing, detect
+            s += '%s %s %s\n' % (bearing, detect[0][0], detect[0][1]) # TODO: Fix for multiple pings per bearing
+        '''
+        return s
 
 class SonarSensor(Sensor) :
     def __init__(self, source_level, source_bw, array_size, interval, min_snr, angular=False, noise_mean=50, noise_std=5) :

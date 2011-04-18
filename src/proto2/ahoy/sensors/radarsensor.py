@@ -22,9 +22,11 @@ class RadarEvent(SensorEvent) :
 
     def __str__(self) :
         if self._target_location != None :
-            return '%s %s %s %s %s' % (self.get_owner_uid(), self._bearing, self._distance, self._target_location[0], self._target_location[1])
+            s = '%s %s %s %s %s' % (self.get_owner_uid(), math.degrees(self._bearing), self._distance, self._target_location[0], self._target_location[1])
         else :
-            return '%s %s %s none none' % (self.get_owner_uid(), self._bearing, self._distance)
+            s = '%s %s none none none' % (self.get_owner_uid(), math.degrees(self._bearing))
+        print '> ', s
+        return s
 
 class RadarSensor(Sensor) :
     def __init__(self, trans_power, trans_freq, gain, aperature, prop_fact, dwell_time, angle, **kwds) :
@@ -79,10 +81,6 @@ class RadarSensor(Sensor) :
                 location = None
                 distance = None
             self._publish_data(RadarEvent(self.get_owner().get_uid(), antenna_bearing, distance, location))
-            '''
-            if distance != None and location != None :
-                print antenna_bearing, distance, location
-            '''
 
             antenna_bearing = (antenna_bearing + self._angle) % (2 * math.pi)
             time.sleep(self._dwell_time)
