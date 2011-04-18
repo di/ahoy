@@ -7,3 +7,6 @@ class SensorEvent(Event) :
 
     def get_owner_uid(self) :
         return self._owner_uid
+
+    def __str__(self) :
+        return 'Not yet implemented'

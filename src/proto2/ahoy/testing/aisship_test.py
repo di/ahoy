@@ -32,7 +32,7 @@ world.add_network(wlan)
 for i in range(0,20):
 	n = Node(i)
 	n.add_interface(Interface('wlan0',wlan, power=120))
-	ship = AISShip((i + 21),0.0203,12346, 'wlan0')
+	ship = AISShip((i + 21),0.0203,12348, 'wlan0')
 	n.add_agent(ship)
 	world.add_entity(n)
 

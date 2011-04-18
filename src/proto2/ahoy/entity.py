@@ -37,7 +37,7 @@ class Entity :
         sensor.set_owner(self)
 
     def get_sensor(self, name) :
-        return self._sensor[name]
+        return self._sensors[name]
 
     def get_lin_velocity(self) :
         return self._velocity
