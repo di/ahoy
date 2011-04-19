@@ -32,7 +32,6 @@ class EventAPI :
 
     def publish(self, event, delay_sec=None) :
         if delay_sec == None :
-            #print "@@\n" + str(event.pickle()) + "$$\n"
             self.push_raw(event.pickle())
         else :
             Thread(tartget=self._delay, args=(event, delay_sec))
@@ -76,14 +75,10 @@ class EventAPI :
     def run(self) :
         while self._running :
             if self._tcp_conn == None :
-                #data, addr = self._sock.recvfrom(2147483647)
                 data, addr = self._sock.recvfrom(32768)
             else :
                 data = self._tcp_assemble()
             if data != None :
-                import hashlib
-                m = hashlib.md5()
-                m.update(data)
                 self._process(data)
 
     def _tcp_assemble(self) :
