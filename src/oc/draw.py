@@ -144,8 +144,8 @@ class ProofOfConcept :
         for link, up in self._links.iteritems() :
            if up :
                if self._nodelist.has_key(link[0]) and self._nodelist.has_key(link[1]) :
-                   p1 = self._get_pix(self._nodelist[link[0]][0])
-                   p2 = self._get_pix(self._nodelist[link[1]][0])
+                   p1 = self._get_pix(*self._nodelist[link[0]][0])
+                   p2 = self._get_pix(*self._nodelist[link[1]][0])
                    pygame.draw.line(surface, (255, 0, 0), p1, p2, 2)
         self._link_lock.release()
 
