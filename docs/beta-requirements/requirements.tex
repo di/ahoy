@@ -101,7 +101,7 @@
 \subsubsection{Simulation Engine}
 	The following applies to AHOY's Simulation Engine:
     \paragraph{Timing} The Simulation Engine runs in real-time.\cbox
-    \paragraph{Maximum Models} The Simulation Engine keeps in memory up to 500 nodes.\cbox
+    \paragraph{Maximum Models} The Simulation Engine keeps in memory up to 50 nodes.\cbox
     \paragraph{Startup} The Simulation Engine interprets the scenario definition and distributes world entities to distributed nodes.\cbox
     \paragraph{Shutdown} The Simulation Engine responds to any shutdown requests from the user and terminates the simulation.\cbox
 
@@ -175,7 +175,7 @@ AHOY requires that the system is configured per-site to create a distributed sim
   \label{operating-system}%
 }
 
-AHOY is able to run on Unix, Linux, and Mac\cbox
+AHOY is able to run on Linux and Mac\cbox
 
 %__________________________________________________________________________
 
@@ -195,13 +195,6 @@ The AHOY input format is a single Python script for each scenario.  No additiona
 
 %___________________________________________________________________________
 
-\subsection{Output Formats%
-  \label{output-formats}%
-}
-
-AHOY does not natively output data to files.  Users may subscribe to the event channel via the API to record any information necessary.\cbox
-
-%___________________________________________________________________________
 \subsection{Extensibility%
   \label{extensibility}%
 }
