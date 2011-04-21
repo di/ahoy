@@ -5,7 +5,7 @@ from ahoy.events.sensor import SensorEvent
 from ahoy.util.geo import *
 
 class CameraEvent(SensorEvent) :
-    def __init__(self, owner_uid, visible, interval) :
+    def __init__(self, owner_uid, visible) :
         SensorEvent.__init__(self, owner_uid)
         self._visible = visible
         self._interval = interval
@@ -14,11 +14,13 @@ class CameraEvent(SensorEvent) :
         return self._visible
 
 class CameraSensor(Sensor) :
-    def __init__(self, fov) :
+    def __init__(self, fov, interval) :
         Sensor.__init__(self)
         self._fov = fov
+        self._interval = interval
 
     def run(self) :
+        print "CAMERA IS RUNNING!"
         while True :
             visible = []
 

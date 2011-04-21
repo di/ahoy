@@ -19,18 +19,32 @@ from ahoy.agents.uav import UAV
 from ahoy.agents.smallship import SmallShip
 from ahoy.sensors.radarsensor import RadarSensor
 from ahoy.sensors.sonarsensor import SonarSensor
+from ahoy.sensors.camerasensor import CameraSensor
 from ahoy.util.units import *
-from ahoy.entities.uavnode import UAVNode
+from ahoy.agents.sensorforwardagent import SensorForwardAgent
 
 world = World()
 wlan = Network('wlan0', LogLossComms())
+uavnet = Network('uavnet',LogLossComms())
+
 world.add_network(wlan)
+world.add_network(uavnet)
 
 uavnode = Node(1)
-uavnode.add_interface(Interface('wlan0',wlan,power=120))
-uav = UAV(8,1.0,0.02,0.007)
-uavnode.add_agent(uav)
+uavnode.set_position(39.8661,-75.2549, 0.0001)
+uavnode.add_interface(Interface('uavnet',uavnet,power=120))
+uavnode.add_sensor('camera', CameraSensor(0.785,1))
+uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
+uavnode.add_agent(UAV(8,1.0,0.02,0.007))
+
 world.add_entity(uavnode)
+
+for i in range(5,15):
+	n = Node(i)
+	n.add_interface(Interface('wlan0',wlan, power=120))
+	ship = AISShip((i + 51),0.0203,12346, 'wlan0')
+	n.add_agent(ship)
+	world.add_entity(n)
 
 
 if __name__ == '__main__' :

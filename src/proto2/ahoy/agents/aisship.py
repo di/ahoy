@@ -34,10 +34,10 @@ class AISShip(Agent) :
             posdata = (self._lat) + "," + (self._lon)
             newpos = ""
             if self._use_ais:
-                print str(uid) + " sending " + posdata
+                #print str(uid) + " sending " + posdata
                 self._path_conn.send(posdata)
                 newpos = self._path_conn.recv(1024)
-                print str(uid) + " received " + newpos
+                #print str(uid) + " received " + newpos
             else:
                 #TODO: What happens when the path is done? 
                 newpos = self._man_paths.pop(0)    
