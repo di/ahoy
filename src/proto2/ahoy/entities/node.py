@@ -53,7 +53,11 @@ class Node(Entity) :
             iface.send(message, src_agent.get_uid())
 
     def _on_message(self, event, **kwds) :
-        self._agents[event.get_message().get_dest_agent()].on_message(event)
+        if event.get_message().get_dest_agent() == '*' :
+            for agent in self._agents :
+                agent.on_message(event)
+        else :
+            self._agents[event.get_message().get_dest_agent()].on_message(event)
 
     def run(self) :
         print 'starting node %s' % self._uid
