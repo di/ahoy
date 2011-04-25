@@ -8,8 +8,8 @@ from ahoy.util.aisdatagen import AISDataGen
 
 
 class SmallShip(Agent) :
-    def __init__(self, owner_node, dataid, forward_vel) :
-        Agent.__init__(self, owner_node)
+    def __init__(self, uid, dataid, forward_vel) :
+        Agent.__init__(self, uid)
         self._forward_vel = forward_vel
         self._agl = 0.001; 
         self._vert_vel = 0.0; 

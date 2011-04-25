@@ -20,7 +20,7 @@ class UAV(Agent) :
     def run(self) :
         self.get_owner_node().get_event_api().subscribe(UAVSurveilArea, self._on_order)
         #self.get_owner_node().get_event_api().subscribe(CameraEvent, self._on_visual)
-        self.get_owner_node().get_interface('uavnet').set_recv_callback(self._on_visual)
+        #self.get_owner_node().get_interface('uavnet').set_recv_callback(self._on_visual)
         #self._wait_for_orders()
         nw = [39.913,-75.156]
         se = [39.887,-75.125]
@@ -68,11 +68,13 @@ class UAV(Agent) :
 
         print 'ended patrol'
 
+'''
     def _on_visual(self, event, iface=None):      
         print "RECEIVING CAMERA EVENT!"  
         if(event.get_owner_uid() == self.get_owner_node().get_uid()):
             if(len(event.get_visible()) > 0):
                 print "UAV spots " , event.get_visible()
+'''
 
 class UAVSurveilArea(Event):
     def __init__(self,node_uid, north_west, south_east):

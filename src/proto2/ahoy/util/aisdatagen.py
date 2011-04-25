@@ -10,7 +10,7 @@ class AISDataGen():
      
         self.probs_ = {}
         if(data == None or data == ""):   
-            self.file_ = "AIS_probs.dat"
+            self.file_ = "AIS_trimmed.dat"
         else:
             self.file_ = data
         

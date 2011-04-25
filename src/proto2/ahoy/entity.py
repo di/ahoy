@@ -117,7 +117,7 @@ class Entity :
                 break
 
             self.set_position(new_lat, new_lon, new_agl)
-            print 'moved to', new_lat, new_lon, new_agl
+            #print 'moved to', new_lat, new_lon, new_agl
 
             last_tic = time.time()
             time.sleep(Entity.MAX_DISTANCE / forward_vel)
