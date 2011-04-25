@@ -16,6 +16,9 @@ class Node(Entity) :
     def get_agent_uids(self) :
         return self._agents.keys()
 
+    def get_agents(self) :
+        return self._agents
+
     def add_interface(self, interface) :
         self._interfaces[interface.get_name()] = interface
         interface.set_owner(self)
