@@ -54,7 +54,7 @@ class Node(Entity) :
 
     def _on_message(self, event, **kwds) :
         if event.get_message().get_dest_agent() == '*' :
-            for agent in self._agents :
+            for agent in self._agents.values() :
                 agent.on_message(event)
         else :
             self._agents[event.get_message().get_dest_agent()].on_message(event)
