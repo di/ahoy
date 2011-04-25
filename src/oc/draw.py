@@ -18,6 +18,7 @@ surface = pygame.display.set_mode((1280,800))
 image_surface = pygame.image.load("map_big.png")
 # 461, 282
 center = (-1770,-2000)
+window_center = (-1770,-2000)
 
 class ProofOfConcept :
     def __init__(self, ip, port) :
@@ -76,7 +77,6 @@ class ProofOfConcept :
         lat = event.get_lat()
         type = event.get_type()
         
-        #self._nodelist[uid] = (self._get_pix(lat, lon),type)
         self._nodelist[uid] = ((lat, lon),type)
 
     def _on_radar(self, event) :
@@ -109,13 +109,12 @@ class ProofOfConcept :
         for uid in self._nodelist.keys() :
             (lat, lon), type = self._nodelist[uid]
             self.draw_node(self._get_pix(lat,lon),type)
-            #print x,y
 
     def draw_radar(self) :
         if self._current_radar_loc is not None :
             x = int(self._current_radar_loc[0] + 4800*math.cos(math.radians(self._current_radar_bearing-90)))
             y = int(self._current_radar_loc[1] + 4800*math.sin(math.radians(self._current_radar_bearing-90)))
-            pygame.draw.line(surface, (0,255,0), self._current_radar_loc, (x,y), 2) 
+            pygame.draw.line(surface, (0,255,0), self._get_pix(*self._current_radar_loc), (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
             if t_loc is None :
@@ -161,14 +160,11 @@ def main() :
         sys.exit()
 
     def redraw(move=(0,0)) :
-        global center
+        global window_center
         pygame.display.flip()
-        new = map(operator.sub, center, move)
+        new = map(operator.sub, window_center, move)
         surface.blit(image_surface,new)
-        try :
-            poc.draw()
-        except NameError :
-            pass
+        poc.draw()
         return new
 
     if len(sys.argv) > 2 :
@@ -179,26 +175,30 @@ def main() :
     gotFirst = False
 
     while True:
-        if pygame.key.get_mods() & KMOD_SHIFT:
-            pass
-            #print "shift"
+        global center
+        global window_center
+        # Quit code
         for event in pygame.event.get():
             if event.type == QUIT:
                 quit(None, None)
+        
+        # Detecting 'shift' keys
+        if pygame.key.get_mods() & KMOD_SHIFT:
+            pass
 
         if pygame.mouse.get_pressed()[0] :
             if not gotFirst :
                 dx, dy = pygame.mouse.get_pos()
                 gotFirst = True
             ux, uy = pygame.mouse.get_pos()
+            center = redraw((dx-ux, dy-uy)) 
         else:
             if gotFirst :
-                global center
-                center = redraw((dx-ux, dy-uy)) 
+                #global center
+                window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
                 #poc.send_bound(dx, dy, ux, uy)
             gotFirst = False    
         #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
-        print center
         redraw((dx-ux, dy-uy)) 
 main()
