@@ -21,6 +21,10 @@ center = (-1770,-2000)
 window_center = (-1770,-2000)
 surface = pygame.display.set_mode((1280,800))
 
+def quit(signal, frame) :
+    pygame.quit()
+    sys.exit()
+
 class ProofOfConcept :
     def __init__(self, ip, port) :
         self._nodelist = {}
@@ -175,12 +179,12 @@ class ProofOfConcept :
         surface.blit(text,(x+7,y+7))
 
     def draw_correlation(self) :
-        self._correlation_lock.aquire()
-        for correlation in self._correlations :
+        self._correlation_lock.acquire()
+        for correlation in self._correlations.values() :
             p1 = self._get_pix(*correlation[0])
             p2 = self._get_pix(*correlation[1])
             pygame.draw.line(surface, (0, 255, 0), p1, p2, 2)
-        self._correlation_lock.relase()
+        self._correlation_lock.release()
 
     def draw_links(self) :
         self._link_lock.acquire()
@@ -200,10 +204,6 @@ class ProofOfConcept :
 
 def main() :
     
-    def quit(signal, frame) :
-        pygame.quit()
-        sys.exit()
-
     def redraw(move=(0,0)) :
         global window_center
         pygame.display.flip()
