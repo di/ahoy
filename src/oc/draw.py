@@ -148,8 +148,8 @@ class ProofOfConcept :
 
     def draw_radar(self) :
         if self._current_radar_loc is not None :
-            x = int(self._current_radar_loc[0] + 4800*math.cos(math.radians(self._current_radar_bearing-90)))
-            y = int(self._current_radar_loc[1] + 4800*math.sin(math.radians(self._current_radar_bearing-90)))
+            x = int(self._current_radar_loc[0] + 1200*math.cos(math.radians(self._current_radar_bearing-90)))
+            y = int(self._current_radar_loc[1] + 800*math.sin(math.radians(self._current_radar_bearing-90)))
             pygame.draw.line(surface, (0,255,0), self._get_pix(*self._current_radar_loc), (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
