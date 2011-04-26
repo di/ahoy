@@ -7,20 +7,31 @@ from ahoy.util.geo import *
 from ahoy.util.height import Elevation
 
 class SonarEvent(SensorEvent) :
-    def __init__(self, owner_uid, detects) :
+    def __init__(self, owner_uid, bearing, detects) :
         SensorEvent.__init__(self, owner_uid)
+        self._bearing = bearing
         self._detects = detects
+
+    def get_bearing(self) :
+        return self._bearing
 
     def get_detects(self) :
         return self._detects
 
     def __str__(self) :
+        '''
+                s = ''
+                for bearing, detect in self._detects.iteritems() :
+                    print bearing, detect
+                    s += '%s %s %s\n' % (bearing, detect[0][0], detect[0][1]) # TODO: Fix for multiple pings per bearing
+                print 'msg len:', len(s)
+        '''
         s = ''
-        for bearing, detect in self._detects.iteritems() :
-#            print bearing, detect
-            s += '%s %s %s\n' % (bearing, detect[0][0], detect[0][1]) # TODO: Fix for multiple pings per bearing
-        print 'msg len:', len(s)
-        return s
+        for det in self._detects :
+            dist, snr = det
+            s += '%s,%s ' % (dist, snr)
+        print self._bearing, self._detects, '%s %s' % (self._bearing, s.strip())
+        return '%s %s' % (self._bearing, s.strip())
 
 class SonarSensor(Sensor) :
     def __init__(self, source_level, source_bw, array_size, interval, min_snr, angular=False, noise_mean=50, noise_std=5) :
@@ -97,8 +108,9 @@ class SonarSensor(Sensor) :
 
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
-                merged_detects[detector_start] = detects[detector_start:detector_start + self._angles]
+                self._publish_data(SonarEvent(self.get_owner().get_uid(), detector_start, detects[detector_start:detector_start + self._angles]))
+                #merged_detects[detector_start] = detects[detector_start:detector_start + self._angles]
                 #print detector_start, ','.join(map(lambda e: str(e[0]) + '=' + str(e[1]), merged_detects[detector_start]))
 
-            self._publish_data(SonarEvent(self.get_owner().get_uid(), merged_detects))
+#            self._publish_data(SonarEvent(self.get_owner().get_uid(), merged_detects))
             time.sleep(self._interval)
