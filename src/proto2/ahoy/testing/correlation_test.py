@@ -28,7 +28,7 @@ world.add_network(aisnet)
 for i in range(0, 3):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
-	ship = AISShip(100+n.get_uid(),0.0203,12346, 'ais1')
+	ship = AISShip(n.get_uid(), 0.0203, 12346, 'ais1')
 	n.add_agent(ship)
 	world.add_entity(n)
 

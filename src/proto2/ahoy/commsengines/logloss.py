@@ -38,7 +38,8 @@ class LogLossComms(CommsEngine) :
         try :
             src_power = self.get_world().get_entity(source_node_uid).get_interface_on_net(event.get_network())['power']
         except :
-            print 'error _on_send', event.get_network(), source_node_uid, event.get_message().get_payload()
+            print 'error _on_send: net: %s, src_node: %s, src_agent: %s, payload: \n\t%s' % (event.get_network(), source_node_uid, event.get_src_agent_uid(), event.get_message().get_payload())
+            return
         recvrs = set([])
         for iface in self.get_world().get_network(event.get_network()).get_interfaces() :
             node = iface.get_owner()
