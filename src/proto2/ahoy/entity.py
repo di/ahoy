@@ -91,11 +91,11 @@ class Entity :
             x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2 - lon1)
             bearing = math.atan2(y, x)
 
-            self._velocity = (math.cos(bearing) * forward_vel, math.sin(bearing) * forward_vel, vert_vel)
+            self._velocity = (math.cos(bearing) * self._forward_velocity, math.sin(bearing) * self._forward_velocity, vert_vel)
 
             dt = time.time() - last_tic
 
-            d = forward_vel * dt
+            d = self._forward_velocity * dt
             R = kilometers(6378.1)
             new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(bearing)))
             new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
@@ -120,7 +120,7 @@ class Entity :
             #print 'moved to', new_lat, new_lon, new_agl
 
             last_tic = time.time()
-            time.sleep(Entity.MAX_DISTANCE / forward_vel)
+            time.sleep(Entity.MAX_DISTANCE / self._forward_velocity)
 
         self._move_thread = None
         self._stopped_cond.acquire()
