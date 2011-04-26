@@ -53,14 +53,18 @@ class ThreatShip(Agent) :
             mylat,mylon,myagl = self.get_owner_node().get_position()
             d = lin_distance(lat,lon,0.0,mylat,mylon,0.0)
             print str(d) + " kilos away"
-            if(d < 0.1):
+            if(d <= 0.2 and vel != 0):
                 print "Slowing down..."
-                self._forward_vel = vel - (vel/4.0)
+                self._forward_vel = vel
             elif(d > 0.2):
                 print "Speeding up..."
-                self._forward_vel = self._forward_vel + 0.02         
-
+                self._forward_vel = vel + 0.08         
+            
+            self.get_owner_node().set_forward_velocity(self._forward_vel)
+            
     def _move(self, posdata):
         lat, lon = posdata.split(',')
+        self._curlat = float(lat)
+        self._curlon = float(lon)
         self.get_owner_node().move(float(lat), float(lon), self._agl, self._forward_vel, self._vert_vel, True)
 
