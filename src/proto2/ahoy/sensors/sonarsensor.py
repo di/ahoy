@@ -19,18 +19,10 @@ class SonarEvent(SensorEvent) :
         return self._detects
 
     def __str__(self) :
-        '''
-                s = ''
-                for bearing, detect in self._detects.iteritems() :
-                    print bearing, detect
-                    s += '%s %s %s\n' % (bearing, detect[0][0], detect[0][1]) # TODO: Fix for multiple pings per bearing
-                print 'msg len:', len(s)
-        '''
         s = ''
         for det in self._detects :
-            dist, snr = det
-            s += '%s,%s ' % (dist, snr)
-        print self._bearing, self._detects, '%s %s' % (self._bearing, s.strip())
+            lat, lon, snr = det
+            s += '%s,%s,%s ' % (lat, lon, snr)
         return '%s %s' % (self._bearing, s.strip())
 
 class SonarSensor(Sensor) :
@@ -52,7 +44,7 @@ class SonarSensor(Sensor) :
         lat, lon, agl = self.get_owner().get_position()
         for angle in range(0, 360) :
             e_lat, e_lon, e_dist, e_height = self._elevation.get_above(lat, lon, angle)
-            edges.append([e_dist, self._get_snr(e_dist * 1000, 0)])
+            edges.append([e_lat, e_lon, self._get_snr(e_dist * 1000, 0)])
         return edges
 
     def _get_noise(self) :
@@ -104,13 +96,11 @@ class SonarSensor(Sensor) :
                     snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
                     if distance/1000 < detects[bearing][0] and snr >= self._min_snr :
-                        detects[bearing] = [distance/1000, snr]
+                        tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
+                        detects[bearing] = [tlat, tlon, snr]#[distance/1000, snr]
 
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
                 self._publish_data(SonarEvent(self.get_owner().get_uid(), detector_start, detects[detector_start:detector_start + self._angles]))
-                #merged_detects[detector_start] = detects[detector_start:detector_start + self._angles]
-                #print detector_start, ','.join(map(lambda e: str(e[0]) + '=' + str(e[1]), merged_detects[detector_start]))
 
-#            self._publish_data(SonarEvent(self.get_owner().get_uid(), merged_detects))
             time.sleep(self._interval)
