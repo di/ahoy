@@ -41,7 +41,9 @@ tanknode.add_interface(Interface('tnet',tnet,power=120))
 tanknode.add_agent(Tanker(80,0.08,'tnet',pathfile))
 
 threatnode = Node(2)
-threatnode.add_agent(ThreatShip(81,0.10,pathfile))
+tagent = ThreatShip(81,0.10,pathfile)
+tagent.follow(1)
+threatnode.add_agent(tagent)
 
 world.add_entity(tanknode)
 world.add_entity(threatnode)
