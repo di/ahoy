@@ -11,6 +11,8 @@ from ahoy.events.move import EntityMoveEvent
 from ahoy.events.chemical import ChemicalSpillEvent
 from ahoy.events.sensor import SensorEvent
 from ahoy.events.startup import StartupEvent
+from ahoy.events.correlation import CorrelationEvent 
+from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.sensors.radarsensor import RadarEvent
 
 pygame.init()
@@ -50,6 +52,8 @@ class ProofOfConcept :
         self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
         self._event_api.subscribe(SensorEvent, self._on_sensor)
         self._event_api.subscribe(StartupEvent, self._on_startup)
+        self._event_api.subscribe(CorrelationEvent, self._on_correlation)
+        self._event_api.subscribe(ProximityThreatEvent, self._on_prox_threat)
 
     def _get_pix(self, lat, lon) :
         global center
@@ -107,6 +111,12 @@ class ProofOfConcept :
 
     def _on_sensor(self, event) :
         uid = event.get_owner_uid() 
+
+    def _on_correlation(self, event) :
+        pass
+
+    def _on_prox_threat(self, event) :
+        pass
 
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
