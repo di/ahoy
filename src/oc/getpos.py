@@ -17,7 +17,6 @@ pygame.display.set_caption("Path Finder 2000")
 surface = pygame.display.set_mode((1280,800))
 image_surface = pygame.image.load("map_big.png")
 # 461, 282
-center = (-1770,-2000)
 window_center = (-1770,-2000)
 
 class LatLonMapper :
@@ -33,8 +32,8 @@ class LatLonMapper :
 
 
     def _get_pix(self, lat, lon) :
-        global center
-        cx, cy = center
+        global window_center
+        cx, cy = window_center
         try :
             x = int(((lon-self.tl_lon)/self.d_lon)*4800)+cx
             y = int(((lat-self.tl_lat)/self.d_lat)*4800)+cy
@@ -73,7 +72,6 @@ def main() :
     lastlat = 0
     lastlon = 0
     while True:
-        global center
         global window_center
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -81,8 +79,8 @@ def main() :
                 quit(None, None)
 
         if pygame.mouse.get_pressed()[0] and (pygame.key.get_mods() & KMOD_SHIFT):
-            ux, uy = pygame.mouse.get_pos()
-            lat, lon = poc._get_ll(ux,uy) 
+            s_ux, s_uy = pygame.mouse.get_pos()
+            lat, lon = poc._get_ll(s_ux,s_uy) 
             if(not(lat == lastlat) and not(lon == lastlon)):
                 f.write(str(lat) + "," + str(lon) + "\n")
                 print str(lat) + "," + str(lon)
@@ -94,16 +92,17 @@ def main() :
                 dy, dy = pygame.mouse.get_pos()
                 gotFirst = True
             ux,uy = pygame.mouse.get_pos()
-            center = redraw((dx-ux,dy-uy))
-        elif gotFirst:
-            window_center = redraw((dx-ux,dy-uy))
-            dx,dy,ux,uy = 0,0,0,0
-            gotFirst = False
+            #window_center = redraw((dx-ux,dy-uy))
         elif pygame.mouse.get_pressed()[2]:
             if not ended:
                 f.write("@@@\n")
                 print "Ending this path"
                 ended = True
+        else :
+            if gotFirst:
+                window_center = redraw((dx-ux,dy-uy))
+                dx,dy,ux,uy = 0,0,0,0
+            gotFirst = False
 
         redraw((dx-ux,dy-uy)) 
         #time.sleep(1)
