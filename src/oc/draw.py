@@ -15,19 +15,18 @@ from ahoy.events.correlation import CorrelationEvent
 from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.sensors.radarsensor import RadarEvent
 
-pygame.init()
-pygame.display.set_caption("Operations Center")
-surface = pygame.display.set_mode((1280,800))
-image_surface = pygame.image.load("map_big.png")
 # 461, 282
 center = (-1770,-2000)
 window_center = (-1770,-2000)
+surface = pygame.display.set_mode((1280,800))
 
 class ProofOfConcept :
     def __init__(self, ip, port) :
         self._nodelist = {}
         self._links = {}
+        self._correlations = {}
         self._link_lock = Lock()
+        self._correlation_lock= Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._aaron_sucks = {} # Agent lists
@@ -113,7 +112,12 @@ class ProofOfConcept :
         uid = event.get_owner_uid() 
 
     def _on_correlation(self, event) :
-        pass
+        p1, p2 = event.get_location()
+        uid = event.get_ais_uid()
+
+        self._correlation_lock.acquire()
+        self._correlationis[uid] = tuple(sorted((p1, p2)))
+        self._correlation_lock.release()
 
     def _on_prox_threat(self, event) :
         pass
@@ -164,6 +168,14 @@ class ProofOfConcept :
         pygame.draw.circle(surface, (r-100,g-100,b-100), (x,y), 8, 3)
         surface.blit(text,(x+7,y+7))
 
+    def draw_correlation(self) :
+        self._correlation_lock.aquire()
+        for correlation in self._correlations :
+            p1 = self._get_pix(*correlation[0])
+            p2 = self._get_pix(*correlation[1])
+            pygame.draw.line(surface, (0, 255, 0), p1, p2, 2)
+        self._correlation_lock.relase()
+
     def draw_links(self) :
         self._link_lock.acquire()
         for link, up in self._links.iteritems() :
@@ -193,8 +205,19 @@ def main() :
         poc.draw()
         return new
 
-    if len(sys.argv) > 2 :
+    if len(sys.argv) <= 2 :
+        print "USAGE: python draw.py <hostname> <port>"
+        quit(None, None)
+
+    try : 
         poc = ProofOfConcept(sys.argv[1], int(sys.argv[2]))
+    except socket.error :
+        print "Invalid host or port, or TCP forwarder not started. Exiting."
+        quit(None, None)
+
+    pygame.init()
+    pygame.display.set_caption("Operations Center")
+    image_surface = pygame.image.load("map_big.png")
     signal.signal(signal.SIGINT, quit)
     redraw()
     dx, dy, ux, uy = 0,0,0,0
