@@ -2,6 +2,7 @@ import pygame
 import time
 from pygame.locals import *
 import os, sys
+import socket, sys, signal, operator
 import socket, sys, signal
 from threading import Lock
 from ahoy.util.geo import *
@@ -52,13 +53,18 @@ def main() :
         pygame.quit()
         sys.exit()
 
-    def redraw() :
+    def redraw(move=(0,0)) :
+        global window_center
         pygame.display.flip()
-        surface.blit(image_surface,(0,0))
+        new = map(operator.sub, window_center, move)
+        surface.blit(image_surface,new)
+        #poc.draw()
+        return new
 
     filename = sys.argv[1]
     f = open(filename,'w')
 
+    gotFirst = False
     ended = False
     poc = LatLonMapper()
     signal.signal(signal.SIGINT, quit)
@@ -67,27 +73,38 @@ def main() :
     lastlat = 0
     lastlon = 0
     while True:
+        global center
+        global window_center
         for event in pygame.event.get():
             if event.type == QUIT:
                 f.close()
                 quit(None, None)
-                #pygame.quit(); sys.exit()
 
         if pygame.mouse.get_pressed()[0] and (pygame.key.get_mods() & KMOD_SHIFT):
             ux, uy = pygame.mouse.get_pos()
-            lat, lon = poc.get_ll(ux,uy) 
+            lat, lon = poc._get_ll(ux,uy) 
             if(not(lat == lastlat) and not(lon == lastlon)):
                 f.write(str(lat) + "," + str(lon) + "\n")
                 print str(lat) + "," + str(lon)
             lastlat = lat
             lastlon = lon
             ended = False
+        elif pygame.mouse.get_pressed()[0]:
+            if not gotFirst:
+                dy, dy = pygame.mouse.get_pos()
+                gotFirst = True
+            ux,uy = pygame.mouse.get_pos()
+            center = redraw((dx-ux,dy-uy))
+        elif gotFirst:
+            window_center = redraw((dx-ux,dy-uy))
+            dx,dy,ux,uy = 0,0,0,0
+            gotFirst = False
         elif pygame.mouse.get_pressed()[2]:
             if not ended:
                 f.write("@@@\n")
                 print "Ending this path"
                 ended = True
 
-        redraw() 
+        redraw((dx-ux,dy-uy)) 
         #time.sleep(1)
 main()
