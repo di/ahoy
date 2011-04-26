@@ -6,11 +6,12 @@ from threading import Lock
 from ahoy.util.geo import *
 from ahoy.agents.rectanglesurveil import *
 from ahoy.eventapi import EventAPI
+from ahoy.events.startup import StartupEvent
+from ahoy.events.startup import StopSimulationEvent
 from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
 from ahoy.events.chemical import ChemicalSpillEvent
 from ahoy.events.sensor import SensorEvent
-from ahoy.events.startup import StartupEvent
 from ahoy.events.correlation import CorrelationEvent 
 from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.sensors.radarsensor import RadarEvent
@@ -45,12 +46,13 @@ class ProofOfConcept :
         self._remote_sock.connect((ip, port))
         self._event_api = EventAPI(self._remote_sock)
         t = self._event_api.start()
+        self._event_api.subscribe(StartupEvent, self._on_startup)
+        self._event_api.subscribe(StopSimulationEvent, self._on_shutdown)
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(RadarEvent, self._on_radar)
         self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
         self._event_api.subscribe(SensorEvent, self._on_sensor)
-        self._event_api.subscribe(StartupEvent, self._on_startup)
         self._event_api.subscribe(CorrelationEvent, self._on_correlation)
         self._event_api.subscribe(ProximityThreatEvent, self._on_prox_threat)
 
@@ -72,6 +74,9 @@ class ProofOfConcept :
     def _on_startup(self, event) :
         self._world = event.get_world()
 
+    def _on_shutdown(self, event) :
+        quit(None, None)
+
     def _on_link(self, event) :
         n1 = event.get_uid1()
         n2 = event.get_uid2()
@@ -90,6 +95,7 @@ class ProofOfConcept :
             self._aaron_sucks[uid] = agent 
         except AttributeError :
             print 'Simulation was started before interface'
+            quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
         print uid, lat, lon, type, agent
