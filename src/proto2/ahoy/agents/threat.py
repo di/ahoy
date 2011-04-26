@@ -22,7 +22,9 @@ class ThreatShip(Agent) :
         start = self._locs[0]
         lat,lon = start.split(',')
         self.get_owner_node().set_position(float(lat),float(lon),self._agl)
+        print "Threat at " + lat + "," + lon
         for l in self._locs[1:]:
+            print "Threat moving to " + l
             self._move(l)            
 
 

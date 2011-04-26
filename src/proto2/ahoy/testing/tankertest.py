@@ -33,15 +33,15 @@ tnet = Network('tnet',LogLossComms())
 world.add_network(wlan)
 world.add_network(tnet)
 
-pathfile = "agents/paths.txt"
+pathfile = "agents/paths/tpaths.dat"
 
 tanknode = Node(1)
 #uavnode.set_position(39.8656978,-75.21841399, 0.0001)
 tanknode.add_interface(Interface('tnet',tnet,power=120))
-tanknode.add_agent(Tanker(80,0.002,'tnet',pathfile))
+tanknode.add_agent(Tanker(80,0.08,'tnet',pathfile))
 
 threatnode = Node(2)
-threatnode.add_agent(ThreatShip(81,0.004,pathfile))
+threatnode.add_agent(ThreatShip(81,0.10,pathfile))
 
 world.add_entity(tanknode)
 world.add_entity(threatnode)

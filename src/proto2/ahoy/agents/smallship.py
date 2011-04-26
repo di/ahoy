@@ -8,13 +8,13 @@ from ahoy.util.aisdatagen import AISDataGen
 
 
 class SmallShip(Agent) :
-    def __init__(self, uid, dataid, forward_vel) :
+    def __init__(self, uid, dataid, forward_vel,pathfile) :
         Agent.__init__(self, uid)
         self._forward_vel = forward_vel
         self._agl = 0.001; 
         self._vert_vel = 0.0; 
         #self._pathfile = "/home/frank/ahoy/src/proto2/ahoy/agents/paths.txt"
-        self._pathfile = "agents/paths.txt"
+        self._pathfile = pathfile
         self._locs = []
         self._dataid = dataid
 

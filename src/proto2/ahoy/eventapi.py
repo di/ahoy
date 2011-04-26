@@ -10,7 +10,8 @@ class EventAPI :
         self._running = True
         if tcp_conn == None :
             self._ip = '239.192.0.100'
-            self._port = 9998
+            #self._port = 9998
+            self._port = 9997
             self._setup_mc()
             self._tcp_conn = None
         else :
