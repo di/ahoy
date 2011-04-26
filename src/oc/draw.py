@@ -10,6 +10,7 @@ from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
 from ahoy.events.chemical import ChemicalSpillEvent
 from ahoy.events.sensor import SensorEvent
+from ahoy.events.startup import StartupEvent
 from ahoy.sensors.radarsensor import RadarEvent
 
 pygame.init()
@@ -27,6 +28,7 @@ class ProofOfConcept :
         self._link_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
+        self._aaron_sucks = {} # Agent lists
         self._current_radar_bearing = None
         self._current_radar_loc = None
 
@@ -47,6 +49,7 @@ class ProofOfConcept :
         self._event_api.subscribe(RadarEvent, self._on_radar)
         self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
         self._event_api.subscribe(SensorEvent, self._on_sensor)
+        self._event_api.subscribe(StartupEvent, self._on_startup)
 
     def _get_pix(self, lat, lon) :
         global center
@@ -63,6 +66,9 @@ class ProofOfConcept :
         lat = ((y/4800.0)*self.d_lat)+self.tl_lat
         return (lat,lon)
 
+    def _on_startup(self, event) :
+        self._world = event.get_world()
+
     def _on_link(self, event) :
         n1 = event.get_uid1()
         n2 = event.get_uid2()
@@ -76,8 +82,14 @@ class ProofOfConcept :
         lon = event.get_long()
         lat = event.get_lat()
         type = event.get_type()
-        
+        try :
+            agent = map(lambda a : a.__class__.__name__, self._world.get_entity(uid).get_agents().values()) 
+            self._aaron_sucks[uid] = agent 
+        except AttributeError :
+            print 'Simulation was started before interface'
+
         self._nodelist[uid] = ((lat, lon),type)
+        print uid, lat, lon, type, agent
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -108,7 +120,7 @@ class ProofOfConcept :
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
             (lat, lon), type = self._nodelist[uid]
-            self.draw_node(self._get_pix(lat,lon),type)
+            self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_radar(self) :
         if self._current_radar_loc is not None :
@@ -127,7 +139,10 @@ class ProofOfConcept :
         pygame.draw.circle(surface, (0,155,0), (x,y), 6, 0)
         pygame.draw.circle(surface, (100,255,100), (x,y), 4, 0)
 
-    def draw_node(self, position, type) :
+    def draw_node(self, position, type, uid) :
+        Font = pygame.font.Font(None,20)
+        text = Font.render(','.join(str(n) for n in self._aaron_sucks[uid]),1,(0,0,0))
+
         x, y = position
         if self._nodecolor.has_key(type) :
             r,g,b = self._nodecolor[type]
@@ -137,6 +152,7 @@ class ProofOfConcept :
         pygame.draw.circle(surface, (255,255,255), (x,y), 10, 0)
         pygame.draw.circle(surface, (r,g,b), (x,y), 6, 0)
         pygame.draw.circle(surface, (r-100,g-100,b-100), (x,y), 8, 3)
+        surface.blit(text,(x+7,y+7))
 
     def draw_links(self) :
         self._link_lock.acquire()

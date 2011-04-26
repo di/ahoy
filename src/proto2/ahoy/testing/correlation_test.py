@@ -63,7 +63,7 @@ world.add_entity(sonar2n)
 # On pier of naval yard
 radarn = Node(len(world.get_entities()))
 radarn.set_position(39.886597, -75.166043, 0)
-radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1))
+radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1, use_event_channel=True))
 radarn.add_interface(Interface('radar1', r1net, power=120))
 radarn.add_agent(SensorForwardAgent(radarn.get_uid(), 'radar', 'radar1'))
 world.add_entity(radarn)
