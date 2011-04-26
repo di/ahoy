@@ -196,6 +196,7 @@ class ProofOfConcept :
         self.draw_nodes()
         self.draw_radar()
         self.draw_links()
+        self.draw_correlation()
 
 def main() :
     
