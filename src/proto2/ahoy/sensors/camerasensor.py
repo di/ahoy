@@ -43,7 +43,7 @@ class CameraSensor(Sensor) :
                 e_lat, e_lon, e_agl = entity.get_position()
                 if min_lat <= e_lat <= max_lat and min_lon <= e_lon <= max_lon :
                     visible.append((e_lat, e_lon, e_agl))
-                    print "Entity spotted at " + str(e_lat) + "," + str(e_lon)
+                    print "Spotted " + str(entity.get_uid()) + " at " + str(e_lat) + "," + str(e_lon)
 
             self._publish_data(CameraEvent(self.get_owner().get_uid(), visible))
             time.sleep(self._interval)

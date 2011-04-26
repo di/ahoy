@@ -32,7 +32,7 @@ world.add_network(wlan)
 world.add_network(uavnet)
 
 uavnode = Node(1)
-uavnode.set_position(38.8661,-75.2549, 0.0001)
+uavnode.set_position(39.8661,-75.2549, 0.0001)
 #uavnode.set_position(39.8656978,-75.21841399, 0.0001)
 uavnode.add_interface(Interface('uavnet',uavnet,power=120))
 uavnode.add_sensor('camera', CameraSensor(0.785,1))
@@ -42,20 +42,13 @@ uavnode.add_agent(UAV(8,1.0,0.02,0.007))
 
 world.add_entity(uavnode)
 
-'''
 for i in range(5,15):
 	n = Node(i)
 	n.add_interface(Interface('wlan0',wlan, power=120))
 	ship = AISShip((i + 51),0.0203,12346, 'wlan0')
 	n.add_agent(ship)
 	world.add_entity(n)
-'''
 
-n = Node(5)
-n.add_interface(Interface('wlan0',wlan,power=120))
-ship = SmallShip(50,2,0.02)
-n.add_agent(ship)
-world.add_entity(n)
 
 if __name__ == '__main__' :
     sim = Simulation(world)
