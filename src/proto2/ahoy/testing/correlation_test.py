@@ -29,10 +29,10 @@ world = World()
 aisnet = Network('aisn', LogLossComms())
 world.add_network(aisnet)
 
-for i in range(0,2):
+for i in range(0, 20):
 	n = Node(i)
 	n.add_interface(Interface('ais1', aisnet, power=120))
-	ship = AISShip((i + 21),0.0203,12348, 'ais1')
+	ship = AISShip((i + 50),0.0203,12348, 'ais1')
 	n.add_agent(ship)
 	world.add_entity(n)
 

@@ -16,11 +16,10 @@ class SonarEvent(SensorEvent) :
 
     def __str__(self) :
         s = ''
-        '''
         for bearing, detect in self._detects.iteritems() :
-            print bearing, detect
+#            print bearing, detect
             s += '%s %s %s\n' % (bearing, detect[0][0], detect[0][1]) # TODO: Fix for multiple pings per bearing
-        '''
+        print 'msg len:', len(s)
         return s
 
 class SonarSensor(Sensor) :

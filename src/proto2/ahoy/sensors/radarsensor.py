@@ -25,7 +25,6 @@ class RadarEvent(SensorEvent) :
             s = '%s %s %s %s %s' % (self.get_owner_uid(), math.degrees(self._bearing), self._distance, self._target_location[0], self._target_location[1])
         else :
             s = '%s %s none none none' % (self.get_owner_uid(), math.degrees(self._bearing))
-        print '> ', s
         return s
 
 class RadarSensor(Sensor) :
