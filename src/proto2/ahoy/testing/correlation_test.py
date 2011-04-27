@@ -67,11 +67,12 @@ world.add_entity(radarn)
 
 # Ground station
 groundst = Node(len(world.get_entities()))
+groundst.set_position(39.887911, -75.187533, 0)
 groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.01, 0.01, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.01, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
 world.add_entity(groundst)
 
 if __name__ == '__main__' :
