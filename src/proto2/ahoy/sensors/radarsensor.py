@@ -58,9 +58,10 @@ class RadarSensor(Sensor) :
                 bearing = math.atan2(y, x) % (2*math.pi)
                 
                 if bearing >= antenna_bearing and bearing <= antenna_bearing + self._angle :
-                    dist = haver_distance(math.degrees(lat), math.degrees(lon), math.degrees(e_lat), math.degrees(e_lon))
+                    #dist = haver_distance(math.degrees(lat), math.degrees(lon), math.degrees(e_lat), math.degrees(e_lon))
+                    dist = lin_distance(math.degrees(lat), math.degrees(lon), 0, math.degrees(e_lat), math.degrees(e_lon), 0)
                     est_dist = dist
-                    if angle_data == None or angle_data > est_dist :
+                    if angle_data == None or angle_data[0] > est_dist :
                         x, y, z = sph_to_lin(lat, lon, agl)
                         e_vel_x, e_vel_y, e_vel_z = entity.get_lin_velocity()
                         e_x, e_y, e_z = sph_to_lin(e_vel_x, e_vel_y, e_vel_z)
@@ -70,12 +71,15 @@ class RadarSensor(Sensor) :
                         freq_shift = 2 * proj_vel * self._trans_freq / 3e8
 
                         est_orth_vel = freq_shift * 3e8 / (2 * self._trans_freq)
-                        angle_data = (est_dist, est_orth_vel)
+                        angle_data = (est_dist, est_orth_vel, e_lat, e_lon)
 
             if angle_data != None :
                 llat, llon, _ = self.get_owner().get_position()
-                location = loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0])
+                location = (math.degrees(angle_data[2]), math.degrees(angle_data[3]))
+                #location = loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0])
+                print 'bearing:', loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0]), 'actual', location
                 distance = angle_data[0]
+                print 'RADAR:', antenna_bearing, location
             else :
                 location = None
                 distance = None
