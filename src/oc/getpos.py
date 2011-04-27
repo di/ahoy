@@ -31,8 +31,10 @@ class LatLonMapper:
             return (0,0)
 
     def _get_ll(self, x, y) :
-        lon = ((x/4800.0)*self.d_lon)+self.tl_lon
-        lat = ((y/4800.0)*self.d_lat)+self.tl_lat
+        global center
+        cx, cy = center
+        lon = (((x-cx)/4800.0)*self.d_lon)+self.tl_lon
+        lat = (((y-cy)/4800.0)*self.d_lat)+self.tl_lat
         return (lat,lon)
 
 def main() :
