@@ -46,11 +46,9 @@ class CameraSensor(Sensor) :
             visible = []
 
             lat, lon, agl = self.get_owner().get_position()
-            app_size = agl / math.cos(self._fov / 2.0)
-            min_lat = lat - app_size
-            max_lat = lat + app_size
-            min_lon = lon - app_size
-            max_lon = lon + app_size
+            app_size = agl * math.tan(self._fov/2.0)
+            max_lat, min_lon = loc_from_bearing_dist(lat,lon,45,math.sqrt(2)*app_size)
+            min_lat, max_lon = loc_from_bearing_dist(lat,lon,225,math.sqrt(2)*app_size)
 
             for entity in self.get_world().get_entities() :
                 if entity.get_uid() == self.get_owner().get_uid() :
