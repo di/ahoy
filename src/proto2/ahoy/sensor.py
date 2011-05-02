@@ -22,7 +22,6 @@ class Sensor :
         for cb in self._subscribers :
             cb(event)
         if self._use_event_channel :
-            print "PUBLISHING THE EVENT"
             self._owner.get_event_api().publish(event)
 
     def get_world(self) :
