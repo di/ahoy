@@ -28,9 +28,18 @@ world.add_network(aisnet)
 for i in range(0, 3):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
-	ship = AISShip(n.get_uid(), 0.0203, 12346, 'ais1')
+	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12346, 'ais1')
 	n.add_agent(ship)
 	world.add_entity(n)
+
+
+path = "agents/paths/path"
+for i in range(8,12):
+    n = Node(len(world.get_entities()))
+    ship = SmallShip(n.get_uid(), i, 0.03, path + str(i) + ".dat")
+    n.add_agent(ship)
+    world.add_entity(n)
+ 
 
 # Make sensor interfaces
 s1net = Network('sonar1n', LogLossComms())
@@ -72,7 +81,7 @@ groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.01, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
 world.add_entity(groundst)
 
 if __name__ == '__main__' :

@@ -14,6 +14,7 @@ from threading import Lock
 
 from ahoy.eventapi import EventAPI
 from ahoy.events.correlation import CorrelationEvent
+from ahoy.events.prox_threat import ProximityThreatEvent
 
 class CorrelationAgent(Agent):
     
@@ -76,7 +77,6 @@ class CorrelationAgent(Agent):
             If distance from the current sensor item is less than or equal to 
             the most recent smallest distance from a sensor point to this AIS data point,
             then set update the most recent smallest sensor point to be the current sensor item.'''
-            #print 'About to update self._correlation...'
             
             for sensor_pt in self._sensor_data:
                 #print '\nCorrelating ', sensor_pt, '...'
@@ -91,7 +91,6 @@ class CorrelationAgent(Agent):
                         # Only match if we find an AIS point closer than we have found before
                         closest_dist = dist
                         closest_ais_id = ais_id
-                        
                         #print 'closest_ais_id = ', closest_ais_id, 'closest_dist = ', closest_dist
                 
                 #print 'closest_ais_id = ', closest_ais_id
@@ -112,12 +111,11 @@ class CorrelationAgent(Agent):
                     #print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
                     
                     
-            print 'final:'
+            #print 'final:'
             for ais_id in self._correlation:
                 ais_pt = self._ais_data[ais_id]
                 dist, s_pt = self._correlation[ais_id]
                 print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
-                #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], sensor_pt[0], sensor_pt[1], ais_id))
                 self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
                 
             # update all blank AIS matches
@@ -127,8 +125,34 @@ class CorrelationAgent(Agent):
                     self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
                     
             self.lock.release()
-            time.sleep(3)
             
+            self._detect_threats()
+            
+            time.sleep(3)
+    
+    def _detect_threats(self):
+        self.lock.acquire()
+        
+        ''' Get list of all sensor points that were correlated '''
+        correlated_s_pts = []
+        for dist, s_pt in self._correlation.values():
+            correlated_s_pts.append( s_pt )
+        
+        ''' Go through all sensor points that were reported to agent...'''    
+        for sensor_pt in self._sensor_data:
+            if not sensor_pt in correlated_s_pts:
+                
+                ''' This sensor_pt was not correlated with an AIS ship.  It is a possible threat.
+                    Check if the sensor_pt is within self._threat_dist of an AIS ship'''
+                for ais_id in self._ais_data:
+                    ais_pt = self._ais_data[ais_id]
+                    if haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] ) <= self._threat_dist:
+                        print 'POSSIBLE THREAT at ', sensor_pt
+                        self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
+        self.lock.release()
+            
+        
+    
     def _parse_sonar_data(self, event):
         msg = event.get_message().get_payload()
         info = msg.split()
