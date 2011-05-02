@@ -42,7 +42,7 @@ class Entity :
         return self._sensors[name]
 
     def get_bearing(self) :
-        return self._bearing
+        return math.degrees(self._bearing)
 
     def get_lin_velocity(self) :
         return self._velocity
