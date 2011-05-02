@@ -33,6 +33,7 @@ tnet = Network('tnet',LogLossComms())
 world.add_network(wlan)
 world.add_network(tnet)
 
+path = "agents/paths/path"
 pathfile = "agents/paths/tpaths.dat"
 
 tanknode = Node(1)
@@ -45,6 +46,12 @@ tagent = ThreatShip(81,0.10,pathfile)
 tagent.follow(1)
 threatnode.add_agent(tagent)
 
+for i in range(0,4):
+    n = Node(i+100)
+    ship = SmallShip(i+200, i, 0.03, path + str(i) + ".dat")
+    n.add_agent(ship)
+    world.add_entity(n)
+ 
 world.add_entity(tanknode)
 world.add_entity(threatnode)
 

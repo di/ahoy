@@ -19,13 +19,11 @@ class UAV(Agent) :
 
     def run(self) :
         self.get_owner_node().get_event_api().subscribe(UAVSurveilArea, self._on_order)
-        #self.get_owner_node().get_event_api().subscribe(CameraEvent, self._on_visual)
-        #self.get_owner_node().get_interface('uavnet').set_recv_callback(self._on_visual)
-        #self._wait_for_orders()
-        nw = [39.913,-75.156]
-        se = [39.887,-75.125]
-        uid = self.get_owner_node().get_uid()
-        self.get_owner_node().get_event_api().publish(UAVSurveilArea(uid,nw,se)) 
+        self._wait_for_orders()
+        #nw = [39.913,-75.156]
+        #se = [39.887,-75.125]
+        #uid = self.get_owner_node().get_uid()
+        #self.get_owner_node().get_event_api().publish(UAVSurveilArea(uid,nw,se)) 
 
     def _on_order(self, event):
         print "Got the order"
