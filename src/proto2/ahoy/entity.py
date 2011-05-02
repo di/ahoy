@@ -21,6 +21,7 @@ class Entity :
         self._world = None
         self._velocity = (0, 0, 0)
         self._forward_velocity = 0
+        self._bearing = 0
 
         self._sensors = {}
 
@@ -39,6 +40,9 @@ class Entity :
 
     def get_sensor(self, name) :
         return self._sensors[name]
+
+    def get_bearing(self) :
+        return self._bearing
 
     def get_lin_velocity(self) :
         return self._velocity
@@ -90,16 +94,16 @@ class Entity :
 
             y = math.sin(lon2 - lon1) * math.cos(lat2)
             x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2 - lon1)
-            bearing = math.atan2(y, x)
+            self._bearing = math.atan2(y, x)
 
-            self._velocity = (math.cos(bearing) * self._forward_velocity, math.sin(bearing) * self._forward_velocity, vert_vel)
+            self._velocity = (math.cos(self._bearing) * self._forward_velocity, math.sin(self._bearing) * self._forward_velocity, vert_vel)
 
             dt = time.time() - last_tic
 
             d = self._forward_velocity * dt
             R = kilometers(6378.1)
-            new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(bearing)))
-            new_lon = math.degrees(lon1 + math.atan2(math.sin(bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
+            new_lat = math.degrees(math.asin(math.sin(lat1)*math.cos(d/R) + math.cos(lat1)*math.sin(d/R)*math.cos(self._bearing)))
+            new_lon = math.degrees(lon1 + math.atan2(math.sin(self._bearing)*math.sin(d/R)*math.cos(lat1), math.cos(d/R)-math.sin(lat1)*math.sin(new_lat)))
             if self._agl < agl :
                 new_agl = min(self._agl + vert_vel * dt, agl)
             elif self._agl > agl :
