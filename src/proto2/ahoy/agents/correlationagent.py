@@ -65,6 +65,8 @@ class CorrelationAgent(Agent):
             #    print self._ais_data[ais_id], ais_id
             #print '*************************'
             
+            self.lock.acquire()
+            
             '''clear all correlations for now
                 This way, there will be no chance of having an AIS ship point still correlated to an outdated
                 sensor point (which may no longer even exist)'''
@@ -75,6 +77,7 @@ class CorrelationAgent(Agent):
             the most recent smallest distance from a sensor point to this AIS data point,
             then set update the most recent smallest sensor point to be the current sensor item.'''
             #print 'About to update self._correlation...'
+            
             for sensor_pt in self._sensor_data:
                 #print '\nCorrelating ', sensor_pt, '...'
                 closest_dist = 99999
@@ -106,14 +109,24 @@ class CorrelationAgent(Agent):
                     ''' No sensor point had yet been paired with this AIS point,
                         and we know this is the closest AIS point we've found to this sensor so far.  Update.'''
                     self._correlation[closest_ais_id] = [closest_dist, (sensor_pt)]
-                    print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
+                    #print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
                     
-                        
-            #print 'final:'
+                    
+            print 'final:'
             for ais_id in self._correlation:
+                ais_pt = self._ais_data[ais_id]
                 dist, s_pt = self._correlation[ais_id]
                 print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
-                self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], sensor_pt[0], sensor_pt[1], ais_id))
+                #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], sensor_pt[0], sensor_pt[1], ais_id))
+                self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
+                
+            # update all blank AIS matches
+            for ais_id in self._ais_data:
+                if not ais_id in self._correlation:
+                    ais_pt = self._ais_data[ais_id]
+                    self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                    
+            self.lock.release()
             time.sleep(3)
             
     def _parse_sonar_data(self, event):
@@ -228,20 +241,21 @@ class CorrelationAgent(Agent):
             Iterate through all sonars' sensor points combined 
             (which sonar sensor data came from does not matter at this point; 
             it only matters when trying to delete sonar data from any one particular sonar sensor only) '''
-        all_sonar_pts = []
-        all_sonar_pts.extend( self._sonar1_data.values() )
-        all_sonar_pts.extend( self._sonar2_data.values() )
-        print 'length of all_sonar_pts = ', len(all_sonar_pts)
         
-        for sonar_loc in all_sonar_pts:
-            uniquePoint = True
-            '''make sure sonar_loc is not within ais_threshold dist from each point'''
-            for loc in self._sensor_data:
-                if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
-                    uniquePoint = False
-                    break
-            if uniquePoint:
-                self._sensor_data.append(sonar_loc)
+        #all_sonar_pts = []
+        #all_sonar_pts.extend( self._sonar1_data.values() )
+        #all_sonar_pts.extend( self._sonar2_data.values() )
+        #print 'length of all_sonar_pts = ', len(all_sonar_pts)
+        
+        #for sonar_loc in all_sonar_pts:
+        #    uniquePoint = True
+        #    '''make sure sonar_loc is not within ais_threshold dist from each point'''
+        #    for loc in self._sensor_data:
+        #        if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
+        #            uniquePoint = False
+        #            break
+        #    if uniquePoint:
+        #        self._sensor_data.append(sonar_loc)
         print 'length of self._sensor_data = ', len(self._sensor_data) 
         
         self.lock.release()
