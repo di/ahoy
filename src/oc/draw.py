@@ -15,6 +15,7 @@ from ahoy.events.sensor import SensorEvent
 from ahoy.events.correlation import CorrelationEvent 
 from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.sensors.radarsensor import RadarEvent
+from ahoy.sensors.camerasensor import CameraEvent 
 
 # 461, 282
 center = (-1770,-2000)
@@ -30,8 +31,12 @@ class ProofOfConcept :
         self._nodelist = {}
         self._links = {}
         self._correlations = {}
+        self._fields = {}
+        self._cameranodes = {}
         self._link_lock = Lock()
         self._correlation_lock= Lock()
+        self._fields_lock= Lock()
+        self._cameranodes_lock= Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._aaron_sucks = {} # Agent lists
@@ -59,6 +64,7 @@ class ProofOfConcept :
         self._event_api.subscribe(SensorEvent, self._on_sensor)
         self._event_api.subscribe(CorrelationEvent, self._on_correlation)
         self._event_api.subscribe(ProximityThreatEvent, self._on_prox_threat)
+        self._event_api.subscribe(CameraEvent, self._on_camera)
 
     def _get_pix(self, lat, lon) :
         global center
@@ -102,7 +108,7 @@ class ProofOfConcept :
             quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
-        print uid, lat, lon, type, agent
+        #print uid, lat, lon, type, agent
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -131,6 +137,20 @@ class ProofOfConcept :
 
     def _on_prox_threat(self, event) :
         pass
+
+    def _on_camera(self, event) :
+        print 'Got camera event'
+        field = event.get_field()
+        cameranodes = event.get_visible()
+        uid = event.get_owner_uid()
+
+        self._fields_lock.acquire()
+        self._fields[uid] = field
+        self._fields_lock.release()
+
+        self._cameranodes_lock.acquire()
+        self._cameranodes[uid] = cameranodes
+        self._cameranodes_lock.release()
 
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
@@ -196,11 +216,35 @@ class ProofOfConcept :
                    pygame.draw.line(surface, (255, 0, 0), p1, p2, 2)
         self._link_lock.release()
 
+    def draw_fields(self) :
+        self._fields_lock.acquire()
+        for field in self._fields.values() :
+            max_lat, max_lon, min_lat, min_lon = field
+            print 'Camera bound: ', field
+            p1 = self._get_pix(max_lat, max_lon)
+            p2 = self._get_pix(min_lat, min_lon)
+            dx, dy = p1
+            ux, uy = p2
+            pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
+        self._fields_lock.release()
+
+    def draw_cameranodes(self) :
+        self._cameranodes_lock.acquire()
+        for uid in self._cameranodes.keys() :
+            nodes = self._cameranodes[uid]
+            for node in nodes :
+                lat, lon, agl = node
+                x, y = self._get_pix(lat, lon)
+                pygame.draw.rect(surface,(0,0,255),(x-5,y-5,x+5,y+5),1)
+        self._cameranodes_lock.release()
+
     def draw(self) :
         self.draw_nodes()
         self.draw_radar()
         self.draw_links()
         self.draw_correlation()
+        self.draw_fields()
+        self.draw_cameranodes()
 
 def main() :
     
