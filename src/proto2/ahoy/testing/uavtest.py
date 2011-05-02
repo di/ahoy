@@ -37,7 +37,7 @@ uavnode = Node(1)
 uavnode.set_position(39.8661,-75.2549, 0.0001)
 #uavnode.set_position(39.8656978,-75.21841399, 0.0001)
 uavnode.add_interface(Interface('uavnet',uavnet,power=120))
-uavnode.add_sensor('camera', CameraSensor(0.785,1))
+uavnode.add_sensor('camera', CameraSensor(0.785,1,use_event_channel=True))
 uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
 uavnode.add_agent(UAV(8,1.0,0.02,0.007))
 

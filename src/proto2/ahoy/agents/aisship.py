@@ -8,7 +8,7 @@ from ahoy.util.aisdatagen import AISDataGen
 
 
 class AISShip(Agent) :
-    def __init__(self, uid, forward_vel, port, iface_name) :
+    def __init__(self, uid, forward_vel, ip, port, iface_name):
         Agent.__init__(self, uid)
         self._forward_vel = forward_vel
         self._agl = 0.002 
@@ -17,12 +17,13 @@ class AISShip(Agent) :
         self._use_ais = True  #if True, uses AISDataGen info to move
         self._iface_name = iface_name  #interface on the node it communicates ais info through
         self._man_paths = []     #list of paths to follow given by human operator
-        
+        self._ip = ip 
+
     def run(self) :
         #sets the callback to listen for divert events
         self.get_owner_node().get_interface(self._iface_name).set_recv_callback(self._changedata) 
         self._path_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._path_conn.connect(('', self._port))
+        self._path_conn.connect((self._ip, self._port))
         uid = self.get_owner_node().get_uid()
         # Gets a random initial position from AISDataGen
         self._path_conn.send("INIT")

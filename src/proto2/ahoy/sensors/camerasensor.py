@@ -35,8 +35,8 @@ class CameraEvent(SensorEvent) :
         return out
 
 class CameraSensor(Sensor) :
-    def __init__(self, fov, interval) :
-        Sensor.__init__(self)
+    def __init__(self, fov, interval,**kwds) :
+        Sensor.__init__(self,**kwds)
         self._fov = fov
         self._interval = interval
 
