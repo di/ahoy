@@ -5,13 +5,20 @@ from ahoy.events.sensor import SensorEvent
 from ahoy.util.geo import *
 
 class CameraEvent(SensorEvent) :
-    def __init__(self, owner_uid, visible) :
+    def __init__(self, owner_uid, visible, field) :
         SensorEvent.__init__(self, owner_uid)
         self._visible = visible
+        self._field = field
         #self._interval = interval
 
+    # Returns a list of lat/lons for nodes visible w/in the field
     def get_visible(self) :
         return self._visible
+
+    # Returns parameters for the field of vision in the form:
+    # (max_lat, max_lon, min_lat, min_lon)
+    def get_field(self) :
+        return self._field
 
     def __str__(self):
         out = ""
@@ -44,6 +51,7 @@ class CameraSensor(Sensor) :
                 if min_lat <= e_lat <= max_lat and min_lon <= e_lon <= max_lon :
                     visible.append((e_lat, e_lon, e_agl))
                     print "Spotted " + str(entity.get_uid()) + " at " + str(e_lat) + "," + str(e_lon)
-
-            self._publish_data(CameraEvent(self.get_owner().get_uid(), visible))
+                
+            field = (max_lat, max_lon, min_lat, min_lon)
+            self._publish_data(CameraEvent(self.get_owner().get_uid(), visible, field))
             time.sleep(self._interval)
