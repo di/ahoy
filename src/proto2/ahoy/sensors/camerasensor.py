@@ -40,7 +40,7 @@ class CameraSensor(Sensor) :
         self._fov = fov
         self._interval = interval
 
-    def point_inside(self, x, y, poly):
+    def _point_inside(self, x, y, poly):
         n = len(poly)
         inside =False
 
