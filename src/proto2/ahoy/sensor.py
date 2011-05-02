@@ -7,6 +7,7 @@ class Sensor :
         else :
             self._use_event_channel = False
         self._subscribers = []
+        self._uid = None
 
     def get_owner(self) :
         return self._owner
@@ -25,6 +26,12 @@ class Sensor :
 
     def get_world(self) :
         return self._world
+
+    def set_uid(self, uid):
+        self._uid = uid
+
+    def get_uid(self):
+        return self._uid
 
     def _run(self, world) :
         self._world = world

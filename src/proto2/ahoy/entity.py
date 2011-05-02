@@ -33,6 +33,7 @@ class Entity :
         self._params[param] = value
 
     def add_sensor(self, name, sensor) :
+        sensor.set_uid(len(self._sensors))
         self._sensors[name] = sensor
         sensor.set_owner(self)
 
