@@ -9,6 +9,7 @@ class CameraEvent(SensorEvent) :
         SensorEvent.__init__(self, owner_uid)
         self._visible = visible
         self._field = field
+        self._owner_uid = owner_uid
         #self._interval = interval
 
     # Returns a list of lat/lons for nodes visible w/in the field
@@ -19,6 +20,9 @@ class CameraEvent(SensorEvent) :
     # (max_lat, max_lon, min_lat, min_lon)
     def get_field(self) :
         return self._field
+
+    def get_owner_uid(self) :
+        return self._owner_uid
 
     def __str__(self):
         out = ""
