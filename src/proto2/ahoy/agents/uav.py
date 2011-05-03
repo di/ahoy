@@ -20,28 +20,26 @@ class UAV(Agent) :
     def run(self) :
         self.get_owner_node().get_event_api().subscribe(UAVSurveilArea, self._on_order)
         self._wait_for_orders()
-        #nw = [39.913,-75.156]
-        #se = [39.887,-75.125]
-        #uid = self.get_owner_node().get_uid()
-        #self.get_owner_node().get_event_api().publish(UAVSurveilArea(uid,nw,se)) 
 
     def _on_order(self, event):
         print "Got the order"
         Thread(target=self._on_order_thread,args=(event,)).start()
 
     def _on_order_thread(self, event):
-        if event.get_node_uid() == self.get_owner_node().get_uid():
-            print self.get_owner_node().get_uid(), 'got new orders ', event.get_north_west(), event.get_south_east()
-            nw_lat, nw_lon = event.get_north_west()
-            se_lat, se_lon = event.get_south_east()
+        #if event.get_node_uid() == self.get_owner_node().get_uid():
+        self._new_order = True
+        print self.get_owner_node().get_uid(), 'got new orders ', event.get_north_west(), event.get_south_east()
+        nw_lat, nw_lon = event.get_north_west()
+        se_lat, se_lon = event.get_south_east()
 
-            self._north_west = event.get_north_west()
-            self._south_east = event.get_south_east()
+        self._north_west = event.get_north_west()
+        self._south_east = event.get_south_east()
 
-            self._have_orders = True
-            self.get_owner_node().move(nw_lat, nw_lon,self._max_agl,self._forward_vel, self._vert_vel, True)
-            #self._have_orders = False
-            self._patrol()
+        self._have_orders = True
+        self.get_owner_node().move(nw_lat, nw_lon,self._max_agl,self._forward_vel, self._vert_vel, True)
+        #self._have_orders = False
+        self._new_order = False
+        self._patrol()
   
     def _move(self, lat, lon, agl, fvel, vvel):
         self.get_owner_node().move(lat, lon, agl, fvel, vvel, True)

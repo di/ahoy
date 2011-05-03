@@ -58,7 +58,6 @@ class CameraSensor(Sensor) :
         return inside
 
     def run(self) :
-        print "CAMERA IS RUNNING!"
         while True :
             visible = []
 
