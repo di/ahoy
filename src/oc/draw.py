@@ -4,7 +4,7 @@ import os, sys
 import socket, sys, signal, operator
 from threading import Lock
 from ahoy.util.geo import *
-from ahoy.agents.rectanglesurveil import *
+from ahoy.agents.uav import *
 from ahoy.eventapi import EventAPI
 from ahoy.events.startup import StartupEvent
 from ahoy.events.startup import StopSimulationEvent
@@ -33,6 +33,8 @@ class ProofOfConcept :
         self._correlations = {}
         self._fields = {}
         self._cameranodes = {}
+        self._threats = {}
+        self._threat_lock = Lock()
         self._link_lock = Lock()
         self._correlation_lock= Lock()
         self._fields_lock= Lock()
@@ -61,7 +63,7 @@ class ProofOfConcept :
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(RadarEvent, self._on_radar)
         self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
-        self._event_api.subscribe(SensorEvent, self._on_sensor)
+       # self._event_api.subscribe(SensorEvent, self._on_sensor)
         self._event_api.subscribe(CorrelationEvent, self._on_correlation)
         self._event_api.subscribe(ProximityThreatEvent, self._on_prox_threat)
         self._event_api.subscribe(CameraEvent, self._on_camera)
@@ -77,8 +79,10 @@ class ProofOfConcept :
             return (0,0)
 
     def _get_ll(self, x, y) :
-        lon = ((x/4800.0)*self.d_lon)+self.tl_lon
-        lat = ((y/4800.0)*self.d_lat)+self.tl_lat
+        global center
+        cx, cy = center
+        lon = (((x-cx)/4800.0)*self.d_lon)+self.tl_lon
+        lat = (((y-cy)/4800.0)*self.d_lat)+self.tl_lat
         return (lat,lon)
 
     def _on_startup(self, event) :
@@ -125,6 +129,7 @@ class ProofOfConcept :
         int = event.get_intensity()
 
     def _on_sensor(self, event) :
+        print 'Got sensor event'
         uid = event.get_owner_uid() 
 
     def _on_correlation(self, event) :
@@ -132,14 +137,18 @@ class ProofOfConcept :
         uid = event.get_ais_uid()
 
         self._correlation_lock.acquire()
-        self._correlationis[uid] = tuple(sorted((p1, p2)))
+        self._correlations[uid] = tuple(sorted((p1, p2)))
         self._correlation_lock.release()
 
     def _on_prox_threat(self, event) :
-        pass
+        uid = event.get_threatened_uid()
+        loc = event.get_threat_location()
+
+        self._threat_lock.aquire()
+        self._threats[uid] = loc
+        self._threat_lock.release()
 
     def _on_camera(self, event) :
-        print 'Got camera event'
         field = event.get_field()
         cameranodes = event.get_visible()
         uid = event.get_owner_uid()
@@ -155,11 +164,8 @@ class ProofOfConcept :
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
-
-        self._event_api.publish(RectangleSurveilMove(0, p1, p2))
-        self._event_api.publish(RectangleSurveilMove(1, p1, p2))
-        self._event_api.publish(RectangleSurveilMove(2, p1, p2))
-        self._event_api.publish(RectangleSurveilMove(3, p1, p2))
+        print 'Sending Bound', p1, p2 
+        self._event_api.publish(UAVSurveilArea(1, p1, p2))
 
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
@@ -219,13 +225,11 @@ class ProofOfConcept :
     def draw_fields(self) :
         self._fields_lock.acquire()
         for field in self._fields.values() :
-            max_lat, max_lon, min_lat, min_lon = field
-            print 'Camera bound: ', field
-            p1 = self._get_pix(max_lat, max_lon)
-            p2 = self._get_pix(min_lat, min_lon)
-            dx, dy = p1
-            ux, uy = p2
-            pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
+            field_poly = []
+            for point in field :
+                field_poly.append(self._get_pix(*point))
+            #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
+            pygame.draw.polygon(surface,(0,0,255),field_poly,1)
         self._fields_lock.release()
 
     def draw_cameranodes(self) :
@@ -235,8 +239,19 @@ class ProofOfConcept :
             for node in nodes :
                 lat, lon, agl = node
                 x, y = self._get_pix(lat, lon)
-                pygame.draw.rect(surface,(0,0,255),(x-5,y-5,x+5,y+5),1)
+                box_width = 20
+                pygame.draw.rect(surface,(0,0,255),(x-(box_width/2),y-(box_width/2),box_width,box_width),1)
         self._cameranodes_lock.release()
+
+    def draw_threats(self) :
+        self._threat_lock.acquire()
+        for uid in self._threats.keys() :
+            loc = self._threats[uid]
+            pos = self._get_pix(*loc)
+            pygame.draw.circle(surface, (255,0,0), pos, 10, 1)
+            pygame.draw.circle(surface, (255,0,0), pos, 15, 1)
+            pygame.draw.circle(surface, (255,0,0), pos, 20, 1)
+        self._threat_lock.release()
 
     def draw(self) :
         self.draw_nodes()
@@ -245,6 +260,7 @@ class ProofOfConcept :
         self.draw_correlation()
         self.draw_fields()
         self.draw_cameranodes()
+        self.draw_threats()
 
 def main() :
     
@@ -273,6 +289,8 @@ def main() :
     redraw()
     dx, dy, ux, uy = 0,0,0,0
     gotFirst = False
+    b1x, b1y, b2x, b2y = 0,0,0,0
+    boundFirst = False
 
     while True:
         global center
@@ -283,18 +301,27 @@ def main() :
                 quit(None, None)
         
         # Detecting 'shift' keys
-        if pygame.key.get_mods() & KMOD_SHIFT:
-            pass
-
-        if pygame.mouse.get_pressed()[0] :
+        if pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_SHIFT :
+            if not boundFirst :
+                b1x, b1y = pygame.mouse.get_pos()
+                boundFirst = True
+                print 'Got first', b1x, b1y, b2x, b2y
+            else :
+                b2x, b2y = pygame.mouse.get_pos()
+                pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
+                print 'Got second', b1x, b1y, b2x, b2y
+        elif pygame.mouse.get_pressed()[0] :
             if not gotFirst :
                 dx, dy = pygame.mouse.get_pos()
                 gotFirst = True
             ux, uy = pygame.mouse.get_pos()
             center = redraw((dx-ux, dy-uy)) 
         else:
+            if boundFirst :
+                poc.send_bound(b1x, b1y, b2x, b2y)
+                print 'Sent bound'
+                boundFirst = False
             if gotFirst :
-                #global center
                 window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
                 #poc.send_bound(dx, dy, ux, uy)
