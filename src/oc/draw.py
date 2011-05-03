@@ -17,7 +17,6 @@ from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.sensors.radarsensor import RadarEvent
 from ahoy.sensors.camerasensor import CameraEvent 
 
-# 461, 282
 center = (-1770,-2000)
 window_center = (-1770,-2000)
 surface = pygame.display.set_mode((1280,800))
@@ -112,7 +111,6 @@ class ProofOfConcept :
             quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
-        #print uid, lat, lon, type, agent
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -164,7 +162,6 @@ class ProofOfConcept :
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
-        print 'Sending Bound', p1, p2 
         self._event_api.publish(UAVSurveilArea(1, p1, p2))
 
     def draw_nodes(self) :
@@ -228,7 +225,6 @@ class ProofOfConcept :
             field_poly = []
             for point in field :
                 field_poly.append(self._get_pix(*point))
-            #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
             pygame.draw.polygon(surface,(0,0,255),field_poly,1)
         self._fields_lock.release()
 
@@ -305,11 +301,9 @@ def main() :
             if not boundFirst :
                 b1x, b1y = pygame.mouse.get_pos()
                 boundFirst = True
-                print 'Got first', b1x, b1y, b2x, b2y
             else :
                 b2x, b2y = pygame.mouse.get_pos()
                 pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
-                print 'Got second', b1x, b1y, b2x, b2y
         elif pygame.mouse.get_pressed()[0] :
             if not gotFirst :
                 dx, dy = pygame.mouse.get_pos()
@@ -319,13 +313,10 @@ def main() :
         else:
             if boundFirst :
                 poc.send_bound(b1x, b1y, b2x, b2y)
-                print 'Sent bound'
                 boundFirst = False
             if gotFirst :
                 window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
-                #poc.send_bound(dx, dy, ux, uy)
             gotFirst = False    
-        #pygame.draw.rect(surface,(0,0,255),(dx,dy,ux-dx,uy-dy),1)
         redraw((dx-ux, dy-uy)) 
 main()
