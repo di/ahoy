@@ -162,6 +162,7 @@ class ProofOfConcept :
     def send_bound(self, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
+        print "Sending bound", p1, p2
         self._event_api.publish(UAVSurveilArea(1, p1, p2))
 
     def draw_nodes(self) :
@@ -170,9 +171,12 @@ class ProofOfConcept :
             self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_radar(self) :
+        global center
+        cx, cy = center
         if self._current_radar_loc is not None :
-            x = int(self._current_radar_loc[0] + 1200*math.cos(math.radians(self._current_radar_bearing-90)))
-            y = int(self._current_radar_loc[1] + 800*math.sin(math.radians(self._current_radar_bearing-90)))
+            px, py = self._get_pix(*self._current_radar_loc)
+            x = int(px + 1200*math.cos(math.radians(self._current_radar_bearing-90)))
+            y = int(py + 800*math.sin(math.radians(self._current_radar_bearing-90)))
             pygame.draw.line(surface, (0,255,0), self._get_pix(*self._current_radar_loc), (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
