@@ -9,6 +9,8 @@ class DivertAgent(Agent) :
 
     def _on_divert(self, event) :
         points = event.get_waypoints()
+        print "Got diversion points:"
+        print points
         message_str = "DIVERT;"
         for i in range(0,len(points)):
             points = points[i]
@@ -20,4 +22,4 @@ class DivertAgent(Agent) :
         self.get_owner_node().send(message, self, self.get_owner_node().get_interface(self._interface_name))
 
     def run(self) :
-        self.get_owner_node().get_event_api.subscribe(DivertEvent, self._on_divert)
+        self.get_owner_node().get_event_api().subscribe(DivertEvent, self._on_divert)
