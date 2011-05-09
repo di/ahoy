@@ -165,6 +165,10 @@ class ProofOfConcept :
         print "Sending bound", p1, p2
         self._event_api.publish(UAVSurveilArea(1, p1, p2))
 
+
+    def send_divert(self, points):
+        return
+
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
             (lat, lon), type = self._nodelist[uid]
@@ -291,6 +295,8 @@ def main() :
     gotFirst = False
     b1x, b1y, b2x, b2y = 0,0,0,0
     boundFirst = False
+    divert = False
+    divert_points = []
 
     while True:
         global center
@@ -308,6 +314,12 @@ def main() :
             else :
                 b2x, b2y = pygame.mouse.get_pos()
                 pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
+        elif pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_CTRL :
+            x,y = pygame.mouse.get_pos()
+            divert = True
+            if(divert_points.count([x,y]) == 0):
+                divert_points.append([x,y])
+                pygame.draw.circle(surface,(255,0,255),(x,y),5)
         elif pygame.mouse.get_pressed()[0] :
             if not gotFirst :
                 dx, dy = pygame.mouse.get_pos()
@@ -321,6 +333,10 @@ def main() :
             if gotFirst :
                 window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
+            if divert:
+                pos.send_divert(divert_points)
+                divert_points[:] = []
+                divert = False
             gotFirst = False    
         redraw((dx-ux, dy-uy)) 
 main()
