@@ -12,6 +12,7 @@ from ahoy.action import Action
 from ahoy.actions.move import MoveAction 
 from ahoy.condition import Condition
 from ahoy.events.communication import CommunicationSendEvent
+from ahoy.agents.divertagent import DivertAgent
 from ahoy.conditions.srccondition import SourceCondition
 from ahoy.agents.aisship import AISShip
 from ahoy.agents.smallship import SmallShip
@@ -114,6 +115,7 @@ groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
 groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.01, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
 world.add_entity(groundst)
 
 

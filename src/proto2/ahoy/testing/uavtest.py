@@ -44,14 +44,6 @@ uavnode.add_agent(UAV(8,1.0,0.045,0.015))
 
 world.add_entity(uavnode)
 
-"""
-for i in range(5,15):
-	n = Node(i)
-	n.add_interface(Interface('wlan0',wlan, power=120))
-	ship = AISShip((i + 51),0.0203,12346, 'wlan0')
-	n.add_agent(ship)
-	world.add_entity(n)
-"""
 
 for i in range(0,9):
     n = Node(i+100)

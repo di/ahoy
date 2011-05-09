@@ -55,7 +55,8 @@ class AISShip(Agent) :
             print str(event.get_src_agent_uid()) + " = " + str(self.get_uid())
             self._use_ais = False
             newpaths = payload
-            self._man_paths = newpaths.split(';')
+            paths = newpaths.split(';')
+            self._man_paths = paths[1:]
 
     def _move(self, posdata):
         lat, lon = posdata.split(',')
