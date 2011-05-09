@@ -322,10 +322,11 @@ def main() :
                 pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
         elif pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_CTRL :
             x,y = pygame.mouse.get_pos()
-            divert = True
             if(divert_points.count([x,y]) == 0):
                 divert_points.append([x,y])
                 pygame.draw.circle(surface,(255,0,255),(x,y),5)
+        elif pygame.mouse.get_pressed()[2] and pygame.key.get_mods() & KMOD_CTRL :
+            divert = True
         elif pygame.mouse.get_pressed()[0] :
             if not gotFirst :
                 dx, dy = pygame.mouse.get_pos()
