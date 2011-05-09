@@ -171,8 +171,8 @@ class ProofOfConcept :
     def send_divert(self, points):
         ll_points = []
         for p in points:
-            newp = self._get_ll(p[0], p[1])
-            ll_points.append(newp)
+            lat,lon = self._get_ll(p[0], p[1])
+            ll_points.append([lat,lon])
         print "Sending Divert Points " , ll_points
         self._event_api.publish(DivertEvent(ll_points))
 
