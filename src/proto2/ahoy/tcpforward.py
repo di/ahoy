@@ -40,6 +40,7 @@ class TcpForward :
 
     def _on_event(self, event) :
         discards = set([])
+        print 'forwarding', event
         for client in self._clients :
             try :
                raw = event.pickle()

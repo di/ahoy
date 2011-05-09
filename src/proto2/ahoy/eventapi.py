@@ -82,14 +82,16 @@ class EventAPI :
                 self._process(data)
 
     def _tcp_assemble(self) :
-       length = self._tcp_conn.recv(4)
-       if len(length) < 4 :
-           return None
-       length = struct.unpack('>L', length)[0]
-       packet = self._tcp_conn.recv(length)
-       while len(packet) < length :
-           packet += self._tcp_conn.recv(length - len(packet))
-       return packet
+        print 'tcp_assemble'
+        length = self._tcp_conn.recv(4)
+        if len(length) < 4 :
+            return None
+        length = struct.unpack('>L', length)[0]
+        packet = self._tcp_conn.recv(length)
+        while len(packet) < length :
+            packet += self._tcp_conn.recv(length - len(packet))
+        print '    done tcp_assemble'
+        return packet
 
     def start(self) :
         t = Thread(target=self.run)
