@@ -14,6 +14,7 @@ from ahoy.events.chemical import ChemicalSpillEvent
 from ahoy.events.sensor import SensorEvent
 from ahoy.events.correlation import CorrelationEvent 
 from ahoy.events.prox_threat import ProximityThreatEvent
+from ahoy.events.divert import DivertEvent
 from ahoy.sensors.radarsensor import RadarEvent
 from ahoy.sensors.camerasensor import CameraEvent 
 
@@ -167,7 +168,12 @@ class ProofOfConcept :
 
 
     def send_divert(self, points):
-        return
+        ll_points = []
+        for p in points:
+            newp = self._get_ll(p[0], p[1])
+            ll_points.append(newp)
+        print "Sending Divert Points " , ll_points
+        self._event_api.publish(DivertEvent(ll_points))
 
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
