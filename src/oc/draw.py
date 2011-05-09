@@ -34,11 +34,13 @@ class ProofOfConcept :
         self._fields = {}
         self._cameranodes = {}
         self._threats = {}
+        self._divert_points = [] 
         self._threat_lock = Lock()
         self._link_lock = Lock()
-        self._correlation_lock= Lock()
-        self._fields_lock= Lock()
-        self._cameranodes_lock= Lock()
+        self._correlation_lock = Lock()
+        self._fields_lock = Lock()
+        self._cameranodes_lock = Lock()
+        self._divert_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._aaron_sucks = {} # Agent lists
@@ -171,7 +173,7 @@ class ProofOfConcept :
     def send_divert(self, points):
         ll_points = []
         for p in points:
-            lat,lon = self._get_ll(p[0], p[1])
+            lat, lon = self._get_ll(p[0], p[1])
             ll_points.append([lat,lon])
         print "Sending Divert Points " , ll_points
         self._event_api.publish(DivertEvent(ll_points))
@@ -264,6 +266,13 @@ class ProofOfConcept :
             pygame.draw.circle(surface, (255,0,0), pos, 20, 1)
         self._threat_lock.release()
 
+    def draw_divert(self) :
+        self._divert_lock.acquire()
+        for point in self._divert_points:
+            x, y = point
+            pygame.draw.circle(surface,(255,0,255),(x,y),5)
+        self._divert_lock.release()
+
     def draw(self) :
         self.draw_nodes()
         self.draw_radar()
@@ -272,6 +281,7 @@ class ProofOfConcept :
         self.draw_fields()
         self.draw_cameranodes()
         self.draw_threats()
+        self.draw_divert()
 
 def main() :
     
@@ -303,7 +313,6 @@ def main() :
     b1x, b1y, b2x, b2y = 0,0,0,0
     boundFirst = False
     divert = False
-    divert_points = []
 
     while True:
         global center
@@ -323,9 +332,10 @@ def main() :
                 pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
         elif pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_CTRL :
             x,y = pygame.mouse.get_pos()
-            if(divert_points.count([x,y]) == 0):
-                divert_points.append([x,y])
-                pygame.draw.circle(surface,(255,0,255),(x,y),5)
+            if(self._divert_points.count([x,y]) == 0):
+                self._divert_lock.acquire()
+                self._divert_points.append([x,y])
+                self._divert_lock.release()
         elif pygame.mouse.get_pressed()[2] and pygame.key.get_mods() & KMOD_CTRL :
             divert = True
         elif pygame.mouse.get_pressed()[0] :
@@ -342,8 +352,8 @@ def main() :
                 window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
             if divert:
-                poc.send_divert(divert_points)
-                divert_points[:] = []
+                poc.send_divert(self._divert_points)
+                self._divert_points[:] = []
                 divert = False
             gotFirst = False    
         redraw((dx-ux, dy-uy)) 
