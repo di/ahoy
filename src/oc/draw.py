@@ -131,7 +131,7 @@ class ProofOfConcept :
         uid = event.get_owner_uid() 
 
     def _on_correlation(self, event) :
-        p1, p2 = event.get_location()
+        p1, p2 = event.get_locations()
         uid = event.get_ais_uid()
 
         self._correlation_lock.acquire()
@@ -142,7 +142,7 @@ class ProofOfConcept :
         uid = event.get_threatened_uid()
         loc = event.get_threat_location()
 
-        self._threat_lock.aquire()
+        self._threat_lock.acquire()
         self._threats[uid] = loc
         self._threat_lock.release()
 
