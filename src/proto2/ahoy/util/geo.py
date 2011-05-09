@@ -1,5 +1,20 @@
 import math
 
+def point_in_poly(lat, lon, points)  : 
+    i = 0 
+    j = len(points)-1
+    inPoly = False
+
+    while i<len(points) :
+        lat_i, lon_i = points[i]
+        lat_j, lon_j = points[j]
+        
+        if ((lon_i < lon and lon_j >= lon) or (lon_j < lon and lon_i >= lon)) and ((lat_i+(lon-lon_i)/(lon_j-lon_i)*(lat_j-lat_i)) < lat) :
+            inPoly = not inPoly 
+        j = i
+        i = i + 1
+    return inPoly 
+
 def haver_distance(lat1, lon1, lat2, lon2) :
     r = 6371
     dLat = float(math.radians(lat2-lat1))
