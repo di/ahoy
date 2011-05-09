@@ -342,7 +342,7 @@ def main() :
                 window_center = redraw((dx-ux, dy-uy)) 
                 dx, dy, ux, uy = 0,0,0,0
             if divert:
-                pos.send_divert(divert_points)
+                poc.send_divert(divert_points)
                 divert_points[:] = []
                 divert = False
             gotFirst = False    
