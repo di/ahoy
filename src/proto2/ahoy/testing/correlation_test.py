@@ -25,13 +25,12 @@ world = World()
 aisnet = Network('aisn', LogLossComms())
 world.add_network(aisnet)
 
-for i in range(0, 3):
+for i in range(0, 10):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
 	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12346, 'ais1')
 	n.add_agent(ship)
 	world.add_entity(n)
-
 
 path = "agents/paths/path"
 for i in range(8,12):
