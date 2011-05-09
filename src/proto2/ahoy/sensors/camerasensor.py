@@ -73,7 +73,8 @@ class CameraSensor(Sensor) :
                     continue
                 e_lat, e_lon, e_agl = entity.get_position()
                 #if min_lat <= e_lat <= max_lat and min_lon <= e_lon <= max_lon :
-                if self._point_inside(e_lon, e_lat, [forward_right, backward_right, backward_left, forward_left]) :
+                #if self._point_inside(e_lon, e_lat, [forward_right, backward_right, backward_left, forward_left]) :
+                if point_in_poly(e_lon, e_lat, [forward_right, backward_right, backward_left, forward_left]) :
                     visible.append((e_lat, e_lon, e_agl))
                     print "Spotted " + str(entity.get_uid()) + " at " + str(e_lat) + "," + str(e_lon)
                 
