@@ -82,7 +82,6 @@ class EventAPI :
                 self._process(data)
 
     def _tcp_assemble(self) :
-        print 'tcp_assemble'
         length = self._tcp_conn.recv(4)
         if len(length) < 4 :
             return None
@@ -90,7 +89,6 @@ class EventAPI :
         packet = self._tcp_conn.recv(length)
         while len(packet) < length :
             packet += self._tcp_conn.recv(length - len(packet))
-        print '    done tcp_assemble'
         return packet
 
     def start(self) :

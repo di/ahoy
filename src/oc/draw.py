@@ -57,6 +57,7 @@ class ProofOfConcept :
         self._remote_sock.connect((ip, port))
         self._event_api = EventAPI(self._remote_sock)
         t = self._event_api.start()
+
         self._event_api.subscribe(StartupEvent, self._on_startup)
         self._event_api.subscribe(StopSimulationEvent, self._on_shutdown)
         self._event_api.subscribe(LinkEvent, self._on_link)
@@ -160,11 +161,11 @@ class ProofOfConcept :
         self._cameranodes[uid] = cameranodes
         self._cameranodes_lock.release()
 
-    def send_bound(self, dx, dy, ux, uy) :
+    def send_bound(self, uid, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
         print "Sending bound", p1, p2
-        self._event_api.publish(UAVSurveilArea(1, p1, p2))
+        self._event_api.publish(UAVSurveilArea(uid, p1, p2))
 
 
     def send_divert(self, points):
@@ -185,8 +186,8 @@ class ProofOfConcept :
         cx, cy = center
         if self._current_radar_loc is not None :
             px, py = self._get_pix(*self._current_radar_loc)
-            x = int(px + 1200*math.cos(math.radians(self._current_radar_bearing-90)))
-            y = int(py + 800*math.sin(math.radians(self._current_radar_bearing-90)))
+            x = int(px + 4800*math.cos(math.radians(self._current_radar_bearing-90)))
+            y = int(py + 4800*math.sin(math.radians(self._current_radar_bearing-90)))
             pygame.draw.line(surface, (0,255,0), self._get_pix(*self._current_radar_loc), (x,y), 2) 
         for bear in self._radarlist.keys() :
             t_loc = self._radarlist[bear]
@@ -335,7 +336,7 @@ def main() :
             center = redraw((dx-ux, dy-uy)) 
         else:
             if boundFirst :
-                poc.send_bound(b1x, b1y, b2x, b2y)
+                poc.send_bound(1, b1x, b1y, b2x, b2y)
                 boundFirst = False
             if gotFirst :
                 window_center = redraw((dx-ux, dy-uy)) 
