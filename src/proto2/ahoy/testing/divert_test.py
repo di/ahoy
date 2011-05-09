@@ -15,6 +15,7 @@ from ahoy.events.communication import CommunicationSendEvent
 from ahoy.conditions.srccondition import SourceCondition
 from ahoy.agents.aisship import AISShip
 from ahoy.agents.smallship import SmallShip
+from ahoy.agents.divertagent import DivertAgent
 from ahoy.agents.sensorforwardagent import SensorForwardAgent
 from ahoy.sensors.radarsensor import RadarSensor
 from ahoy.sensors.sonarsensor import SonarSensor
@@ -25,7 +26,7 @@ world = World()
 aisnet = Network('aisn', LogLossComms())
 world.add_network(aisnet)
 
-for i in range(0, 10):
+for i in range(0, 6):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
 	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12346, 'ais1')
@@ -39,7 +40,7 @@ for i in range(8,12):
     n.add_agent(ship)
     world.add_entity(n)
  
-
+"""
 # Make sensor interfaces
 s1net = Network('sonar1n', LogLossComms())
 world.add_network(s1net)
@@ -72,16 +73,17 @@ radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, g
 radarn.add_interface(Interface('radar1', r1net, power=12000))
 radarn.add_agent(SensorForwardAgent(radarn.get_uid(), 'radar', 'radar1'))
 world.add_entity(radarn)
+"""
 
 # Ground station
 groundst = Node(len(world.get_entities()))
 groundst.set_position(39.887911, -75.187533, 0)
-groundst.add_interface(Interface('sonar1', s1net, power=12000))
-groundst.add_interface(Interface('sonar2', s2net, power=12000))
-groundst.add_interface(Interface('radar1', r1net, power=12000))
+#groundst.add_interface(Interface('sonar1', s1net, power=12000))
+#groundst.add_interface(Interface('sonar2', s2net, power=12000))
+#groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
-groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
+#groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(DivertAgent(len(world.get_entities()), 'ais1'))
 world.add_entity(groundst)
 
 if __name__ == '__main__' :
