@@ -38,6 +38,7 @@ class node :
         self._type = type
         self._loc = loc
         self._bear = bear
+        self._agents = agents
 
     def update_loc(self, loc) :
         self._loc = loc
@@ -54,7 +55,10 @@ class node :
     def get_bear(self) :
         return self._bear
 
-class CS485_gui :
+    def has_agent(self, agent) :
+        return agent in self._agents
+
+class grid_gui :
     def __init__(self, ip, port) :
         self._nodelist = {}
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
@@ -73,9 +77,10 @@ class CS485_gui :
         type = event.get_type()
         bear = event.get_bearing()
         loca = loc(x,y)
-        print x, y, type 
+        agents = event.get_agents()
+        print x, y, type, agents
         
-        self._nodelist[uid] = node(uid, type, loca, bear)
+        self._nodelist[uid] = node(uid, type, loca, bear, agents)
 
     def draw_nodes(self) :
         for uid in self._nodelist :
@@ -88,8 +93,13 @@ class CS485_gui :
         bear = node.get_bear()
         points = [loc(x+CW/2, y+CW/2), loc(x+CW/2, y-CW/4), loc(x+CW/4, y-CW/2), loc(x-CW/4, y-CW/2), loc(x-CW/2, y-CW/4), loc(x-CW/2, y+CW/2)]
         points = self._rotate_poly(origin, points, bear)
-        pygame.draw.polygon(screen, (255,0,0,), points, 0)
-        pygame.draw.polygon(screen, (0,0,0,), points, 1)
+        color = (0,0,0)
+        if node.has_agent('PredatorAgent') :
+            color = (255,0,0)
+        else if node.has_agent('PreyAgent') :
+            color = (0,0,255)
+        pygame.draw.polygon(screen, color, points, 0)
+        pygame.draw.polygon(screen, (0,0,0), points, 1)
         pygame.draw.circle(screen, (0,0,0), (x+1,y), 1, 1)
 
     def _rotate_point(self, origin, point, angle) :
@@ -129,7 +139,7 @@ if len(sys.argv) <= 2 :
     quit(None)
 
 try :
-    gui = CS485_gui(sys.argv[1], int(sys.argv[2]))
+    gui = grid_gui(sys.argv[1], int(sys.argv[2]))
 except socket.error :
     print "Invalid host or port, or TCP forwarder not started. Exiting."
     quit(None)
