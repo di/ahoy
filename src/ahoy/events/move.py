@@ -5,7 +5,7 @@ class EntityMoveEvent(Event) :
         Event.__init__(self)
         self._entity_uid = entity.get_uid()
         self._entity_type = entity.__class__.__name__
-        self._entity_agents = map(lambda a : a.__class__.__name__, entity.get_agents())
+        self._entity_agents = map(lambda a : a.__class__.__name__, entity.get_agents().values())
         self._lat = lat
         self._long = long
         self._agl = agl
