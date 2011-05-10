@@ -14,8 +14,8 @@ class PredatorAgent(Agent) :
         while True :
             pass
 
-    def move(self, x, y, v) :
-        self.get_owner_node().move(PredatorAgent.DEG_PER_SQUARE * y, PredatorAgent.DEG_PER_SQUARE * x, 0, v * 0.00035552, 0, True)
+    def set_speed(self, velocity, turn_rate) :
+        self.get_owner_node().set_speed(velocity * 1/50.0, turn_rate)
 
     def get_position(self) :
         cx, cy, cz = self.get_owner_node().get_position()

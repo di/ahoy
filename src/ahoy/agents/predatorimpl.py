@@ -1,3 +1,4 @@
+import math
 from ahoy.agents.predator import PredatorAgent
 
 class PredatorAgentImpl(PredatorAgent) :
@@ -7,6 +8,4 @@ class PredatorAgentImpl(PredatorAgent) :
 
     def main(self) :
         ''' Main method which is called at startup '''
-        print 'start', self.get_position()
-        self.move(1, 0, 10)
-        print 'end', self.get_position()
+        self.set_speed(1, math.radians(20))

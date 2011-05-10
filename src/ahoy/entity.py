@@ -22,6 +22,7 @@ class Entity :
         self._velocity = (0, 0, 0)
         self._forward_velocity = 0
         self._bearing = 0
+        self._turn_rate = 0
 
         self._sensors = {}
 
@@ -68,6 +69,10 @@ class Entity :
         self._agl = agl
         if self._event_api != None :
             self._event_api.publish(EntityMoveEvent(self, lat, long, agl, self._bearing, self._forward_velocity, self._velocity))
+
+    def set_speed(self, vel, turn_rate) :
+        self._forward_velocity = vel
+        self._turn_rate = turn_rate
 
     def move(self, lat, lon, agl, forward_vel, vert_vel, block=False) :
         if self._move_thread != None :
@@ -161,8 +166,28 @@ class Entity :
         for sensor in self._sensors.values() :
             Thread(target=sensor._run, args=(self.get_world(),)).start()
 
+        Thread(target=self.move_loop).start()
+
     def run(self) :
         pass
+
+    def move_loop(self) :
+        print 'RUNNING'
+        last_tic = time.time()
+        last_lat, last_long, last_bearing = self._lat, self._long, self._bearing
+
+        while True :
+            dt = time.time() - last_tic
+            self._bearing += self._turn_rate * dt
+            print dt, self._lat, self._long, loc_from_bearing_dist(self._lat, self._long, math.degrees(self._bearing), self._forward_velocity * dt)
+            self._lat, self._long = loc_from_bearing_dist(self._lat, self._long, math.degrees(self._bearing), self._forward_velocity * dt)
+
+            if last_lat != self._lat or last_long != self._long or last_bearing != self._bearing:
+                if self._event_api != None :
+                    self._event_api.publish(EntityMoveEvent(self, self._lat, self._long, self._agl, self._bearing, self._forward_velocity, self._velocity))
+            last_lat, last_long, last_bearing = self._lat, self._long, self._bearing
+            last_tic = time.time()
+            time.sleep(0.1)
 
 if __name__ == '__main__' :
     entity = Entity.from_pickle(sys.argv[1])
