@@ -1,7 +1,7 @@
 from ahoy.event import Event
 
 class EntityMoveEvent(Event) :
-    def __init__(self, entity, lat, long, agl, forward_vel=None, lin_vel=None) :
+    def __init__(self, entity, lat, long, agl, bearing, forward_vel=None, lin_vel=None) :
         Event.__init__(self)
         self._entity_uid = entity.get_uid()
         self._entity_type = entity.__class__.__name__
@@ -11,6 +11,7 @@ class EntityMoveEvent(Event) :
         self._agl = agl
         self._forward_vel = forward_vel
         self._lin_vel = lin_vel
+        self._bearing = bearing
 
     def get_uid(self) :
         return self._entity_uid
@@ -32,3 +33,6 @@ class EntityMoveEvent(Event) :
 
     def get_lin_vel(self) :
         return self._lin_vel
+
+    def get_bearing(self) :
+        return self._bearing
