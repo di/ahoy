@@ -52,10 +52,12 @@ class ChemicalSensor(Sensor) :
                     self._spill_occurred = False
                     self._spill_event = None
                 else:
+                    # get distance in km
                     distance = haver_distance( lat, lon, spill_lat, spill_lon )
+                    print 'node ', self.get_owner().get_uid(), 'distance from spill = ', distance
+                    
                     # for now, assuming spill spreads at a constant rate (does not slow down)
-                    time_to_reach_sensor = distance / self._spill_event.get_intensity()
-                    time_to_reach_sensor *= self._interval
+                    time_to_reach_sensor = distance / self._spill_event.get_rate()
                     print 'Sensor at ', self.get_owner().get_uid(), ' will go off at ', time_to_reach_sensor
 
                     # wait until chemical spill would have reached self, then publish ChemicalDetectEvent
