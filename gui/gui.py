@@ -75,9 +75,10 @@ class CS485_gui :
         x = event.get_long()
         y = event.get_lat()
         type = event.get_type()
-        loc = loc(x,y)
+        bear = event.get_bearing()
+        loca = loc(x,y)
         
-        self._nodelist[uid] = node(uid, type, loc)
+        self._nodelist[uid] = node(uid, type, loca, bear)
 
     def draw_nodes(self) :
         for uid in self._nodelist :
