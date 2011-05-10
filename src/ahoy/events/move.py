@@ -11,7 +11,6 @@ class EntityMoveEvent(Event) :
         self._agl = agl
         self._forward_vel = forward_vel
         self._lin_vel = lin_vel
-        print 'event bearing', bearing
         self._bearing = bearing
 
     def get_uid(self) :

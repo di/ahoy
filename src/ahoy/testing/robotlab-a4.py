@@ -3,13 +3,13 @@ import sys
 from ahoy.world import World
 from ahoy.simulation import Simulation
 from ahoy.entities.node import Node
-from ahoy.agents.predator import PredatorAgent
+from ahoy.agents.predatorimpl import PredatorAgentImpl
 
 world = World()
 
 for pred_id in range(0, 1) :
     pred = Node(pred_id)
-    pred.add_agent(PredatorAgent(pred_id))
+    pred.add_agent(PredatorAgentImpl(pred_id))
     world.add_entity(pred)
 
 if __name__ == '__main__' :
