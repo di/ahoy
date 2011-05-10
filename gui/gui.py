@@ -65,18 +65,15 @@ class CS485_gui :
         t = self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
 
-        # Testing
-        self._nodelist[1] = node(1, 'foobar', loc(200,200), 45)
-        self._nodelist[2] = node(2, 'foobar', loc(300,300), 90)
-        self._nodelist[3] = node(3, 'foobar', loc(400,400), 0)
-
     def _on_move(self, event) :
+        global CW
         uid = event.get_uid()
-        x = event.get_long()
-        y = event.get_lat()
+        x = int(400+(event.get_long()/.004444)*800)
+        y = int(400-(event.get_lat()/.004444)*800)
         type = event.get_type()
         bear = event.get_bearing()
         loca = loc(x,y)
+        print x, y, type 
         
         self._nodelist[uid] = node(uid, type, loca, bear)
 
@@ -89,7 +86,7 @@ class CS485_gui :
         origin = node.get_loc()
         x,y = origin.tuple()
         bear = node.get_bear()
-        points = [loc(x-CW/2, y-CW/2), loc(x-CW/2, y+CW/4), loc(x-CW/4, y+CW/2), loc(x+CW/4, y+CW/2), loc(x+CW/2, y+CW/4), loc(x+CW/2, y-CW/2)]
+        points = [loc(x+CW/2, y+CW/2), loc(x+CW/2, y-CW/4), loc(x+CW/4, y-CW/2), loc(x-CW/4, y-CW/2), loc(x-CW/2, y-CW/4), loc(x-CW/2, y+CW/2)]
         points = self._rotate_poly(origin, points, bear)
         pygame.draw.polygon(screen, (255,0,0,), points, 0)
         pygame.draw.polygon(screen, (0,0,0,), points, 1)
@@ -123,6 +120,7 @@ class CS485_gui :
 
     def redraw(self) :
         pygame.display.flip()
+        screen.fill((255, 255, 255))
         gui.draw_grid()
         gui.draw_nodes()
 
@@ -138,10 +136,8 @@ except socket.error :
 
 pygame.init()
 screen = pygame.display.set_mode((CW*50,CW*50))
-screen.fill((255, 255, 255))
 
 signal.signal(signal.SIGINT, quit)
-gui.redraw()
 
 while True:
     for event in pygame.event.get():
