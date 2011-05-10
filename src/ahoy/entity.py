@@ -10,7 +10,7 @@ from ahoy.util.geo import *
 from ahoy.util.units import *
 
 class Entity :
-    MAX_DISTANCE = kilometers(0.01)
+    MAX_DISTANCE = kilometers(0.001)
     def __init__(self, uid) :
         self._uid = uid
         self._lat = 0
