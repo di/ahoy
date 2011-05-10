@@ -37,3 +37,6 @@ class EntityMoveEvent(Event) :
 
     def get_bearing(self) :
         return self._bearing
+
+    def get_agents(self) :
+        return self._entity_agents
