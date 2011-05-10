@@ -1,11 +1,3 @@
-# 
-# Notes for now
-# 
-# AIS: ID, lat, lon, agl, speed
-# Sonar, Radar: bearing, distance
-#           call loc_from_baring_dist(lat, lon, bearing, distance)
-#           bearing 0 north, 90 east, etc.
-
 from ahoy.agent import Agent
 from ahoy.util.geo import *
 
@@ -39,6 +31,8 @@ class CorrelationAgent(Agent):
         self._sonar2_data = {}  # keyed by bearing
         
         self._event_api = None
+        
+        self._sensor_history = []
     
     def run(self):
         print 'Running correlation agent...'
@@ -266,21 +260,21 @@ class CorrelationAgent(Agent):
             (which sonar sensor data came from does not matter at this point; 
             it only matters when trying to delete sonar data from any one particular sonar sensor only) '''
         
-        #all_sonar_pts = []
-        #all_sonar_pts.extend( self._sonar1_data.values() )
-        #all_sonar_pts.extend( self._sonar2_data.values() )
+        all_sonar_pts = []
+        all_sonar_pts.extend( self._sonar1_data.values() )
+        all_sonar_pts.extend( self._sonar2_data.values() )
         #print 'length of all_sonar_pts = ', len(all_sonar_pts)
         
-        #for sonar_loc in all_sonar_pts:
-        #    uniquePoint = True
-        #    '''make sure sonar_loc is not within ais_threshold dist from each point'''
-        #    for loc in self._sensor_data:
-        #        if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
-        #            uniquePoint = False
-        #            break
-        #    if uniquePoint:
-        #        self._sensor_data.append(sonar_loc)
-        print 'length of self._sensor_data = ', len(self._sensor_data) 
+        for sonar_loc in all_sonar_pts:
+            uniquePoint = True
+            '''make sure sonar_loc is not within ais_threshold dist from each point'''
+            for loc in self._sensor_data:
+                if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
+                    uniquePoint = False
+                    break
+            if uniquePoint:
+                self._sensor_data.append(sonar_loc)
+        #print 'length of self._sensor_data = ', len(self._sensor_data) 
         
         self.lock.release()
         
