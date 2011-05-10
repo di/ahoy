@@ -7,7 +7,7 @@ class PredatorAgent(Agent) :
         Agent.__init__(self, uid)
 
     def run(self) :
-        self.get_owner_node().get_event_api().subscribe(PredatorMessage, lambda e: on_message_recv(e.get_contents()))
+        self.get_owner_node().get_event_api().subscribe(PredatorMessage, self._process_message)
         self.main()
 
     def main(self) :
@@ -22,7 +22,11 @@ class PredatorAgent(Agent) :
         return cx / PredatorAgent.DEG_PER_SQUARE, cy / PredatorAgent.DEG_PER_SQUARE
 
     def send_message(self, data) :
-        self.get_owner_node().get_event_api().publish(PredatorMessage(data))
+        self.get_owner_node().get_event_api().publish(PredatorMessage(self.get_uid(), data))
 
-    def on_message_recv(self, contents) :
+    def _process_message(self, event) :
+        if event.get_src_agent_uid() != self.get_uid() :
+            self.on_message_recv(event.get_src_agent_uid(), event.get_contents())
+
+    def on_message_recv(self, src, contents) :
         pass

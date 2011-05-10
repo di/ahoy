@@ -127,7 +127,6 @@ class Entity :
                 break
 
             self.set_position(new_lat, new_lon, new_agl)
-            #print 'moved to', new_lat, new_lon, new_agl
 
             last_tic = time.time()
             time.sleep(Entity.MAX_DISTANCE / self._forward_velocity)
@@ -172,14 +171,12 @@ class Entity :
         pass
 
     def move_loop(self) :
-        print 'RUNNING'
         last_tic = time.time()
         last_lat, last_long, last_bearing = self._lat, self._long, self._bearing
 
         while True :
             dt = time.time() - last_tic
             self._bearing += self._turn_rate * dt
-            print dt, self._lat, self._long, loc_from_bearing_dist(self._lat, self._long, math.degrees(self._bearing), self._forward_velocity * dt)
             self._lat, self._long = loc_from_bearing_dist(self._lat, self._long, math.degrees(self._bearing), self._forward_velocity * dt)
 
             if last_lat != self._lat or last_long != self._long or last_bearing != self._bearing:

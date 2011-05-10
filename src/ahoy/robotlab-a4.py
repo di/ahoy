@@ -7,7 +7,7 @@ from ahoy.agents.predatorimpl import PredatorAgentImpl
 
 world = World()
 
-for pred_id in range(0, 1) :
+for pred_id in range(0, 4) :
     pred = Node(pred_id)
     pred.add_agent(PredatorAgentImpl(pred_id))
     world.add_entity(pred)
