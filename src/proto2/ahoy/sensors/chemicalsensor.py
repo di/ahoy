@@ -15,8 +15,8 @@ class ChemicalDetectEvent(SensorEvent) :
         return self._location
 
 class ChemicalSensor(Sensor) :
-    def __init__(self, interval) :
-        Sensor.__init__(self)
+    def __init__(self, interval, **kwds) :
+        Sensor.__init__(self, **kwds)
         self._interval = interval
         self._spill_occurred = False
         self._spill_event = None

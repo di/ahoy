@@ -41,6 +41,9 @@ class Entity :
     def get_sensor(self, name) :
         return self._sensors[name]
 
+    def get_sensors(self):
+        return self._sensors
+
     def get_bearing(self) :
         return math.degrees(self._bearing)
 

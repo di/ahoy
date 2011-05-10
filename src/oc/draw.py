@@ -17,6 +17,7 @@ from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.events.divert import DivertEvent
 from ahoy.sensors.radarsensor import RadarEvent
 from ahoy.sensors.camerasensor import CameraEvent 
+from ahoy.sensors.chemicalsensor import ChemicalDetectEvent
 
 center = (-1770,-2000)
 window_center = (-1770,-2000)
@@ -34,6 +35,8 @@ class ProofOfConcept :
         self._fields = {}
         self._cameranodes = {}
         self._threats = {}
+        self._chemsensors = {}
+        self._chemsensors_detect = {}
         self._divert_points = [] 
         self._threat_lock = Lock()
         self._link_lock = Lock()
@@ -41,6 +44,7 @@ class ProofOfConcept :
         self._fields_lock = Lock()
         self._cameranodes_lock = Lock()
         self._divert_lock = Lock()
+        self._chem_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
         self._aaron_sucks = {} # Agent lists
@@ -70,6 +74,8 @@ class ProofOfConcept :
         self._event_api.subscribe(CorrelationEvent, self._on_correlation)
         self._event_api.subscribe(ProximityThreatEvent, self._on_prox_threat)
         self._event_api.subscribe(CameraEvent, self._on_camera)
+        self._event_api.subscribe(ChemicalDetectEvent, self._on_chem_detect)
+
 
     def _get_pix(self, lat, lon) :
         global center
@@ -90,6 +96,14 @@ class ProofOfConcept :
 
     def _on_startup(self, event) :
         self._world = event.get_world()
+        entities = self._world.get_entities()
+        for entity in entities :
+            sensors = entity.get_sensors().values()
+            for sensor in sensors:
+                if sensor.__class__.__name__ == "ChemicalSensor" :
+                    print "ADDING SENSOR"
+                    uid = sensor.get_owner().get_uid()
+                    self._chemsensors[uid] = sensor.get_owner().get_position()
 
     def _on_shutdown(self, event) :
         quit(None, None)
@@ -127,8 +141,18 @@ class ProofOfConcept :
         self._radarlist[bear] = t_loc
     
     def _on_chemspill(self, event) :
+        print "Chemical spill happened"
         loc = event.get_location()
-        int = event.get_intensity()
+        #int = event.get_intensity()
+
+    def _on_chem_detect(self,event) :
+        loc = event.get_location()
+        uid = event.get_owner_uid()
+        self._chem_lock.acquire()
+        self._chemsensors_detect[uid] = loc
+        self._chem_lock.release()
+        print "Chemical detected at " , loc
+
 
     def _on_sensor(self, event) :
         print 'Got sensor event'
@@ -174,6 +198,21 @@ class ProofOfConcept :
             lat, lon = self._get_ll(p[0], p[1])
             ll_points.append([lat,lon])
         self._event_api.publish(DivertEvent(ll_points))
+
+    def draw_chem_sensors(self) :
+        detected = self._chemsensors_detect.keys()
+        for uid in self._chemsensors.keys():
+            if (detected.count(uid) == 0):
+                loc = self._chemsensors[uid]
+                self.draw_chem_sensor(loc,(0,255,0))
+        for uid in detected:
+            loc = self._chemsensors_detect[uid]
+            self.draw_chem_sensor(loc,(255,0,0))
+    
+
+    def draw_chem_sensor(self, loc, color):
+        x,y = self._get_pix(loc[0], loc[1])
+        pygame.draw.circle(surface, color,(x,y),10,0)
 
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
@@ -278,6 +317,7 @@ class ProofOfConcept :
         self.draw_fields()
         self.draw_cameranodes()
         self.draw_threats()
+        self.draw_chem_sensors()
         self.draw_divert()
 
     def main(self) :

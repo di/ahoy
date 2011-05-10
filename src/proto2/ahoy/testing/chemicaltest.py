@@ -11,12 +11,12 @@ from ahoy.agents.chemspillannounce import ChemicalSpillAnnounceAgent
 world = World()
 
 node = Node(0)
-node.add_sensor('chemical', ChemicalSensor(interval=1))
+node.add_sensor('chemical', ChemicalSensor(interval=1, use_event_channel=True))
 node.set_position(39.883531, -75.193963, 0) #sw of navy yard
 world.add_entity(node)
 
 node1 = Node(1)
-node1.add_sensor('chemical', ChemicalSensor(interval=1))
+node1.add_sensor('chemical', ChemicalSensor(interval=1, use_event_channel=True))
 node1.set_position(39.890776,-75.195594, 0) #w of navy yard
 world.add_entity(node1)
 
