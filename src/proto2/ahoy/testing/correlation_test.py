@@ -19,13 +19,14 @@ from ahoy.agents.sensorforwardagent import SensorForwardAgent
 from ahoy.sensors.radarsensor import RadarSensor
 from ahoy.sensors.sonarsensor import SonarSensor
 from ahoy.agents.correlationagent import CorrelationAgent
+from ahoy.agents.histcorragent import HistoryCorrelationAgent
 from ahoy.util.units import *
 
 world = World()
 aisnet = Network('aisn', LogLossComms())
 world.add_network(aisnet)
 
-for i in range(0, 10):
+for i in range(0, 5):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
 	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12346, 'ais1')
@@ -80,8 +81,9 @@ groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
-groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.02, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+#groundst.add_agent(HistoryCorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1', 4, 0.05, 0.5))
+#groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
 world.add_entity(groundst)
 
 if __name__ == '__main__' :
