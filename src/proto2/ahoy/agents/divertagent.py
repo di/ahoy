@@ -13,8 +13,8 @@ class DivertAgent(Agent) :
         print points
         message_str = "DIVERT;"
         for i in range(0,len(points)):
-            points = points[i]
-            message_str += str(points[0]) + "," + str(points[1])
+            point = points[i]
+            message_str += str(point[0]) + "," + str(point[1])
             if( i < len(points) -1):
                 message_str += ";"
 
