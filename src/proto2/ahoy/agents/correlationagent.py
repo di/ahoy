@@ -20,7 +20,6 @@ class CorrelationAgent(Agent):
         # max distance from AIS data point to sensor data point, to consider a sensor data point a threat to AIS point
         self._threat_dist = threat_dist
         # max distance for an AIS and sensor point to be considered the same point
-        # this may not actually get used yet
         self._ais_threshold = ais_threshold
         
         self._correlation = {}
@@ -72,11 +71,17 @@ class CorrelationAgent(Agent):
             the most recent smallest distance from a sensor point to this AIS data point,
             then set update the most recent smallest sensor point to be the current sensor item.'''
             
+            #for ais_id in self._ais_data[ais_id]:
+            #    ais_pt = self._ais_data[ais_id]
             for sensor_pt in self._sensor_data:
+            #for sensor_pt in self._radar_data.values():
+            
                 #print '\nCorrelating ', sensor_pt, '...'
                 closest_dist = 99999
                 closest_ais_id = None
+                #closest_s_pt = None
                 
+                #for sensor_pt in self._sensor_data:
                 for ais_id in self._ais_data:
                     ais_pt = self._ais_data[ais_id]
                     dist = haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] )
@@ -85,10 +90,12 @@ class CorrelationAgent(Agent):
                         # Only match if we find an AIS point closer than we have found before
                         closest_dist = dist
                         closest_ais_id = ais_id
+                        #closest_s_pt = None
                         #print 'closest_ais_id = ', closest_ais_id, 'closest_dist = ', closest_dist
                 
                 #print 'closest_ais_id = ', closest_ais_id
                 if closest_ais_id is None:
+                #if closest_s_pt = None:
                     continue
                 
                 ''' Now that we know which AIS data point is closest to this sensor_pt...'''
@@ -112,20 +119,51 @@ class CorrelationAgent(Agent):
                 print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
                 self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
                 
-            # update all blank AIS matches
+            ''' update all blank AIS matches'''
+            # first, create list of unmatched sensor points
+            available_sensor_pts = []
+            for pt in self._sensor_data:
+                if pt not in self._correlation.values():
+                    available_sensor_pts.append(pt)
+                    
             for ais_id in self._ais_data:
                 if not ais_id in self._correlation:
+                    print 'About to correlate AIS ID', ais_id, ', which so far was unmatched.'
                     ais_pt = self._ais_data[ais_id]
-                    self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
                     
-            self.lock.release()
+                    closest_dist, closest_pt = self._get_closest_pt(ais_pt, available_sensor_pts)
+                    if closest_pt is None:
+                        print 'No sensor point correlated with AIS ID', ais_id, 'at', ais_pt, '!'
+                        self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                    else:
+                        print 'Correlated with ', closest_pt, ' dist = ', closest_dist
+                        self._correlation[ais_id] = [closest_dist, closest_pt]
+                        self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], closest_pt[0], closest_pt[1], ais_id))
+                    
+                    #print 'No sensor point correlated with AIS ID ', ais_id, ' at ', ais_pt
+                    #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                    
+            #self.lock.release()
             
             self._detect_threats()
+            self.lock.release()
             
             time.sleep(3)
     
+    def _get_closest_pt(self, loc, pts):
+        closest_dist = 99999
+        closest_pt = None
+        
+        for pt in pts:
+            dist = haver_distance(pt[0], pt[1], loc[0], loc[1])
+            if dist < closest_dist:
+                closest_dist = dist
+                closest_pt = pt
+        return [closest_dist, closest_pt]
+    
+    
     def _detect_threats(self):
-        self.lock.acquire()
+        #self.lock.acquire()
         
         ''' Get list of all sensor points that were correlated '''
         correlated_s_pts = []
@@ -143,7 +181,7 @@ class CorrelationAgent(Agent):
                     if haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] ) <= self._threat_dist:
                         print 'POSSIBLE THREAT at ', sensor_pt
                         self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
-        self.lock.release()
+        #self.lock.release()
             
         
     
@@ -220,14 +258,6 @@ class CorrelationAgent(Agent):
         self.lock.release()
         
         #print 'Just added ais data at id ', s_id, '=', (lat, lon)
-        
-        # check if this AIS ship ID is in correlation{}.  If not, add it, default the distance to 
-            
-        ##this was for history
-        #if s_id in self._ais_data.keys(): 
-            #if len(self._ais_data[s_id]) > self._ais_hist:
-            #    self._ais_data[s_id].pop(0)
-            #    self._ais_data.append([lat, lon, speed])    # ignoring agl
         
     
     def _add_sensor_pt(self, lat, lon):
