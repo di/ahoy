@@ -166,16 +166,13 @@ class ProofOfConcept :
     def send_bound(self, uid, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
         p2 = self._get_ll(ux, uy)
-        print "Sending bound", p1, p2
         self._event_api.publish(UAVSurveilArea(uid, p1, p2))
-
 
     def send_divert(self, points):
         ll_points = []
         for p in points:
             lat, lon = self._get_ll(p[0], p[1])
             ll_points.append([lat,lon])
-        print "Sending Divert Points " , ll_points
         self._event_api.publish(DivertEvent(ll_points))
 
     def draw_nodes(self) :
@@ -343,7 +340,7 @@ class ProofOfConcept :
                     dx, dy, ux, uy = 0,0,0,0
                 if divert:
                     poc.send_divert(self._divert_points)
-                    self._divert_points[:] = []
+                    #self._divert_points[:] = []
                     divert = False
                 gotFirst = False    
             redraw((dx-ux, dy-uy)) 
