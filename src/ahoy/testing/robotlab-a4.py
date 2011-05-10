@@ -1,0 +1,26 @@
+import signal
+import sys
+from ahoy.world import World
+from ahoy.simulation import Simulation
+from ahoy.entities.node import Node
+from ahoy.agents.predator import PredatorAgent
+
+world = World()
+
+for pred_id in range(0, 5) :
+    pred = Node(pred_id)
+    pred.add_agent(PredatorAgent(pred_id))
+    world.add_entity(pred)
+
+if __name__ == '__main__' :
+    sim = Simulation(world)
+
+    def quit(signal, frame) :
+        sim.stop()
+        sys.exit(0)
+    signal.signal(signal.SIGINT, quit)
+
+    sim.start(2)
+
+    while True :
+        pass
