@@ -33,7 +33,7 @@ class loc :
         return (self._x,self._y)
 
 class node :
-    def __init__(self, uid, type, loc, bear) :
+    def __init__(self, uid, type, loc, bear, agents) :
         self._uid = uid
         self._type = type
         self._loc = loc
@@ -72,8 +72,8 @@ class grid_gui :
     def _on_move(self, event) :
         global CW
         uid = event.get_uid()
-        x = int(400+(event.get_long()/.004444)*800)
-        y = int(400-(event.get_lat()/.004444)*800)
+        x = int(400+(event.get_long()/.004444)*400)
+        y = int(400-(event.get_lat()/.004444)*400)
         type = event.get_type()
         bear = event.get_bearing()
         loca = loc(x,y)
@@ -94,13 +94,14 @@ class grid_gui :
         points = [loc(x+CW/2, y+CW/2), loc(x+CW/2, y-CW/4), loc(x+CW/4, y-CW/2), loc(x-CW/4, y-CW/2), loc(x-CW/2, y-CW/4), loc(x-CW/2, y+CW/2)]
         points = self._rotate_poly(origin, points, bear)
         color = (0,0,0)
-        if node.has_agent('PredatorAgent') :
+        if node.has_agent('PredatorAgent') or node.has_agent('PredatorAgentImpl') :
             color = (255,0,0)
-        else if node.has_agent('PreyAgent') :
+        elif node.has_agent('PreyAgent') :
             color = (0,0,255)
         pygame.draw.polygon(screen, color, points, 0)
         pygame.draw.polygon(screen, (0,0,0), points, 1)
         pygame.draw.circle(screen, (0,0,0), (x+1,y), 1, 1)
+        pygame.draw.circle(screen, (255, 0, 0), (x, y), 1, 1)
 
     def _rotate_point(self, origin, point, angle) :
         x = origin._x + ((point._x - origin._x) * math.cos(angle) - (point._y - origin._y) * math.sin(angle))
@@ -136,13 +137,13 @@ class grid_gui :
 
 if len(sys.argv) <= 2 :
     print "USAGE: python draw.py <hostname> <port>"
-    quit(None)
+    quit(None, None)
 
 try :
     gui = grid_gui(sys.argv[1], int(sys.argv[2]))
 except socket.error :
     print "Invalid host or port, or TCP forwarder not started. Exiting."
-    quit(None)
+    quit(None, None)
 
 pygame.init()
 screen = pygame.display.set_mode((CW*50,CW*50))
@@ -152,5 +153,5 @@ signal.signal(signal.SIGINT, quit)
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
-            gui.quit(None, None)
+            gui.quit(None)
     gui.redraw() 
