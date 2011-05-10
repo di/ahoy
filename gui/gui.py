@@ -72,9 +72,10 @@ class CS485_gui :
 
     def _on_move(self, event) :
         uid = event.get_uid()
-        lon = event.get_long()
-        lat = event.get_lat()
+        x = event.get_long()
+        y = event.get_lat()
         type = event.get_type()
+        loc = loc(x,y)
         
         self._nodelist[uid] = node(uid, type, loc)
 
@@ -91,7 +92,6 @@ class CS485_gui :
         points = self._rotate_poly(origin, points, bear)
         pygame.draw.polygon(screen, (255,0,0,), points, 0)
         pygame.draw.polygon(screen, (0,0,0,), points, 1)
-        #pygame.draw.circle(screen, (0,0,0), (x,y), 1, 1)
         pygame.draw.circle(screen, (0,0,0), (x+1,y), 1, 1)
 
     def _rotate_point(self, origin, point, angle) :
@@ -127,18 +127,17 @@ class CS485_gui :
 
 if len(sys.argv) <= 2 :
     print "USAGE: python draw.py <hostname> <port>"
-    quit(None, None)
+    quit(None)
 
 try :
     gui = CS485_gui(sys.argv[1], int(sys.argv[2]))
 except socket.error :
     print "Invalid host or port, or TCP forwarder not started. Exiting."
-    quit(None, None)
+    quit(None)
 
 pygame.init()
 screen = pygame.display.set_mode((CW*50,CW*50))
 screen.fill((255, 255, 255))
-#screen.blit(background, (0, 0))
 
 signal.signal(signal.SIGINT, quit)
 gui.redraw()
