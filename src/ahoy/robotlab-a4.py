@@ -7,10 +7,15 @@ from ahoy.agents.predatorimpl import PredatorAgentImpl
 
 world = World()
 
-for pred_id in range(0, 4) :
+for pred_id in range(0, 5) :
     pred = Node(pred_id)
     pred.add_agent(PredatorAgentImpl(pred_id))
     world.add_entity(pred)
+
+for prey_id in range(5, 9) :
+    prey = Node(prey_id)
+    prey.add_agent(PreyAgent(prey_id))
+    world.add_entity(prey)
 
 if __name__ == '__main__' :
     sim = Simulation(world)
