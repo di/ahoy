@@ -1,3 +1,4 @@
+import math
 from ahoy.agent import Agent
 from ahoy.events.predatormessage import PredatorMessage
 from ahoy.events.preymessage import PreyMessage
@@ -27,7 +28,7 @@ class PredatorAgent(Agent) :
         return cx / PredatorAgent.DEG_PER_SQUARE, cy / PredatorAgent.DEG_PER_SQUARE
 
     def get_rotation(self) :
-        return self.get_owner_node().get_bearing()
+        return math.radians(self.get_owner_node().get_bearing())
 
     def send_message(self, data) :
         self.get_owner_node().get_event_api().publish(PredatorMessage(self.get_uid(), data))
