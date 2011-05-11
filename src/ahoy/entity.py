@@ -45,6 +45,9 @@ class Entity :
     def get_bearing(self) :
         return math.degrees(self._bearing)
 
+    def set_bearing(self, bearing) :
+        self._bearing = bearing
+
     def get_lin_velocity(self) :
         return self._velocity
 

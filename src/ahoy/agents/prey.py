@@ -1,7 +1,6 @@
-import random, time
+import random, time, math
 from ahoy.agent import Agent
 from ahoy.events.preymessage import PreyMessage
-from ahoy.agents.predator import PredatorAgent
 
 class PreyAgent(Agent) :
     DEG_PER_SQUARE = .004444 / 25.0
@@ -14,48 +13,25 @@ class PreyAgent(Agent) :
 
     def main(self) :
         STEP = 6
-        VEL = 0.002
-        WAIT_SEC = 8
-        WAIT_JIT = 4
+        VEL = 0.010
+        WAIT_SEC = 1
+        WAIT_JIT = 1
         MAX = 25
+        BUFFER = 1
 
         while self._alive == True :
             cur_x, cur_y = self.get_position()
+            self.get_owner_node().set_speed(VEL, math.radians(random.uniform(-20, 20)))
 
-            if cur_x <= 0 :
-                if random.random() < 0.75 :
-                    x = random.random()*STEP
-                else :
-                    x = random.random()*-STEP
-            else :
-                if random.random() < 0.75 :
-                    x = random.random()*-STEP
-                else :
-                    x = random.random()*STEP
-
-            if cur_y <= 0 :
-                if random.random() < 0.75 :
-                    y = random.random()*STEP*2
-                else :
-                    y = random.random()*-STEP*2
-            else :
-                if random.random() < 0.75 :
-                    y = random.random()*-STEP*2
-                else :
-                    y = random.random()*STEP*2
-
-            if -MAX <= cur_x + x <= MAX :
-                cur_x = cur_x + x
-            if -MAX <= cur_y + y <= MAX :
-                cur_y = cur_y + y
-
-            print 'Prey "', self.get_uid(), '" at "', cur_x, cur_y
-            self.get_owner_node().move(cur_x, cur_y, 0, VEL, 0, True)
-            time.sleep(WAIT_SEC+ random.random() * WAIT_JIT)
+            if cur_x >= MAX - BUFFER or cur_x <= -MAX + BUFFER or cur_y >= MAX - BUFFER or cur_y <= -MAX + BUFFER :
+                self.get_owner_node().set_bearing(math.radians(self.get_owner_node().get_bearing() + 180))
+                self.get_owner_node().set_speed(VEL, 0)
+            t = WAIT_SEC+ random.random() * WAIT_JIT
+            time.sleep(t)
 
     def get_position(self) :
         cx, cy, cz = self.get_owner_node().get_position()
-        return cx / PredatorAgent.DEG_PER_SQUARE, cy / PredatorAgent.DEG_PER_SQUARE
+        return cx / PreyAgent.DEG_PER_SQUARE, cy / PreyAgent.DEG_PER_SQUARE
 
     def die(self) :
         self._alive = False

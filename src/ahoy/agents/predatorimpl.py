@@ -19,8 +19,8 @@ class PredatorAgentImpl(PredatorAgent) :
             '''
             set_speed(blocks_per_second, radians_per_second)
             '''
-            self.set_speed(0, rotation)
-#            rotation *= -1
+            self.set_speed(5, rotation)
+            rotation *= -1
             x, y = self.get_position()
             '''
             Example communication: Sends a string message to all other predators with the new location.
