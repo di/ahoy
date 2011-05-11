@@ -11,7 +11,7 @@ class Tanker(Agent) :
     def __init__(self, uid, forward_vel, iface, pathfile) :
         Agent.__init__(self, uid)
         self._forward_vel = forward_vel
-        self._agl = 0.001; 
+        self._agl = 0.0; 
         self._vert_vel = 0.0; 
         self._pathfile = pathfile
         self._locs = []

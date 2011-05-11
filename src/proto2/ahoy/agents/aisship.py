@@ -12,7 +12,7 @@ class AISShip(Agent) :
     def __init__(self, uid, forward_vel, ip, port, iface_name):
         Agent.__init__(self, uid)
         self._forward_vel = forward_vel
-        self._agl = 0.002 
+        self._agl = 0.0 
         self._vert_vel = 0
         self._port = port # The port it communicates to the AISDataGen with 
         self._use_ais = True  #if True, uses AISDataGen info to move
