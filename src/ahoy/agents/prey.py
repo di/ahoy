@@ -17,6 +17,7 @@ class PreyAgent(Agent) :
         VEL = 0.002
         WAIT_SEC = 8
         WAIT_JIT = 4
+        MAX = 25
 
         while self._alive == True :
             cur_x, cur_y = self.get_position()
@@ -43,7 +44,13 @@ class PreyAgent(Agent) :
                 else :
                     y = random.random()*STEP*2
 
-            self.get_owner_node().move(cur_x + x, cur_y + y, 0, VEL, 0, True)
+            if -MAX <= cur_x + x <= MAX :
+                cur_x = cur_x + x
+            if -MAX <= cur_y + y <= MAX :
+                cur_y = cur_y + y
+
+            print 'Prey "', self.get_uid(), '" at "', cur_x, cur_y
+            self.get_owner_node().move(cur_x, cur_y, 0, VEL, 0, True)
             time.sleep(WAIT_SEC+ random.random() * WAIT_JIT)
 
     def get_position(self) :
