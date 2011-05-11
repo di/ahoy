@@ -1,8 +1,9 @@
 import random, time
 from ahoy.agent import Agent
 from ahoy.events.preymessage import PreyMessage
+from ahoy.agents.predator import PredatorAgent
 
-class PreyAgent(Agent)
+class PreyAgent(Agent) :
     DEG_PER_SQUARE = .004444 / 25.0
     def __init__(self, uid) :
         Agent.__init__(self, uid)
@@ -17,26 +18,26 @@ class PreyAgent(Agent)
         WAIT_SEC = 8
         WAIT_JIT = 4
 
-        while self._alive = True :
+        while self._alive == True :
             cur_x, cur_y = self.get_position()
 
             if cur_x <= 0 :
                 if random.random() < 0.75 :
                     x = random.random()*STEP
-                else
+                else :
                     x = random.random()*-STEP
-            else
+            else :
                 if random.random() < 0.75 :
                     x = random.random()*-STEP
                 else :
                     x = random.random()*STEP
 
-            if cur_y <= 0
+            if cur_y <= 0 :
                 if random.random() < 0.75 :
                     y = random.random()*STEP*2
-                else
+                else :
                     y = random.random()*-STEP*2
-            else
+            else :
                 if random.random() < 0.75 :
                     y = random.random()*-STEP*2
                 else :
@@ -52,4 +53,4 @@ class PreyAgent(Agent)
     def die(self) :
         self._alive = False
         self.get_owner_node().get_event_api().publish(PreyMessage(self.get_uid(), self._alive))
-        print 'Prey "', self.get_uid(), '" has been killed!"
+        print 'Prey "', self.get_uid(), '" has been killed!"'

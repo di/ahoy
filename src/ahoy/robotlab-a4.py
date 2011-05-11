@@ -5,6 +5,7 @@ from ahoy.simulation import Simulation
 from ahoy.entities.node import Node
 from ahoy.sensors.forwardcamera import ForwardCameraSensor
 from ahoy.agents.predatorimpl import PredatorAgentImpl
+from ahoy.agents.prey import PreyAgent
 
 world = World()
 

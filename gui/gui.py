@@ -4,11 +4,9 @@ import os, sys
 import socket, sys, signal
 from threading import Lock
 from ahoy.util.geo import *
-from ahoy.agents.rectanglesurveil import *
 from ahoy.eventapi import EventAPI
-from ahoy.events.link import LinkEvent
 from ahoy.events.move import EntityMoveEvent
-from ahoy.sensors.radarsensor import RadarEvent
+from ahoy.sensors.forwardcamera import ForwardCameraEvent
 
 global screen
 CW = 16 # Cell Width 
@@ -61,6 +59,8 @@ class node :
 class grid_gui :
     def __init__(self, ip, port) :
         self._nodelist = {}
+        self._vislist = {}
+        self._vis_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
 
         self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -68,6 +68,7 @@ class grid_gui :
         self._event_api = EventAPI(self._remote_sock)
         t = self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
+        self._event_api.subscribe(ForwardCameraEvent, self._on_camera)
 
     def _on_move(self, event) :
         global CW
@@ -81,6 +82,16 @@ class grid_gui :
         print x, y, type, agents
         
         self._nodelist[uid] = node(uid, type, loca, bear, agents)
+
+    def _on_camera(self, event) :
+        self._vis_lock.acquire()
+        self._vislist[event.get_owner_uid()] = []
+        for visible in event.get_visible() :
+            x = int(400+(visible[1]/.004444)*400) #lon
+            y = int(400-(visible[0]/.004444)*400) #lat
+            self._vislist[event.get_owner_uid()].append((x, y))
+            print 'adding to %s: %s,%s' % (event.get_owner_uid(), x, y)
+        self._vis_lock.release()
 
     def draw_nodes(self) :
         for uid in self._nodelist :
@@ -101,7 +112,14 @@ class grid_gui :
         pygame.draw.polygon(screen, color, points, 0)
         pygame.draw.polygon(screen, (0,0,0), points, 1)
         pygame.draw.circle(screen, (0,0,0), (x+1,y), 1, 1)
-        pygame.draw.circle(screen, (255, 0, 0), (x, y), 1, 1)
+
+    def draw_vis(self) :
+        self._vis_lock.acquire()
+        for node, vis in self._vislist.iteritems() :
+            for v in vis :
+                print 'drawing', node, vis
+                pygame.draw.circle(screen, (0, 255, 0), (v[0], v[1]), 5, 0)
+        self._vis_lock.release()
 
     def _rotate_point(self, origin, point, angle) :
         x = origin._x + ((point._x - origin._x) * math.cos(angle) - (point._y - origin._y) * math.sin(angle))
@@ -134,6 +152,7 @@ class grid_gui :
         screen.fill((255, 255, 255))
         gui.draw_grid()
         gui.draw_nodes()
+        gui.draw_vis()
 
 if len(sys.argv) <= 2 :
     print "USAGE: python draw.py <hostname> <port>"
