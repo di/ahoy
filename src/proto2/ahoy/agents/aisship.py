@@ -6,6 +6,7 @@ from ahoy.agent import Agent
 from ahoy.message import Message
 from ahoy.util.aisdatagen import AISDataGen
 from ahoy.util.geo import *
+from threading import Thread
 
 class AISShip(Agent) :
     def __init__(self, uid, forward_vel, ip, port, iface_name):
@@ -32,6 +33,7 @@ class AISShip(Agent) :
         orig_pos = self._path_conn.recv(1024)
         self._lat, self._lon = orig_pos.split(',')
         self.get_owner_node().set_position(float(self._lat),float(self._lon),self._agl)
+        Thread(target=self._publishlocation).start() 
         
         while True:
             posdata = (self._lat) + "," + (self._lon)
@@ -51,7 +53,7 @@ class AISShip(Agent) :
                 else:
                     self._use_ais = True  
             self._move(newpos) 
-            self._publishmove() 
+            #self._publishmove() 
             time.sleep(1)
 
     #  Changes the path data for the ais ship based on whats sent in
@@ -118,6 +120,16 @@ class AISShip(Agent) :
         message = str(uid) + "," + self._lat + "," + self._lon + "," + str(self._agl) + "," + str(self._forward_vel)
         m = Message(message,'*')
         self.get_owner_node().get_interface(self._iface_name).send(m, uid)
+
+    def _publishlocation(self):
+        while True:
+            loc = self.get_owner_node().get_position()
+            uid = self.get_uid()
+            message = str(uid) + "," + str(loc[0])  + "," + str(loc[1]) + "," + str(self._agl) + "," + str(self._forward_vel)
+            print "Publishing: " + message
+            m = Message(message, '*')
+            self.get_owner_node().get_interface(self._iface_name).send(m,uid)
+            time.sleep(1)
 
     def _distToPath(self):
         if(len(self._man_paths) > 0):
