@@ -44,3 +44,9 @@ class PredatorAgentImpl(PredatorAgent) :
     def on_prey_death(self, pos, uid) :
         x, y = pos
         print 'Predator %s heard that prey %s at %s, %s died' % (self.get_uid(), uid, x, y)
+
+    '''
+    This method is automatically invoked when when the camera sees other predators/prey.
+    '''
+    def on_camera(self, locations) :
+        print 'Predator %s sees predators or prey at location(s) %s' % (self.get_uid(), locations)
