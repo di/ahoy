@@ -10,6 +10,7 @@ class PredatorAgent(Agent) :
     def run(self) :
         self.get_owner_node().get_event_api().subscribe(PredatorMessage, self._process_predator_message)
         self.get_owner_node().get_event_api().subscribe(PreyMessage, self._process_prey_message)
+        self.get_owner_node().get_sensor('camera').subscribe(self.on_camera)
         self.main()
 
     def main(self) :
@@ -43,4 +44,7 @@ class PredatorAgent(Agent) :
         pass
 
     def on_camera(self, event) :
-        print event
+        for v in event.get_visible() :
+            x = v[0] / PredatorAgent.DEG_PER_SQUARE
+            y = v[1] / PredatorAgent.DEG_PER_SQUARE
+            print x, y
