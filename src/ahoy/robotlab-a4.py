@@ -3,6 +3,7 @@ import sys
 from ahoy.world import World
 from ahoy.simulation import Simulation
 from ahoy.entities.node import Node
+from ahoy.sensors.forwardcamera import ForwardCameraSensor
 from ahoy.agents.predatorimpl import PredatorAgentImpl
 
 world = World()
@@ -10,6 +11,7 @@ world = World()
 for pred_id in range(0, 5) :
     pred = Node(pred_id)
     pred.add_agent(PredatorAgentImpl(pred_id))
+    pred.add_sensor('camera', ForwardCameraSensor(0, 60, use_event_channel=True))
     world.add_entity(pred)
 
 for prey_id in range(5, 9) :
