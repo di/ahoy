@@ -28,7 +28,7 @@ class PredatorAgentImpl(PredatorAgent) :
             Example communication: Sends a string message to all other predators with the new location.
             The contents being sent can be any serializable object, not just a string.
             '''
-            self.send_message('new_loc %s %s' % (x, y))
+            self.send_message('new_loc %s %s %s' % (x, y, self.get_rotation()))
 
             time.sleep(2)
 

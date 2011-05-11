@@ -26,6 +26,9 @@ class PredatorAgent(Agent) :
         cx, cy, cz = self.get_owner_node().get_position()
         return cx / PredatorAgent.DEG_PER_SQUARE, cy / PredatorAgent.DEG_PER_SQUARE
 
+    def get_rotation(self) :
+        return self.get_owner_node().get_bearing()
+
     def send_message(self, data) :
         self.get_owner_node().get_event_api().publish(PredatorMessage(self.get_uid(), data))
 
