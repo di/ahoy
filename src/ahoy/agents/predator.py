@@ -15,7 +15,9 @@ class PredatorAgent(Agent) :
             pass
 
     def set_speed(self, velocity, turn_rate) :
-        self.get_owner_node().set_speed(velocity * 1/50.0, turn_rate)
+#        velocity = min(velocity, 2 * PredatorAgent.DEG_PER_SQUARE)
+        velocity = min(velocity * 1/50.0, 2.0 / 50.0)
+        self.get_owner_node().set_speed(velocity, turn_rate)
 
     def get_position(self) :
         cx, cy, cz = self.get_owner_node().get_position()

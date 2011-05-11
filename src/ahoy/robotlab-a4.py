@@ -12,7 +12,7 @@ world = World()
 for pred_id in range(0, 5) :
     pred = Node(pred_id)
     pred.add_agent(PredatorAgentImpl(pred_id))
-    pred.add_sensor('camera', ForwardCameraSensor(0, 60, use_event_channel=True))
+    pred.add_sensor('camera', ForwardCameraSensor(0, 90, 200.0 / 1000.0, use_event_channel=True))
     world.add_entity(pred)
 
 for prey_id in range(5, 9) :

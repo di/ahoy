@@ -79,7 +79,6 @@ class grid_gui :
         bear = event.get_bearing()
         loca = loc(x,y)
         agents = event.get_agents()
-        print x, y, type, agents
         
         self._nodelist[uid] = node(uid, type, loca, bear, agents)
 
@@ -90,7 +89,6 @@ class grid_gui :
             x = int(400+(visible[1]/.004444)*400) #lon
             y = int(400-(visible[0]/.004444)*400) #lat
             self._vislist[event.get_owner_uid()].append((x, y))
-            print 'adding to %s: %s,%s' % (event.get_owner_uid(), x, y)
         self._vis_lock.release()
 
     def draw_nodes(self) :
@@ -117,7 +115,6 @@ class grid_gui :
         self._vis_lock.acquire()
         for node, vis in self._vislist.iteritems() :
             for v in vis :
-                print 'drawing', node, vis
                 pygame.draw.circle(screen, (0, 255, 0), (v[0], v[1]), 5, 0)
         self._vis_lock.release()
 

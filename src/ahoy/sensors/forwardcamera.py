@@ -16,23 +16,26 @@ class ForwardCameraEvent(SensorEvent) :
         return self._visible
 
 class ForwardCameraSensor(Sensor) :
-    MAX_DIST = 10 * (.00444 / 25)
-    def __init__(self, bearing, fov, **kwds) :
+    def __init__(self, bearing, fov, max_dist, **kwds) :
         Sensor.__init__(self, **kwds)
         self._bearing = bearing
         self._fov = fov
+        self._max_dist = max_dist
 
     def run(self) :
         while True :
             lat, lon, agl = self.get_owner().get_position()
             cam_bearing = self.get_owner().get_bearing() + self._bearing
-            points = [self.get_owner().get_position()[0:2], loc_from_bearing_dist(lat, lon, cam_bearing - self._fov / 2.0, ForwardCameraSensor.MAX_DIST), loc_from_bearing_dist(lat, lon, cam_bearing + self._fov / 2.0, ForwardCameraSensor.MAX_DIST)]
+            points = [self.get_owner().get_position()[0:2], loc_from_bearing_dist(lat, lon, cam_bearing - self._fov / 2.0, self._max_dist), loc_from_bearing_dist(lat, lon, cam_bearing + self._fov / 2.0, self._max_dist)]
+            print 'lat/lon', lat, lon, 'cam_brg', cam_bearing, 'pts', points, self._max_dist
             visible = []
             for entity in self.get_owner().get_world().get_entities() :
                 if entity.get_uid() != self.get_owner().get_uid() :
                     elat, elon, eagl = entity.get_position()
+                    print haver_distance(lat, lon, elat, elon)
                     if point_in_poly(elat, elon, points) :
                         visible.append((elat, elon))
+            print cam_bearing, visible
 
             self._publish_data(ForwardCameraEvent(self.get_owner().get_uid(), points, visible))
             time.sleep(0.01)

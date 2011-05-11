@@ -177,6 +177,7 @@ class Entity :
         while True :
             dt = time.time() - last_tic
             self._bearing += self._turn_rate * dt
+            self._bearing = self._bearing % (math.pi * 2.0)
             self._lat, self._long = loc_from_bearing_dist(self._lat, self._long, math.degrees(self._bearing), self._forward_velocity * dt)
 
             if last_lat != self._lat or last_long != self._long or last_bearing != self._bearing:
