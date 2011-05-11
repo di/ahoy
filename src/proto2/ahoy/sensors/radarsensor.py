@@ -77,9 +77,9 @@ class RadarSensor(Sensor) :
                 llat, llon, _ = self.get_owner().get_position()
                 location = (math.degrees(angle_data[2]), math.degrees(angle_data[3]))
                 #location = loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0])
-                print 'bearing:', loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0]), 'actual', location
+                #print 'bearing:', loc_from_bearing_dist(llat, llon, math.degrees(antenna_bearing), angle_data[0]), 'actual', location
                 distance = angle_data[0]
-                print 'RADAR:', antenna_bearing, location
+                #print 'RADAR:', antenna_bearing, location
             else :
                 location = None
                 distance = None

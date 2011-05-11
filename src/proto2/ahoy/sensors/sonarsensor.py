@@ -26,8 +26,8 @@ class SonarEvent(SensorEvent) :
         return '%s %s' % (self._bearing, s.strip())
 
 class SonarSensor(Sensor) :
-    def __init__(self, source_level, source_bw, array_size, interval, min_snr, angular=False, noise_mean=50, noise_std=5) :
-        Sensor.__init__(self)
+    def __init__(self, source_level, source_bw, array_size, interval, min_snr, angular=False, noise_mean=50, noise_std=5, **kwds) :
+        Sensor.__init__(self, **kwds)
         self._source_level = source_level # dB
         self._source_bw = source_bw
         self._angles = 360 / array_size
@@ -42,6 +42,7 @@ class SonarSensor(Sensor) :
     def _get_edges(self) :
         edges = []
         lat, lon, agl = self.get_owner().get_position()
+        angle = 0
         for angle in range(0, 360) :
             e_lat, e_lon, e_dist, e_height = self._elevation.get_above(lat, lon, angle)
             edges.append([e_lat, e_lon, self._get_snr(e_dist * 1000, 0)])
@@ -91,15 +92,16 @@ class SonarSensor(Sensor) :
                 e_lat, e_lon, e_agl = entity.get_position()
                 if e_agl <= 0 :
                     #TODO: use prop time
-                    distance = math.sqrt(haver_distance(lat, lon, e_lat, e_lon)**2 + (agl - e_agl)**2) * 1000
+                    distance = haver_distance(lat, lon, e_lat, e_lon)#math.sqrt(haver_distance(lat, lon, e_lat, e_lon)**2 + (agl - e_agl)**2) * 1000
 
                     snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
-                    if distance/1000 < detects[bearing][0] and snr >= self._min_snr :
+                    print entity.get_uid(), snr, self._min_snr, distance / 1000.0 < detects[bearing][0], distance / 1000.0, detects[bearing][0]
+                    if distance/1000.0 < detects[bearing][0] and snr >= self._min_snr and distance < 3.0 :
                         #tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
                         # TODO: This removes all error
                         tlat, tlon = e_lat, e_lon
-                        detects[bearing] = [tlat, tlon, snr]#[distance/1000, snr]
+                        detects[bearing] = [tlat, tlon, snr]
 
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
