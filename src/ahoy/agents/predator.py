@@ -1,5 +1,6 @@
 from ahoy.agent import Agent
 from ahoy.events.predatormessage import PredatorMessage
+from ahoy.events.preymessage import PreyMessage
 
 class PredatorAgent(Agent) :
     DEG_PER_SQUARE = .004444 / 25.0
@@ -7,7 +8,8 @@ class PredatorAgent(Agent) :
         Agent.__init__(self, uid)
 
     def run(self) :
-        self.get_owner_node().get_event_api().subscribe(PredatorMessage, self._process_message)
+        self.get_owner_node().get_event_api().subscribe(PredatorMessage, self._process_predator_message)
+        self.get_owner_node().get_event_api().subscribe(PreyMessage, self._process_prey_message)
         self.main()
 
     def main(self) :
@@ -26,9 +28,16 @@ class PredatorAgent(Agent) :
     def send_message(self, data) :
         self.get_owner_node().get_event_api().publish(PredatorMessage(self.get_uid(), data))
 
-    def _process_message(self, event) :
+    def _process_predator_message(self, event) :
         if event.get_src_agent_uid() != self.get_uid() :
             self.on_message_recv(event.get_src_agent_uid(), event.get_contents())
 
+    def _process_prey_message(self, event) :
+        if not event.is_alive() :
+            self.on_prey_death(event.get_pos(), event.get_src_agent_uid())
+
     def on_message_recv(self, src, contents) :
+        pass
+
+    def on_prey_death(self, pos, uid) :
         pass

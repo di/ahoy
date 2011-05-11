@@ -21,9 +21,24 @@ class PreyAgent(Agent) :
             dist = math.sqrt((pred_x - x)**2 + (pred_y - y)**2)
             if dist < 3.0 :
                 lat1, lon1, _ = self.get_owner_node().get_position()
-                lat2, lon2 = event.get_lat(), event.get_lon()
-                angle = bearing_from_points(lat1, lon1, lat2, lon2)
-                print '>', event.get_uid(), 'in range', angle
+                lat2, lon2 = event.get_lat(), event.get_long()
+                angle = bearing_from_pts(lat1, lon1, lat2, lon2)
+
+                for side, euid in self._sides.iteritems() :
+                    if euid == event.get_uid() :
+                        self._sides[side] = None
+
+                if 0 <= angle <= 45 or 315 <= angle <= 360 :
+                    self._sides[0] = event.get_uid()
+                elif 45 < angle <= 135 :
+                    self._sides[90] = event.get_uid()
+                elif 135 < angle <= 225 :
+                    self._sides[180] = event.get_uid()
+                elif 225 < angle <= 315 :
+                    self._sides[270] = event.get_uid()
+
+                if None not in self._sides.values() :
+                    self.die()
 
     def run(self) :
         self.get_owner_node().get_event_api().subscribe(EntityMoveEvent, self._on_move)
@@ -51,4 +66,6 @@ class PreyAgent(Agent) :
     def die(self) :
         self._alive = False
         self.get_owner_node().get_event_api().publish(PreyMessage(self.get_uid(), self.get_position(), self._alive))
+        self.get_owner_node().set_speed(0, 0)
+        self.get_owner_node().set_position(-500, -500, 0)
         print 'Prey %s at %s has been killed!' % (self.get_uid(), self.get_position())

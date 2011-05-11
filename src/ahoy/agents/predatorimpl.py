@@ -19,7 +19,7 @@ class PredatorAgentImpl(PredatorAgent) :
             '''
             set_speed(blocks_per_second, radians_per_second)
             '''
-            self.set_speed(5, rotation)
+            self.set_speed(1, rotation)
             rotation *= -1
             x, y = self.get_position()
             '''
@@ -35,3 +35,10 @@ class PredatorAgentImpl(PredatorAgent) :
     '''
     def on_message_recv(self, src, contents) :
         print 'Predator %s got message "%s" from predator %s' % (self.get_uid(), contents, src)
+
+    '''
+    This method is automatically invoked when a prey dies.
+    '''
+    def on_prey_death(self, pos, uid) :
+        x, y = pos
+        print 'Predator %s heard that prey %s at %s, %s died' % (self.get_uid(), uid, x, y)
