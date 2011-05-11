@@ -16,6 +16,7 @@ from ahoy.events.correlation import CorrelationEvent
 from ahoy.events.prox_threat import ProximityThreatEvent
 from ahoy.events.divert import DivertEvent
 from ahoy.sensors.radarsensor import RadarEvent
+from ahoy.sensors.sonarsensor import SonarEvent
 from ahoy.sensors.camerasensor import CameraEvent 
 from ahoy.sensors.chemicalsensor import ChemicalDetectEvent
 
@@ -47,9 +48,12 @@ class ProofOfConcept :
         self._chem_lock = Lock()
         self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
         self._radarlist = {}
+        self._sonarlist = {}
         self._aaron_sucks = {} # Agent lists
         self._current_radar_bearing = None
         self._current_radar_loc = None
+        self._current_sonar_bearing= None
+        self._current_sonar_loc = None
 
         self.tl_lat, self.tl_lon = (40.0140,-75.3321)
         self.br_lat, self.br_lon = (39.7590,-75.0000)
@@ -69,6 +73,7 @@ class ProofOfConcept :
         self._event_api.subscribe(LinkEvent, self._on_link)
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(RadarEvent, self._on_radar)
+        self._event_api.subscribe(SonarEvent, self._on_sonar)
         self._event_api.subscribe(ChemicalSpillEvent, self._on_chemspill)
        # self._event_api.subscribe(SensorEvent, self._on_sensor)
         self._event_api.subscribe(CorrelationEvent, self._on_correlation)
@@ -129,6 +134,16 @@ class ProofOfConcept :
             quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
+
+    def _on_sonar(self, event) :
+        uid = event.get_owner_uid()
+        t_loc = event.get_detects()
+        bear = round(math.degrees(event.get_bearing()))
+        
+        self._current_sonar_bearing = bear
+        self._current_sonar_loc = self._nodelist[uid][0]
+
+        self._sonarlist[bear] = t_loc
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -219,6 +234,24 @@ class ProofOfConcept :
             (lat, lon), type = self._nodelist[uid]
             self.draw_node(self._get_pix(lat,lon),type,uid)
 
+    def draw_sonar(self) :
+        global center
+        cx, cy = center
+        if self._current_sonar_loc is not None :
+            px, py = self._get_pix(*self._current_sonar_loc)
+            x = int(px + 4800*math.cos(math.radians(self._current_sonar_bearing-90)))
+            y = int(py + 4800*math.sin(math.radians(self._current_sonar_bearing-90)))
+            pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc), (x,y), 2) 
+        for bear in self._sonarlist.keys() :
+            t_loc = self._sonarlist[bear]
+            if t_loc is None :
+                del self._sonarlist[bear]
+            else :
+                for loca in t_loc :
+                    lat, lon, bs = loca
+                    self.draw_blip(self._get_pix(lat, lon), (255,255,100))
+                    print 'sonar', loca
+
     def draw_radar(self) :
         global center
         cx, cy = center
@@ -232,12 +265,13 @@ class ProofOfConcept :
             if t_loc is None :
                 del self._radarlist[bear]
             else :
-                self.draw_blip(self._get_pix(*t_loc))
+                self.draw_blip(self._get_pix(*t_loc), (100,255,100))
 
-    def draw_blip(self, position) :
+    def draw_blip(self, position, color) :
         x, y = position
-        pygame.draw.circle(surface, (0,155,0), (x,y), 6, 0)
-        pygame.draw.circle(surface, (100,255,100), (x,y), 4, 0)
+        r, g, b = color
+        pygame.draw.circle(surface, (r-100, g-100, b-100), (x,y), 6, 0)
+        pygame.draw.circle(surface, (r,g,b), (x,y), 4, 0)
 
     def draw_node(self, position, type, uid) :
         Font = pygame.font.Font(None,20)
