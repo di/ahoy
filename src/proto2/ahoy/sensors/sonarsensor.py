@@ -96,7 +96,9 @@ class SonarSensor(Sensor) :
                     snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
                     if distance/1000 < detects[bearing][0] and snr >= self._min_snr :
-                        tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
+                        #tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
+                        # TODO: This removes all error
+                        tlat, tlon = e_lat, e_lon
                         detects[bearing] = [tlat, tlon, snr]#[distance/1000, snr]
 
             merged_detects = {}
