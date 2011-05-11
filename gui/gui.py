@@ -57,14 +57,11 @@ class node :
         return agent in self._agents
 
 class grid_gui :
-    def __init__(self, ip, port) :
+    def __init__(self) :
         self._nodelist = {}
         self._vislist = {}
         self._vis_lock = Lock()
-
-        self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._remote_sock.connect((ip, port))
-        self._event_api = EventAPI(self._remote_sock)
+        self._event_api = EventAPI()
         t = self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(ForwardCameraEvent, self._on_camera)
@@ -148,17 +145,9 @@ class grid_gui :
         screen.fill((255, 255, 255))
         gui.draw_grid()
         gui.draw_nodes()
-        gui.draw_vis()
+        #gui.draw_vis()
 
-if len(sys.argv) <= 2 :
-    print "USAGE: python draw.py <hostname> <port>"
-    quit(None, None)
-
-try :
-    gui = grid_gui(sys.argv[1], int(sys.argv[2]))
-except socket.error :
-    print "Invalid host or port, or TCP forwarder not started. Exiting."
-    quit(None, None)
+gui = grid_gui()
 
 pygame.init()
 screen = pygame.display.set_mode((CW*50,CW*50))
