@@ -143,6 +143,7 @@ class ProofOfConcept :
         self._current_sonar_bearing = bear
         self._current_sonar_loc = self._nodelist[uid][0]
 
+        print 'got sonar', bear, t_loc
         self._sonarlist[bear] = t_loc
 
     def _on_radar(self, event) :
@@ -235,6 +236,7 @@ class ProofOfConcept :
             self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_sonar(self) :
+        print 'drawing sonar'
         global center
         cx, cy = center
         if self._current_sonar_loc is not None :
@@ -243,6 +245,7 @@ class ProofOfConcept :
             y = int(py + 4800*math.sin(math.radians(self._current_sonar_bearing-90)))
             pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc), (x,y), 2) 
         for bear in self._sonarlist.keys() :
+            print 'bear:', bear
             t_loc = self._sonarlist[bear]
             if t_loc is None :
                 del self._sonarlist[bear]
@@ -293,7 +296,7 @@ class ProofOfConcept :
         for correlation in self._correlations.values() :
             p1 = self._get_pix(*correlation[0])
             p2 = self._get_pix(*correlation[1])
-            pygame.draw.line(surface, (0, 255, 0), p1, p2, 2)
+            pygame.draw.line(surface, (255, 0, 255), p1, p2, 2)
         self._correlation_lock.release()
 
     def draw_links(self) :
@@ -353,6 +356,7 @@ class ProofOfConcept :
         self.draw_threats()
         self.draw_chem_sensors()
         self.draw_divert()
+        self.draw_sonar()
 
     def main(self) :
         
