@@ -65,7 +65,7 @@ class grid_gui :
             self._event_api = EventAPI()
         except :
             print 'Environmental variable "AHOY_PORT" not set, exiting.'
-            self.quit(None, None)
+            quit(None, None)
         t = self._event_api.start()
         self._event_api.subscribe(EntityMoveEvent, self._on_move)
         self._event_api.subscribe(ForwardCameraEvent, self._on_camera)
@@ -140,16 +140,16 @@ class grid_gui :
             screen.blit(text,(i*CW+CW*25,CW*25))
             screen.blit(text,(CW*25,i*CW+CW*25))
 
-    def quit(self, signal, frame) :
-        pygame.quit()
-        sys.exit()
-
     def redraw(self) :
         pygame.display.flip()
         screen.fill((255, 255, 255))
         gui.draw_grid()
         gui.draw_nodes()
         #gui.draw_vis()
+
+def quit(signal, frame) :
+    pygame.quit()
+    sys.exit()
 
 gui = grid_gui()
 
@@ -161,5 +161,5 @@ signal.signal(signal.SIGINT, quit)
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
-            gui.quit(None, None)
+            quit(None, None)
     gui.redraw() 
