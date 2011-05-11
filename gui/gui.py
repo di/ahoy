@@ -61,7 +61,6 @@ class grid_gui :
         self._nodelist = {}
         self._vislist = {}
         self._vis_lock = Lock()
-        self._nodecolor ={'Node':(100,100,255),'RadarSensor2':(255,100,100),'Scripted':(100,100,100)}
 
         self._remote_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._remote_sock.connect((ip, port))
