@@ -1,5 +1,6 @@
 import socket
 import struct
+import os
 from threading import Thread
 from ahoy.event import Event
 from ahoy.events.all import All
@@ -10,7 +11,7 @@ class EventAPI :
         self._running = True
         if tcp_conn == None :
             self._ip = '239.192.0.100'
-            self._port = 99977
+            self._port = int(os.getenv('AHOY_PORT'))
             self._setup_mc()
             self._tcp_conn = None
         else :
