@@ -57,8 +57,6 @@ class HistoryCorrelationAgent(Agent):
         
         while True:
             
-            
-            
             '''recreate list of most recent sensor data, as it may have been updated'''
             # possibly move this action to functions where individual data points are added
             self._update_sensor_data()
@@ -95,9 +93,7 @@ class HistoryCorrelationAgent(Agent):
                         # Only match if we find an AIS point closer than we have found before
                         closest_dist = dist
                         closest_ais_id = ais_id
-                        #print 'closest_ais_id = ', closest_ais_id, 'closest_dist = ', closest_dist
                 
-                #print 'closest_ais_id = ', closest_ais_id
                 if closest_ais_id is None:
                     continue
                 
@@ -119,7 +115,7 @@ class HistoryCorrelationAgent(Agent):
             for ais_id in self._correlation:
                 ais_pt = self._ais_data[ais_id]
                 dist, s_pt = self._correlation[ais_id]
-                print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
+                #print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
                 self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
                 
             # update all blank AIS matches
@@ -133,70 +129,90 @@ class HistoryCorrelationAgent(Agent):
             ''' move sensor data to history, 
                 while correlating the most recent sensor data w/ historical sensor data'''
             self._correlate_sensor_history()
-            self._detect_threats()
+            #self._detect_threats()
             
             time.sleep(3)
             
     
     
     def _get_sensor_hist_by_pt(self, pt):
+        #self.lock.acquire()
+        pt = None
         for info in self._sensor_history:
             if info[1] == pt:
-                return info
-        return None
+                pt = info
+                break
+        #self.lock.release()
+        return pt
         
     
     def _correlate_sensor_history(self):
-    
+        print '\nCorrelating sensor history...'
         self.lock.acquire() 
         
         ''' If there is no most recent sensor data, ignore this '''
         if len(self._sensor_data) == 0:
+            print 'No sensor data. Exiting function.'
+            self.lock.release()
             return
         
         hist_correlation = {}
+        print 'len of sensor data = ', len(self._sensor_data)
+        print 'len of history data = ', len(self._sensor_history)
         
         for new_pt in self._sensor_data:
             ''' Try to correlate each new sensor pt to historical points.
                 If none are less than self._sensor_accuracy km away,
                 consider this a new sensor point'''
+            print '\nCorrelating', new_pt
             
             closest_dist = self._sensor_accuracy
             closest_pt = None
             
             for hist in self._sensor_history:
-                hist_pt = hist[0]
+                hist_pt = hist[1]
                 
                 dist = haver_distance( hist_pt[0], hist_pt[1], new_pt[0], new_pt[1] )
                 
                 if dist < closest_dist:
                     closest_dist = dist
                     closest_pt = hist_pt
+                #else:
+                #    print 'point too far away, dist = ', dist
                     
             if closest_pt is None:
-                print 'Could not find closest sensor pt history match for ', new_pt
+                print 'Could not find closest sensor pt history match for ', new_pt, '. Adding it as new entry.'
                 self._sensor_history.append([0, new_pt])
                 continue
             
             ''' Update hist_correlation'''
             if hist_correlation.has_key( closest_pt ):
                 if closest_dist <= hist_correlation[closest_pt][0]:
+                    print 'bumping out ', hist_correlation[closest_pt], 'with new data: ', new_pt, ', d = ', closest_dist
                     hist_correlation[closest_pt] = [closest_dist, new_pt]
+                    
             else:
+                print 'assigning ', closest_pt, ' as correlation. d = ', closest_dist
                 hist_correlation[closest_pt] = [closest_dist, new_pt]
         
         ''' Update self._sensor_history with new correlations'''
+        ''' This is the part where we tack on new set of sensor points, to their corresponding (correlated)
+            historical sensor points.
+            We iterate through all these already existing historical sensor data points, to which new ones were correlated to,
+            and tack on the new points into the old ones' historical list.
+            If a new sensor point was not correlated with a historical point, it was added above.'''
         for correlated_hist_pt in hist_correlation:
             dist, new_hist_pt = hist_correlation[correlated_hist_pt]
             inserted_new_pt = False
             
             for hist_info in self._sensor_history:
-                if correlated_hist_pt == hist_info[0]:
+                if correlated_hist_pt == hist_info[1]:
                     ''' This is the item (list, technically) in self._sensor_history 
                         where we need to tack on the newly correlated sensor pt'''
-                    hist_info.insert(0, new_hist_pt)
-                    if len(hist_info) > self._num_history :
-                        hist_info.pop(-2)   # the last item is the value of the threat, NOT a historical point
+                    hist_info.insert(1, new_hist_pt)
+                    print 'Just inserted ', new_hist_pt, ' into ', hist_info
+                    if len(hist_info) > self._history_num :
+                        hist_info.pop(-1)   # the last item is the value of the threat, NOT a historical point
                     inserted_new_pt = True
                     break
             
@@ -204,6 +220,8 @@ class HistoryCorrelationAgent(Agent):
                 print 'Did not insert', new_hist_pt, ' into correlation history. Problem.'
         
         self.lock.release()
+        
+        print '\t..finished correlating sensor history.'
             
                 
                 
@@ -211,17 +229,24 @@ class HistoryCorrelationAgent(Agent):
         
     
     def _detect_threats(self):
+        print 'Detecting threats...'
         self.lock.acquire()
         
+        print len(self._correlation), ' = length of self._correlation'
         ''' Get list of all sensor points that were correlated '''
         correlated_s_pts = []
         for dist, s_pt in self._correlation.values():
             correlated_s_pts.append( s_pt )
+        print len(correlated_s_pts), 'correlated sensor points.'
+        print len(self._correlation), 'keys in self._correlation'
         
         ''' Go through all sensor points that were reported to agent...'''    
         for sensor_pt in self._sensor_data:
+            #print 'analyzing ', sensor_pt
+            hist_info = self._get_sensor_hist_by_pt(sensor_pt)
+            print hist_info
+
             if not sensor_pt in correlated_s_pts:
-                hist_info = self._get_sensor_hist_by_pt(sensor_pt)
                 #if hist_info is not None:
                 #    ''' adjust hist_info. check if threat level is high for this sensor point'''
                 
@@ -229,7 +254,9 @@ class HistoryCorrelationAgent(Agent):
                     Check if the sensor_pt is within self._threat_dist of an AIS ship'''
                 for ais_id in self._ais_data:
                     ais_pt = self._ais_data[ais_id]
+                    
                     dist = haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] )
+                    
                     if dist <= self._threat_dist:
                         if hist_info is not None:
                             threat_level = hist_info[0]
@@ -240,13 +267,22 @@ class HistoryCorrelationAgent(Agent):
                             if threat_level > 0.5:
                                 print 'POSSIBLE THREAT at ', sensor_pt
                                 self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
+                            else:
+                                print sensor_pt, 'is not quite a threat yet..'
                         else:
                             'No sensor data history for ', sensor_pt
                             if dist <= (0.5*self._threat_dist):
                                 print 'POSSIBLE THREAT at ', sensor_pt, '. reporting WITHOUT historical data.'
                                 self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
-                                
+            else:
+                print '\t\tthis point was correlated.'
+                if hist_info is not None:
+                    # If point was correlated to AIS data, set its threat level to 0 (it may already be at that amount)
+                    hist_info[0] = 0
+                    
+                
         self.lock.release()
+        print 'Done detecting threats.'
             
         
     
