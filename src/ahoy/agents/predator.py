@@ -41,3 +41,6 @@ class PredatorAgent(Agent) :
 
     def on_prey_death(self, pos, uid) :
         pass
+
+    def on_camera(self, event) :
+        print event

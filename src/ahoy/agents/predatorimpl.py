@@ -18,6 +18,8 @@ class PredatorAgentImpl(PredatorAgent) :
         while True :
             '''
             set_speed(blocks_per_second, radians_per_second)
+
+            NOTE: The max for this is 2 blocks/sec.
             '''
             self.set_speed(1, rotation)
             rotation *= -1
