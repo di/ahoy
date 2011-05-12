@@ -22,6 +22,8 @@ class CorrelationAgent(Agent):
         # max distance for an AIS and sensor point to be considered the same point
         self._ais_threshold = ais_threshold
         
+        self._max_corr_dist = 1.0
+        
         self._correlation = {}
         self._sensor_data = []
         self._ais_data = {}
@@ -47,19 +49,20 @@ class CorrelationAgent(Agent):
         self.get_owner_node().get_interface(self._iface_ais).set_recv_callback(self._new_ais_data)
         
         while True:
+            self.lock.acquire()
             
             '''recreate list of most recent sensor data, as it may have been updated'''
             # possibly move this action to functions where individual data points are added
             self._update_sensor_data()
-            #print '*****************CORRELATING****'
-            #for pt in self._sensor_data:
-            #    print pt
-            #print '\n\n'
-            #for ais_id in self._ais_data:
-            #    print self._ais_data[ais_id], ais_id
-            #print '*************************'
+            print '*****************CORRELATING****'
+            for pt in self._sensor_data:
+                print pt
+            print '\n\n'
+            for ais_id in self._ais_data:
+                print self._ais_data[ais_id], ais_id
+            print '*************************'
             
-            self.lock.acquire()
+            #self.lock.acquire()
             
             '''clear all correlations for now
                 This way, there will be no chance of having an AIS ship point still correlated to an outdated
@@ -76,8 +79,9 @@ class CorrelationAgent(Agent):
             for sensor_pt in self._sensor_data:
             #for sensor_pt in self._radar_data.values():
             
-                #print '\nCorrelating ', sensor_pt, '...'
-                closest_dist = 99999
+                print '\nCorrelating ', sensor_pt, '...'
+                ''' distance to AIS ship should be negligent '''
+                closest_dist = self._max_corr_dist  #self._ais_threshold #self._ais_threshold  #99999
                 closest_ais_id = None
                 #closest_s_pt = None
                 
@@ -85,6 +89,7 @@ class CorrelationAgent(Agent):
                 for ais_id in self._ais_data:
                     ais_pt = self._ais_data[ais_id]
                     dist = haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] )
+                    #print 'dist = ', dist
                     
                     if dist < closest_dist:
                         # Only match if we find an AIS point closer than we have found before
@@ -92,6 +97,7 @@ class CorrelationAgent(Agent):
                         closest_ais_id = ais_id
                         #closest_s_pt = None
                         #print 'closest_ais_id = ', closest_ais_id, 'closest_dist = ', closest_dist
+                        print 'Found a new closest distance: ', closest_dist
                 
                 #print 'closest_ais_id = ', closest_ais_id
                 if closest_ais_id is None:
@@ -104,12 +110,12 @@ class CorrelationAgent(Agent):
                         Let's see if current sensor point is closer (or equidistant).  If so, update the correlation'''
                     if closest_dist <= self._correlation[closest_ais_id][0]:
                         self._correlation[closest_ais_id] = [closest_dist, (sensor_pt)]
-                        #print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist, '*'
+                        print 'OVERWRITE: Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist, '*'
                 else:
                     ''' No sensor point had yet been paired with this AIS point,
                         and we know this is the closest AIS point we've found to this sensor so far.  Update.'''
                     self._correlation[closest_ais_id] = [closest_dist, (sensor_pt)]
-                    #print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
+                    print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
                     
                     
             #print 'final:'
@@ -136,9 +142,10 @@ class CorrelationAgent(Agent):
                         print 'No sensor point correlated with AIS ID', ais_id, 'at', ais_pt, '!'
                         self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
                     else:
-                        print 'Correlated with ', closest_pt, ' dist = ', closest_dist
-                        self._correlation[ais_id] = [closest_dist, closest_pt]
-                        self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], closest_pt[0], closest_pt[1], ais_id))
+                        print 'Found closest point ', closest_pt, ' dist = ', closest_dist
+                        if closest_dist <= self._max_corr_dist:
+                            self._correlation[ais_id] = [closest_dist, closest_pt]
+                            self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], closest_pt[0], closest_pt[1], ais_id))
                     
                     #print 'No sensor point correlated with AIS ID ', ais_id, ' at ', ais_pt
                     #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
@@ -148,7 +155,7 @@ class CorrelationAgent(Agent):
             self._detect_threats()
             self.lock.release()
             
-            time.sleep(3)
+            time.sleep(2)
     
     def _get_closest_pt(self, loc, pts):
         closest_dist = 99999
@@ -254,6 +261,9 @@ class CorrelationAgent(Agent):
         lat = float(lat)
         lon = float(lon)
         self.lock.acquire()
+        #if self._ais_data.has_key(s_id):
+        #    dist = haver_distance(lat, lon, self._ais_data[s_id][0], self._ais_data[s_id][1])
+        #    print 'dist between last AIS data = ', dist
         self._ais_data[s_id] = (lat, lon)   # ignoring agl and speed for now
         self.lock.release()
         
@@ -274,7 +284,7 @@ class CorrelationAgent(Agent):
         
         # add radar sensor data
         ## Note: self._radar_data[bearing] = (lat, lon)
-        self.lock.acquire()
+        #self.lock.acquire()
         
         ''' Add RADAR sensor points to sensor_data list '''
         #print 'length of radar data = ', len(self._radar_data)
@@ -299,6 +309,7 @@ class CorrelationAgent(Agent):
             uniquePoint = True
             '''make sure sonar_loc is not within ais_threshold dist from each point'''
             for loc in self._sensor_data:
+                #print 'about to calculate haver_distance for ', sonar_loc, 'and', loc
                 if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
                     uniquePoint = False
                     break
@@ -306,6 +317,6 @@ class CorrelationAgent(Agent):
                 self._sensor_data.append(sonar_loc)
         #print 'length of self._sensor_data = ', len(self._sensor_data) 
         
-        self.lock.release()
+        #self.lock.release()
         
 
