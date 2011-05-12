@@ -22,11 +22,6 @@ class loc :
     def _y(self) :
         return self._y
 
-    def get_pix(self) :
-        # Converts x/y coordinates to pixel coords
-        global CW
-        return ((self._x+30)*CW,(self._y+30)*CW) 
-
     def tuple(self) :
         return (self._x,self._y)
 
@@ -61,6 +56,8 @@ class grid_gui :
         self._nodelist = {}
         self._vislist = {}
         self._vis_lock = Lock()
+        self._fieldlist = {}
+        self._field_lock = Lock()
         try :
             self._event_api = EventAPI()
         except :
@@ -83,13 +80,18 @@ class grid_gui :
         self._nodelist[uid] = node(uid, type, loca, bear, agents)
 
     def _on_camera(self, event) :
+        uid = event.get_owner_uid()
         self._vis_lock.acquire()
-        self._vislist[event.get_owner_uid()] = []
+        self._vislist[uid] = []
         for visible in event.get_visible() :
             x = int(400+(visible[1]/.004444)*400) #lon
             y = int(400-(visible[0]/.004444)*400) #lat
-            self._vislist[event.get_owner_uid()].append((x, y))
+            self._vislist[uid].append((x, y))
         self._vis_lock.release()
+        field = event.get_poly()
+        self._field_lock.acquire()
+        self._fieldlist[uid] = field
+        self._field_lock.release()
 
     def draw_nodes(self) :
         for uid in self._nodelist :
@@ -118,6 +120,17 @@ class grid_gui :
                 pygame.draw.circle(screen, (0, 255, 0), (v[0], v[1]), 5, 0)
         self._vis_lock.release()
 
+    def draw_fields(self) :
+        self._field_lock.acquire()
+        for field in self._fieldlist.values() :
+            field_poly = []
+            for point in field :
+                x = int(400+(point[1]/.004444)*400)
+                y = int(400-(point[0]/.004444)*400)
+                field_poly.append((x,y))
+            pygame.draw.polygon(screen,(0,0,255),field_poly,1)
+        self._field_lock.release()
+
     def _rotate_point(self, origin, point, angle) :
         x = origin._x + ((point._x - origin._x) * math.cos(angle) - (point._y - origin._y) * math.sin(angle))
         y = origin._y + ((point._x - origin._x) * math.sin(angle) + (point._y - origin._y) * math.cos(angle))
@@ -144,8 +157,9 @@ class grid_gui :
         pygame.display.flip()
         screen.fill((255, 255, 255))
         gui.draw_grid()
+        gui.draw_fields()
         gui.draw_nodes()
-        #gui.draw_vis()
+        gui.draw_vis()
 
 def quit(signal, frame) :
     pygame.quit()
