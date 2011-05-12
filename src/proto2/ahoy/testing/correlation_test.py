@@ -9,7 +9,7 @@ from ahoy.agents.comms import CommsAgent
 from ahoy.network import Network
 from ahoy.tcpforward import TcpForward
 from ahoy.action import Action
-from ahoy.actions.move import MoveAction 
+from ahoy.actions.move import MoveAction
 from ahoy.condition import Condition
 from ahoy.events.communication import CommunicationSendEvent
 from ahoy.conditions.srccondition import SourceCondition
@@ -39,7 +39,7 @@ for i in range(8,14):
     ship = SmallShip(n.get_uid(), i, 0.03, path + str(i) + ".dat")
     n.add_agent(ship)
     world.add_entity(n)
- 
+
 
 # Make sensor interfaces
 s1net = Network('sonar1n', LogLossComms())
@@ -67,14 +67,14 @@ sonar2n.add_agent(SensorForwardAgent(sonar2n.get_uid(), 'sonar', 'sonar2'))
 world.add_entity(sonar2n)
 
 # On pier of naval yard
-'''
+
 radarn = Node(len(world.get_entities()))
 radarn.set_position(39.886597, -75.166043, 0)
 radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1, use_event_channel=True))
 radarn.add_interface(Interface('radar1', r1net, power=12000))
 radarn.add_agent(SensorForwardAgent(radarn.get_uid(), 'radar', 'radar1'))
 world.add_entity(radarn)
-'''
+
 # Ground station
 groundst = Node(len(world.get_entities()))
 groundst.set_position(39.887911, -75.187533, 0)
@@ -82,10 +82,11 @@ groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.02, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.08, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
 #groundst.add_agent(HistoryCorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1', 4, 0.05, 0.5))
 #groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
 world.add_entity(groundst)
+
 
 if __name__ == '__main__' :
     sim = Simulation(world)
