@@ -155,7 +155,7 @@ class CorrelationAgent(Agent):
             self._detect_threats()
             self.lock.release()
             
-            time.sleep(2)
+            #time.sleep(2)
     
     def _get_closest_pt(self, loc, pts):
         closest_dist = 99999
