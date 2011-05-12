@@ -96,7 +96,7 @@ class SonarSensor(Sensor) :
 
                     snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
-                    print entity.get_uid(), snr, self._min_snr, distance / 1000.0 < detects[bearing][0], distance / 1000.0, detects[bearing][0]
+#                    print entity.get_uid(), snr, self._min_snr, distance / 1000.0 < detects[bearing][0], distance / 1000.0, detects[bearing][0]
                     if distance/1000.0 < detects[bearing][0] and snr >= self._min_snr and distance < 3.0 :
                         #tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
                         # TODO: This removes all error

@@ -42,9 +42,10 @@ class TcpForward :
         discards = set([])
         for client in self._clients :
             try :
-               raw = event.pickle()
-               client.sendall(struct.pack('>L', len(raw)))
-               client.sendall(raw)
+                raw = event.pickle()
+                print 'pushing', len(raw)
+                client.sendall(struct.pack('>L', len(raw)))
+                client.sendall(raw)
             except :
                 print 'error sending:', sys.exc_info()[0]
                 discards.add(client)
