@@ -110,6 +110,7 @@ class ProofOfConcept :
                     print 'ADDING SENSOR'
                     uid = sensor.get_owner().get_uid()
                     self._chemsensors[uid] = sensor.get_owner().get_position()
+        redraw()
 
     def _on_shutdown(self, event) :
         quit(None, None)
@@ -121,6 +122,7 @@ class ProofOfConcept :
         self._link_lock.acquire()
         self._links[tuple(sorted((n1, n2)))] = event.get_up()
         self._link_lock.release()
+        redraw()
 
     def _on_move(self, event) :
         uid = event.get_uid()
@@ -135,6 +137,7 @@ class ProofOfConcept :
             quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
+        redraw()
 
     def _on_sonar(self, event) :
         uid = event.get_owner_uid()
@@ -146,6 +149,7 @@ class ProofOfConcept :
 
 #        print 'got sonar', bear, t_loc
         self._sonarlist[bear] = t_loc
+        redraw()
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -157,11 +161,13 @@ class ProofOfConcept :
 
         print 'Radar data bearing', bear, t_loc
         self._radarlist[bear] = t_loc
+        redraw()
     
     def _on_chemspill(self, event) :
         print 'Chemical spill happened'
         loc = event.get_location()
         #int = event.get_intensity()
+        redraw()
 
     def _on_chem_detect(self,event) :
         loc = event.get_location()
@@ -170,11 +176,12 @@ class ProofOfConcept :
         self._chemsensors_detect[uid] = loc
         self._chem_lock.release()
         print 'Chemical detected at ' , loc
-
+        redraw()
 
     def _on_sensor(self, event) :
         print 'Got sensor event'
         uid = event.get_owner_uid() 
+        redraw()
 
     def _on_correlation(self, event) :
         p1, p2 = event.get_locations()
@@ -184,6 +191,7 @@ class ProofOfConcept :
         self._correlation_lock.acquire()
         self._correlations[uid] = tuple(sorted((p1, p2)))
         self._correlation_lock.release()
+        redraw()
 
     def _on_prox_threat(self, event) :
         uid = event.get_threatened_uid()
@@ -192,6 +200,7 @@ class ProofOfConcept :
         self._threat_lock.acquire()
         self._threats[uid] = loc
         self._threat_lock.release()
+        redraw()
 
     def _on_camera(self, event) :
         field = event.get_field()
@@ -205,6 +214,7 @@ class ProofOfConcept :
         self._cameranodes_lock.acquire()
         self._cameranodes[uid] = cameranodes
         self._cameranodes_lock.release()
+        redraw()
 
     def send_bound(self, uid, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
@@ -227,7 +237,6 @@ class ProofOfConcept :
         for uid in detected:
             loc = self._chemsensors_detect[uid]
             self.draw_chem_sensor(loc,(255,0,0))
-    
 
     def draw_chem_sensor(self, loc, color):
         x,y = self._get_pix(loc[0], loc[1])
@@ -371,30 +380,35 @@ class ProofOfConcept :
         
         def redraw(move=(0,0)) :
             global window_center
-            pygame.display.flip()
             new = map(operator.sub, window_center, move)
-            surface.blit(image_surface,new)
             poc.draw()
+            pygame.display.flip()
+            surface.blit(image_surface,new)
             return new
 
         pygame.init()
         pygame.display.set_caption('Operations Center')
         image_surface = pygame.image.load('map_big.png')
         signal.signal(signal.SIGINT, quit)
-        redraw()
         dx, dy, ux, uy = 0,0,0,0
         gotFirst = False
         b1x, b1y, b2x, b2y = 0,0,0,0
         boundFirst = False
         divert = False
 
+        redraw()
+        pygame.display.flip()
+
         while True:
             global center
             global window_center
+
+            #pygame.event.pump()
+            event = pygame.event.wait()
+
             # Quit code
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    quit(None, None)
+            if event.type == QUIT:
+                quit(None, None)
             
             # Detecting 'shift' keys
             if pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_SHIFT :
@@ -404,12 +418,14 @@ class ProofOfConcept :
                 else :
                     b2x, b2y = pygame.mouse.get_pos()
                     pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
+                    redraw()
             elif pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_CTRL :
                 x,y = pygame.mouse.get_pos()
                 if(self._divert_points.count([x,y]) == 0):
                     self._divert_lock.acquire()
                     self._divert_points.append([x,y])
                     self._divert_lock.release()
+                redraw()
             elif pygame.mouse.get_pressed()[2] and pygame.key.get_mods() & KMOD_CTRL :
                 divert = True
             elif pygame.mouse.get_pressed()[0] :
@@ -427,10 +443,9 @@ class ProofOfConcept :
                     dx, dy, ux, uy = 0,0,0,0
                 if divert:
                     poc.send_divert(self._divert_points)
-                    #self._divert_points[:] = []
                     divert = False
                 gotFirst = False    
-            redraw((dx-ux, dy-uy)) 
+            #redraw((dx-ux, dy-uy))
         
 if len(sys.argv) <= 2 :
     print 'USAGE: python draw.py <hostname> <port>'
