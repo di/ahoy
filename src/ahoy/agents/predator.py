@@ -45,8 +45,8 @@ class PredatorAgent(Agent) :
         if len(event.get_visible()) > 0 :
             locs = []
             for v in event.get_visible() :
-                x = v[0] / PredatorAgent.DEG_PER_SQUARE
-                y = v[1] / PredatorAgent.DEG_PER_SQUARE
+                x = v[1] / PredatorAgent.DEG_PER_SQUARE
+                y = v[0] / PredatorAgent.DEG_PER_SQUARE
                 locs.append((x, y))
             self.on_camera(locs)
 
