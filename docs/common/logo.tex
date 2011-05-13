@@ -1,0 +1,46 @@
+\RequirePackage{fix-cm}
+\documentclass{article}
+\usepackage[usenames,dvipsnames]{xcolor}	% Logo
+\usepackage{tikz,ifthen}			% Logo
+\usepackage{pgf}				% Logo
+\usepackage{scalefnt}				% Logo
+\usepgfmodule{shapes}				% Logo
+\usepgfmodule{plot}				% Logo
+\usetikzlibrary{shapes,arrows,shadows,fit}
+
+\usepackage[graphics,tightpage,active]{preview}
+\usetikzlibrary{mindmap,trees}
+\PreviewEnvironment{tikzpicture}
+\begin{document}
+\pagestyle{empty}
+\begin{tikzpicture}[scale=1]
+    \node[color=black] at (0,-2) {{\scalefont{11.0}\textbf{AHOY}}};
+    \clip[] (0,6.5) circle (6.8cm);
+    
+    \coordinate (A) at (0,20);
+    \coordinate (B) at (-12,-.4);
+    \coordinate (C) at (12,-.4);
+    \foreach \density in {20,30,...,160}{%
+        \draw[fill=MidnightBlue!\density] (A)--(B)--(C)--cycle;
+        \path
+             (A) coordinate (X)
+          -- (B) coordinate[pos=.15](A)
+          -- (C) coordinate[pos=.15](B)
+          -- (X) coordinate[pos=.15](C);
+    }
+
+
+    \draw[draw,black,line width=10pt] (0,6.5) circle (6.8cm);
+    \draw[shorten >=2pt,line width=39pt,->] (0,1) -- (0,0);
+    \draw[line width=30pt,o-] (0,13) -- (0,3);
+    \draw[line width=30pt,o-o] (5,9) -- (-5,9);
+
+    \draw[line width=20pt,line cap=round,-] (0,5) .. controls +(0,-3.5) and +(0,0) .. (3,2.5);
+    \draw[line width=20pt,line cap=round,-] (0,5) .. controls +(0,-3.5) and +(0,0) .. (-3,2.5);
+    \draw[line width=40pt,-] (0,10.5) -- (0,2);
+
+    \draw[shorten <=15pt,line width=30pt,line cap=round,-latex] (0,0) .. controls +(0,3.5) and +(0,-6) .. (-4,7);
+    \draw[shorten <=15pt,line width=30pt,line cap=round,-latex] (0,0) .. controls +(0,3.5) and +(0,-6) .. (4,7);
+	
+\end{tikzpicture}
+\end{document}
