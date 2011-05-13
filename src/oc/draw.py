@@ -247,17 +247,18 @@ class ProofOfConcept :
             pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc[uid]), (x,y), 2) 
         
         for bear in self._sonarlist.keys() :
-            #print 'bear:', bear
             t_loc = self._sonarlist[bear]
-            if t_loc is None:
+            if len(t_loc) < 3 :
+                print '< 3', t_loc
                 del self._sonarlist[bear]
             else :
-                for loca in t_loc :
-                    try:
-                        lat, lon, bs = loca
-                        print lat, lon, bs
-                        self.draw_blip(self._get_pix(lat, lon), (255,255,100))
-                    except:
+                print 't_loc', t_loc
+                try:
+                    lat, lon, bs = t_loc
+                    print 'drawing', lat, lon, bs
+                    self.draw_blip(self._get_pix(lat, lon), (255,255,100))
+                except:
+                    if self._sonarlist.has_key(bear) :
                         del self._sonarlist[bear]
 
     def draw_radar(self) :
