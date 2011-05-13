@@ -8,30 +8,30 @@
 \pagestyle{empty}
 \begin{tikzpicture}
   \path[mindmap,concept color=black,text=white]
-    node [concept] {AHOY}
-    [clockwise from=67.5]
-    child[concept color=red!60!black, sibling angle=45] {
+    node [concept, minimum size=0pt, text width=80pt] {AHOY}
+    [clockwise from=(45*3+45/2)]
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
       node[concept] {Links}
     }
-    child[concept color=red!60!black, sibling angle=45] {
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
       node[concept] {Protocols}
     }
-    child[concept color=red!60!black, sibling angle=45] {
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
       node[concept] {Interfaces}
     }
-    child[concept color=green!50!black, sibling angle=45] {
+    child[concept color=green!50!black, sibling angle=45, level distance=100] {
       node[concept] {Events}
     }
-    child[concept color=green!50!black, sibling angle=45] {
+    child[concept color=green!50!black, sibling angle=45, level distance=100] {
       node[concept] {Entities}
     }
-    child[concept color=blue!70!black, sibling angle=45] {
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
       node[concept] {Sensors}
     }
-    child[concept color=blue!70!black, sibling angle=45] {
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
       node[concept] {Agents}
     }
-    child[concept color=blue!70!black, sibling angle=45] {
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
       node[concept] {Actions}
     }
     ;

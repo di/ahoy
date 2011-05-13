@@ -9,11 +9,12 @@
 \begin{tikzpicture}
   \path[mindmap,concept color=black,text=white]
     node [concept, minimum size=0pt, text width=80pt] {AHOY}
-    [clockwise from=67.5]
+    [clockwise from=(45*3+45/2)]
     child[concept color=red!60!black, sibling angle=45, level distance=100] {
       node[concept] {Links}
-      child[concept color=red!90!black] { node[concept] {Ethernet} }
-      child[concept color=red!90!black] { node[concept] {Wireless} }
+      [clockwise from=(130)]
+      child[sibling angle=25, concept color=red!90!black, level distance=125] { node[concept] {Ethernet} }
+      child[sibling angle=25, concept color=red!90!black] { node[concept] {Wireless} }
     }
     child[concept color=red!60!black, sibling angle=45, level distance=100] {
       node[concept] {Protocols}
@@ -23,7 +24,7 @@
     }
     child[concept color=green!50!black, sibling angle=45, level distance=100] {
       node[concept] {Events}
-      [clockwise from=360]
+      [clockwise from=75]
       child[sibling angle=25, concept color=green!80!black] { node[concept] {Entity Move} }
       child[sibling angle=25, concept color=green!80!black, level distance=125] { node[concept] {Chemical Spill} }
       child[sibling angle=25, concept color=green!80!black] { node[concept] {Divert} }
@@ -33,30 +34,31 @@
     }
     child[concept color=green!50!black, sibling angle=45, level distance=100] {
       node[concept] {Entities}
-      [clockwise from=240]
-      child[sibling angle=25, concept color=green!80!black] { node[concept] {Node} }
-      child[sibling angle=25, concept color=green!80!black,level distance=125] { node[concept] {Scripted} }
-    }
-    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
-      node[concept] {Sensors}
-      [clockwise from=245]
-      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Camera} }
-      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Chemical} }
-      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Radar} }
-      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Sonar} }
-    }
-    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
-      node [concept] {Agents}
-      [clockwise from=190]
-      child[sibling angle=25, concept color=blue!100!black] { node[concept] {AIS Ship} }
-      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Small Ship} }
-      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Threat Ship} }
-      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {UAV} }
-      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Correlation} }
+      [clockwise from=310]
+      child[sibling angle=25, concept color=green!80!black,level distance=125] { node[concept] {Node} }
+      child[sibling angle=25, concept color=green!80!black] { node[concept] {Scripted} }
     }
     child[concept color=blue!70!black, sibling angle=45, level distance=100] {
       node[concept] {Actions}
+      [clockwise from=295]
       child[sibling angle=25, concept color=blue!100!black] { node[concept] {Move} }
+    }
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
+      node[concept] {Sensors}
+      [counterclockwise from=200]
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Camera} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Chemical} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Radar} }
+      child[sibling angle=35, concept color=blue!100!black] { node[concept] {Sonar} }
+    }
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
+      node [concept] {Agents}
+      [clockwise from=230]
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {AIS Ship} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Small Ship} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Threat Ship} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {UAV} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Correlation} }
     }
     ;
 
