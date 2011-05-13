@@ -38,6 +38,8 @@ class CorrelationAgent(Agent):
         
         self._sonar_land_data = {}
         self._sonar_land_data_is_ready = False
+        
+        self._threats = {}
     
     
     def run(self):
@@ -52,6 +54,10 @@ class CorrelationAgent(Agent):
         self.get_owner_node().get_interface(self._iface_s2).set_recv_callback(self._new_sonar2_data)
         self.get_owner_node().get_interface(self._iface_r1).set_recv_callback(self._new_radar1_data)
         self.get_owner_node().get_interface(self._iface_ais).set_recv_callback(self._new_ais_data)
+        
+        while True:
+            self.refresh()
+            time.sleep(0.5)
     
     def refresh(self):
         self.lock.acquire()
@@ -237,7 +243,7 @@ class CorrelationAgent(Agent):
             
         if publish_event:
             self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
-            print 'CORRELATED AIS id', ais_key, 'at', ais_pt, 'with', s_pt, '. DIST=', dist
+            print 'Correlated AIS id', ais_key, 'at', ais_pt, 'with', s_pt, '. DIST=', dist
             
     
     def _get_closest_pt(self, loc, pts):
@@ -250,6 +256,18 @@ class CorrelationAgent(Agent):
                 closest_dist = dist
                 closest_pt = pt
         return [closest_dist, closest_pt]
+    
+    
+    def _publish_threat(self, ais_id, sensor_pt, d):
+        if not ais_id in self._threats:
+            self._threats[ais_id] = []
+        
+        if not sensor_pt in self._threats[ais_id]:
+            print 'DETECTED THREAT at ', sensor_pt, ' to AIS ID', ais_id, ' d=', d
+            self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
+            self._threats[ais_id].append(sensor_pt)
+        #else:
+        #    print sensor_pt, ' is already in ', self._threats[ais_id]
     
     
     def _detect_threats(self):
@@ -276,13 +294,12 @@ class CorrelationAgent(Agent):
                     ais_pt = self._ais_data[ais_id]
                     d = haver_distance( sensor_pt[0], sensor_pt[1], ais_pt[0], ais_pt[1] )
                     if d <= self._threat_dist:
-                        print 'POSSIBLE THREAT at ', sensor_pt, ' to AIS ID', ais_id, ' d=', d
-                        self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
+                        self._publish_threat(ais_id, sensor_pt, d)
                         
-                        if not ais_id in self._correlation:
-                            print '\tthis AIS ID was not correlated.'
-                        else:
-                            print '\tAIS ID', ais_id, 'was correlated: ', self._correlation[ais_id]
+                        #if not ais_id in self._correlation:
+                        #    print '\tthis AIS ID was not correlated.'
+                        #else:
+                        #    print '\tAIS ID', ais_id, 'was correlated: ', self._correlation[ais_id]
         #self.lock.release()
         
         
@@ -341,9 +358,9 @@ class CorrelationAgent(Agent):
             self._sonar1_data[bearing] = (lat, lon)
         self.lock.release()
         
-        is_land_pt = self._check_sonar_land_data( (lat,lon) )
-        if not is_land_pt:
-            self.refresh()
+        #is_land_pt = self._check_sonar_land_data( (lat,lon) )
+        #if not is_land_pt:
+        #    self.refresh()
         #else:
         #    print (lat,lon), 'is a land point'
         
@@ -369,9 +386,9 @@ class CorrelationAgent(Agent):
         
         self._check_sonar_land_data( (lat,lon) )
         
-        is_land_pt = self._check_sonar_land_data( (lat,lon) )
-        if not is_land_pt:
-            self.refresh()
+        #is_land_pt = self._check_sonar_land_data( (lat,lon) )
+        #if not is_land_pt:
+        #    self.refresh()
         #else:
         #    print (lat,lon), 'is a land point'
         
@@ -397,7 +414,7 @@ class CorrelationAgent(Agent):
             self._radar_data[bearing] = (lat, lon)
             self.lock.release()
         
-        self.refresh()
+        #self.refresh()
         
         
     def _new_ais_data(self, event, iface):
@@ -414,7 +431,7 @@ class CorrelationAgent(Agent):
         self._ais_data[s_id] = (lat, lon)   # ignoring agl and speed for now
         self.lock.release()
         
-        self.refresh()
+        #self.refresh()
         
         
     def _update_sensor_data(self):
