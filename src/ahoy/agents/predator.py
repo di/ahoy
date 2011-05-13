@@ -25,7 +25,7 @@ class PredatorAgent(Agent) :
 
     def get_position(self) :
         cx, cy, cz = self.get_owner_node().get_position()
-        return cx / PredatorAgent.DEG_PER_SQUARE, cy / PredatorAgent.DEG_PER_SQUARE
+        return cy / PredatorAgent.DEG_PER_SQUARE, cx / PredatorAgent.DEG_PER_SQUARE
 
     def get_rotation(self) :
         return math.radians(self.get_owner_node().get_bearing())
