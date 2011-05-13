@@ -66,6 +66,5 @@ class PreyAgent(Agent) :
     def die(self) :
         self._alive = False
         self.get_owner_node().get_event_api().publish(PreyMessage(self.get_uid(), self.get_position(), self._alive))
-        self.get_owner_node().set_speed(0, 0)
         self.get_owner_node().set_position(-500, -500, 0)
         print 'Prey %s at %s has been killed!' % (self.get_uid(), self.get_position())
