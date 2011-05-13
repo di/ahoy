@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os, sys
 import socket, sys, signal, operator
+import random
 from threading import Lock
 from ahoy.util.geo import *
 from ahoy.agents.uav import *
@@ -105,8 +106,8 @@ class ProofOfConcept :
         for entity in entities :
             sensors = entity.get_sensors().values()
             for sensor in sensors:
-                if sensor.__class__.__name__ == "ChemicalSensor" :
-                    print "ADDING SENSOR"
+                if sensor.__class__.__name__ == 'ChemicalSensor' :
+                    print 'ADDING SENSOR'
                     uid = sensor.get_owner().get_uid()
                     self._chemsensors[uid] = sensor.get_owner().get_position()
 
@@ -154,10 +155,11 @@ class ProofOfConcept :
         self._current_radar_bearing = bear
         self._current_radar_loc = self._nodelist[uid][0]
 
+#        print 'Radar data bearing', bear
         self._radarlist[bear] = t_loc
     
     def _on_chemspill(self, event) :
-        print "Chemical spill happened"
+        print 'Chemical spill happened'
         loc = event.get_location()
         #int = event.get_intensity()
 
@@ -167,7 +169,7 @@ class ProofOfConcept :
         self._chem_lock.acquire()
         self._chemsensors_detect[uid] = loc
         self._chem_lock.release()
-        print "Chemical detected at " , loc
+        print 'Chemical detected at ' , loc
 
 
     def _on_sensor(self, event) :
@@ -177,6 +179,7 @@ class ProofOfConcept :
     def _on_correlation(self, event) :
         p1, p2 = event.get_locations()
         uid = event.get_ais_uid()
+        print 'CORRELATION AIS id %s AT %s' % (uid, p2)
 
         self._correlation_lock.acquire()
         self._correlations[uid] = tuple(sorted((p1, p2)))
@@ -236,16 +239,18 @@ class ProofOfConcept :
             self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_sonar(self) :
-        print 'drawing sonar'
+        #print 'drawing sonar'
         global center
         cx, cy = center
+        '''
         if self._current_sonar_loc is not None :
             px, py = self._get_pix(*self._current_sonar_loc)
             x = int(px + 4800*math.cos(math.radians(self._current_sonar_bearing-90)))
             y = int(py + 4800*math.sin(math.radians(self._current_sonar_bearing-90)))
             pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc), (x,y), 2) 
+        '''
         for bear in self._sonarlist.keys() :
-            print 'bear:', bear
+            #print 'bear:', bear
             t_loc = self._sonarlist[bear]
             if t_loc is None :
                 del self._sonarlist[bear]
@@ -253,7 +258,7 @@ class ProofOfConcept :
                 for loca in t_loc :
                     lat, lon, bs = loca
                     self.draw_blip(self._get_pix(lat, lon), (255,255,100))
-                    print 'sonar', loca
+                    #print 'sonar', loca
 
     def draw_radar(self) :
         global center
@@ -278,7 +283,7 @@ class ProofOfConcept :
 
     def draw_node(self, position, type, uid) :
         Font = pygame.font.Font(None,20)
-        text = Font.render(','.join(str(n) for n in self._aaron_sucks[uid]),1,(0,0,0))
+        text = Font.render(','.join(str(n) for n in self._aaron_sucks[uid]) + (' (%s)' % uid),1,(0,0,0))
 
         x, y = position
         if self._nodecolor.has_key(type) :
@@ -293,10 +298,14 @@ class ProofOfConcept :
 
     def draw_correlation(self) :
         self._correlation_lock.acquire()
-        for correlation in self._correlations.values() :
+        for uid, correlation in self._correlations.iteritems() :
             p1 = self._get_pix(*correlation[0])
             p2 = self._get_pix(*correlation[1])
-            pygame.draw.line(surface, (255, 0, 255), p1, p2, 2)
+            num_ais = 6.0
+            color = ((255.0 / num_ais) * uid)
+            pygame.draw.circle(surface, (color, color, color), p1, 13, 3)
+            pygame.draw.circle(surface, (color, color, color), p2, 13, 3)
+            pygame.draw.line(surface, (255, 0, 255), p1, p2, 5)
         self._correlation_lock.release()
 
     def draw_links(self) :
@@ -369,8 +378,8 @@ class ProofOfConcept :
             return new
 
         pygame.init()
-        pygame.display.set_caption("Operations Center")
-        image_surface = pygame.image.load("map_big.png")
+        pygame.display.set_caption('Operations Center')
+        image_surface = pygame.image.load('map_big.png')
         signal.signal(signal.SIGINT, quit)
         redraw()
         dx, dy, ux, uy = 0,0,0,0
@@ -424,13 +433,13 @@ class ProofOfConcept :
             redraw((dx-ux, dy-uy)) 
         
 if len(sys.argv) <= 2 :
-    print "USAGE: python draw.py <hostname> <port>"
+    print 'USAGE: python draw.py <hostname> <port>'
     quit(None, None)
 
 try : 
     poc = ProofOfConcept(sys.argv[1], int(sys.argv[2]))
 except socket.error :
-    print "Invalid host or port, or TCP forwarder not started. Exiting."
+    print 'Invalid host or port, or TCP forwarder not started. Exiting.'
     quit(None, None)
 
 poc.main()
