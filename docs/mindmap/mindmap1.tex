@@ -1,0 +1,52 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usepackage[graphics,tightpage,active]{preview}
+\usetikzlibrary{mindmap,trees}
+\PreviewEnvironment{tikzpicture}
+\begin{document}
+\pagestyle{empty}
+\begin{tikzpicture}
+  \path[mindmap,concept color=black,text=white]
+    node (NS) at (-4.33,0) [concept] {Network Simulators}
+    [clockwise from=240]
+    child[concept color=red!60!black] {
+      node[concept] {Links}
+    }
+    child[concept color=red!60!black] {
+      node[concept] {Protocols}
+    }
+    child[concept color=red!60!black] {
+      node[concept] {Interfaces}
+    }
+    node (NS2) at (NS) [concept] {Network Simulators}
+    [clockwise from=30]
+    child[concept color=green!50!black] {
+      node[concept] {Events}
+    }
+    child[concept color=green!50!black] {
+      node[concept] {Entities}
+    }
+    node (AS) at (4.33,0) [concept] {Agent Simulators}
+    [counterclockwise from=150]
+    child[concept color=green!50!black] {
+      node[concept] {Events}
+    }
+    child[concept color=green!50!black] {
+      node[concept] {Entities}
+    }
+    node (AS2) at (AS) [concept] {Agent Simulators}
+    [clockwise from=60]
+    child[concept color=blue!70!black] {
+      node[concept] {Sensors}
+    }
+    child[concept color=blue!70!black] {
+      node[concept] {Agents}
+    }
+    child[concept color=blue!70!black] {
+      node[concept] {Actions}
+    }
+    ;
+
+\end{tikzpicture}
+\end{document}

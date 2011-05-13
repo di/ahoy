@@ -1,0 +1,64 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usepackage[graphics,tightpage,active]{preview}
+\usetikzlibrary{mindmap,trees}
+\PreviewEnvironment{tikzpicture}
+\begin{document}
+\pagestyle{empty}
+\begin{tikzpicture}
+  \path[mindmap,concept color=black,text=white]
+    node [concept, minimum size=0pt, text width=80pt] {AHOY}
+    [clockwise from=67.5]
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
+      node[concept] {Links}
+      child[concept color=red!90!black] { node[concept] {Ethernet} }
+      child[concept color=red!90!black] { node[concept] {Wireless} }
+    }
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
+      node[concept] {Protocols}
+    }
+    child[concept color=red!60!black, sibling angle=45, level distance=100] {
+      node[concept] {Interfaces}
+    }
+    child[concept color=green!50!black, sibling angle=45, level distance=100] {
+      node[concept] {Events}
+      [clockwise from=360]
+      child[sibling angle=25, concept color=green!80!black] { node[concept] {Entity Move} }
+      child[sibling angle=25, concept color=green!80!black, level distance=125] { node[concept] {Chemical Spill} }
+      child[sibling angle=25, concept color=green!80!black] { node[concept] {Divert} }
+      child[sibling angle=25, concept color=green!80!black, level distance=125] { node[concept] {Link} }
+      child[sibling angle=25, concept color=green!80!black] { node[concept] {Threat} }
+      child[sibling angle=25, concept color=green!80!black, level distance=125] { node[concept] {Sensor} }
+    }
+    child[concept color=green!50!black, sibling angle=45, level distance=100] {
+      node[concept] {Entities}
+      [clockwise from=240]
+      child[sibling angle=25, concept color=green!80!black] { node[concept] {Node} }
+      child[sibling angle=25, concept color=green!80!black,level distance=125] { node[concept] {Scripted} }
+    }
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
+      node[concept] {Sensors}
+      [clockwise from=245]
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Camera} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Chemical} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Radar} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Sonar} }
+    }
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
+      node [concept] {Agents}
+      [clockwise from=190]
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {AIS Ship} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {Small Ship} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Threat Ship} }
+      child[sibling angle=25, concept color=blue!100!black, level distance=125] { node[concept] {UAV} }
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Correlation} }
+    }
+    child[concept color=blue!70!black, sibling angle=45, level distance=100] {
+      node[concept] {Actions}
+      child[sibling angle=25, concept color=blue!100!black] { node[concept] {Move} }
+    }
+    ;
+
+\end{tikzpicture}
+\end{document}
