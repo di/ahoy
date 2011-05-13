@@ -1,7 +1,7 @@
 from ahoy.agent import Agent
 from ahoy.util.geo import *
 
-import time
+import time, sys
 from threading import Lock
 
 from ahoy.eventapi import EventAPI
@@ -22,7 +22,7 @@ class CorrelationAgent(Agent):
         # max distance for an AIS and sensor point to be considered the same point
         self._ais_threshold = ais_threshold
         
-        self._max_corr_dist = 1.0
+        self._max_corr_dist = 0.5
         
         self._correlation = {}
         self._sensor_data = []
@@ -34,6 +34,11 @@ class CorrelationAgent(Agent):
         self._event_api = None
         
         self._sensor_history = []
+        self._old_correlation = {}
+        
+        self._sonar_land_data = {}
+        self._sonar_data_is_ready = False
+        
     
     def run(self):
         print 'Running correlation agent...'
@@ -54,19 +59,26 @@ class CorrelationAgent(Agent):
             '''recreate list of most recent sensor data, as it may have been updated'''
             # possibly move this action to functions where individual data points are added
             self._update_sensor_data()
-            print '*****************CORRELATING****'
-            for pt in self._sensor_data:
-                print pt
-            print '\n\n'
-            for ais_id in self._ais_data:
-                print self._ais_data[ais_id], ais_id
-            print '*************************'
+            #print '*****************CORRELATING****'
+            #for pt in self._sensor_data:
+            #    print pt
+            #print '\n\n'
+            #for ais_id in self._ais_data:
+            #    print self._ais_data[ais_id], ais_id
+            #print '*************************'
             
             #self.lock.acquire()
             
             '''clear all correlations for now
                 This way, there will be no chance of having an AIS ship point still correlated to an outdated
                 sensor point (which may no longer even exist)'''
+            # copy old correlation into new
+            # used to check for duplicates. need this b/c correlation needs to start as a cleared dictionary 
+            # (later we need to be able to check if all AIS ships were paired with a sensor point, before we try to find closest point to each unpaired AIS ship
+            self._old_correlation.clear()
+            for ais_id in self._correlation:
+            	dist, s_pt = self._correlation[ais_id]
+            	self._old_correlation[ais_id] = [dist, s_pt]
             self._correlation.clear()
             
             '''for each sensor data item ("current sensor item"), see which AIS data point is closest.
@@ -79,7 +91,7 @@ class CorrelationAgent(Agent):
             for sensor_pt in self._sensor_data:
             #for sensor_pt in self._radar_data.values():
             
-                print '\nCorrelating ', sensor_pt, '...'
+                #print '\nCorrelating ', sensor_pt, '...'
                 ''' distance to AIS ship should be negligent '''
                 closest_dist = self._max_corr_dist  #self._ais_threshold #self._ais_threshold  #99999
                 closest_ais_id = None
@@ -95,9 +107,8 @@ class CorrelationAgent(Agent):
                         # Only match if we find an AIS point closer than we have found before
                         closest_dist = dist
                         closest_ais_id = ais_id
-                        #closest_s_pt = None
                         #print 'closest_ais_id = ', closest_ais_id, 'closest_dist = ', closest_dist
-                        print 'Found a new closest distance: ', closest_dist
+                        #print 'Found a new closest distance: ', closest_dist
                 
                 #print 'closest_ais_id = ', closest_ais_id
                 if closest_ais_id is None:
@@ -110,20 +121,21 @@ class CorrelationAgent(Agent):
                         Let's see if current sensor point is closer (or equidistant).  If so, update the correlation'''
                     if closest_dist <= self._correlation[closest_ais_id][0]:
                         self._correlation[closest_ais_id] = [closest_dist, (sensor_pt)]
-                        print 'OVERWRITE: Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist, '*'
+                        #print 'OVERWRITE: Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist, '*'
                 else:
                     ''' No sensor point had yet been paired with this AIS point,
                         and we know this is the closest AIS point we've found to this sensor so far.  Update.'''
                     self._correlation[closest_ais_id] = [closest_dist, (sensor_pt)]
-                    print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
+                    #print 'Paired this sensor pt to AIS ', closest_ais_id, 'dist=', closest_dist
                     
                     
             #print 'final:'
             for ais_id in self._correlation:
                 ais_pt = self._ais_data[ais_id]
                 dist, s_pt = self._correlation[ais_id]
-                print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
-                self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
+                #print 'Correlated AIS id', ais_id, 'at', self._ais_data[ais_id], 'with', s_pt, '. DIST=', dist
+                #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
+                self._publish_correlation(ais_id, ais_pt, dist, s_pt)
                 
             ''' update all blank AIS matches'''
             # first, create list of unmatched sensor points
@@ -139,13 +151,22 @@ class CorrelationAgent(Agent):
                     
                     closest_dist, closest_pt = self._get_closest_pt(ais_pt, available_sensor_pts)
                     if closest_pt is None:
-                        print 'No sensor point correlated with AIS ID', ais_id, 'at', ais_pt, '!'
-                        self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                        #print 'No sensor point correlated with AIS ID', ais_id, 'at', ais_pt, '!'
+                        #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                        self._correlation[ais_id] = [0, ais_pt]
+                        self._publish_correlation(ais_id, ais_pt, 0, ais_pt)
                     else:
-                        print 'Found closest point ', closest_pt, ' dist = ', closest_dist
+                        #print 'Found closest point ', closest_pt, ' dist = ', closest_dist
                         if closest_dist <= self._max_corr_dist:
                             self._correlation[ais_id] = [closest_dist, closest_pt]
-                            self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], closest_pt[0], closest_pt[1], ais_id))
+                            #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], closest_pt[0], closest_pt[1], ais_id))
+                            self._publish_correlation(ais_id, ais_pt, closest_dist, closest_pt)
+                        else:
+                            print 'No sensor point correlated with AIS ID', ais_id, 'at', ais_pt, '. closest_d = ', closest_dist
+                            #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
+                            self._correlation[ais_id] = [0, ais_pt]
+                            self._publish_correlation(ais_id, ais_pt, 0, ais_pt)
+                            
                     
                     #print 'No sensor point correlated with AIS ID ', ais_id, ' at ', ais_pt
                     #self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], ais_pt[0], ais_pt[1], ais_id))
@@ -153,9 +174,25 @@ class CorrelationAgent(Agent):
             #self.lock.release()
             
             self._detect_threats()
+            self._old_correlation.clear()
             self.lock.release()
             
-            #time.sleep(2)
+            time.sleep(0.5)
+    
+    
+    def _publish_correlation(self, ais_id, ais_pt, dist, s_pt):
+        publish_event = False
+        if ais_id in self._old_correlation:
+            old_dist, old_pt = self._old_correlation[ais_id]
+            if not old_pt == s_pt:
+                publish_event = True
+        else:
+            publish_event = True
+            
+        if publish_event:
+            self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
+            print 'CORRELATED AIS id', ais_id, 'at', ais_pt, 'with', s_pt, '. DIST=', dist
+            
     
     def _get_closest_pt(self, loc, pts):
         closest_dist = 99999
@@ -192,6 +229,30 @@ class CorrelationAgent(Agent):
             
         
     
+    
+    def _pt_in_sonar_land_data(self, pt):
+        if pt in self._sonar_land_data:
+            if self._sonar_land_data[pt] > 4:
+                return True
+    
+    def _check_sonar_land_data(self, pt):
+        if self._pt_in_sonar_land_data(pt):
+        
+            # Test if land data is ready
+            if self._sonar_land_data[pt] > 5:
+                self._sonar_land_data_is_ready = True
+                self._trim_sonar_land_data()
+            
+            self._sonar_land_data[pt] = self._sonar_land_data[pt] + 1
+            return True
+        
+        else:
+            self._sonar_land_data[pt] = 0
+        
+        return False
+    
+    
+    
     def _parse_sonar_data(self, event):
         msg = event.get_message().get_payload()
         info = msg.split()
@@ -203,32 +264,42 @@ class CorrelationAgent(Agent):
         #print 'CA: new sonar1 data: ', msg
         info = msg.split()
         bearing = float(info[0])
-        if not self._sonar1_data.has_key(bearing):
-            self._sonar1_data[bearing] = []
         
         self.lock.acquire()
+        if not self._sonar1_data.has_key(bearing):
+            self._sonar1_data[bearing] = None
+        
         for entry in info[1:]:      
             lat, lon, snr = entry.split(',')
             lat = float(lat)
             lon = float(lon)
+            #if (not self._sonar1_data.has_key(bearing)) or (not (lat,lon) is self._sonar1_data[bearing]):
+            #    print 'updated sonar1 data bearing', bearing, ' = ', (lat, lon)
             self._sonar1_data[bearing] = (lat, lon)
         self.lock.release()
+        
+        self._check_sonar_land_data( (lat,lon) )
         
     def _new_sonar2_data(self, event, iface):
         msg = event.get_message().get_payload()
         #print 'CA: new sonar2 data: ', msg
         info = msg.split()
         bearing = float(info[0])
-        if not self._sonar2_data.has_key(bearing):
-            self._sonar2_data[bearing] = []
         
         self.lock.acquire()
+        if not self._sonar2_data.has_key(bearing):
+            self._sonar2_data[bearing] = None
+        
         for entry in info[1:]:      # will always get something for the given bearing (if no ship, picks up land)
             lat, lon, snr = entry.split(',')
             lat = float(lat)
             lon = float(lon)
+            #if (not self._sonar2_data.has_key(bearing)) or (not (lat,lon) is self._sonar2_data[bearing]):
+            #    print 'updated sonar2 data bearing', bearing, ' = ', (lat, lon)
             self._sonar2_data[bearing] = (lat, lon)
         self.lock.release()
+        
+        self._check_sonar_land_data( (lat,lon) )
         
         
     def _new_radar1_data(self, event, iface):
@@ -248,9 +319,10 @@ class CorrelationAgent(Agent):
             lon = float(lon)
             
             self.lock.acquire()
+            #if (not self._radar_data.has_key(bearing)) or (not (lat,lon) is self._radar_data[bearing]):
+            #        print 'Just added radar data at bearing ', bearing, '=', (lat, lon)
             self._radar_data[bearing] = (lat, lon)
             self.lock.release()
-            #print 'Just added radar data at bearing ', bearing, '=', (lat, lon)
             
         
         
@@ -269,16 +341,8 @@ class CorrelationAgent(Agent):
         
         #print 'Just added ais data at id ', s_id, '=', (lat, lon)
         
-    
-    def _add_sensor_pt(self, lat, lon):
-            
-        #for pt_id, pt_lat, pt_lon in self._sensor_data:
-        for pt in self._sensor_data:
-            ''' See if given lat, lon point is within threshold distance of pt.
-                If so, consider them the same point '''
-            pass
-            
-            
+        
+        
     def _update_sensor_data(self):
         self._sensor_data = []
         
@@ -300,19 +364,32 @@ class CorrelationAgent(Agent):
             (which sonar sensor data came from does not matter at this point; 
             it only matters when trying to delete sonar data from any one particular sonar sensor only) '''
         
+        if not self._sonar_data_is_ready:
+            return
+        
         all_sonar_pts = []
         all_sonar_pts.extend( self._sonar1_data.values() )
         all_sonar_pts.extend( self._sonar2_data.values() )
         #print 'length of all_sonar_pts = ', len(all_sonar_pts)
         
         for sonar_loc in all_sonar_pts:
+            if sonar_loc is None:
+                continue
+                
+            if self._pt_in_sonar_land_data(sonar_loc) is True:
+                ''' This is a land point'''
+                continue
+            
             uniquePoint = True
             '''make sure sonar_loc is not within ais_threshold dist from each point'''
             for loc in self._sensor_data:
                 #print 'about to calculate haver_distance for ', sonar_loc, 'and', loc
-                if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
-                    uniquePoint = False
-                    break
+                try:
+                    if haver_distance( sonar_loc[0], sonar_loc[1], loc[0], loc[1]) <= self._ais_threshold:
+                        uniquePoint = False
+                        break
+                except:
+                    print 'error with sonar_loc = ', sonar_loc, ', loc = ', loc
             if uniquePoint:
                 self._sensor_data.append(sonar_loc)
         #print 'length of self._sensor_data = ', len(self._sensor_data) 
