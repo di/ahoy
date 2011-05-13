@@ -15,24 +15,22 @@ class PredatorAgentImpl(PredatorAgent) :
     '''
     def main(self) :
         rotation = math.radians(50)
-        self.get_owner_node().set_bearing(math.radians(0))
-        self.set_speed(1, 0)
         while True :
             '''
             set_speed(blocks_per_second, radians_per_second)
 
             NOTE: The max for this is 2 blocks/sec.
             '''
-#            rotation *= -1
+            self.set_speed(1, rotation)
+            rotation *= -1
             x, y = self.get_position()
-            print '>', x, y
             '''
             Example communication: Sends a string message to all other predators with the new location.
             The contents being sent can be any serializable object, not just a string.
             '''
             self.send_message('new_loc %s %s %s' % (x, y, math.degrees(self.get_rotation())))
 
-            time.sleep(.1)
+            time.sleep(2)
 
     '''
     This method is automatically invoked when a message from another predator is received.

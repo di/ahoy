@@ -11,7 +11,7 @@ from ahoy.agents.prey import PreyAgent
 world = World()
 
 quads = [ (0, .00444, 0, .00444), (0, -.00444, 0, .00444), (0, .00444, 0, -.00444), (-.00444, 0, -.00444, 0) ]
-'''
+
 for q in quads :
     prey = Node(len(world.get_entities()))
     prey.set_position(random.uniform(q[0], q[1]), random.uniform(q[2], q[3]), 0)
@@ -23,7 +23,7 @@ for q in quads :
     pred.add_agent(PredatorAgentImpl(len(world.get_entities())))
     pred.add_sensor('camera', ForwardCameraSensor(1, 90, 200.0 / 1000.0, use_event_channel=True))
     world.add_entity(pred)
-'''
+
 pred = Node(len(world.get_entities()))
 pred.add_agent(PredatorAgentImpl(len(world.get_entities())))
 pred.add_sensor('camera', ForwardCameraSensor(1, 90, 200.0 / 1000.0, use_event_channel=True))
