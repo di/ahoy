@@ -25,6 +25,7 @@ from ahoy.agents.sensorforwardagent import SensorForwardAgent
 from ahoy.sensors.camerasensor import CameraSensor
 from ahoy.agents.threat import ThreatShip
 from ahoy.agents.tanker import Tanker
+from ahoy.agents.correlationagent import CorrelationAgent
 
 world = World()
 wlan = Network('wlan0', LogLossComms())
@@ -94,8 +95,8 @@ groundst.set_position(39.887911, -75.187533, 0)
 groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
-#groundst.add_interface(Interface('ais1', aisnet, power=12000))
-#groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.01, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_interface(Interface('tnet', tnet, power=12000))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.4, 0.03, 'sonar1', 'sonar2', 'radar1', 'tnet'))
 #groundst.add_agent(HistoryCorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1', 4, 0.05, 0.5))
 #groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
 world.add_entity(groundst)
