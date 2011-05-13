@@ -151,7 +151,7 @@ class grid_gui :
             Font = pygame.font.Font(None,CW)
             text = Font.render(str(i),1,(200,200,200))
             screen.blit(text,(i*CW+CW*25,CW*25))
-            screen.blit(text,(CW*25,i*CW+CW*25))
+            screen.blit(text,(CW*25,CW*25-i*CW))
 
     def redraw(self) :
         pygame.display.flip()
