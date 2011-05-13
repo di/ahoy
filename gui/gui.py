@@ -54,6 +54,7 @@ class node :
 class grid_gui :
     def __init__(self) :
         self._nodelist = {}
+        self._node_lock = Lock()
         self._vislist = {}
         self._vis_lock = Lock()
         self._fieldlist = {}
@@ -77,7 +78,9 @@ class grid_gui :
         loca = loc(x,y)
         agents = event.get_agents()
         
+        self._node_lock.acquire()
         self._nodelist[uid] = node(uid, type, loca, bear, agents)
+        self._node_lock.release()
 
     def _on_camera(self, event) :
         uid = event.get_owner_uid()
@@ -94,8 +97,10 @@ class grid_gui :
         self._field_lock.release()
 
     def draw_nodes(self) :
+        self._node_lock.acquire()
         for uid in self._nodelist :
             self.draw_node(self._nodelist[uid])
+        self._node_lock.release()
 
     def draw_node(self, node) :
         global CW
