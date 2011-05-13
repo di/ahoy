@@ -30,6 +30,7 @@ class SonarSensor(Sensor) :
         Sensor.__init__(self, **kwds)
         self._source_level = source_level # dB
         self._source_bw = source_bw
+        self._array_size = array_size
         self._angles = 360 / array_size
         self._interval = interval
         self._min_snr = min_snr
@@ -81,7 +82,8 @@ class SonarSensor(Sensor) :
         return snr
 
     def run(self) :
-        self._edges = self._get_edges()
+        self._edges = [[None] for angle in range(0, 360)]#self._get_edges()
+        ''' 
         while True :
             detects = self._edges[:]
 
@@ -97,14 +99,48 @@ class SonarSensor(Sensor) :
                     snr = self._get_snr(distance, entity.get_parameter('sonar_level', 0))
                     bearing = int(bearing_from_pts(lat, lon, e_lat, e_lon))
 #                    print entity.get_uid(), snr, self._min_snr, distance / 1000.0 < detects[bearing][0], distance / 1000.0, detects[bearing][0]
-                    if distance/1000.0 < detects[bearing][0] and snr >= self._min_snr and distance < 3.0 :
+                    print detects[bearing]
+                    if (detects[bearing][0] == None or distance/1000.0 < detects[bearing][0]) and snr >= self._min_snr and distance < 3.0 :
                         #tlat, tlon = loc_from_bearing_dist(lat, lon, bearing, distance/1000)
                         # TODO: This removes all error
                         tlat, tlon = e_lat, e_lon
                         detects[bearing] = [tlat, tlon, snr]
+                        print detects[bearing]
 
             merged_detects = {}
             for detector_start in range(0, 360, self._angles) :
                 self._publish_data(SonarEvent(self.get_owner().get_uid(), detector_start, detects[detector_start:detector_start + self._angles]))
+                time.sleep(self._interval / float(self._array_size))
+        '''
+        sonar_bearing = 0
+        while True :
+            angle_data = None
+            for entity in self.get_world().get_entities() :
+                if entity.get_uid() == self.get_owner().get_uid() :
+                    continue
+                lat, lon, agl = self.get_owner().get_position()
+                e_lat, e_lon, e_agl = entity.get_position()
 
-            time.sleep(self._interval)
+                lat = math.radians(lat)
+                e_lat = math.radians(e_lat)
+                lon = math.radians(lon)
+                e_lon = math.radians(e_lon)
+                
+                y = math.sin(e_lon - lon) * math.cos(e_lat)
+                x = math.cos(lat) * math.sin(e_lat) - math.sin(lat) * math.cos(e_lat) * math.cos(e_lon - lon)
+                bearing = math.atan2(y, x) % (2*math.pi)
+                
+                if bearing >= sonar_bearing and bearing <= sonar_bearing + self._angles :
+                    dist = lin_distance(math.degrees(lat), math.degrees(lon), 0, math.degrees(e_lat), math.degrees(e_lon), 0)
+                    if angle_data == None or angle_data[0] > dist :
+                        angle_data = [dist, e_lat, e_lon]
+
+            if angle_data != None :
+                data = [math.degrees(angle_data[1]), math.degrees(angle_data[2]), 0]
+                print 'got data', data
+            else :
+                data = [None]
+            self._publish_data(SonarEvent(self.get_owner().get_uid(), int(math.degrees(sonar_bearing)), data))
+
+            sonar_bearing = (sonar_bearing + (2*math.pi/float(self._array_size))) % (2 * math.pi)
+            time.sleep(self._interval / float(self._array_size))
