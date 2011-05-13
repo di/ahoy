@@ -31,9 +31,9 @@ class ThreatShip(Agent) :
         if(self._follow != None):
             self.get_owner_node().get_event_api().subscribe(EntityMoveEvent, self._on_tanker_move)
 
-        print 'Threat at ' + lat + ',' + lon
+        #print 'Threat at ' + lat + ',' + lon
         for l in self._locs[1:]:
-            print 'Threat moving to ' + l
+            #print 'Threat moving to ' + l
             self._move(l)            
 
 
@@ -47,21 +47,21 @@ class ThreatShip(Agent) :
 
     def _on_tanker_move(self, event):
         if event.get_uid() == self._follow:
-            print 'Got the follow event'
+            #print 'Got the follow event'
             lat = event.get_lat()
             lon = event.get_long()
             vel = event.get_forward_vel()
             mylat,mylon,myagl = self.get_owner_node().get_position()
             d = lin_distance(lat,lon,0.0,mylat,mylon,0.0)
-            print str(d) + ' kilos away'
+            #print str(d) + ' kilos away'
             if d == 0 :
-                print 'Intercepted ship'
+                #print 'Intercepted ship'
                 self.get_owner_node().get_event_api().publish(ChemicalSpillEvent(self.get_owner_node().get_position(), .0002))
             elif d <= 0.2 and vel != 0 :
-                print 'Slowing down...'
+                #print 'Slowing down...'
                 self._forward_vel = vel
             elif d > 0.2 :
-                print 'Speeding up...'
+                #print 'Speeding up...'
                 self._forward_vel = vel + 0.08         
             
             self.get_owner_node().set_forward_velocity(self._forward_vel)

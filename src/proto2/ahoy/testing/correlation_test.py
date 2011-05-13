@@ -19,7 +19,7 @@ from ahoy.agents.sensorforwardagent import SensorForwardAgent
 from ahoy.sensors.radarsensor import RadarSensor
 from ahoy.sensors.sonarsensor import SonarSensor
 from ahoy.agents.correlationagent import CorrelationAgent
-from ahoy.agents.histcorragent import HistoryCorrelationAgent
+#from ahoy.agents.histcorragent import HistoryCorrelationAgent
 from ahoy.util.units import *
 
 world = World()

@@ -53,8 +53,8 @@ class ProofOfConcept :
         self._aaron_sucks = {} # Agent lists
         self._current_radar_bearing = None
         self._current_radar_loc = None
-        self._current_sonar_bearing= None
-        self._current_sonar_loc = None
+        self._current_sonar_bearing= {} 
+        self._current_sonar_loc = {} 
 
         self.tl_lat, self.tl_lon = (40.0140,-75.3321)
         self.br_lat, self.br_lon = (39.7590,-75.0000)
@@ -142,10 +142,10 @@ class ProofOfConcept :
     def _on_sonar(self, event) :
         uid = event.get_owner_uid()
         t_loc = event.get_detects()
-        bear = round(math.degrees(event.get_bearing()))
+        bear = round(event.get_bearing())
         
-        self._current_sonar_bearing = bear
-        self._current_sonar_loc = self._nodelist[uid][0]
+        self._current_sonar_bearing[uid] = bear
+        self._current_sonar_loc[uid] = self._nodelist[uid][0]
 
 #        print 'got sonar', bear, t_loc
         self._sonarlist[bear] = t_loc
@@ -159,7 +159,7 @@ class ProofOfConcept :
         self._current_radar_bearing = bear
         self._current_radar_loc = self._nodelist[uid][0]
 
-        print 'Radar data bearing', bear, t_loc
+        #print 'Radar data bearing', bear, t_loc
         self._radarlist[bear] = t_loc
         self.redraw()
     
@@ -262,7 +262,7 @@ class ProofOfConcept :
             #print 'bear:', bear
             t_loc = self._sonarlist[bear]
             if t_loc is None :
-                del self._sonarlist[bear]
+                del self._sonarlist[(bear, uid)]
             else :
                 for loca in t_loc :
                     lat, lon, bs = loca
