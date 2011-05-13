@@ -144,7 +144,7 @@ class ProofOfConcept :
         self._current_sonar_bearing = bear
         self._current_sonar_loc = self._nodelist[uid][0]
 
-        print 'got sonar', bear, t_loc
+#        print 'got sonar', bear, t_loc
         self._sonarlist[bear] = t_loc
 
     def _on_radar(self, event) :
@@ -155,7 +155,7 @@ class ProofOfConcept :
         self._current_radar_bearing = bear
         self._current_radar_loc = self._nodelist[uid][0]
 
-#        print 'Radar data bearing', bear
+        print 'Radar data bearing', bear, t_loc
         self._radarlist[bear] = t_loc
     
     def _on_chemspill(self, event) :
