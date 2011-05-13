@@ -107,10 +107,8 @@ class ProofOfConcept :
             sensors = entity.get_sensors().values()
             for sensor in sensors:
                 if sensor.__class__.__name__ == 'ChemicalSensor' :
-                    print 'ADDING SENSOR'
                     uid = sensor.get_owner().get_uid()
                     self._chemsensors[uid] = sensor.get_owner().get_position()
-        self.redraw()
 
     def _on_shutdown(self, event) :
         quit(None, None)
@@ -122,7 +120,6 @@ class ProofOfConcept :
         self._link_lock.acquire()
         self._links[tuple(sorted((n1, n2)))] = event.get_up()
         self._link_lock.release()
-        self.redraw()
 
     def _on_move(self, event) :
         uid = event.get_uid()
@@ -137,19 +134,16 @@ class ProofOfConcept :
             quit(None, None)
 
         self._nodelist[uid] = ((lat, lon),type)
-        self.redraw()
 
     def _on_sonar(self, event) :
         uid = event.get_owner_uid()
         t_loc = event.get_detects()
-        bear = round(event.get_bearing())
+        bear = event.get_bearing()
         
         self._current_sonar_bearing[uid] = bear
         self._current_sonar_loc[uid] = self._nodelist[uid][0]
 
-#        print 'got sonar', bear, t_loc
         self._sonarlist[bear] = t_loc
-        self.redraw()
 
     def _on_radar(self, event) :
         uid = event.get_owner_uid()
@@ -159,15 +153,12 @@ class ProofOfConcept :
         self._current_radar_bearing = bear
         self._current_radar_loc = self._nodelist[uid][0]
 
-        #print 'Radar data bearing', bear, t_loc
         self._radarlist[bear] = t_loc
-        self.redraw()
     
     def _on_chemspill(self, event) :
         print 'Chemical spill happened'
         loc = event.get_location()
         #int = event.get_intensity()
-        self.redraw()
 
     def _on_chem_detect(self,event) :
         loc = event.get_location()
@@ -176,12 +167,11 @@ class ProofOfConcept :
         self._chemsensors_detect[uid] = loc
         self._chem_lock.release()
         print 'Chemical detected at ' , loc
-        self.redraw()
+
 
     def _on_sensor(self, event) :
         print 'Got sensor event'
         uid = event.get_owner_uid() 
-        self.redraw()
 
     def _on_correlation(self, event) :
         p1, p2 = event.get_locations()
@@ -191,7 +181,6 @@ class ProofOfConcept :
         self._correlation_lock.acquire()
         self._correlations[uid] = tuple(sorted((p1, p2)))
         self._correlation_lock.release()
-        self.redraw()
 
     def _on_prox_threat(self, event) :
         uid = event.get_threatened_uid()
@@ -200,7 +189,6 @@ class ProofOfConcept :
         self._threat_lock.acquire()
         self._threats[uid] = loc
         self._threat_lock.release()
-        self.redraw()
 
     def _on_camera(self, event) :
         field = event.get_field()
@@ -214,7 +202,6 @@ class ProofOfConcept :
         self._cameranodes_lock.acquire()
         self._cameranodes[uid] = cameranodes
         self._cameranodes_lock.release()
-        self.redraw()
 
     def send_bound(self, uid, dx, dy, ux, uy) :
         p1 = self._get_ll(dx, dy)
@@ -237,6 +224,7 @@ class ProofOfConcept :
         for uid in detected:
             loc = self._chemsensors_detect[uid]
             self.draw_chem_sensor(loc,(255,0,0))
+    
 
     def draw_chem_sensor(self, loc, color):
         x,y = self._get_pix(loc[0], loc[1])
@@ -251,23 +239,26 @@ class ProofOfConcept :
         #print 'drawing sonar'
         global center
         cx, cy = center
-        '''
-        if self._current_sonar_loc is not None :
-            px, py = self._get_pix(*self._current_sonar_loc)
-            x = int(px + 4800*math.cos(math.radians(self._current_sonar_bearing-90)))
-            y = int(py + 4800*math.sin(math.radians(self._current_sonar_bearing-90)))
-            pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc), (x,y), 2) 
-        '''
+
+        for uid in self._current_sonar_loc.keys() :
+            px, py = self._get_pix(*self._current_sonar_loc[uid])
+            x = int(px + 4800*math.cos(math.radians(self._current_sonar_bearing[uid]-90)))
+            y = int(py + 4800*math.sin(math.radians(self._current_sonar_bearing[uid]-90)))
+            pygame.draw.line(surface, (255,255,0), self._get_pix(*self._current_sonar_loc[uid]), (x,y), 2) 
+        
         for bear in self._sonarlist.keys() :
             #print 'bear:', bear
             t_loc = self._sonarlist[bear]
-            if t_loc is None :
-                del self._sonarlist[(bear, uid)]
+            if t_loc is None:
+                del self._sonarlist[bear]
             else :
                 for loca in t_loc :
-                    lat, lon, bs = loca
-                    self.draw_blip(self._get_pix(lat, lon), (255,255,100))
-                    #print 'sonar', loca
+                    try:
+                        lat, lon, bs = loca
+                        print lat, lon, bs
+                        self.draw_blip(self._get_pix(lat, lon), (255,255,100))
+                    except:
+                        del self._sonarlist[bear]
 
     def draw_radar(self) :
         global center
@@ -375,39 +366,35 @@ class ProofOfConcept :
         self.draw_chem_sensors()
         self.draw_divert()
         self.draw_sonar()
-    
-    def redraw(self, move=(0,0)) :
-        global window_center
-        new = map(operator.sub, window_center, move)
-        poc.draw()
-        pygame.display.flip()
-        surface.blit(self.image_surface,new)
-        return new
 
     def main(self) :
+        
+        def redraw(move=(0,0)) :
+            global window_center
+            pygame.display.flip()
+            new = map(operator.sub, window_center, move)
+            surface.blit(image_surface,new)
+            poc.draw()
+            return new
+
         pygame.init()
         pygame.display.set_caption('Operations Center')
-        self.image_surface = pygame.image.load('map_big.png')
+        image_surface = pygame.image.load('map_big.png')
         signal.signal(signal.SIGINT, quit)
+        redraw()
         dx, dy, ux, uy = 0,0,0,0
         gotFirst = False
         b1x, b1y, b2x, b2y = 0,0,0,0
         boundFirst = False
         divert = False
 
-        self.redraw()
-        pygame.display.flip()
-
         while True:
             global center
             global window_center
-
-            #pygame.event.pump()
-            event = pygame.event.wait()
-
             # Quit code
-            if event.type == QUIT:
-                quit(None, None)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    quit(None, None)
             
             # Detecting 'shift' keys
             if pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_SHIFT :
@@ -417,14 +404,12 @@ class ProofOfConcept :
                 else :
                     b2x, b2y = pygame.mouse.get_pos()
                     pygame.draw.rect(surface,(0,0,255),(b1x,b1y,b2x-b1x,b2y-b1y),1)
-                    self.redraw()
             elif pygame.mouse.get_pressed()[0] and pygame.key.get_mods() & KMOD_CTRL :
                 x,y = pygame.mouse.get_pos()
                 if(self._divert_points.count([x,y]) == 0):
                     self._divert_lock.acquire()
                     self._divert_points.append([x,y])
                     self._divert_lock.release()
-                self.redraw()
             elif pygame.mouse.get_pressed()[2] and pygame.key.get_mods() & KMOD_CTRL :
                 divert = True
             elif pygame.mouse.get_pressed()[0] :
@@ -432,19 +417,20 @@ class ProofOfConcept :
                     dx, dy = pygame.mouse.get_pos()
                     gotFirst = True
                 ux, uy = pygame.mouse.get_pos()
-                center = self.redraw((dx-ux, dy-uy)) 
+                center = redraw((dx-ux, dy-uy)) 
             else:
                 if boundFirst :
                     poc.send_bound(1, b1x, b1y, b2x, b2y)
                     boundFirst = False
                 if gotFirst :
-                    window_center = self.redraw((dx-ux, dy-uy)) 
+                    window_center = redraw((dx-ux, dy-uy)) 
                     dx, dy, ux, uy = 0,0,0,0
                 if divert:
                     poc.send_divert(self._divert_points)
+                    #self._divert_points[:] = []
                     divert = False
                 gotFirst = False    
-            #self.redraw((dx-ux, dy-uy))
+            redraw((dx-ux, dy-uy)) 
         
 if len(sys.argv) <= 2 :
     print 'USAGE: python draw.py <hostname> <port>'
