@@ -29,18 +29,16 @@ from ahoy.agents.tanker import Tanker
 world = World()
 aisnet = Network('aisn', LogLossComms())
 uavnet = Network('uavnet',LogLossComms())
-tnet = Network('tnet',LogLossComms())
 world.add_network(aisnet)
 world.add_network(uavnet)
-world.add_network(tnet)
 
 path = "agents/paths/path"
 pathfile = "agents/paths/tpaths.dat"
 
 #create tanker
 tanknode = Node(0)
-tanknode.add_interface(Interface('tnet',tnet,power=120))
-tanknode.add_agent(Tanker(80,0.08,'tnet',pathfile))
+tanknode.add_interface(Interface('aisn',aisnet,power=120))
+tanknode.add_agent(Tanker(80,0.08,'aisn',pathfile))
 world.add_entity(tanknode)
 
 threatnode = Node(1)
@@ -68,8 +66,8 @@ for i in range(0,9):
 #AIS Ships
 for i in range(0, 16):
 	n = Node(len(world.get_entities()))
-	n.add_interface(Interface('ais1', aisnet, power=120))
-	ship = AISShip(n.get_uid(), 0.0203, 12346, 'ais1')
+	n.add_interface(Interface('aisn', aisnet, power=120))
+	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12348, 'aisn')
 	n.add_agent(ship)
 	world.add_entity(n)
 
@@ -79,28 +77,34 @@ s1net = Network('sonar1n', LogLossComms())
 world.add_network(s1net)
 s2net = Network('sonar2n', LogLossComms())
 world.add_network(s2net)
+s3net = Network('sonar3n', LogLossComms())
+world.add_network(s3net)
 r1net = Network('radar1n', LogLossComms())
 world.add_network(r1net)
 
 # SW tip of airport
-sonar1n = Node(len(world.get_entities()))
+sonar1n = Node(901)
 sonar1n.set_position(39.8560599677, -75.255277528, 0)
 sonar1n.add_sensor('sonar', SonarSensor(source_level=220, source_bw=10, array_size=360, interval=5, min_snr=2))
 sonar1n.add_interface(Interface('sonar1', s1net, power=120))
-sonar1n.add_agent(SensorForwardAgent(sonar1n.get_uid(), 'sonar', 'sonar1'))
 world.add_entity(sonar1n)
-print 'sonar1n id: ', sonar1n.get_uid()
 
 # Eastern bank of river, north of 76 bridge to NJ
 sonar2n = Node(len(world.get_entities()))
 sonar2n.set_position(39.9103365806, -75.1257383781, 0)
 sonar2n.add_sensor('sonar', SonarSensor(source_level=220, source_bw=10, array_size=360, interval=5, min_snr=2))
 sonar2n.add_interface(Interface('sonar2', s2net, power=120))
-sonar2n.add_agent(SensorForwardAgent(sonar2n.get_uid(), 'sonar', 'sonar2'))
 world.add_entity(sonar2n)
 
+# Red Bank Battlefield (nw part of land sticking out south of navy yard)
+sonar3n = Node(902)
+sonar3n.set_position(39.872596,-75.190008, 0)
+sonar3n.add_sensor('sonar', SonarSensor(source_level=220, source_bw=10, array_size=360, interval=5, min_snr=120, use_event_channel=True))
+sonar3n.add_interface(Interface('sonar3', s3net, power=120))
+world.add_entity(sonar3n)
+
 # On pier of naval yard
-radarn = Node(len(world.get_entities()))
+radarn = Node(903)
 radarn.set_position(39.886597, -75.166043, 0)
 radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1, use_event_channel=True))
 radarn.add_interface(Interface('radar1', r1net, power=12000))
@@ -113,12 +117,10 @@ groundst.set_position(39.887911, -75.187533, 0)
 groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
-groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.01, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1'))
-groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
+groundst.add_interface(Interface('aisn', aisnet, power=12000))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.5, 0.45, 'aisn'))
+groundst.add_agent(DivertAgent(len(world.get_entities()),'aisn'))
 world.add_entity(groundst)
-
-
 
 if __name__ == '__main__' :
     sim = Simulation(world)

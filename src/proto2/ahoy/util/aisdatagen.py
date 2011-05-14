@@ -35,7 +35,7 @@ class AISDataGen():
             if(data == "INIT"):
                 conn.send(self.get_rand_location())
             else:
-                print "RECEIVED: " + data
+                #print "RECEIVED: " + data
                 lat,lon = data.split(',')
                 lat,lon = self.get_next_location(lat,lon)
                 conn.send(lat+","+lon)

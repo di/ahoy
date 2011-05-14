@@ -61,7 +61,7 @@ class AISShip(Agent) :
     def _changedata(self, event, iface=None):
         payload = event.get_message().get_payload()
         if(event.get_src_agent_uid() != self.get_uid() and payload.startswith("DIVERT")):
-            print "CHANGING DATA"
+            #print "CHANGING DATA"
             #print str(event.get_src_agent_uid()) + " = " + str(self.get_uid())
             newpaths = payload
             paths = newpaths.split(';')
@@ -126,7 +126,7 @@ class AISShip(Agent) :
             loc = self.get_owner_node().get_position()
             uid = self.get_uid()
             message = str(uid) + "," + str(loc[0])  + "," + str(loc[1]) + "," + str(self._agl) + "," + str(self._forward_vel)
-            print "Publishing: " + message
+            #print "Publishing: " + message
             m = Message(message, '*')
             self.get_owner_node().get_interface(self._iface_name).send(m,uid)
             time.sleep(1)

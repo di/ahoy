@@ -249,13 +249,13 @@ class ProofOfConcept :
         for bear in self._sonarlist.keys() :
             t_loc = self._sonarlist[bear]
             if len(t_loc) < 3 :
-                print '< 3', t_loc
+                #print '< 3', t_loc
                 del self._sonarlist[bear]
             else :
-                print 't_loc', t_loc
+                #print 't_loc', t_loc
                 try:
                     lat, lon, bs = t_loc
-                    print 'drawing', lat, lon, bs
+                    #print 'drawing', lat, lon, bs
                     self.draw_blip(self._get_pix(lat, lon), (255,255,100))
                 except:
                     if self._sonarlist.has_key(bear) :

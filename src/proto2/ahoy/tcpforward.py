@@ -43,7 +43,6 @@ class TcpForward :
         for client in self._clients :
             try :
                 raw = event.pickle()
-                print 'pushing', len(raw)
                 client.sendall(struct.pack('>L', len(raw)))
                 client.sendall(raw)
             except :
