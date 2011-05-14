@@ -13,19 +13,15 @@ from ahoy.sensors.sonarsensor import SonarEvent
 
 class CorrelationAgent(Agent):
     
-    def __init__(self, uid, threat_dist, ais_threshold, iface_s1, iface_s2, iface_r1, iface_ais) :
+    def __init__(self, uid, threat_dist, max_corr_dist, iface_ais) :
         Agent.__init__(self, uid)
-        self._iface_s1 = iface_s1
-        self._iface_s2 = iface_s2
-        self._iface_r1 = iface_r1
         self._iface_ais = iface_ais
         
         # max distance from AIS data point to sensor data point, to consider a sensor data point a threat to AIS point
         self._threat_dist = threat_dist
-        # max distance for an AIS and sensor point to be considered the same point
-        self._ais_threshold = ais_threshold
         
-        self._max_corr_dist = 0.45
+        # max distance from an AIS ship and sensor pt, and be correlated to each other
+        self._max_corr_dist = max_corr_dist
         
         self._correlation = {}
         self._all_sonar_data = []
