@@ -57,7 +57,7 @@ class Tanker(Agent) :
             loc = self.get_owner_node().get_position()
             uid = self.get_uid()
             message = str(uid) + "," + str(loc[0])  + "," + str(loc[1]) + "," + str(self._agl) + "," + str(self._forward_vel)
-            print "TANKER Publishing: " + message
+            #print "TANKER Publishing: " + message
             m = Message(message, '*')
             self.get_owner_node().get_interface(self._iface_name).send(m,uid)
             time.sleep(0.5)
