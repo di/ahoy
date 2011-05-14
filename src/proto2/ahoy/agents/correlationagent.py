@@ -7,6 +7,8 @@ from threading import Lock
 from ahoy.eventapi import EventAPI
 from ahoy.events.correlation import CorrelationEvent
 from ahoy.events.prox_threat import ProximityThreatEvent
+from ahoy.sensors.radarsensor import RadarEvent
+from ahoy.sensors.sonarsensor import SonarEvent
 
 class CorrelationAgent(Agent):
     
@@ -46,13 +48,16 @@ class CorrelationAgent(Agent):
         print 'Running correlation agent...'
         
         self._event_api = EventAPI()
+        self._event_api.subscribe(RadarEvent, self._new_radar1_data)
+        self._event_api.subscribe(SonarEvent, self._new_sonar_data)
         self._event_api.start()
         
         self.lock = Lock()
-        
+        '''
         self.get_owner_node().get_interface(self._iface_s1).set_recv_callback(self._new_sonar1_data)
         self.get_owner_node().get_interface(self._iface_s2).set_recv_callback(self._new_sonar2_data)
         self.get_owner_node().get_interface(self._iface_r1).set_recv_callback(self._new_radar1_data)
+        '''
         self.get_owner_node().get_interface(self._iface_ais).set_recv_callback(self._new_ais_data)
         
         while True:
@@ -64,8 +69,6 @@ class CorrelationAgent(Agent):
         self._correlate()
         self._detect_threats()
         self.lock.release()
-        
-        #time.sleep(2)
         
     
     def _correlate(self):
@@ -340,6 +343,27 @@ class CorrelationAgent(Agent):
         return bearing, info[1:]    # will always get something for the given bearing (if no ship, picks up land)
     
     def _new_sonar1_data(self, event, iface):
+        bearing = event.get_bearing()
+        detects = event.get_detects()
+        
+        self.lock.acquire()
+        if detects is None:
+            print 'detects is None'
+            self.lock.release()
+            return
+        elif len(detects == 0):
+            print 'detects has length 0'
+            self.lock.release()
+            return
+        if len(detects) > 1:
+            print 'Got', len(detects), 'data in bearing', bearing
+            self._sonar1_data[bearing] = detects[0]
+        elif len(detects) == 1:
+            self._sonar1_data[bearing] = detects
+        self._check_sonar_land_data( self._sonar1_data[bearing] )
+        self.lock.release()
+        
+        '''
         msg = event.get_message().get_payload()
         #print 'CA: new sonar1 data: ', msg
         info = msg.split()
@@ -357,15 +381,17 @@ class CorrelationAgent(Agent):
             #    print 'updated sonar1 data bearing', bearing, ' = ', (lat, lon)
             self._sonar1_data[bearing] = (lat, lon)
         self.lock.release()
-        
+        '''
         #is_land_pt = self._check_sonar_land_data( (lat,lon) )
         #if not is_land_pt:
         #    self.refresh()
         #else:
         #    print (lat,lon), 'is a land point'
         
+    
+    '''def _new_sonar2_data(self, event, iface):
         
-    def _new_sonar2_data(self, event, iface):
+        
         msg = event.get_message().get_payload()
         #print 'CA: new sonar2 data: ', msg
         info = msg.split()
@@ -383,8 +409,7 @@ class CorrelationAgent(Agent):
             #    print 'updated sonar2 data bearing', bearing, ' = ', (lat, lon)
             self._sonar2_data[bearing] = (lat, lon)
         self.lock.release()
-        
-        self._check_sonar_land_data( (lat,lon) )
+        self._check_sonar_land_data( (lat,lon) )'''
         
         #is_land_pt = self._check_sonar_land_data( (lat,lon) )
         #if not is_land_pt:
@@ -392,8 +417,48 @@ class CorrelationAgent(Agent):
         #else:
         #    print (lat,lon), 'is a land point'
         
+    
+    def _new_sonar_data(self, event):
+        sonar_id = event.get_owner_uid()
+        bearing = event.get_bearing()
+        detects = event.get_detects()
         
-    def _new_radar1_data(self, event, iface):
+        data = None # what we'll actually store
+        
+        self.lock.acquire()
+        if len(detects) == 3:
+            #print 'Got', len(detects), 'data in bearing', bearing
+            lat, lon, thing = detects
+            data = (lat, lon)
+        elif len(detects) == 1:
+        #    # probs got [None].  Anyway, useless info if just 1 item
+            data = None
+        else:
+            print 'got data from sonar: \"',detects,'\" and did not parse'
+            self.lock.release()
+            return
+        self.lock.release()
+        
+        if sonar_id == 901:
+            self._sonar1_data[bearing] = data
+        elif sonar_id == 902:
+            self._sonar2_data[bearing] = data
+        else:
+            print "Sonar node is not ID 901 or 902. Not storing sonar data. sonar node id = ", sonar_id
+        
+        if not data is None:
+            self._check_sonar_land_data( data )
+        
+    
+    def _new_radar1_data(self, event):
+        
+        loc = event.get_target_location()
+        bearing = event.get_bearing()
+        self.lock.acquire()
+        self._radar_data[bearing] = loc     # is either point (lat,lon) or None
+        self.lock.release()
+        
+        '''
         msg = event.get_message().get_payload()
         node_uid, bearing, dist, lat, lon = msg.split()
         #print 'CA: new radar1 data: ', msg
@@ -413,6 +478,7 @@ class CorrelationAgent(Agent):
             #        print 'Just added radar data at bearing ', bearing, '=', (lat, lon)
             self._radar_data[bearing] = (lat, lon)
             self.lock.release()
+        '''
         
         #self.refresh()
         
