@@ -26,51 +26,15 @@ from ahoy.sensors.camerasensor import CameraSensor
 from ahoy.agents.threat import ThreatShip
 from ahoy.agents.tanker import Tanker
 
-world = World()
-aisnet = Network('aisn', LogLossComms())
-uavnet = Network('uavnet',LogLossComms())
-world.add_network(aisnet)
-world.add_network(uavnet)
-
 path = "agents/paths/path"
 pathfile = "agents/paths/tpaths.dat"
 
-#create tanker
-tanknode = Node(0)
-tanknode.add_interface(Interface('aisn',aisnet,power=120))
-tanknode.add_agent(Tanker(80,0.08,'aisn',pathfile))
-world.add_entity(tanknode)
+world = World()
 
-threatnode = Node(1)
-tagent = ThreatShip(81,0.10,pathfile)
-tagent.follow(0)
-threatnode.add_agent(tagent)
-world.add_entity(threatnode)
-
-#Create UAV at airport
-uavnode = Node(2)
-uavnode.set_position(39.8661,-75.2549, 0.0001)
-uavnode.add_interface(Interface('uavnet',uavnet,power=120))
-uavnode.add_sensor('camera', CameraSensor(0.785,1))
-uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
-uavnode.add_agent(UAV(8,1.0,0.02,0.007))
-world.add_entity(uavnode)
-
-#Small personal craft
-for i in range(0,9):
-    n = Node(len(world.get_entities()))
-    ship = SmallShip(i+200, i, 0.03, path + str(i) + ".dat")
-    n.add_agent(ship)
-    world.add_entity(n)
-
-#AIS Ships
-for i in range(0, 16):
-	n = Node(len(world.get_entities()))
-	n.add_interface(Interface('aisn', aisnet, power=120))
-	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12348, 'aisn')
-	n.add_agent(ship)
-	world.add_entity(n)
-
+aisnet = Network('aisn', LogLossComms())
+world.add_network(aisnet)
+uavnet = Network('uavnet',LogLossComms())
+world.add_network(uavnet)
 
 # Make sensor interfaces
 s1net = Network('sonar1n', LogLossComms())
@@ -121,6 +85,42 @@ groundst.add_interface(Interface('aisn', aisnet, power=12000))
 groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.5, 0.45, 'aisn'))
 groundst.add_agent(DivertAgent(len(world.get_entities()),'aisn'))
 world.add_entity(groundst)
+
+#create tanker
+tanknode = Node(len(world.get_entities()))
+tanknode.add_interface(Interface('aisn',aisnet,power=120))
+tanknode.add_agent(Tanker(80,0.08,'aisn',pathfile))
+world.add_entity(tanknode)
+
+threatnode = Node(len(world.get_entities()))
+tagent = ThreatShip(81,0.10,pathfile)
+tagent.follow(tanknode.get_uid())
+threatnode.add_agent(tagent)
+world.add_entity(threatnode)
+
+#Create UAV at airport
+uavnode = Node(len(world.get_entities()))
+uavnode.set_position(39.8661,-75.2549, 0.0001)
+uavnode.add_interface(Interface('uavnet',uavnet,power=120))
+uavnode.add_sensor('camera', CameraSensor(0.785,1))
+uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
+uavnode.add_agent(UAV(8,1.0,0.02,0.007))
+world.add_entity(uavnode)
+
+#Small personal craft
+for i in range(0,9):
+    n = Node(len(world.get_entities()))
+    ship = SmallShip(i+200, i, 0.03, path + str(i) + ".dat")
+    n.add_agent(ship)
+    world.add_entity(n)
+
+#AIS Ships
+for i in range(0, 16):
+	n = Node(len(world.get_entities()))
+	n.add_interface(Interface('aisn', aisnet, power=120))
+	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12348, 'aisn')
+	n.add_agent(ship)
+	world.add_entity(n)
 
 if __name__ == '__main__' :
     sim = Simulation(world)
