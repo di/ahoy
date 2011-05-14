@@ -137,7 +137,7 @@ class SonarSensor(Sensor) :
 
             if angle_data != None :
                 data = [math.degrees(angle_data[1]), math.degrees(angle_data[2]), 0]
-                print 'got data', data
+                #print 'got data', data
             else :
                 data = [None]
             self._publish_data(SonarEvent(self.get_owner().get_uid(), int(math.degrees(sonar_bearing)), data))
