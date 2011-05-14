@@ -26,7 +26,7 @@ world = World()
 aisnet = Network('aisn', LogLossComms())
 world.add_network(aisnet)
 
-for i in range(0, 6):
+for i in range(0, 2):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('ais1', aisnet, power=120))
 	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12347, 'ais1')
@@ -34,7 +34,7 @@ for i in range(0, 6):
 	world.add_entity(n)
 
 path = "agents/paths/path"
-for i in range(8,14):
+for i in range(9,11):
     n = Node(len(world.get_entities()))
     ship = SmallShip(n.get_uid(), i, 0.03, path + str(i) + ".dat")
     n.add_agent(ship)
@@ -50,20 +50,20 @@ r1net = Network('radar1n', LogLossComms())
 world.add_network(r1net)
 
 # SW tip of airport
-sonar1n = Node(len(world.get_entities()))
+sonar1n = Node(901)
 sonar1n.set_position(39.8560599677, -75.255277528, 0)
 sonar1n.add_sensor('sonar', SonarSensor(source_level=220, source_bw=10, array_size=360, interval=5, min_snr=120, use_event_channel=True))
 sonar1n.add_interface(Interface('sonar1', s1net, power=120))
-sonar1n.add_agent(SensorForwardAgent(sonar1n.get_uid(), 'sonar', 'sonar1'))
+#sonar1n.add_agent(SensorForwardAgent(sonar1n.get_uid(), 'sonar', 'sonar1'))
 world.add_entity(sonar1n)
-print 'sonar1n id: ', sonar1n.get_uid()
+#print 'sonar1n id: ', sonar1n.get_uid()
 
 # Eastern bank of river, north of 76 bridge to NJ
-sonar2n = Node(len(world.get_entities()))
+sonar2n = Node(902)
 sonar2n.set_position(39.9103365806, -75.1257383781, 0)
 sonar2n.add_sensor('sonar', SonarSensor(source_level=220, source_bw=10, array_size=360, interval=5, min_snr=120, use_event_channel=True))
 sonar2n.add_interface(Interface('sonar2', s2net, power=120))
-sonar2n.add_agent(SensorForwardAgent(sonar2n.get_uid(), 'sonar', 'sonar2'))
+#sonar2n.add_agent(SensorForwardAgent(sonar2n.get_uid(), 'sonar', 'sonar2'))
 world.add_entity(sonar2n)
 
 # On pier of naval yard
@@ -72,17 +72,17 @@ radarn = Node(len(world.get_entities()))
 radarn.set_position(39.886597, -75.166043, 0)
 radarn.add_sensor('radar', RadarSensor(trans_power=watts(6000), trans_freq=25, gain=1, aperature=5, prop_fact=1, dwell_time=3/360.0, angle=1, use_event_channel=True))
 radarn.add_interface(Interface('radar1', r1net, power=12000))
-radarn.add_agent(SensorForwardAgent(radarn.get_uid(), 'radar', 'radar1'))
+#radarn.add_agent(SensorForwardAgent(radarn.get_uid(), 'radar', 'radar1'))
 world.add_entity(radarn)
 
 # Ground station
 groundst = Node(len(world.get_entities()))
 groundst.set_position(39.887911, -75.187533, 0)
-groundst.add_interface(Interface('sonar1', s1net, power=12000))
-groundst.add_interface(Interface('sonar2', s2net, power=12000))
-groundst.add_interface(Interface('radar1', r1net, power=12000))
+#groundst.add_interface(Interface('sonar1', s1net, power=12000))
+#groundst.add_interface(Interface('sonar2', s2net, power=12000))
+#groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('ais1', aisnet, power=12000))
-groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.1, 0.01, 'sonar1', 'sonar2', 'radar1', 'ais1'))
+groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.5, 0.03, 'sonar1', 'sonar2', 'radar1', 'ais1'))
 #groundst.add_agent(HistoryCorrelationAgent(groundst.get_uid(), 0.1, 0.001, 'sonar1', 'sonar2', 'radar1', 'ais1', 4, 0.05, 0.5))
 #groundst.add_agent(DivertAgent(len(world.get_entities()),'ais1'))
 world.add_entity(groundst)
