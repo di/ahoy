@@ -1,4 +1,5 @@
 import signal
+import time
 import sys
 import subprocess
 from ahoy.eventapi import EventAPI

@@ -90,11 +90,12 @@ world.add_entity(groundst)
 #create tanker
 tanknode = Node(len(world.get_entities()))
 tanknode.add_interface(Interface('aisn',aisnet,power=120))
-tanknode.add_agent(Tanker(tanknode.get_uid(),0.08,'aisn',pathfile))
+tanknode.add_agent(Tanker(tanknode.get_uid(),0.04,'aisn',pathfile))
 world.add_entity(tanknode)
 
+# Creat ThreatShip
 threatnode = Node(len(world.get_entities()))
-tagent = ThreatShip(threatnode.get_uid(),0.10,pathfile)
+tagent = ThreatShip(threatnode.get_uid(),0.07,pathfile)
 tagent.follow(tanknode.get_uid())
 threatnode.add_agent(tagent)
 world.add_entity(threatnode)
@@ -105,7 +106,7 @@ uavnode.set_position(39.8661,-75.2549, 0.0001)
 uavnode.add_interface(Interface('uavnet',uavnet,power=120))
 uavnode.add_sensor('camera', CameraSensor(1.75,0.25,use_event_channel=True))
 uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
-uavnode.add_agent(UAV(8,1.0,0.045,0.015))
+uavnode.add_agent(UAV(8,1.0,0.10,0.025))
 world.add_entity(uavnode)
 
 #Small personal craft
@@ -119,7 +120,7 @@ for i in range(0,9):
 for i in range(0, 16):
 	n = Node(len(world.get_entities()))
 	n.add_interface(Interface('aisn', aisnet, power=120))
-	ship = AISShip(n.get_uid(), 0.0203, 'localhost', 12348, 'aisn')
+	ship = AISShip(n.get_uid(), 0.03, 'localhost', 12348, 'aisn')
 	n.add_agent(ship)
 	world.add_entity(n)
 

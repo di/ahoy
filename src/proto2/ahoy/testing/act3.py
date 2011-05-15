@@ -132,7 +132,7 @@ world.add_entity(chem5)
 
 chemspill = Node(len(world.get_entities()))
 chemspill.set_position(39.892223,-75.196788, 0) #immediately east of I-95 bridge, on water
-chemspill.add_agent( ChemicalSpillAnnounceAgent(2, 1, 2, 0.1) )   #ID, interval, announce time, spill rate in km/s
+chemspill.add_agent( ChemicalSpillAnnounceAgent(2, 1, 5, 0.1) )   #ID, interval, announce time, spill rate in km/s
 world.add_entity(chemspill)
 
 #Small personal craft

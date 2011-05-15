@@ -184,7 +184,7 @@ class ProofOfConcept :
         loc = event.get_threat_location()
 
         self._threat_lock.acquire()
-        self._threats[uid] = loc
+        self._threats[uid] = 60
         self._threat_lock.release()
 
     def _on_camera(self, event) :
@@ -230,7 +230,18 @@ class ProofOfConcept :
     def draw_nodes(self) :
         for uid in self._nodelist.keys() :
             (lat, lon), type = self._nodelist[uid]
-            self.draw_node(self._get_pix(lat,lon),type,uid)
+            if 'AISShip' in self._aaron_sucks[uid] :
+                self.draw_node(self._get_pix(lat,lon),type,uid,(100,100,255))
+            elif 'Tanker' in self._aaron_sucks[uid] :
+                self.draw_node(self._get_pix(lat,lon),type,uid,(100,100,255))
+            elif 'UAV' in self._aaron_sucks[uid] : 
+                self.draw_node(self._get_pix(lat,lon),type,uid,(255,100,100))
+            elif 'SmallShip' in self._aaron_sucks[uid] : 
+                pass
+            elif 'ThreatShip' in self._aaron_sucks[uid] : 
+                pass
+            else :
+                self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_sonar(self) :
         global center
@@ -272,15 +283,17 @@ class ProofOfConcept :
         pygame.draw.circle(surface, (r-100, g-100, b-100), (x,y), 6, 0)
         pygame.draw.circle(surface, (r,g,b), (x,y), 4, 0)
 
-    def draw_node(self, position, type, uid) :
+    def draw_node(self, position, type, uid, color=(100,100,100)) :
         Font = pygame.font.Font(None,20)
         text = Font.render(','.join(str(n) for n in self._aaron_sucks[uid]) + (' (%s)' % uid),1,(0,0,0))
 
         x, y = position
-        if self._nodecolor.has_key(type) :
-            r,g,b = self._nodecolor[type]
-        else :
-            r,g,b = (100,100,100)
+        r,g,b = color
+
+        #if self._nodecolor.has_key(type) :
+        #    r,g,b = self._nodecolor[type]
+        #else :
+        #    r,g,b = (100,100,100)
 
         pygame.draw.circle(surface, (255,255,255), (x,y), 10, 0)
         pygame.draw.circle(surface, (r,g,b), (x,y), 6, 0)
@@ -331,11 +344,16 @@ class ProofOfConcept :
     def draw_threats(self) :
         self._threat_lock.acquire()
         for uid in self._threats.keys() :
-            loc, type = self._nodelist[uid]
-            pos = self._get_pix(*loc)
-            pygame.draw.circle(surface, (255,0,0), pos, 10, 1)
-            pygame.draw.circle(surface, (255,0,0), pos, 15, 1)
-            pygame.draw.circle(surface, (255,0,0), pos, 20, 1)
+            t = self._threats[uid]
+            if t > 0 :
+                loc, type = self._nodelist[uid]
+                pos = self._get_pix(*loc)
+                pygame.draw.circle(surface, (255,0,0), pos, 10, 1)
+                pygame.draw.circle(surface, (255,0,0), pos, 15, 1)
+                pygame.draw.circle(surface, (255,0,0), pos, 20, 1)
+                self._threats[uid] = t-1
+            else :
+                del self._threats[uid]
         self._threat_lock.release()
 
     def draw_divert(self) :

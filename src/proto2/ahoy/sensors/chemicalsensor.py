@@ -62,7 +62,9 @@ class ChemicalSensor(Sensor) :
 
                     # wait until chemical spill would have reached self, then publish ChemicalDetectEvent
                     time.sleep(time_to_reach_sensor)
+                    print self.get_owner().get_uid(), ' about to publish ChemicalDetectEvent..'
                     self._publish_data( ChemicalDetectEvent(self.get_owner().get_uid(), self.get_owner().get_position() ) )
+                    print self.get_owner().get_uid(), ' published ChemicalDetectEvent'
 
                     # clear spill event data
                     self._spill_occurred = False
@@ -72,5 +74,6 @@ class ChemicalSensor(Sensor) :
 
 
     def _on_spill( self, event ):
+        print self.get_owner().get_uid(), 'got spill event'
         self._spill_occurred = True
         self._spill_event = event
