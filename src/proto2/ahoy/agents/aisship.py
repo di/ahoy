@@ -144,10 +144,12 @@ class AISShip(Agent) :
                     mindist = dist
                     min_index = i
 
-            if(mindist >= 0.8):
+            if(mindist >= 1.5):
                 return None
 
             bearing = self.get_owner_node().get_bearing()
+            if bearing < 0 :
+                bearing += 360
             print "Bearing for %s is %s" % (self.get_owner_node().get_uid(),bearing)
             if(bearing > 180):
                 paths = [x for x in reversed(paths)]
