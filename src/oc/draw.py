@@ -240,6 +240,8 @@ class ProofOfConcept :
                 pass
             elif 'ThreatShip' in self._aaron_sucks[uid] : 
                 pass
+            elif 'ChemicalSensor' in self._aaron_sucks[uid] : 
+                pass
             else :
                 self.draw_node(self._get_pix(lat,lon),type,uid)
 
