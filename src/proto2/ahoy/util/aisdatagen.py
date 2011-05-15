@@ -41,7 +41,7 @@ class AISDataGen():
                     lat,lon = self.get_next_location(lat,lon)
                     conn.send(lat+","+lon)
                 except:
-                    print "Done."
+                    pass 
 
         conn.close()
 
