@@ -41,7 +41,8 @@ class AISDataGen():
                     lat,lon = self.get_next_location(lat,lon)
                     conn.send(lat+","+lon)
                 except:
-                    pass 
+                    print "AISDatagen getting bad connection. Closing listener"
+                    break
 
         conn.close()
 
