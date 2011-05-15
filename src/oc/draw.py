@@ -357,9 +357,9 @@ class ProofOfConcept :
         self._divert_lock.release()
 
     def draw(self) :
+        self.draw_links()
         self.draw_nodes()
         self.draw_radar()
-        self.draw_links()
         self.draw_correlation()
         self.draw_fields()
         self.draw_cameranodes()
