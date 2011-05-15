@@ -40,6 +40,8 @@ class CorrelationAgent(Agent):
         
         self._threats = {}
         
+        #self._tanker_id = 5
+        
     
     
     def run(self):
@@ -49,7 +51,7 @@ class CorrelationAgent(Agent):
         
         self._event_api = EventAPI()
         self._event_api.subscribe(RadarEvent, self._new_radar1_data)
-        self._event_api.subscribe(SonarEvent, self._new_sonar_data)
+        #self._event_api.subscribe(SonarEvent, self._new_sonar_data)
         self._event_api.start()
         
         self.get_owner_node().get_interface(self._iface_ais).set_recv_callback(self._new_ais_data)
@@ -178,7 +180,8 @@ class CorrelationAgent(Agent):
                         available_sensor_pts.remove(closest_pt)
                         self._publish_correlation(ais_id, ais_pt, closest_dist, closest_pt)
                     else:
-                        #print 'No radar point correlated with AIS ID', ais_id, '. closest_d = ', closest_dist
+                        #if ais_id == self._tanker_id:
+                        #    print '\tNo radar point correlated with AIS ID', ais_id, '. closest_d = ', closest_dist
                         self._correlation[ais_id] = [0, ais_pt]
                         self._publish_correlation(ais_id, ais_pt, 0, ais_pt)
         
@@ -230,7 +233,9 @@ class CorrelationAgent(Agent):
             
         if publish_event:
             self._event_api.publish( CorrelationEvent(ais_pt[0], ais_pt[1], s_pt[0], s_pt[1], ais_id))
-            print 'Correlated AIS id', ais_key, 'at', ais_pt, 'with', s_pt, '. DIST=', dist
+            #if ais_id != self._tanker_id:
+            #    return
+            #print 'Correlated AIS id', ais_key, 'at', ais_pt, 'with', s_pt, '. DIST=', dist
             
     
     def _get_closest_pt(self, loc, pts):
@@ -268,13 +273,17 @@ class CorrelationAgent(Agent):
                     return
             # End checking if sensor pt was just previously correlated
             
-            
+            #if ais_id == self._tanker_id:
+            #    print 'DETECTED THREAT at ', sensor_pt, ' to AIS ID', ais_id, 'at', self._ais_data[ais_id], ' d=', d
             print 'DETECTED THREAT at ', sensor_pt, ' to AIS ID', ais_id, 'at', self._ais_data[ais_id], ' d=', d
             self._event_api.publish( ProximityThreatEvent(sensor_pt[0], sensor_pt[1], ais_id))
             self._threats[ais_id].append(sensor_pt)
             
             # DEBUGGING STUFF
             # Nothing gets modified in the rest of this function
+            
+            #if ais_id != self._tanker_id:    # skip all but tanker
+            #    return
             '''
             if sensor_pt in self._radar_data.values():
                 print 'threat was a radar point'
@@ -423,6 +432,8 @@ class CorrelationAgent(Agent):
         s_id = int(s_id)
         lat = float(lat)
         lon = float(lon)
+        #if s_id == 80 or s_id ==81:
+        #   print 'new ais msg:', msg
         self.lock.acquire()
         #if self._ais_data.has_key(s_id):
         #    dist = haver_distance(lat, lon, self._ais_data[s_id][0], self._ais_data[s_id][1])
