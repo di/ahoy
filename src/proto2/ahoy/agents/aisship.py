@@ -66,43 +66,28 @@ class AISShip(Agent) :
             newpaths = payload
             paths = newpaths.split(';')
             paths = paths[1:]
-            closest = []
+            mindist = None
             min_index = 0
             mylat = float(self._lat)
             mylon = float(self._lon)
             last_lat = None
-            NS = False
             # Find the closest point in the path and determine the direction
             # of the path
             for i in range(0,len(paths)):
-                lat,lon = map(float, paths[i].split(','))
-                #lat = float(lat)
-                #lon = float(lon)
-                if(len(closest) == 0 or lin_distance(lat,lon,0,mylat,mylon,0) < closest):
+                lat,lon = map(float,paths[i].split(','))
+                dist = lin_distance(lat,lon,0,mylat,mylon,0)
+                if(mindist == None or dist < mindist):
+                    mindist = dist
                     min_index = i
-                    closest = [lat,lon]
-                if(last_lat != None and lat < last_lat):
-                    NS = True
-                last_lat = lat
 
-            # figure out the direction to take
-            above = False
-            if(closest[0] < mylat):
-                above = True
-            #Return if moving away from path
-            if(((not above) and self._NtoS) or ( above and (not self._NtoS))):
-                self._use_ais = True
-                return 
-            #Reverse the path if your are moving in the opposite
-            #direction than they were created in
-            if((not above) and NS and (not self._NtoS)):
+            bearing = self.get_owner_node().get_bearing()
+            print "Bearing for %s is %s" % (self.get_owner_node().get_uid(),bearing)
+            if(bearing > 180):
                 paths = [x for x in reversed(paths)]
-                i = (len(paths)-1)-i
-            elif(above and (not NS) and self._NtoS):
-                paths = [x for x in reversed(paths)]
-                i = (len(paths)-1)-i
+                min_index = (len(paths)-1) - min_index
 
-            self._man_paths = paths[i:]
+            self._man_paths = paths[min_index:]
+
             
     def _move(self, posdata):
         lat, lon = posdata.split(',')
