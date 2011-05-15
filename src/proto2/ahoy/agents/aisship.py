@@ -39,9 +39,11 @@ class AISShip(Agent) :
             posdata = (self._lat) + "," + (self._lon)
             newpos = ""
             if self._use_ais:
-                path_dist = self._distToPath()
-                if(path_dist != None and path_dist <= 0.4):
+                #path_dist = self._distToPath()
+                path_point = self._find_closest_path_point()
+                if(path_point != None):
                     self._use_ais = False
+                    self._man_paths = self._man_paths[path_point:]
                     newpos = self._man_paths.pop(0)
                 else:
                     self._path_conn.send(posdata)
@@ -66,11 +68,10 @@ class AISShip(Agent) :
             newpaths = payload
             paths = newpaths.split(';')
             paths = paths[1:]
-            mindist = None
-            min_index = 0
-            mylat = float(self._lat)
-            mylon = float(self._lon)
             last_lat = None
+            self._man_paths = paths
+
+            '''
             # Find the closest point in the path and determine the direction
             # of the path
             for i in range(0,len(paths)):
@@ -87,7 +88,7 @@ class AISShip(Agent) :
                 min_index = (len(paths)-1) - min_index
 
             self._man_paths = paths[min_index:]
-
+            '''
             
     def _move(self, posdata):
         lat, lon = posdata.split(',')
@@ -124,6 +125,37 @@ class AISShip(Agent) :
             return lin_distance(mylat,mylon,0,lat,lon,0)
         else:
             return None
+
+    def _find_closest_path_point(self):
+            if(len(self._man_paths) == 0):
+                return None
+
+            mindist = None
+            min_index = 0
+            mylat = float(self._lat)
+            mylon = float(self._lon)
+            # Find the closest point in the path and determine the direction
+            # of the path
+            paths = self._man_paths
+            for i in range(0,len(paths)):
+                lat,lon = map(float,paths[i].split(','))
+                dist = lin_distance(lat,lon,0,mylat,mylon,0)
+                if(mindist == None or dist < mindist):
+                    mindist = dist
+                    min_index = i
+
+            if(mindist >= 0.8):
+                return None
+
+            bearing = self.get_owner_node().get_bearing()
+            print "Bearing for %s is %s" % (self.get_owner_node().get_uid(),bearing)
+            if(bearing > 180):
+                paths = [x for x in reversed(paths)]
+                min_index = (len(paths)-1) - min_index
+
+            self._man_paths = paths
+            return min_index
+
 #if __name__ == '__main__':
 #    lat = "39.881592"
 #    lon = "-75.172737"
