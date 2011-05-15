@@ -76,7 +76,7 @@ class CameraSensor(Sensor) :
                 #if self._point_inside(e_lon, e_lat, [forward_right, backward_right, backward_left, forward_left]) :
                 if point_in_poly(e_lat, e_lon, [forward_right, backward_right, backward_left, forward_left]) :
                     visible.append((e_lat, e_lon, e_agl))
-                    print "Spotted " + str(entity.get_uid()) + " at " + str(e_lat) + "," + str(e_lon)
+                    #print "Spotted " + str(entity.get_uid()) + " at " + str(e_lat) + "," + str(e_lon)
                 
             field = (forward_right, backward_right, backward_left, forward_left)
             self._publish_data(CameraEvent(self.get_owner().get_uid(), self.get_uid(), visible, field))

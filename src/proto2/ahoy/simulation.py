@@ -15,6 +15,7 @@ class Simulation :
         return self._world
 
     def _on_ack_startup(self, event) :
+        print 'Got ack startup:', event.get_daemon_id()
         self._startup_acks.add(event.get_daemon_id())
 
     def start(self, wait) :

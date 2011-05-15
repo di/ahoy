@@ -82,18 +82,19 @@ groundst.add_interface(Interface('sonar1', s1net, power=12000))
 groundst.add_interface(Interface('sonar2', s2net, power=12000))
 groundst.add_interface(Interface('radar1', r1net, power=12000))
 groundst.add_interface(Interface('aisn', aisnet, power=12000))
+groundst.add_interface(Interface('uavnet', uavnet, power=12000))
 groundst.add_agent(CorrelationAgent(groundst.get_uid(), 0.5, 0.45, 'aisn'))
-groundst.add_agent(DivertAgent(len(world.get_entities()),'aisn'))
+#groundst.add_agent(DivertAgent(len(world.get_entities()),'aisn'))
 world.add_entity(groundst)
 
 #create tanker
 tanknode = Node(len(world.get_entities()))
 tanknode.add_interface(Interface('aisn',aisnet,power=120))
-tanknode.add_agent(Tanker(80,0.08,'aisn',pathfile))
+tanknode.add_agent(Tanker(tanknode.get_uid(),0.08,'aisn',pathfile))
 world.add_entity(tanknode)
 
 threatnode = Node(len(world.get_entities()))
-tagent = ThreatShip(81,0.10,pathfile)
+tagent = ThreatShip(threatnode.get_uid(),0.10,pathfile)
 tagent.follow(tanknode.get_uid())
 threatnode.add_agent(tagent)
 world.add_entity(threatnode)
@@ -102,15 +103,15 @@ world.add_entity(threatnode)
 uavnode = Node(len(world.get_entities()))
 uavnode.set_position(39.8661,-75.2549, 0.0001)
 uavnode.add_interface(Interface('uavnet',uavnet,power=120))
-uavnode.add_sensor('camera', CameraSensor(0.785,1))
+uavnode.add_sensor('camera', CameraSensor(1.75,0.25,use_event_channel=True))
 uavnode.add_agent(SensorForwardAgent(uavnode.get_uid(),'camera','uavnet'))
-uavnode.add_agent(UAV(8,1.0,0.02,0.007))
+uavnode.add_agent(UAV(8,1.0,0.045,0.015))
 world.add_entity(uavnode)
 
 #Small personal craft
 for i in range(0,9):
     n = Node(len(world.get_entities()))
-    ship = SmallShip(i+200, i, 0.03, path + str(i) + ".dat")
+    ship = SmallShip(n.get_uid(), i, 0.03, path + str(i) + ".dat")
     n.add_agent(ship)
     world.add_entity(n)
 
@@ -131,7 +132,7 @@ if __name__ == '__main__' :
         sys.exit(0)
     signal.signal(signal.SIGINT, quit)
 
-    sim.start(2)
+    sim.start(5)
 
     while True :
         pass

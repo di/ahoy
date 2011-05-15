@@ -170,14 +170,11 @@ class ProofOfConcept :
 
 
     def _on_sensor(self, event) :
-        print 'Got sensor event'
         uid = event.get_owner_uid() 
 
     def _on_correlation(self, event) :
         p1, p2 = event.get_locations()
         uid = event.get_ais_uid()
-        print 'CORRELATION AIS id %s AT %s' % (uid, p2)
-
         self._correlation_lock.acquire()
         self._correlations[uid] = tuple(sorted((p1, p2)))
         self._correlation_lock.release()
@@ -236,7 +233,6 @@ class ProofOfConcept :
             self.draw_node(self._get_pix(lat,lon),type,uid)
 
     def draw_sonar(self) :
-        #print 'drawing sonar'
         global center
         cx, cy = center
 
@@ -248,18 +244,12 @@ class ProofOfConcept :
         
         for bear in self._sonarlist.keys() :
             t_loc = self._sonarlist[bear]
-            if len(t_loc) < 3 :
-                #print '< 3', t_loc
-                del self._sonarlist[bear]
-            else :
-                #print 't_loc', t_loc
-                try:
-                    lat, lon, bs = t_loc
-                    #print 'drawing', lat, lon, bs
-                    self.draw_blip(self._get_pix(lat, lon), (255,255,100))
-                except:
-                    if self._sonarlist.has_key(bear) :
-                        del self._sonarlist[bear]
+            try:
+                lat, lon, bs = t_loc[0]
+                self.draw_blip(self._get_pix(lat, lon), (255,255,100))
+            except:
+                if self._sonarlist.has_key(bear) :
+                    del self._sonarlist[bear]
 
     def draw_radar(self) :
         global center
@@ -303,9 +293,8 @@ class ProofOfConcept :
             p1 = self._get_pix(*correlation[0])
             p2 = self._get_pix(*correlation[1])
             num_ais = 6.0
-            color = ((255.0 / num_ais) * uid)
-            pygame.draw.circle(surface, (color, color, color), p1, 13, 3)
-            pygame.draw.circle(surface, (color, color, color), p2, 13, 3)
+            pygame.draw.circle(surface, (255, 255, 255), p1, 13, 3)
+            pygame.draw.circle(surface, (255, 255, 255), p2, 13, 3)
             pygame.draw.line(surface, (255, 0, 255), p1, p2, 5)
         self._correlation_lock.release()
 
@@ -342,7 +331,7 @@ class ProofOfConcept :
     def draw_threats(self) :
         self._threat_lock.acquire()
         for uid in self._threats.keys() :
-            loc = self._threats[uid]
+            loc, type = self._nodelist[uid]
             pos = self._get_pix(*loc)
             pygame.draw.circle(surface, (255,0,0), pos, 10, 1)
             pygame.draw.circle(surface, (255,0,0), pos, 15, 1)
@@ -360,7 +349,7 @@ class ProofOfConcept :
         self.draw_links()
         self.draw_nodes()
         self.draw_radar()
-        self.draw_correlation()
+        #self.draw_correlation()
         self.draw_fields()
         self.draw_cameranodes()
         self.draw_threats()
