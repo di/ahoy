@@ -20,7 +20,11 @@ class Tanker(Agent) :
     def run(self) :
         uid = self.get_owner_node().get_uid()
         self._init_data()
-        start = self._locs[3] #start ahead of the threat
+        if(len(self._locs) >= 4):
+            start = self._locs[3] #start ahead of the threat
+        else:
+            start = self._locs[0]
+
         lat,lon = start.split(',')
         self._lat = lat
         self._lon = lon
