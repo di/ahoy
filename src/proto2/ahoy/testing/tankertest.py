@@ -40,11 +40,11 @@ pathfile = "agents/paths/tpaths.dat"
 tanknode = Node(len(world.get_entities()))
 #uavnode.set_position(39.8656978,-75.21841399, 0.0001)
 tanknode.add_interface(Interface('tnet',tnet,power=120))
-tanknode.add_agent(Tanker(80,0.08,'tnet',pathfile))
+tanknode.add_agent(Tanker(tanknode.get_uid(),0.08,'tnet',pathfile))
 world.add_entity(tanknode)
 
 threatnode = Node(len(world.get_entities()))
-tagent = ThreatShip(81,0.10,pathfile)
+tagent = ThreatShip(threatnode.get_uid(),0.10,pathfile)
 tagent.follow(tanknode.get_uid())
 threatnode.add_agent(tagent)
 world.add_entity(threatnode)
