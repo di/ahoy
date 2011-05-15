@@ -37,8 +37,9 @@ class StartupDaemon :
     def start(self) :
         self._event_api.subscribe(StartupEvent, self._on_startup)
         self._event_api.subscribe(StopSimulationEvent, self._restart)
-        while self._running :
-            pass
+        self._event_api.get_thread().join()
+#        while self._running :
+#            pass
 
     def _restart(self, event) :
         self.terminate_all()

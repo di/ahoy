@@ -92,11 +92,14 @@ class EventAPI :
         return packet
 
     def start(self) :
-        t = Thread(target=self.run)
-        t.start()
-        return t
+        self._thread = Thread(target=self.run)
+        self._thread.start()
+        return self._thread
 
     def stop(self) :
         self._running = False
         if self._tcp_conn != None :
             self._tcp_conn.close()
+
+    def get_thread(self) :
+        return self._thread
