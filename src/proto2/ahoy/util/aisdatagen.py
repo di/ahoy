@@ -36,9 +36,13 @@ class AISDataGen():
                 conn.send(self.get_rand_location())
             else:
                 #print "RECEIVED: " + data
-                lat,lon = data.split(',')
-                lat,lon = self.get_next_location(lat,lon)
-                conn.send(lat+","+lon)
+                try:
+                    lat,lon = data.split(',')
+                    lat,lon = self.get_next_location(lat,lon)
+                    conn.send(lat+","+lon)
+                except:
+                    print "Done."
+
         conn.close()
 
     #Reads in the values to the probs dict
