@@ -1,5 +1,6 @@
 \documentclass[mathserif,usenames,dvipsnames]{beamer}
 
+\usepackage{movie15}
 \usepackage{multicol}
 \usepackage{beamerthemeshadow}
 \usepackage{graphicx}
@@ -48,46 +49,161 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \tableofcontents
 }
 
+\section{Introduction/Background}
 \frame
 {   
     \frametitle{Abstract}
-    \textit{Abstract:} AHOY is a distributed, event-based simulation environment designed to test networked multi-agent systems.
+    \begin{center}
+        \includegraphics[scale=.25]{../common/logo.pdf}
+    \end{center}
+    \begin{tabular}{l p{8cm}}
+        \textit{Abstract:} & AHOY is a distributed, event-based simulation environment designed to test networked multi-agent systems. \\
+    \end{tabular}
 }
 
-\section{Introduction}
-\frame
-{
-\begin{center}
-    \begin{tabular}{c c}
-    \includegraphics[scale=.2]{drexel.png} & \includegraphics[scale=.6]{nrl.png} \\
-    \includegraphics[scale=.25]{acin.png} & \includegraphics[scale=.25]{cvut.png} \\
-    \end{tabular}
-\end{center}
+\frame{
+    \frametitle{Background}
+
 }
-\frame
-{
-    \begin{center}
-        \includegraphics[scale=.4]{../common/logo.pdf}
-    \end{center}
-}
+
 \frame
 {
     \begin{center}
         \includegraphics[scale=.5]{../mindmap/mindmap1.pdf}
     \end{center}
 }
+
+\subsection{Development}
 \frame
 {
     \begin{center}
         \includegraphics[scale=.75]{../mindmap/mindmap2.pdf}
     \end{center}
 }
+
+\frame
+{
+    \frametitle{Features}
+    \begin{itemize}
+        \item Simulation distribution
+        \item Comprehensive Event API
+        \item ?
+    \end{itemize}
+}
+
+\frame
+{
+    \frametitle{System Architecture Diagram}
+    \begin{figure}
+        \centering
+        \resizebox{0.9\textwidth}{!}{\input{../common/distribution.tikz}}
+    \end{figure}
+}
+
+
+\frame
+{
+    \frametitle{Outline}
+    \tableofcontents
+}
+
+\section{Demo: Delaware River Scenario}
 \frame
 {
     \begin{center}
         \includegraphics[scale=.55]{../mindmap/mindmap3.pdf}
     \end{center}
 }
+\frame
+{
+    \begin{center}
+        \includegraphics[scale=.1]{images/testbed.jpg}
+    \end{center}
+}
+\subsection{Act I}
+%\begin{frame}[plain]
+%    \centering
+%    \includemovie[autoplay]{1.05\textwidth}{0.95\textheight}{media/all-AIS.mpg}
+%\end{frame}
+\subsection{Act II}
+\subsection{Act III}
+
+\frame
+{
+    \frametitle{Outline}
+    \tableofcontents
+}
+
+\section{Demo: Predator/Prey}
+\frame
+{
+    \frametitle{CS485/511: Predator/Prey Assignment}
+    \begin{itemize}
+        \item Autonomous multi-agent team coordination
+        \item Random environment, limited sensor
+        \item Predator's shared goal: efficient capture of Prey
+    \end{itemize}
+}
+\frame
+{
+    \begin{center}
+        \includegraphics[scale=.23]{images/pp.png}
+    \end{center}
+}
+
+\section{Conclusion}
+\frame
+{
+    \frametitle{Impact}
+    \begin{itemize}
+        \item Cost
+        \item Production Time
+        \item Research Tool
+        \item Educational Tool
+    \end{itemize}
+}
+
+\frame
+{
+    \frametitle{Thanks to...}
+\begin{center}
+    \begin{tabular}{c c}
+    \includegraphics[scale=.2]{images/drexel.png} & \includegraphics[scale=.6]{images/nrl.png} \\
+    \includegraphics[scale=.25]{images/acin.png} & \includegraphics[scale=.25]{images/cvut.png} \\
+    \end{tabular}
+\end{center}
+}
+
+\frame
+{
+    \frametitle{Contact \& Links}
+    \begin{tabular}{l l}
+        Website: & http://ahoy.googlecode.com/ \\
+        & \\
+        Team: & Frank J. Clark - \texttt{fjc28@cs.drexel.edu} \\
+        & Dustin S. Ingram - \texttt{dustin@cs.drexel.edu} \\
+        & Maria J. Kolakowska - \texttt{mjk75@cs.drexel.edu} \\
+        & Aaron M. Rosenfeld - \texttt{ar374@cs.drexel.edu} \\
+        & \\
+        Advisor: & William C. Regli - \texttt{regli@cs.drexel.edu} \\
+    \end{tabular}
+}
+
+%% Begin backup slides
+\backupbegin
+
+\frame
+{
+    \frametitle{Extra - Sample Architecture Flow}
+    \begin{center}
+        \includegraphics[scale=.48]{images/demo.pdf}
+    \end{center}
+}
+
+%% End backup slides
+\backupend
+
+\end{document}
 
 \frame
 {
@@ -305,52 +421,3 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 }
 
-\frame
-{
-    \frametitle{CS485/511: Predator/Prey Assignment}
-    \begin{center}
-        \includegraphics[scale=.23]{pp.png}
-    \end{center}
-}
-
-\frame
-{
-    \frametitle{Contact \& Links}
-    \begin{center}
-	Dustin S. Ingram - \texttt{dustin@cs.drexel.edu} \\
-	Aaron M. Rosenfeld - \texttt{ar374@cs.drexel.edu} \\
-	Maria J. Kolakowska - \texttt{mjk75@cs.drexel.edu} \\
-	Frank J. Clark - \texttt{fjc28@cs.drexel.edu} \\
-	William C. Regli - \texttt{regli@cs.drexel.edu} \\
-    \end{center}
-
-    \textbf{AHOY:} http://ahoy.googlecode.com/ \\
-    \textbf{CORE:} http://cs.itd.nrl.navy.mil/work/core \\
-    \textbf{EMANE:} http://cs.itd.nrl.navy.mil/work/emane \\
-    \textbf{NS3:} http://www.nsnam.org  \\
-}
-
-%% Begin backup slides
-\backupbegin
-
-\frame
-{
-    \frametitle{Extra - System Architecture Diagram}
-    \begin{figure}
-        \centering
-        \resizebox{0.9\textwidth}{!}{\input{../common/distribution.tikz}}
-    \end{figure}
-}
-
-\frame
-{
-    \frametitle{Extra - Sample Architecture Flow}
-    \begin{center}
-        \includegraphics[scale=.48]{demo.pdf}
-    \end{center}
-}
-
-%% End backup slides
-\backupend
-
-\end{document}
