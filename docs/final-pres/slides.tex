@@ -49,7 +49,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \tableofcontents
 }
 
-\section{Introduction/Background}
+\section{Introduction}
 \frame
 {   
     \frametitle{Abstract}
@@ -60,10 +60,35 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \textit{Abstract:} & AHOY is a distributed, event-based simulation environment designed to test networked multi-agent systems. \\
     \end{tabular}
 }
+\subsection{Background}
 
-\frame{
-    \frametitle{Background}
+\frame
+{
+    \frametitle{Background on Network Simulators}
+    \begin{itemize}
+        \item Application and protocol testing without physical hardware
+        \item Mimic the properties of a physical network
+        \item Network compents are virtualized (``nodes'') 
+        \item Allow multiple virtual nodes to run on one physical machine
+        \item Scale well, easy to re-configure
+        \item Cost \& time effective
+    \end{itemize}
+}
 
+\frame
+{
+    \frametitle{Background on Agents \& Agent Frameworks}
+    \begin{block}{Definition}
+    An \emph{intelligent agent} is software which observes and acts upon an environment and directs its activity towards achieving goals (Russell, Norvig).
+    \end{block}
+
+    \textbf{Agent Simulators}
+    \begin{itemize}
+        \item Used to test agent algorithms within virtual worlds
+        \item Rules define actions to be taken based on beliefs
+        \item Agent rule-sets react to sensory information in the world
+        \item Allows for large-scale simulation unfeasible in the real-world
+    \end{itemize}
 }
 
 \frame
@@ -73,33 +98,48 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 
-\subsection{Development}
 \frame
 {
     \begin{center}
         \includegraphics[scale=.75]{../mindmap/mindmap2.pdf}
     \end{center}
 }
+%% SVN VISUALIZATION
+\subsection{Development}
 
 \frame
 {
     \frametitle{Features}
     \begin{itemize}
-        \item Simulation distribution
-        \item Comprehensive Event API
-        \item ???MULTICAST???
-        \item Easy configuration in Python 
+        \item Real-time simulation allows for human-in-the-loop interaction
+        \item Enable scenarios and network topologies to be easily defined
+        \item Make writing custom agents extremely simple
+        \item Visualization flexibility
+        \item Physically distributed simulation
+        \item Entirely event-driven with comprehensive Event API
     \end{itemize}
 }
 
+\frame
+{
+    \frametitle{Event-Based Simulation}
+    \begin{itemize}
+        \item Every action or change in the simulation is an event
+        \item All events are passed over the event channel
+        \item Event channel is available to all virtual nodes, agents
+        \item Physical nodes as well, including visualizers
+        \item New events can be inserted in real-time (human-in-the-loop)
+    \end{itemize}
+}
 
 \frame
 {
     \frametitle{System Architecture Diagram}
+    \begin{center}
     \begin{figure}
-        \centering
-        \resizebox{0.9\textwidth}{!}{\input{../common/distribution.tikz}}
+        \resizebox{0.8\textwidth}{!}{\input{../common/distribution.tikz}}
     \end{figure}
+    \end{center}
 }
 
 
@@ -113,14 +153,19 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 \frame
 {
     \frametitle{Introduction}
-    Possible use cases:
+    Possible scenarios:
     \begin{itemize}
         \item Optimal path planning \& positioning in an emergency
         \item Unmanned cars in highway traffic
         \item Self-organizing mesh networks with autonomous robots
         \item Load evaluation of large wifi network
     \end{itemize}
+    Our scenario:
+    \begin{itemize}
+        \item Threat detection and crisis avoidance on Delaware River
+    \end{itemize} 
 }
+
 \frame
 {
     \begin{center}
@@ -138,7 +183,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 \frame
 {
     \frametitle{Act I: Threat Detection, Sensor Correlation}
-    Agent uses Radar and Sonar sensors to detect threats to AIS ships:
+    Agent uses Radar and Sonar sensors to detect threats to AIS ships:\\
     \begin{itemize}
         \item AIS ships are moving based on Markov models
         \item Small boats are moving up/down river
