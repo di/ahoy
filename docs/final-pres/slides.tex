@@ -101,19 +101,31 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 }
 
 
+\section{Demo: Delaware River Scenario}
 \frame
 {
     \frametitle{Outline}
     \tableofcontents
 }
 
-\section{Demo: Delaware River Scenario}
+\frame
+{
+    \frametitle{Introduction}
+    Possible use cases:
+    \begin{itemize}
+        \item Optimal path planning \& positioning in an emergency
+        \item Unmanned cars in highway traffic
+        \item Self-organizing mesh networks with autonomous robots
+        \item Load evaluation of large wifi network
+    \end{itemize}
+}
 \frame
 {
     \begin{center}
         \includegraphics[scale=.55]{../mindmap/mindmap3.pdf}
     \end{center}
 }
+%% AIS Data images
 \frame
 {
     \begin{center}
@@ -121,27 +133,58 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 \subsection{Act I}
-%\begin{frame}[plain]
-%    \centering
-%    \includemovie[autoplay]{1.05\textwidth}{0.95\textheight}{media/all-AIS.mpg}
-%\end{frame}
+\frame
+{
+    \frametitle{Act I: Threat Detection, Sensor Correlation}
+    Agent uses Radar and Sonar sensors to detect threats to AIS ships:
+    \begin{itemize}
+        \item AIS ships are moving based on Markov models
+        \item Small boats are moving up/down river
+        \item Sonar \& Radar sensors on riverbanks
+        \item Threat agent uses sensors to detect non-AIS boats 
+        \item Agent alerts human operator to potential threats
+    \end{itemize}
+}
+%% Act 1 Video
 \subsection{Act II}
+\frame
+{
+    \frametitle{Act II: Human-Agent Interaction, Threat Validation}
+    Human operator commands autonomous UAV agent to improve data accuracy with Camera sensor:
+    \begin{itemize}
+        \item Threat has been detected by threat agent 
+        \item Human operator initiates UAV flyover of specific region
+        \item UAV uses camera to provide more accurate position of threat
+    \end{itemize}
+}
+%% Act 2 Video
 \subsection{Act III}
-
+\frame
+{
+    \frametitle{Act III: Sensor Evaluation, Behavior Modification}
+    Chemical sensors detect oil spill while human operator diverts AIS ships:
+    \begin{itemize}
+        \item AIS tanker is destroyed by threat causing chemical spill
+        \item Spill activates chemical sensors \& restricts shipping channel
+        \item Human operator plans alternative route based on sensor data
+        \item Alternative route is sent to AIS ships via radio link
+    \end{itemize}
+}
+%% Act 3 Video
+\section{Demo: Predator/Prey}
 \frame
 {
     \frametitle{Outline}
     \tableofcontents
 }
 
-\section{Demo: Predator/Prey}
 \frame
 {
     \frametitle{CS485/511: Predator/Prey Assignment}
     \begin{itemize}
         \item Autonomous multi-agent team coordination
         \item Random environment, limited sensor
-        \item Predator's shared goal: efficient capture of Prey
+        \item Predator's shared goal: Efficient capture of Prey
     \end{itemize}
 }
 \frame
@@ -165,28 +208,51 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 \frame
 {
-    \frametitle{Thanks to...}
-\begin{center}
-    \begin{tabular}{c c}
-    \includegraphics[scale=.2]{images/drexel.png} & \includegraphics[scale=.6]{images/nrl.png} \\
-    \includegraphics[scale=.25]{images/acin.png} & \includegraphics[scale=.25]{images/cvut.png} \\
-    \end{tabular}
-\end{center}
+    \frametitle{Challenges}
+    \begin{itemize}
+        \item Testing \& Demonstration required completing an additional project:
+        \begin{itemize}
+            \item Creating realistic sensor models (Radar, Sonar, Camera)
+            \item Designing GUI \& human interface from scratch
+            \item Creating intelligent \& functioning agents
+        \end{itemize}
+        \item Simplifying ease-of-use
+        \item Making distribution seamless 
+    \end{itemize}
+}
+
+\frame
+{
+    \frametitle{Originality}
+    \begin{quote}
+        \small 
+        ``There is a number of platforms that facilitate the development of agent based systems [...] Looking from another perspective, the research area of network simulators is a well established one. Although these simulators provide high fidelity simulation of network properties, they are by no means agent-oriented. An integration with one of the agent enabling platforms seems to be a non trivial problem. However, there is a recently started project AHOY that aims to employ network simulators of this kind in multi-agent simulation.''
+    \end{quote}
+    \vspace{0.5cm}
+    \tiny
+    -- Michal \v{C}\'{a}p, Ji\v{r}\'{i} Vok\v{r}\'{i}nek, Anton\'{i}n Komenda: Communication- and Computation- Bounded Agents in Multi-Agent Simulations. In: Proceedings of HoloMAS, the International Conference on Industrial Applications of Holonic and Multi-Agent Systems, 2011.
+
 }
 
 \frame
 {
     \frametitle{Contact \& Links}
     \begin{tabular}{l l}
-        Website: & http://ahoy.googlecode.com/ \\
+        \textbf{Website:} & http://ahoy.googlecode.com/ \\
         & \\
-        Team: & Frank J. Clark - \texttt{fjc28@cs.drexel.edu} \\
+        \textbf{Team:} & Frank J. Clark - \texttt{fjc28@cs.drexel.edu} \\
         & Dustin S. Ingram - \texttt{dustin@cs.drexel.edu} \\
         & Maria J. Kolakowska - \texttt{mjk75@cs.drexel.edu} \\
         & Aaron M. Rosenfeld - \texttt{ar374@cs.drexel.edu} \\
         & \\
-        Advisor: & William C. Regli - \texttt{regli@cs.drexel.edu} \\
+        \textbf{Advisor:} & William C. Regli - \texttt{regli@cs.drexel.edu} \\
     \end{tabular}
+    \begin{center}
+    \begin{tabular}{c c c c c}
+    \includegraphics[scale=.1]{../common/logo.pdf} & \includegraphics[scale=.28]{images/drexel.pdf} & \includegraphics[scale=.33]{images/nrl.png} & \includegraphics[scale=.125]{images/acin.pdf} & \includegraphics[scale=.125]{images/cvut.png} \\
+    \end{tabular}
+    \end{center}
+
 }
 
 %% Begin backup slides
