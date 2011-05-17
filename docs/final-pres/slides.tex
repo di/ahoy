@@ -321,6 +321,64 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{center}
 }
 
+\frame
+{
+    \frametitle{Extra - Radar Specifics}
+    \small
+    Given a transmit power $P_t$, antenna gain $G_t$, aperture area $A_r$, target cross-sectional area $\sigma$, propagation factor $F$, and time to receive reflected wave $t$.      Distance to closest non-occluded entity in each sweep:
+    {\footnotesize
+    \begin{align*}
+        d = \frac{t \cdot c}{2}
+    \end{align*}
+    }
+    Entity's location $\left(\phi_t, \lambda_t\right)$ can be estimated with:
+    {\footnotesize
+    \begin{align*}
+        \phi_t = sin^{-1}\left(sin\left(\phi_r\right) \cdot cos\left(d/R_{e}\right) + cos\left(\phi_r\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\theta\right)\right) \\ 
+        \lambda_t = \lambda_t + tan^{-1}\left(sin\left(\theta\right) \cdot sin\left(d/R_{e}\right) \cdot cos\left(\phi_r\right), cos\left(d/R_{e}\right)-sin\left(\phi_r\right) \cdot sin\left(\phi_t\right)\right)
+    \end{align*}
+    }
+    An estimate of velocity is calculated by the Doppler equation:
+    {\footnotesize
+    \begin{align*}
+        \left|\vec{v_{\parallel}}\right| = -\frac{c \cdot \left(f_{recv} - f_{trans}\right)}{f_{trans}}.
+    \end{align*}
+    }
+    Further, pathloss of radio waves is incorporated. If $P_r$ falls below the sensitivity of the antenna, the target will not be detected.
+    {\footnotesize
+    \begin{align*}
+        P_r = \frac{P_t G_t A_r \sigma F^4}{\left(4 \pi\right)^4 d^4}
+    \end{align*}
+    }
+}
+
+\frame
+{
+    \frametitle{Extra - Sonar Specifics}
+    \small
+    Given a sonar source transformed into cartesian coordinates $(x_s, y_s, z_s)$ and entity at $(x_e, y_e, z_e)$, the round-trip time of sound is given by:
+    \begin{align*}
+        \Delta t = \int\limits_{z_s}^{z_e}{s(z) \cdot \sqrt{1 + \left(\frac{\Delta x}{\Delta z}\right)^2} \mathrm{d}z}
+    \end{align*}
+    Signal-to-noise ratio is given by:
+    \begin{align*}
+        \frac{S}{N} = L_s - 20 \cdot log(d) + L_t - \mathcal{N}(n_\mu, n_\sigma) - 10 \cdot log(S_b)
+    \end{align*}
+    Where $L_s$ is the source level, $d$ is the distance between the sonar and an entity, $L_t$ is the target level, $\mathcal{N}$ is a normal distribution, and $S_b$ is the source bandwidth.  If the SNR falls below a certain threshold, sonar will not pick up an entity.
+}
+
+\frame
+{
+    \frametitle{Extra - Log Loss Links}
+    In the log-loss model of radio propagation, the received signal strength is given by:
+    \begin{align*}
+        P_{rx} = P_{tx} - l_0 - 10 \cdot \gamma log(\frac{d}{d_0}) + \chi
+    \end{align*}
+    Where $P_{tx}$ is the transmission power, $\gamma$ is a path loss exponent, $l_0$ the loss at a reference distance $d_0$, and $\chi$ is a flat-fading factor.
+
+    If $P_{rx}$ falls below a threshold, the interface will not receive the data.
+}
+
 %% End backup slides
 \backupend
 
@@ -541,4 +599,5 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \end{itemize}
 
 }
+
 
