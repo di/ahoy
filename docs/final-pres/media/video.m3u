@@ -1,4 +1,6 @@
 #EXTM3U
+gource.ogv
+vlc://pause:9999
 all-ais.ogv
 vlc://pause:9999
 ais-ny.ogv

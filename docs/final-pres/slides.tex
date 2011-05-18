@@ -30,11 +30,13 @@
 \subtitle{Final Presentation}
 
 \author[Clark, Ingram, Kolakowska, \& Rosenfeld]{ 
-Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rosenfeld\inst{1}, William~Regli\inst{1}}
+Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rosenfeld\inst{1}, William~Regli\inst{1}, Joseph~Macker\inst{2}}
 
 \institute{
     \inst{1}%
-    Drexel University Department of Computer Science, Philadelphia PA
+    Drexel University Department of Computer Science, Philadelphia PA\\
+    \inst{2}%
+    US Naval Research Laboratory, Washington DC
 }
 
 \date{\today}
@@ -232,7 +234,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
     \begin{itemize}
         \item Autonomous multi-agent team coordination
         \item Random environment, limited sensor
-        \item Predator's shared goal: Efficient capture of Prey
+        \item Predators' shared goal: Efficient capture of Prey
     \end{itemize}
 }
 \frame
@@ -271,8 +273,6 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
             \item Scenario may introduce additional bugs
             \item Code coverage is complicated across distributed systems
         \end{itemize}
-        \item Simplifying ease-of-use
-        \item Making distribution seamless 
     \end{itemize}
 }
 
@@ -383,221 +383,3 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 \backupend
 
 \end{document}
-
-\frame
-{
-    \frametitle{Overview of AHOY}
-    \begin{itemize}
-	\item Event-based simulation environment
-	\item Used to compare combinations of software agents, network configurations, and sensor data in real-world environments
-	\item Physically Distributed Simulation
-	\item ``Programming'' Interface:
-	\begin{itemize}
-	    \item Agent Software
-	    \item Network Topologies
-	    \item Sensor Functions
-	    \item World Objects
-	\end{itemize}
-	\item Rapid scenario creation
-	\item Bridges network emulators and agent simulators
-    \end{itemize}
-}
-
-\subsection{Network Simulators}
-\frame
-{
-    \frametitle{Background on Network Simulators}
-    \begin{itemize}
-        \item Application and protocol testing without physical hardware
-        \item Mimic the properties of a physical network
-        \item Network compents are virtualized (``nodes'') 
-        \item Allow multiple virtual nodes to run on one physical machine
-        \item Scale well, easy to re-configure
-        \item Cost \& time effective
-    \end{itemize}
-}
-
-\subsection{Agent Frameworks}
-\frame
-{
-    \frametitle{Background on Agents \& Agent Frameworks}
-    \begin{block}{Definition}
-    An \emph{intelligent agent} is software which observes and acts upon an environment and directs its activity towards achieving goals (Russell, Norvig).
-    \end{block}
-
-    \textbf{Agent Simulators}
-    \begin{itemize}
-        \item Used to test agent algorithms within virtual worlds
-        \item Rules define actions to be taken based on beliefs
-        \item Agent rule-sets react to sensory information in the world
-        \item Allows for large-scale simulation unfeasible in the real-world
-    \end{itemize}
-}
-
-\subsection{Issues with Existing Tools}
-\frame
-{
-    \frametitle{Existing tools}
-    \textbf{Current Network Simulators}
-    \begin{itemize}
-        \item Designed for testing networks \& protocols, not agents 
-        \item Scenarios are pre-scripted
-        \item Poor event support
-        \item Inability to vary settings across batch scenario executions
-        \item Data collection non-existent or not directly supported
-    \end{itemize}
-    \textbf{Current Agent Frameworks}
-    \begin{itemize}
-        \item Communications modeled only at the application layer
-        \item Lack of rich lower-level protocols, or
-        \item Require physical hardware for networking
-    \end{itemize}
-}
-
-\section{Motivation}
-\frame
-{
-    \frametitle{Motivational Background}
-    \textbf{Current Network Simulators}
-    \begin{itemize}
-	\item Existing simulation engines not designed for testing agents but for testing the network \& protocols (NS2/3)
-	\item Pre-scripted scenarios (CORE) or poor event support (EMANE)
-	\item Lack of templated agents
-	\item Inability to batch process many executions of scenarios with varying settings
-	\item Data collection non-existent or not supported
-    \end{itemize}
-    \textbf{Current Agent Frameworks}
-    \begin{itemize}
-	\item Communications modeled only at the application layer (send/recv)
-	\item Lack of rich lower-level protocols
-	\item Alternative approaches (Player project) require physical hardware for networking
-    \end{itemize}
-}
-
-\subsection{CORE}
-\frame
-{
-    \frametitle{Motivational Background - CORE}
-    \begin{itemize}
-	\item CORE is a network emulator which allows software to be run inside virtual machines with full network stacks
-	\item Uses Linux network namespaes (netns), a lightweight container-based virtualization similar to FreeBSD ``jail''
-	\item Basic implementation of PHY and MAC layer protocols including 802.11 and Ethernet
-	\item Extremely easy to create scenarios; drag and drop interface
-	\item Currently being developed by Boeing, based on the open source Integrated Multiprotocol Emulator/Simulator (IMUNES) project developed by the University of Zagreb
-    \end{itemize}
-}
-
-\frame
-{
-    \frametitle{Motivational Background - CORE}
-    \begin{center}
-        \includegraphics[scale=.25]{core-screenshot.png}
-    \end{center}
-}
-
-\subsection{EMANE}
-\frame
-{
-    \frametitle{Motivational Background - EMANE}
-    \begin{itemize}
-	\item EMANE is an Extendable Mobile Ad-hoc Network Emulator
-	\item Allows heterogeneous network emulation using a plugable MAC and PHY layer architecture
-	\item Pre-scripted scenarios publich timed events to a common event channel
-	\item 1-to-1 virtual-to-physical node mapping (without additional virtualization)
-	\item No GUI or integrated visualization component
-	\item EMANE is an Open Source project developed by CenGen, Inc., Columbia, Maryland and released under the BSD license
-    \end{itemize}
-}
-
-\subsection{NS3}
-\frame
-{
-    \frametitle{Motivational Background - NS3}
-    \begin{itemize}
-	\item Well known network simulator with proven accurate network stack characteristics
-	\item Command line based
-	\item Allows developers to write applications and define scenarios in C/C++
-	\item Simulated -- results in slower-than-realtime experiments
-	\item Applications must be written from scratch; no notion of agents or modularity
-    \end{itemize}
-}
-
-\section{Implementation}
-\subsection{Goals}
-\frame
-{
-    \frametitle{Implementation Goals}
-    \textbf{Bridge network simulators and agent simulators}
-    \begin{itemize}
-        \item Entirely event-driven
-        \item Real-time
-        \item Allow for human-in-the-loop interaction with agents
-        \item Enable scenarios and network topologies to be easily defined
-        \item Make writing custom agents extremely simple
-        \item Visualization flexibility
-        \item Physically distributed simulation
-        \item Simple data collection
-    \end{itemize}
-}
-
-\subsection{Overview}
-\frame
-{
-    \frametitle{Event-Based Simulation}
-    \textbf{Events allow Agents to react in real-time}
-    \begin{itemize}
-        \item Every action or change in the simulation is an event
-        \item All events are passed over the event channel
-        \item Event channel is available to all virtual nodes, agents
-        \item Physical nodes as well, including visualizers
-        \item New events can be inserted in real-time (human-in-the-loop)
-    \end{itemize}
-}
-
-\frame
-{
-    \frametitle{Scaled Distribution}
-    \textbf{Virtual Nodes}
-    \begin{itemize}
-	\item Very simple to distribute as all events are broadcast over a common event channel
-	\item Future prototype will include method of starting agents on multiple physical machines
-	\item Synchronization of simulation-time across physical machines may prove difficult, especially with integration of NS3; possible issues with human-in-the-loop
-    \end{itemize}
-    \textbf{Simulation Engine}
-    \begin{itemize}
-	\item Simulation engine may become a bottleneck as all ``filter \& forward'' (e.g. messaging) type events must flow through it
-	\item Distribution of simulation engine is a future goal 
-    \end{itemize}
-}
-
-\frame
-{
-    \frametitle{Decoupled Visualization}
-    \textbf{Visualizing the Simulation}
-    \begin{itemize}
-        \item Monitoring the event channel produces raw event data
-        \item Occurs simultaneously with the execution of an experiment
-        \item Visualizers interpret events, produce their own representation 
-        \item Completely separated from the simulator
-    \end{itemize}
-}
-
-\frame
-{
-    \frametitle{Scenario Setup \& Creation}
-    \textbf{Using a ``Programming'' Interface}
-    \begin{itemize}
-        \item Each of the following are defined purely in Python:
-        \begin{itemize}
-            \item Agent Behaviors 
-            \item Network Topologies
-            \item Sensor Functionality
-            \item World Objects \& Behaviors
-        \end{itemize}
-        \item These definitions are then interpreted by the simulator
-        \item Sets up the experiment \& defines the scenario
-    \end{itemize}
-
-}
-
-
