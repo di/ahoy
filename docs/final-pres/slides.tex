@@ -96,6 +96,30 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 \frame
 {
+    \footnotesize
+    \textbf{Networks}
+    \begin{itemize}
+        \item NS2 (http://www.isi.edu/nsnam/ns)
+        \item NS3 (http://www.nsnam.org)
+        \item CORE (http://cs.itd.nrl.navy.mil/work/core)
+        \item MANE (http://cs.itd.nrl.navy.mil/work/mane)
+        \item EMANE (http://cs.itd.nrl.navy.mil/work/emane)
+        \item QualNet (http://www.scalable-networks.com/products/qualnet)
+    \end{itemize}
+
+    \textbf{Agents}
+    \begin{itemize}
+        \item AGLOBE (http://agents.felk.cvut.cz/aglobe)
+        \item AgentFly (http://agents.felk.cvut.cz/projects)
+        \item Player/Stage (http://playerstage.sourceforge.net)
+        \item JADE (http://jade.tilab.com)
+        \item NetLogo (http://ccl.northwestern.edu/netlogo)
+        \item MASON (http://www.cs.gmu.edu/~eclab/projects/mason)
+    \end{itemize}
+}
+
+\frame
+{
     \begin{center}
         \includegraphics[scale=.5]{../mindmap/mindmap1.pdf}
     \end{center}
@@ -137,6 +161,25 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
 
 \frame
 {
+    \frametitle{Primary Design Choices}
+    \begin{itemize}
+        \item \textbf{Distribution:}
+        \begin{itemize}
+            \item Physical machines
+            \item Processes
+            \item Threads
+        \end{itemize}
+        \item \textbf{Networking:} 
+        \begin{itemize}
+            \item Common multicast channel
+            \item Pairwise TCP connections
+            \item Daemons
+        \end{itemize}
+    \end{itemize}
+}
+
+\frame
+{
     \frametitle{System Architecture Diagram}
     \begin{center}
     \begin{figure}
@@ -161,7 +204,7 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item Optimal path planning \& positioning in an emergency
         \item Unmanned cars in highway traffic
         \item Self-organizing mesh networks with autonomous robots
-        \item Load evaluation of large wifi network
+        \item Load evaluation of large WiFi network
     \end{itemize}
     Our scenario:
     \begin{itemize}
@@ -236,6 +279,19 @@ Frank~Clark\inst{1}, Dustin~Ingram\inst{1}, Maria~Kolakowska\inst{1}, Aaron~Rose
         \item Random environment, limited sensor
         \item Predators' shared goal: Efficient capture of Prey
     \end{itemize}
+}
+
+\frame
+{
+    \frametitle{CS485/511: Predator/Prey Assignment}
+    \begin{center}
+    \begin{tabular}{|l|l|} \hline
+        \textbf{Implementation} & \textbf{Time to Catch Prey} \\ \hline
+        Predator 1 & xxxxxx \\ \hline
+        Predator 2 & xxxxxx \\ \hline
+        Predator 3 & xxxxxx \\ \hline
+    \end{tabular}
+    \end{center}
 }
 
 \section{Conclusion}
