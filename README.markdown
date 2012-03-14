@@ -9,7 +9,7 @@ AHOY is an event-based simulation environment designed to test networked multi-a
   * [Aaron Rosenfeld](https://github.com/arosenfeld) (CS) - <ar374@drexel.edu>
 
 ## Advisor
-  * [Dr. William Regli](www.cs.drexel.edu/~regli/) (CS Faculty) - <regli@drexel.edu>
+  * [Dr. William Regli](http://www.cs.drexel.edu/~regli/) (CS Faculty) - <regli@drexel.edu>
 
 ## Stakeholders
   * Joe Macker (US Naval Research Laboratory) - <joseph.macker@nrl.navy.mil>
